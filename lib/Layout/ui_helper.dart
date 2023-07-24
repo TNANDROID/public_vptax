@@ -40,7 +40,22 @@ class UIHelper {
     );
   }
 
-//Container Style Provider
+//Container Style Provider with shadow
+  static BoxDecoration roundedBorderWithColor(double topleft, double topright,
+      double btmleft, double btmright, Color backgroundColor,
+      {Color borderColor = Colors.transparent, double borderWidth = 1}) {
+    return BoxDecoration(
+      borderRadius: BorderRadius.only(
+          topRight: Radius.circular(topright),
+          topLeft: Radius.circular(topleft),
+          bottomLeft: Radius.circular(btmleft),
+          bottomRight: Radius.circular(btmright)),
+      border: Border.all(width: borderWidth, color: borderColor),
+      color: backgroundColor,
+    );
+  }
+
+//Container Style Provider with shadow
   static BoxDecoration roundedBorderWithColorWithShadow(
       double radius, Color backgroundColor,
       {Color borderColor = Colors.transparent, double borderWidth = 1}) {
@@ -99,22 +114,25 @@ class UIHelper {
   }
 
   //Uneven Container Widget Provider
-  static Widget unEvenContainer(double radius) {
+  static Widget unEvenContainer(double radius, Widget contentWidget) {
     return ClipPath(
       clipper: CustomClip(),
       child: Container(
-        padding: EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(radius),
-          color: c.colorPrimary,
-        ),
-        child: Center(
-          child: Text(
-            'Uneven Width Containers',
-            style: TextStyle(color: Colors.white, fontSize: 20),
+          padding: EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(radius),
+            color: Colors.blue,
           ),
-        ),
-      ),
+          child: contentWidget),
+    );
+  }
+
+//small Line Style Provider
+  static Widget tinyLinewidget({Color borderColor = const Color(0x88A5A5A5)}) {
+    return Container(
+      margin: EdgeInsets.only(top: 0, bottom: 6),
+      color: borderColor,
+      height: 1,
     );
   }
 }
