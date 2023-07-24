@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "public_tax" "\0"
+            VALUE "FileDescription", "public_vptax" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "public_tax" "\0"
+            VALUE "InternalName", "public_vptax" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "public_tax.exe" "\0"
-            VALUE "ProductName", "public_tax" "\0"
+            VALUE "OriginalFilename", "public_vptax.exe" "\0"
+            VALUE "ProductName", "public_vptax" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

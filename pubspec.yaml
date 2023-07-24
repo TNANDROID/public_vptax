@@ -1,4 +1,4 @@
-name: public_tax
+name: public_vptax
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -46,7 +46,7 @@ dependencies:
   open_settings: ^2.0.2
   encrypt: ^5.0.0
   crypto: ^3.0.0
-  package_info_plus: ^1.0.6
+  package_info_plus: ^4.0.2
   google_fonts: ^4.0.4
   local_auth: ^2.1.6
   

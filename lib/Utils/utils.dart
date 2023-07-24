@@ -11,11 +11,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:open_settings/open_settings.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:public_tax/Services/Preferenceservices.dart';
-import 'package:public_tax/Services/locator.dart';
-import 'package:public_tax/Layout/ui_helper.dart';
-import 'package:public_tax/Resources/ImagePath.dart' as imagePath;
-import 'package:public_tax/Resources/ColorsValue.dart' as c;
+import 'package:public_vptax/Services/Preferenceservices.dart';
+import 'package:public_vptax/Services/locator.dart';
+import 'package:public_vptax/Layout/ui_helper.dart';
+import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
+import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:url_launcher/url_launcher.dart';
 
 import '../Resources/StringsKey.dart';

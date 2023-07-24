@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:public_tax/Resources/StringsKey.dart';
-import 'package:public_tax/Services/Apiservices.dart';
-import 'package:public_tax/Services/Preferenceservices.dart';
-import 'package:public_tax/Services/locator.dart';
-import 'package:public_tax/Utils/utils.dart';
+import 'package:public_vptax/Resources/StringsKey.dart';
+import 'package:public_vptax/Services/Apiservices.dart';
+import 'package:public_vptax/Services/Preferenceservices.dart';
+import 'package:public_vptax/Services/locator.dart';
+import 'package:public_vptax/Utils/utils.dart';
 import 'package:stacked/stacked.dart';
 
 class StartUpViewModel extends BaseViewModel {

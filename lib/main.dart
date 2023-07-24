@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:public_tax/Activity/Auth/Splash.dart';
-import 'package:public_tax/Services/locator.dart';
+import 'package:public_vptax/Activity/Auth/Splash.dart';
+import 'package:public_vptax/Services/locator.dart';
 
 Future<void> main() async {
   setupLocator();

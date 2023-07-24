@@ -8,11 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/io_client.dart';
-import 'package:public_tax/Resources/Stringskey.dart' as s;
-import 'package:public_tax/Resources/ImagePath.dart' as imagePath;
-import 'package:public_tax/Resources/ColorsValue.dart' as c;
+import 'package:public_vptax/Activity/Auth/Home.dart';
+import 'package:public_vptax/Resources/Stringskey.dart' as s;
+import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
+import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:local_auth/local_auth.dart';
-import 'package:public_tax/Utils/utils.dart';
+import 'package:public_vptax/Utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Splash extends StatefulWidget {
@@ -27,9 +28,18 @@ class _SplashState extends State<Splash> {
   String msg = "You are not authorized.";
 
   @override
-  void initState() {
+  Future<void> initState() async {
     super.initState();
-    //  initialize();
+    prefs = await SharedPreferences.getInstance();
+    prefs.setString("lang", "en");
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Home(
+              isLogin: "login",
+            )));
+
+
   }
 
   // Future<void> initialize() async {

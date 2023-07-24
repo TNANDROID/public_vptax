@@ -1,6 +1,6 @@
 {
 
-  "appName": "SBM(G) Phase II",
+  "appName": "Public VpTax",
   "signIN": "SignIN",
   "password": "Password",
   "mobileNumber": "Mobile Number",
@@ -10,6 +10,7 @@
   "register": "REGISTER",
   "version": "Version",
   "success": "Success",
+  "home": "Home",
   "sync_data_to_server": "Sync Data To Server",
   "online": "Online",
   "offline": "Offline",

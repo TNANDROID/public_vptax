@@ -1,6 +1,6 @@
 {
-    "name": "public_tax",
-    "short_name": "public_tax",
+    "name": "public_vptax",
+    "short_name": "public_vptax",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

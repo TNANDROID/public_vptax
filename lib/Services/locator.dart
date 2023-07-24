@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
-import 'package:public_tax/Services/Apiservices.dart';
-import 'package:public_tax/Services/Preferenceservices.dart';
+import 'package:public_vptax/Services/Apiservices.dart';
+import 'package:public_vptax/Services/Preferenceservices.dart';
 
 GetIt locator = GetIt.instance;
 

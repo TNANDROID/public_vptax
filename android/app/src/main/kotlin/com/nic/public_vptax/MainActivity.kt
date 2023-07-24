@@ -1,4 +1,4 @@
-package com.example.public_tax
+package com.nic.public_vptax
 
 import io.flutter.embedding.android.FlutterActivity
 
