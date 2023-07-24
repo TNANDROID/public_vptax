@@ -44,11 +44,23 @@ class _HomeState extends State<Home> {
     return WillPopScope(
         onWillPop: showExitPopup,
         child: Scaffold(
-         /* appBar: AppBar(
-            elevation: 2,
-            title: Container(
+          appBar: PreferredSize(
+            preferredSize: AppBar().preferredSize,
+            child: Container(
+              padding: EdgeInsets.only(top: 30,bottom: 10,right: 20),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
+                    topLeft: Radius.circular(0),
+                    topRight: Radius.circular(0)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey,
+                    offset: Offset(0.0, 1.0), //(x,y)
+                    blurRadius: 3.0,
+                  ),
+                ],
                 gradient: LinearGradient(
                     colors: [
                       const Color(0xFF3366FF),
@@ -60,12 +72,13 @@ class _HomeState extends State<Home> {
                     tileMode: TileMode.clamp),
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
                     alignment: Alignment.centerLeft,
                     child:PopupMenuButton<String>(
+                      color: c.white,
                       onSelected: handleClick,
                       itemBuilder: (BuildContext context) {
                         return {'Tamil', 'English'}.map((String choice) {
@@ -82,7 +95,7 @@ class _HomeState extends State<Home> {
                       alignment: Alignment.center,
                       child: Text(
                         'home'.tr().toString(),
-                        style: TextStyle(fontSize: 15),
+                        style: TextStyle(fontSize: 15,color: c.white,),
                       ),
                     ),
                   ),
@@ -101,75 +114,58 @@ class _HomeState extends State<Home> {
                         }),
                   )
                 ],
-              ),
-            ),
+              )
 
-          ),*/
+            ),
+          ),
           body: SingleChildScrollView(
             child: Column(children: [
-              Container(
-                padding: EdgeInsets.only(top: 30,bottom: 20,right: 20),
-                decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(50),
-                        bottomRight: Radius.circular(50),
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10)),
-                  gradient: LinearGradient(
-                      colors: [
-                        const Color(0xFF3366FF),
-                        const Color(0xFF00CCFF),
-                      ],
-                      begin: const FractionalOffset(0.0, 0.0),
-                      end: const FractionalOffset(1.0, 0.0),
-                      stops: [0.0, 1.0],
-                      tileMode: TileMode.clamp),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child:PopupMenuButton<String>(
-                        color: c.white,
-                        onSelected: handleClick,
-                        itemBuilder: (BuildContext context) {
-                          return {'Tamil', 'English'}.map((String choice) {
-                            return PopupMenuItem<String>(
-                              value: choice,
-                              child: Text(choice),
-                            );
-                          }).toList();
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'home'.tr().toString(),
-                          style: TextStyle(fontSize: 15,color: c.white,),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      alignment: Alignment.centerRight,
-                      child: InkWell(
-                          child: Image.asset(
-                            imagePath.logout,
-                            color: c.white,
-                            fit: BoxFit.contain,
-                            height: 25,
-                            width: 25,
-                          ),
-                          onTap: () async {
-                            // logout();
-                          }),
-                    )
-                  ],
-                ),
+            Row(
+                children: [
+            Container(
+            margin: EdgeInsets.all(20),
+            child: Image.asset(
+              imagePath.tamilnadu_logo,
+              height: MediaQuery.of(context).size.height/10,
+            ),
+          ),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.only(top: 10,bottom: 10),
+              decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      bottomLeft: Radius.circular(20)),
+                gradient: LinearGradient(
+                    colors: [
+                      const Color(0xFF3366FF),
+                      const Color(0xFF00CCFF),
+                    ],
+                    begin: const FractionalOffset(0.0, 0.0),
+                    end: const FractionalOffset(1.0, 0.0),
+                    stops: [0.0, 1.0],
+                    tileMode: TileMode.clamp),
               ),
+              child:
+            Text(
+            textAlign: TextAlign.center,
+            'appName'.tr().toString(),
+            style: TextStyle(
+                color: c.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold),
+          ),
+          ),
+          ),
+          ]),
+              Container(child: Text(
+                textAlign: TextAlign.left,
+                'lang'.tr().toString(),
+                style: TextStyle(
+                    color: c.grey_8,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
+              ),)
             ],),
           ),
 
