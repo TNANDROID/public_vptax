@@ -1,12 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceService {
-  String selectedLanguage = "ta";
-
-  List<dynamic> districtList = [];
-  List<dynamic> villageList = [];
-  List<dynamic> blockList = [];
-
   //Set User Info
   Future<bool> setUserInfo(String key, String value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

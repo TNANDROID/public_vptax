@@ -67,7 +67,7 @@ class UIHelper {
           BoxShadow(
             color: Colors.black26,
             offset: Offset(5, 5),
-            blurRadius: 3.0,
+            blurRadius: 10.0,
           )
         ]);
   }
@@ -80,7 +80,10 @@ class UIHelper {
       gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          stops: [0.1, 0.8],
+          stops: [
+            0.2,
+            0.8,
+          ],
           colors: c1),
       borderRadius: BorderRadius.only(
           topRight: Radius.circular(topright),

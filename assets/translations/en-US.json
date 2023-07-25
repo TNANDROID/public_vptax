@@ -1,7 +1,9 @@
 {
-
   "appName": "Public VpTax",
-  "signIN": "SignIN",
+  "signIN": "Sign In",
+  "signUP": "Sign Up",
+  "signupText": "Don't have an account ?",
+  "quickPay": "Quick Pay",
   "password": "Password",
   "mobileNumber": "Mobile Number",
   "no_internet": "No Internet Connection!",
@@ -13,6 +15,10 @@
   "home": "Home",
   "user_name_empty": "User Name is Empty",
   "password_empty": "User Password is Empty",
-  "software_designed_and": "Software Designed & Developed By NIC"
-
+  "software_designed_and": "Software Designed & Developed By NIC",
+  "choose_language": "Choose Language",
+  "tamil": "தமிழ்",
+  "english": "English",
+  "tax_types": "Tax Types",
+  "Submit": "SUBMIT"
 }

@@ -2,10 +2,10 @@
 
 import 'dart:ui';
 
-Color colorPrimary = Color(0xFFff9d58);
-Color colorPrimaryDark = Color(0xFFff8465);
-Color colorAccent = Color(0xFFff935d);
-Color colorAccentlight = Color(0xFFC3E9FA);
+Color colorPrimary = Color(0xFFff8a66);
+Color colorPrimaryDark = Color(0xFFff7371);
+Color colorAccent = Color(0xFFfe776e);
+Color colorAccentlight = Color(0xFFff8f60);
 Color colorAccentverylight = Color(0xFFEFFAFE);
 Color colorAccentveryverylight = Color(0xFF5907B3A5);
 Color colorAccentveryverylight2 = Color(0xFF83d9d2);

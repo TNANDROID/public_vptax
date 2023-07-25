@@ -1,14 +1,17 @@
-// ignore_for_file: file_names, library_private_types_in_public_api
+// ignore_for_file: file_names, library_private_types_in_public_api, unrelated_type_equality_checks
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:public_vptax/Activity/Auth/Login.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import '../../Resources/StringsKey.dart' as s;
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagepath;
 import 'package:public_vptax/Utils/utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../Layout/screen_size.dart';
+import '../../Services/Preferenceservices.dart';
+import '../../Services/locator.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -17,197 +20,251 @@ class Splash extends StatefulWidget {
   _SplashState createState() => _SplashState();
 }
 
-class _SplashState extends State<Splash> {
+class _SplashState extends State<Splash> with TickerProviderStateMixin {
+  late AnimationController _rightToLeftAnimController, _topAnimationController;
+  late Animation<Offset> _rightToLeftAnimation, _topAnimation;
+
   Utils utils = Utils();
-  late SharedPreferences prefs;
+  PreferenceService preferencesService = locator<PreferenceService>();
   final LocalAuthentication auth = LocalAuthentication();
 
-  String selectedLanguage = s.selectLang;
+  String? selectedLanguage;
 
-  var langItems = [
-    s.selectLang,
-    'English',
-    'தமிழ்',
+  List langItems = [
+    {s.key_langCode: '1', s.key_language: 'English'},
+    {s.key_langCode: '2', s.key_language: 'தமிழ்'},
   ];
 
   @override
   void initState() {
     super.initState();
+
+    _rightToLeftAnimController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 2));
+
+    _rightToLeftAnimation = Tween<Offset>(
+            begin: const Offset(1.0, 0.0), end: const Offset(0.0, 0.0))
+        .animate(CurvedAnimation(
+            parent: _rightToLeftAnimController, curve: Curves.easeInOut));
+
+    // Top-to-bottom slide animation
+    _topAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+
+    _topAnimation = Tween<Offset>(
+      begin: const Offset(0.0, -10.0),
+      end: const Offset(0.0, 0.0),
+    ).animate(CurvedAnimation(
+      parent: _topAnimationController,
+      curve: Curves.easeInOut,
+    ));
+
+    initialize();
+
+    _topAnimationController.forward();
+    _rightToLeftAnimController.forward();
+  }
+
+  Future<void> initialize() async {
+    selectedLanguage = await preferencesService.getUserInfo("lang") == "en"
+        ? langItems[0][s.key_langCode]
+        : langItems[1][s.key_langCode];
+
+    setState(() {});
+  }
+
+  void handleClick(String value) async {
+    switch (value) {
+      case '2':
+        setState(() {
+          preferencesService.setUserInfo("lang", "ta");
+          context.setLocale(const Locale('ta', 'IN'));
+        });
+        break;
+      case '1':
+        setState(() {
+          preferencesService.setUserInfo("lang", "en");
+          context.setLocale(const Locale('en', 'US'));
+        });
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    _rightToLeftAnimController.dispose();
+    _topAnimationController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: Screen.width(context),
-        height: Screen.height(context),
-        margin: const EdgeInsets.all(5),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            //  ****************** Choose Language Conatiner with fixed Height ****************** //
+    return SafeArea(
+      top: true,
+      child: Scaffold(
+        body: Container(
+          width: Screen.width(context),
+          height: Screen.height(context),
+          margin: const EdgeInsets.all(5),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              //  ****************** Choose Language Conatiner with fixed Height ****************** //
 
-            Container(
-              width: Screen.width(context),
-              height: Screen.height(context) / 4,
-              padding: const EdgeInsets.all(15),
-              child: Align(
-                alignment: Alignment.topRight,
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton(
-                    elevation: 0,
-                    isExpanded: false,
-                    value: selectedLanguage,
-                    icon: const Padding(
-                        padding: EdgeInsets.only(left: 15),
-                        child: Icon(
-                          Icons.arrow_downward_rounded,
-                          size: 15,
-                        )),
-                    style: TextStyle(
-                      color: c.black,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
+              Container(
+                width: Screen.width(context),
+                height: Screen.height(context) / 4,
+                padding: const EdgeInsets.all(15),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton(
+                      elevation: 0,
+                      isExpanded: false,
+                      value: selectedLanguage,
+                      icon: const Padding(
+                          padding: EdgeInsets.only(left: 15),
+                          child: Icon(
+                            Icons.arrow_downward_rounded,
+                            size: 15,
+                          )),
+                      style: TextStyle(
+                        color: c.black,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      items: langItems
+                          .map((item) => DropdownMenuItem<String>(
+                                value: item[s.key_langCode],
+                                child: Text(item[s.key_language]),
+                              ))
+                          .toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          selectedLanguage = newValue.toString();
+                          handleClick(selectedLanguage!);
+                        });
+                      },
                     ),
-                    items: langItems.map((String items) {
-                      return DropdownMenuItem(
-                        value: items,
-                        child: Text(items),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedLanguage = newValue!;
-                      });
-                    },
                   ),
                 ),
               ),
-            ),
 
-            //  ****************** App Name  ****************** //
+              //  ****************** App Name  ****************** //
 
-            Text(
-              s.appName,
-              style: TextStyle(
-                fontSize: 32.0,
-                fontWeight: FontWeight.bold,
-                color: c.grey_10,
-                fontStyle: FontStyle.normal,
-                decorationColor: Colors.red,
-                decorationStyle: TextDecorationStyle.wavy,
+              SlideTransition(
+                position: _topAnimation,
+                child: Text(
+                  'appName'.tr().toString(),
+                  style: TextStyle(
+                    fontSize: 32.0,
+                    fontWeight: FontWeight.bold,
+                    color: c.text_color,
+                    fontStyle: FontStyle.normal,
+                    decorationStyle: TextDecorationStyle.wavy,
+                  ),
+                ),
               ),
-            ),
-            UIHelper.verticalSpaceMedium,
+              UIHelper.verticalSpaceMedium,
 
-            //  ****************** Qucik Action Buttons  ****************** //
+              //  ****************** Qucik Action Buttons  ****************** //
 
-            Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              SlideTransition(
+                position: _rightToLeftAnimation,
+                child: Column(
                   children: [
-                    InkWell(
-                      onTap: () => {print("Sign in Tapped ")},
-                      child: Container(
-                        width: Screen.width(context) / 2.5,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: c.splashBtn,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Image.asset(
-                                imagepath.login,
-                                width: 30,
-                                height: 30,
-                              ),
-                              Text(
-                                s.signIn,
-                                style: TextStyle(
-                                  color: c.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  decorationStyle: TextDecorationStyle.wavy,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        actionButton(
+                            1, 'signIN'.tr().toString(), imagepath.login),
+                        UIHelper.horizontalSpaceMedium,
+                        actionButton(
+                            2, 'quickPay'.tr().toString(), imagepath.pay),
+                      ],
                     ),
-                    UIHelper.horizontalSpaceMedium,
-                    InkWell(
-                      onTap: () => {print("Quick Pay Tapped ")},
-                      child: Container(
-                        width: Screen.width(context) / 2.5,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: c.splashBtn,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Image.asset(
-                                imagepath.pay,
-                                width: 30,
-                                height: 30,
-                              ),
-                              Text(
-                                s.pay,
-                                style: TextStyle(
-                                  color: c.white,
-                                  fontWeight: FontWeight.bold,
-                                  decorationStyle: TextDecorationStyle.wavy,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
+                    UIHelper.verticalSpaceMedium,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'signupText'.tr().toString(),
+                          style: TextStyle(
+                            color: c.text_color,
+                            fontSize: 16,
                           ),
                         ),
-                      ),
+                        UIHelper.horizontalSpaceSmall,
+                        InkWell(
+                          onTap: () => {print("Sign in Tapped ")},
+                          child: Text(
+                            'signUP'.tr().toString(),
+                            style: TextStyle(
+                              color: c.sky_blue,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                UIHelper.verticalSpaceMedium,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      s.signupText,
-                      style: TextStyle(
-                        color: c.text_color,
-                        fontSize: 16,
-                      ),
-                    ),
-                    UIHelper.horizontalSpaceSmall,
-                    InkWell(
-                      onTap: () => {print("Sign in Tapped ")},
-                      child: Text(
-                        s.signIn,
-                        style: TextStyle(
-                          color: c.sky_blue,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ],
+              ),
+
+              //  ****************** Image Container  ****************** //
+
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Image.asset(
+                  imagepath.splash, // Replace with your image path
+                  fit: BoxFit.cover,
                 ),
-              ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  //  ****************** Qucik Action Buttons Common Wdget  ****************** //
+
+  Widget actionButton(int flag, String btnText, String imgPath) {
+    return ElevatedButton(
+      onPressed: () {
+        if (flag == 1) {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => Login(),
+          ));
+        } else if (flag == 2) {
+          print("Quick Pay Tapped");
+        }
+      },
+      style: ElevatedButton.styleFrom(
+        fixedSize: Size(Screen.width(context) / 2.5, 40),
+        backgroundColor: c.splashBtn,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+      ),
+      child: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Image.asset(
+              imgPath,
+              width: 25,
+              height: 25,
             ),
-
-            //  ****************** Image Container  ****************** //
-
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Image.asset(
-                imagepath.splash, // Replace with your image path
-                fit: BoxFit.cover,
+            Text(
+              btnText,
+              style: TextStyle(
+                color: c.white,
+                fontWeight: FontWeight.bold,
+                decorationStyle: TextDecorationStyle.wavy,
+                fontSize: btnText.length > 10 ? 11 : 12,
               ),
             ),
           ],

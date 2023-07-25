@@ -3,13 +3,6 @@
 
 // ************************** Basic Strings ************************** //
 
-String appName = "Public Tax";
-String signIn = "Sign In";
-String signUp = "Sign Up";
-String pay = "Quick Pay";
-String signupText = "Don't have an account ?";
-String selectLang = "Choose Language";
-
 // ************************** Key Strings ************************** //
 
 String key_user_name = "user_name";
