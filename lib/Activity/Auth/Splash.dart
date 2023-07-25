@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:public_vptax/Activity/Auth/Login.dart';
+import 'package:public_vptax/Activity/Tax_Collection/taxCollection_view.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import '../../Resources/StringsKey.dart' as s;
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
@@ -239,7 +240,9 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
             builder: (context) => Login(),
           ));
         } else if (flag == 2) {
-          print("Quick Pay Tapped");
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => TaxCollectionView(),
+          ));
         }
       },
       style: ElevatedButton.styleFrom(
