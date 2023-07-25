@@ -22,6 +22,11 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
   PreferenceService preferencesService = locator<PreferenceService>();
 
+  String selectedDistrict = "";
+  String selectedBlock = "";
+  String selectedVillage = "";
+  String selectedTaxType = "";
+
   Widget addInputFormControl(
       String nameField, String hintText, String errorTxt) {
     return Column(
@@ -74,7 +79,33 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
   Widget addInputDropdownField(int index, String inputHint, String fieldName,
       String errorText, StartUpViewModel model) {
     List dropList = [];
+    String keyCode = "";
+    String titleText = "";
+    String titleTextTamil = "";
 
+    if (index == 0) {
+      dropList = model.districtList;
+      keyCode = "dcode";
+      titleText = "dname";
+      titleTextTamil = "lldname";
+    } else if (index == 1) {
+      dropList = model.selectedBlockList;
+      keyCode = "dcode";
+      titleText = "dname";
+      titleTextTamil = "lldname";
+    } else if (index == 2) {
+      dropList = model.selectedVillageList;
+      keyCode = "pvcode";
+      titleText = "pvname";
+      titleTextTamil = "llpvname";
+    } else if (index == 3) {
+      // dropList = habitationItems.toList();
+      // keyCode = "$key_habitation_code";
+      // titleText = "$key_habitation_name";
+      // titleTextTamil = "$key_habitation_name_ta";
+    } else {
+      print("End.....");
+    }
     return Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,8 +114,10 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
           FormBuilderDropdown(
             decoration: InputDecoration(
               contentPadding: EdgeInsets.only(left: 10),
-              // hintText: inputHint,
-              // hintStyle: TextStyle(fontSize: 12),
+              hintText: inputHint,
+              // hintStyle: TextStyle(
+              //   fontSize: 12,
+              // ),
               filled: true,
               fillColor: Colors.white,
               enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_6),
@@ -94,54 +127,43 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
               errorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
             ),
             name: fieldName,
-            // initialValue: index == 0
-            //     ? selectedDistrict
-            //     : index == 1
-            //         ? selectedBlock
-            //         : index == 2
-            //             ? selectedVillage
-            //             : index == 3
-            //                 ? selectedHabitation
-            //                 : selectedStreet,
+            initialValue: index == 0
+                ? selectedDistrict
+                : index == 1
+                    ? selectedBlock
+                    : index == 2
+                        ? selectedVillage
+                        : selectedTaxType,
             onTap: () async {
-              // if (index == 0) {
-              //   selectedDistrict = "";
-              //   selectedBlock = "";
-              //   selectedVillage = "";
-              //   selectedHabitation = "";
-              //   selectedStreet = "";
-              //   model.selectedBlockList.clear();
-              // } else if (index == 1) {
-              //   selectedBlock = "";
-              //   selectedVillage = "";
-              //   selectedHabitation = "";
-              //   selectedStreet = "";
-              // } else if (index == 2) {
-              //   selectedVillage = "";
-              //   selectedHabitation = "";
-              //   selectedStreet = "";
-              // } else if (index == 3) {
-              //   selectedHabitation = "";
-              //   selectedStreet = "";
-              // } else if (index == 4) {
-              //   selectedStreet = "";
-              // } else {
-              //   print("End of the Statement......");
-              // }
-              // setState(() {});
+              if (index == 0) {
+                selectedDistrict = "";
+                selectedBlock = "";
+                selectedVillage = "";
+                model.selectedBlockList.clear();
+                model.selectedVillageList.clear();
+              } else if (index == 1) {
+                selectedBlock = "";
+                selectedVillage = "";
+                model.selectedVillageList.clear();
+              } else if (index == 2) {
+                selectedVillage = "";
+              } else {
+                print("End of the Statement......");
+              }
+              setState(() {});
             },
-            iconSize: 28,
+            iconSize: 30,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: FormBuilderValidators.compose([
               FormBuilderValidators.required(errorText: errorText),
             ]),
             items: dropList
                 .map((item) => DropdownMenuItem(
-                      value: item["keyCode"],
+                      value: item[keyCode],
                       child: Text(
-                        preferencesService.selectedLanguage == "en"
-                            ? item["titleText"].toString()
-                            : item["titleText"].toString(),
+                        preferencesService.getUserInfo("lang") == "en"
+                            ? item[titleText].toString()
+                            : item[titleTextTamil].toString(),
                         style: const TextStyle(
                           fontSize: 12,
                         ),
@@ -149,32 +171,18 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                     ))
                 .toList(),
             onChanged: (value) async {
-              // if (index == 0) {
-              //   selectedDistrict = value.toString();
-              //   model.selectedBlockList.clear();
-              //   await model.loadUIBlock(value.toString());
-              // } else if (index == 1) {
-              //   selectedBlock = value.toString();
-              //   //  loadUIVillage(value.toString());
-              //   habitationItems.clear();
-              //   streetItems.clear();
-              //   houseList.clear();
-              // } else if (index == 2) {
-              //   selectedVillage = value.toString();
-              //   //  loadUIHabitaion(value.toString());
-              //   streetItems = [];
-              //   houseList = [];
-              // } else if (index == 3) {
-              //   selectedHabitation = value.toString();
-              //   // loadUIStreet(value.toString());
-              //   houseList = [];
-              // } else if (index == 4) {
-              //   selectedStreet = value.toString();
-              //   //  loadWorkList(value.toString());
-              // } else {
-              //   print("End of the Statement......");
-              // }
-              // setState(() {});
+              if (index == 0) {
+                selectedDistrict = value.toString();
+                await model.loadUIBlock(selectedDistrict);
+              } else if (index == 1) {
+                selectedBlock = value.toString();
+                await model.loadUIVillage(selectedDistrict, selectedBlock);
+              } else if (index == 2) {
+                selectedVillage = value.toString();
+              } else {
+                print("End of the Statement......");
+              }
+              setState(() {});
             },
           )
         ]);
@@ -204,14 +212,18 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                         addInputDropdownField(
                             0, "District Name", "district", "Required", model),
                         UIHelper.verticalSpaceSmall,
+                        if (model.selectedBlockList.length > 0)
+                          addInputDropdownField(
+                              1, "Block Name", "block", "Required", model),
+                        if (model.selectedBlockList.length > 0)
+                          UIHelper.verticalSpaceSmall,
+                        if (model.selectedVillageList.length > 0)
+                          addInputDropdownField(
+                              2, "Village Name", "village", "Required", model),
+                        if (model.selectedVillageList.length > 0)
+                          UIHelper.verticalSpaceSmall,
                         addInputDropdownField(
-                            1, "District Name", "district", "Required", model),
-                        UIHelper.verticalSpaceSmall,
-                        addInputDropdownField(
-                            2, "District Name", "district", "Required", model),
-                        UIHelper.verticalSpaceSmall,
-                        addInputDropdownField(
-                            3, "District Name", "district", "Required", model),
+                            3, "Tax Type", "taxtype", "Required", model),
                         UIHelper.verticalSpaceSmall,
                         addInputFormControl(
                             'assesment', 'Assesment No', "Required"),
@@ -273,9 +285,14 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
         body: SafeArea(
       top: true,
       child: ViewModelBuilder<StartUpViewModel>.reactive(
+          onModelReady: (model) async {
+            await model.getOpenServiceList("District");
+            await model.getOpenServiceList("Block");
+            await model.getOpenServiceList("Village");
+          },
           builder: (context, model, child) {
             return model.isBusy
-                ? CircularProgressIndicator()
+                ? Center(child: CircularProgressIndicator())
                 : Container(
                     color: Colors.white,
                     width: Screen.width(context),

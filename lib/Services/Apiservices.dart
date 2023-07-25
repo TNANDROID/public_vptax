@@ -44,7 +44,7 @@ class ApiServices {
   /*********Master API Service Call********/
   /**********************************************/
 
-  Future masterServiceFunction(dynamic jsonRequest) async {
+  Future<List> masterServiceFunction(dynamic jsonRequest) async {
     IOClient _ioClient = await ioclientCertificate();
 
     dynamic encrpted_request = {
@@ -57,7 +57,27 @@ class ApiServices {
     var response = await _ioClient.post(
         Uri.parse('$endPointURL/master_services/master_services_v_1_6.php'),
         body: json.encode(encrpted_request));
-    return response;
+
+    if (response.statusCode == 200) {
+      var data = response.body;
+      var jsonData = jsonDecode(data);
+      var enc_data = jsonData[key_enc_data];
+      var decrpt_data = utils.decryption(
+          enc_data, await preferencesService.getUserInfo(key_user_passKey));
+
+      var distData = jsonDecode(decrpt_data);
+
+      var status = distData[key_status];
+      var response_value = distData[key_response];
+      List<dynamic> res_jsonArray = [];
+      if (status == key_ok && response_value == key_ok) {
+        res_jsonArray = distData[key_json_data];
+        if (res_jsonArray.isNotEmpty) {
+          return res_jsonArray;
+        }
+      }
+    }
+    return [];
   }
 
   /**********************************************/
@@ -76,5 +96,32 @@ class ApiServices {
         Uri.parse('$endPointURL/village/SBM/SBM_services.php'),
         body: json.encode(encrpted_request));
     return response;
+  }
+
+  /**********************************************/
+  /*********Open Service API Call********/
+  /**********************************************/
+
+  Future<List> openServiceFunction(dynamic jsonRequest) async {
+    IOClient _ioClient = await ioclientCertificate();
+
+    var response = await _ioClient.post(
+        Uri.parse('$endPointURL/open_services/open_services.php'),
+        body: json.encode(jsonRequest));
+    if (response.statusCode == 200) {
+      var data = response.body;
+      var jsonData = jsonDecode(data);
+      var status = jsonData[key_status];
+
+      var response_value = jsonData[key_response];
+      List<dynamic> res_jsonArray = [];
+      if (status == key_ok && response_value == key_ok) {
+        res_jsonArray = jsonData[key_json_data];
+        if (res_jsonArray.isNotEmpty) {
+          return res_jsonArray;
+        }
+      }
+    }
+    return [];
   }
 }

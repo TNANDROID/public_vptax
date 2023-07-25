@@ -193,25 +193,27 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
   }
 
   Widget propertyTaxCollectionWidget() {
+    int dataWiseHeight = examplePropertyData.length * 40;
     return Column(
       children: [
         Container(
           padding: EdgeInsets.all(10),
           width: Screen.width(context),
-          decoration:
-              UIHelper.roundedBorderWithColor(15, 15, 0, 0, c.colorPrimaryDark),
+          decoration: UIHelper.GradientContainer(
+              15, 15, 0, 0, [c.colorPrimary, c.colorPrimaryDark]),
           child: UIHelper.titleTextStyle(
-              "Property Tax Collection", c.white, 18, true, true),
+              "Property Tax Collection", c.grey_8, 18, true, true),
         ),
         propertyTaxRowWidget("Si.\nNo", "Financial Year", "Amount", true),
         Container(
             width: Screen.width(context),
-            height: Screen.width(context) / 1.5,
+            height: dataWiseHeight + 5,
             child: ListView.builder(
               itemCount: examplePropertyData.length,
               itemBuilder: (context, rowIndex) {
                 int siNo = rowIndex + 1;
                 return Container(
+                    height: 40,
                     color:
                         rowIndex % 2 == 0 ? c.blueAccent : Colors.transparent,
                     child: propertyTaxRowWidget(
@@ -221,6 +223,32 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                         false));
               },
             )),
+      ],
+    );
+  }
+
+  Widget taxInvoiceWidget() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        UIHelper.titleTextStyle("Property Tax", c.black, 16, true, false),
+        UIHelper.verticalSpaceSmall,
+        taxInvoiceRowWidget("Demand Selected (₹).", "480.00"),
+        UIHelper.verticalSpaceTiny,
+        taxInvoiceRowWidget("Advance Available (₹).", "0.00"),
+        UIHelper.verticalSpaceTiny,
+        taxInvoiceRowWidget("Amount payable (₹).", "480.00"),
+      ],
+    );
+  }
+
+  Widget taxInvoiceRowWidget(String title, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        UIHelper.titleTextStyle(title, c.grey_10, 14, false, false),
+        UIHelper.titleTextStyle(value, c.grey_10, 16, true, false),
       ],
     );
   }
@@ -241,17 +269,28 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                     child: Column(
                       children: [
                         UIHelper.verticalSpaceMedium,
-                        Expanded(
-                            child: SingleChildScrollView(
+                        SingleChildScrollView(
                           child: Column(
                             children: [
                               headerCardUIWidget(),
                               UIHelper.verticalSpaceMedium,
                               propertyTaxCollectionWidget(),
                               UIHelper.verticalSpaceMedium,
+                              Container(
+                                  decoration:
+                                      UIHelper.roundedBorderWithColorWithShadow(
+                                          10, c.grey_3),
+                                  padding: EdgeInsets.all(10),
+                                  width: Screen.width(context),
+                                  child: taxInvoiceWidget()),
+                              UIHelper.verticalSpaceMedium,
+                              ElevatedButton(
+                                  onPressed: () {},
+                                  child: UIHelper.titleTextStyle(
+                                      "Pay Now", c.white, 16, true, true))
                             ],
                           ),
-                        )),
+                        ),
                       ],
                     ));
           },

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Services/Apiservices.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
@@ -14,7 +15,9 @@ class StartUpViewModel extends BaseViewModel {
 
   List<dynamic> districtList = [];
   List<dynamic> blockList = [];
+  List<dynamic> villageList = [];
   List<dynamic> selectedBlockList = [];
+  List<dynamic> selectedVillageList = [];
 
   // Get District List
   Future getDistrictList() async {
@@ -23,32 +26,7 @@ class StartUpViewModel extends BaseViewModel {
       key_scode: await preferencesService.getUserInfo(key_scode),
       key_service_id: service_key_district_list_all,
     };
-
-    var response = await apiServices.masterServiceFunction(request);
-    if (response.statusCode == 200) {
-      var data = response.body;
-      var jsonData = jsonDecode(data);
-      var enc_data = jsonData[key_enc_data];
-      var decrpt_data = utils.decryption(
-          enc_data, await preferencesService.getUserInfo(key_user_passKey));
-
-      var distData = jsonDecode(decrpt_data);
-
-      var status = distData[key_status];
-      var response_value = distData[key_response];
-      if (status == key_ok && response_value == key_ok) {
-        List<dynamic> res_jsonArray = distData[key_json_data];
-        if (res_jsonArray.isNotEmpty) {
-          res_jsonArray.sort((a, b) {
-            return a[key_dname]
-                .toString()
-                .toLowerCase()
-                .compareTo(b[key_dname].toLowerCase());
-          });
-          districtList = res_jsonArray.toList();
-        }
-      }
-    }
+    districtList = await apiServices.masterServiceFunction(request);
     setBusy(false);
   }
 
@@ -57,33 +35,7 @@ class StartUpViewModel extends BaseViewModel {
       key_scode: await preferencesService.getUserInfo(key_scode),
       key_service_id: service_key_block_list_all,
     };
-
-    var response = await apiServices.masterServiceFunction(request);
-    if (response.statusCode == 200) {
-      var data = response.body;
-      var jsonData = jsonDecode(data);
-      var enc_data = jsonData[key_enc_data];
-      var decrpt_data = utils.decryption(
-          enc_data, await preferencesService.getUserInfo(key_user_passKey));
-
-      var distData = jsonDecode(decrpt_data);
-
-      var status = distData[key_status];
-      var response_value = distData[key_response];
-
-      if (status == key_ok && response_value == key_ok) {
-        List<dynamic> res_jsonArray = distData[key_json_data];
-
-        if (res_jsonArray.isNotEmpty) {
-          res_jsonArray.sort((a, b) {
-            return a[key_bname]
-                .toLowerCase()
-                .compareTo(b[key_bname].toLowerCase());
-          });
-          blockList = res_jsonArray.toList();
-        }
-      }
-    }
+    blockList = await apiServices.masterServiceFunction(request);
   }
 
   Future<void> loadUIBlock(String value) async {
@@ -91,5 +43,38 @@ class StartUpViewModel extends BaseViewModel {
     selectedBlockList = blockList.where((e) {
       return e['dcode'].toString().toLowerCase().contains(value.toLowerCase());
     }).toList();
+  }
+
+  Future<void> loadUIVillage(String distcode, String blockcode) async {
+    selectedVillageList.clear();
+    selectedVillageList = villageList.where((e) {
+      return e['dcode']
+              .toString()
+              .toLowerCase()
+              .contains(distcode.toLowerCase()) &&
+          e['bcode'].toString().toLowerCase().contains(blockcode.toLowerCase());
+    }).toList();
+  }
+
+  // Get District List
+  Future getOpenServiceList(String type) async {
+    setBusy(true);
+    dynamic requestData = {};
+    if (type == "District") {
+      requestData = {key_service_id: "district_list_all"};
+    } else if (type == "Block") {
+      requestData = {key_service_id: "block_list_all"};
+    } else {
+      requestData = {key_service_id: "village_list_all"};
+    }
+    var response = await apiServices.openServiceFunction(requestData);
+    if (type == "District") {
+      districtList = response;
+    } else if (type == "Block") {
+      blockList = response;
+    } else {
+      villageList = response;
+    }
+    setBusy(false);
   }
 }
