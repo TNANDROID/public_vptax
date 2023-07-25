@@ -1,14 +1,26 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, file_names
 // Key
-String key_service_id = "service_id";
-String key_user_login_key = "user_login_key";
+
+// ************************** Basic Strings ************************** //
+
+String appName = "Public Tax";
+String signIn = "Sign In";
+String signUp = "Sign Up";
+String pay = "Quick Pay";
+String signupText = "Don't have an account ?";
+String selectLang = "Choose Language";
+
+// ************************** Key Strings ************************** //
+
 String key_user_name = "user_name";
 String key_user_pwd = "user_pwd";
+String key_service_id = "service_id";
+String key_langCode = "lang_code";
+String key_language = "language";
 String key_user_data = "user_data";
 String key_scode = "scode";
 String key_status = "STATUS";
 String key_fail = "FAIL";
-String key_app_code = "appcode";
 String key_response = "RESPONSE";
 String key_message = "MESSAGE";
 String key_json_data = "JSON_DATA";
@@ -29,88 +41,20 @@ String key_gender = "gender";
 String key_level = "level";
 String key_office_address = "office_address";
 String key_email = "email";
-String key_action_taken_id = "action_taken_id";
-String key_role_code = "role_code";
-String key_data_content = "data_content";
-String key_image_description = "image_description";
-String key_image = "image";
-String key_serial_no = "serial_no";
-String key_latitude = "latitude";
-String key_longitude = "longitude";
-String key_distance = "distance";
-String key_inspection_work_details = "inspection_work_details";
-String key_desig_name = "desig_name";
-String key_desig_code = "desig_code";
-String key_localbody_code = "localbody_code";
-String key_localbody_name = "localbody_name";
-String key_gender_code = "gender_code";
-String key_gender_name_en = "gender_name_en";
-String key_levels = "levels";
-String key_profile_image = "profile_image";
 String key_noRecord = "NO_RECORD";
 String key_ok = "OK";
 String key_cancel = "CANCEL";
 String key_key = "KEY";
-String key_appcode = "app_code";
+String key_data_content = "data_content";
 String key_enc_data = "enc_data";
-String key_COUNT = "COUNT";
-String key_status_id = "status_id";
-String key_status_name = "status";
-String key_mobile_otp = "mobile_otp";
-String key_otp = "otp";
-String key_new_password = "new_password";
-String key_confirm_password = "confirm_password";
-String key_designation = "designation";
-String key_from_date = "from_date";
-String key_to_date = "to_date";
-String key_description = "description";
-String key_habitation_code = "habitation_code";
-String key_habitation_code_street = "hab_code";
-String key_habitation_name = "habitation_name";
-String key_habitation_name_ta = "habitation_name_ta";
-String key_ward_code = "ward_code";
-String key_ward_name = "ward_name";
-String key_ward_name_ta = "ward_name_ta";
-String key_type = "type";
-String key_date = "date";
-String key_days = "days";
-String key_image_path = "image_path";
-String key_flag = "flag";
-String key_toilet_type_id = "toilet_type_id";
-String key_toilet_type_name = "toilet_type_name";
- String key_street_code="street_code";
- String key_street_name="street_name_e";
- String key_street_name_ta="street_name_t";
- String key_owner_name="owner_name";
- String key_owner_name_ta="ownername_ta";
- String key_father_husband_name="father_name";
- String key_father_husband_name_ta="fathername_ta";
- String key_door_number="door_no";
- String key_street_id="streetid";
- String key_toilet_place_id = "toilet_place_id";
- String key_toilet_place_name = "toilet_place_name";
- String key_trash_id = "trash_id";
- String key_trash_name = "trash_name";
- String key_user_passKey = "user_pass_key";
-// Service Key
-String service_key_login = "login";
-String service_key_version_check = "version_check";
+String key_user_passKey = "user_pass_key";
+
+// ************************** Service Key Strings ************************** //
+
 String service_key_district_list_all = "district_list_all";
 String service_key_block_list_all = "block_list_all";
-String service_key_block_list_district_wise_master = "block_list_district_wise";
-String service_key_village_list_district_block_wise = "village_list_district_block_wise";
-String service_key_habitation_list_district_block_village_wise = "habitation_list_district_block_village_wise";
-String service_key_street_list_district_village_hab_wise = "street_list_district_village_hab_wise";
-String service_key_get_house_deatils_for_sbm_survey = "get_house_deatils_for_sbm_survey";
-String service_key_save_house_deatils_for_sbm_survey = "save_house_deatils_for_sbm_survey";
-String service_key_toilet_type = "toilet_type";
-String service_key_toilet_place = "toilet_place";
-String service_key_trash = "trash";
-String service_key_appcode = "SBM";
 
+// ************************** Table Strings ************************** //
 
-
-//Table Name
 String table_District = "District";
 String table_Block = "Block";
-

@@ -1,22 +1,18 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
+// ignore_for_file: file_names, library_private_types_in_public_api
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:http/io_client.dart';
-import 'package:public_vptax/Activity/Auth/Home.dart';
-import 'package:public_vptax/Resources/Stringskey.dart' as s;
-import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
-import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:local_auth/local_auth.dart';
+import 'package:public_vptax/Layout/ui_helper.dart';
+import '../../Resources/StringsKey.dart' as s;
+import 'package:public_vptax/Resources/ColorsValue.dart' as c;
+import 'package:public_vptax/Resources/ImagePath.dart' as imagepath;
 import 'package:public_vptax/Utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../Layout/screen_size.dart';
 
 class Splash extends StatefulWidget {
+  const Splash({super.key});
+
   @override
   _SplashState createState() => _SplashState();
 }
@@ -25,224 +21,198 @@ class _SplashState extends State<Splash> {
   Utils utils = Utils();
   late SharedPreferences prefs;
   final LocalAuthentication auth = LocalAuthentication();
-  String msg = "You are not authorized.";
+
+  String selectedLanguage = s.selectLang;
+
+  var langItems = [
+    s.selectLang,
+    'English',
+    'தமிழ்',
+  ];
 
   @override
-  Future<void> initState() async {
+  void initState() {
     super.initState();
-    prefs = await SharedPreferences.getInstance();
-    prefs.setString("lang", "en");
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => Home(
-              isLogin: "login",
-            )));
-
-
   }
-
-  // Future<void> initialize() async {
-  //   prefs = await SharedPreferences.getInstance();
-  //   if (await utils.isOnline()) {
-  //     checkVersion(context);
-  //   } else {
-  //     if (prefs.getString(s.key_user_name) != null &&
-  //         prefs.getString(s.key_user_pwd) != null) {
-  //       checkBiometricSupport();
-  //     } else {
-  //       utils.gotoLoginPageFromSplash(context);
-  //     }
-  //   }
-  // }
-
-  // Future<void> checkBiometricSupport() async {
-  //   try {
-  //     bool hasbiometrics =
-  //         await auth.canCheckBiometrics; //check if there is authencations,
-
-  //     if (hasbiometrics) {
-  //       print("Mess>>" + hasbiometrics.toString());
-  //       List<BiometricType> availableBiometrics =
-  //           await auth.getAvailableBiometrics();
-  //       if (availableBiometrics.contains(BiometricType.face) ||
-  //           availableBiometrics.contains(BiometricType.fingerprint)) {
-  //         print("Messsss>>" + hasbiometrics.toString());
-  //         checkFaceFingerPrint();
-  //       } else {
-  //         msg = "You are not alowed to access biometrics.";
-  //         print("Mess2>>" + hasbiometrics.toString());
-  //         checkPinPatternPasscode();
-  //       }
-  //     } else {
-  //       print("Mess4>>" + hasbiometrics.toString());
-  //       msg = "You are not alowed to access biometrics.";
-  //       checkPinPatternPasscode();
-  //     }
-  //   } on PlatformException catch (e) {
-  //     print("Mess6>>" + "hasbiometrics.toString()");
-  //     msg = e.toString();
-  //     checkPinPatternPasscode();
-  //   }
-  //   print("Mess>>" + msg);
-  // }
-
-  // Future<void> checkFaceFingerPrint() async {
-  //   try {
-  //     bool pass = await auth.authenticate(
-  //         localizedReason: 'Authenticate with fingerprint/face',
-  //         biometricOnly: true);
-  //     print("Mess1>>" + pass.toString());
-
-  //     if (pass) {
-  //       msg = "You are Authenicated.";
-  //       setState(() {});
-  //       utils.gotoHomePage(context, "Login");
-  //     } else {
-  //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //         content: Text(
-  //             "Authentication failed. Please use user name and password to login. "),
-  //       ));
-  //       utils.gotoLoginPageFromSplash(context);
-  //     }
-  //   } on PlatformException catch (e) {
-  //     print("Messpin>>" + e.toString());
-  //     msg = "Error while opening fingerprint/face scanner";
-  //     checkPinPatternPasscode();
-  //   }
-  // }
-
-  // Future<void> checkPinPatternPasscode() async {
-  //   try {
-  //     bool pass = await auth.authenticate(
-  //         localizedReason: 'Authenticate with pattern/pin/passcode',
-  //         biometricOnly: false);
-  //     if (pass) {
-  //       msg = "You are Authenticated.";
-  //       setState(() {});
-  //       utils.gotoHomePage(context, "Splash");
-  //     }
-  //   } on PlatformException catch (e) {
-  //     print("Mess3>>" + e.toString());
-  //     msg = "Error while opening pattern/pin/passcode";
-  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //       content: Text(
-  //           "Authentication failed. Please use user name and password to login. "),
-  //     ));
-  //     utils.gotoLoginPageFromSplash(context);
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: InkWell(
-        child: Container(
-          color: c.colorAccentverylight,
-          child: Padding(
-              padding: const EdgeInsets.only(top: 80),
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                      child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                        child: Align(
-                          alignment: AlignmentDirectional.topCenter,
-                          child: Image.asset(
-                            imagePath.tamilnadu_logo,
-                            height: 100,
+      body: Container(
+        width: Screen.width(context),
+        height: Screen.height(context),
+        margin: const EdgeInsets.all(5),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            //  ****************** Choose Language Conatiner with fixed Height ****************** //
+
+            Container(
+              width: Screen.width(context),
+              height: Screen.height(context) / 4,
+              padding: const EdgeInsets.all(15),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton(
+                    elevation: 0,
+                    isExpanded: false,
+                    value: selectedLanguage,
+                    icon: const Padding(
+                        padding: EdgeInsets.only(left: 15),
+                        child: Icon(
+                          Icons.arrow_downward_rounded,
+                          size: 15,
+                        )),
+                    style: TextStyle(
+                      color: c.black,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    items: langItems.map((String items) {
+                      return DropdownMenuItem(
+                        value: items,
+                        child: Text(items),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedLanguage = newValue!;
+                      });
+                    },
+                  ),
+                ),
+              ),
+            ),
+
+            //  ****************** App Name  ****************** //
+
+            Text(
+              s.appName,
+              style: TextStyle(
+                fontSize: 32.0,
+                fontWeight: FontWeight.bold,
+                color: c.grey_10,
+                fontStyle: FontStyle.normal,
+                decorationColor: Colors.red,
+                decorationStyle: TextDecorationStyle.wavy,
+              ),
+            ),
+            UIHelper.verticalSpaceMedium,
+
+            //  ****************** Qucik Action Buttons  ****************** //
+
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InkWell(
+                      onTap: () => {print("Sign in Tapped ")},
+                      child: Container(
+                        width: Screen.width(context) / 2.5,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: c.splashBtn,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Image.asset(
+                                imagepath.login,
+                                width: 30,
+                                height: 30,
+                              ),
+                              Text(
+                                s.signIn,
+                                style: TextStyle(
+                                  color: c.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  decorationStyle: TextDecorationStyle.wavy,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Align(
-                          alignment: AlignmentDirectional.topCenter,
-                          child: Text(
-                            "appName",
-                            style: TextStyle(
-                                color: c.grey_9,
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold),
+                    ),
+                    UIHelper.horizontalSpaceMedium,
+                    InkWell(
+                      onTap: () => {print("Quick Pay Tapped ")},
+                      child: Container(
+                        width: Screen.width(context) / 2.5,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: c.splashBtn,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Image.asset(
+                                imagepath.pay,
+                                width: 30,
+                                height: 30,
+                              ),
+                              Text(
+                                s.pay,
+                                style: TextStyle(
+                                  color: c.white,
+                                  fontWeight: FontWeight.bold,
+                                  decorationStyle: TextDecorationStyle.wavy,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    ],
-                  )),
-                  Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.white,
-                          ),
-                          color: Colors.white,
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(180),
-                              topRight: Radius.circular(180))),
-                      alignment: AlignmentDirectional.bottomEnd,
-                      height: 200,
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                        child: Align(
-                          alignment: AlignmentDirectional.bottomCenter,
-                          child: Image.asset(
-                            imagePath.logo,
-                          ),
+                    ),
+                  ],
+                ),
+                UIHelper.verticalSpaceMedium,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      s.signupText,
+                      style: TextStyle(
+                        color: c.text_color,
+                        fontSize: 16,
+                      ),
+                    ),
+                    UIHelper.horizontalSpaceSmall,
+                    InkWell(
+                      onTap: () => {print("Sign in Tapped ")},
+                      child: Text(
+                        s.signIn,
+                        style: TextStyle(
+                          color: c.sky_blue,
+                          fontSize: 16,
                         ),
-                      ))
-                ],
-              )),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            //  ****************** Image Container  ****************** //
+
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Image.asset(
+                imagepath.splash, // Replace with your image path
+                fit: BoxFit.cover,
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
-
-  // Future<dynamic> checkVersion(BuildContext context) async {
-  //   var request = {
-  //     s.key_service_id: s.service_key_version_check,
-  //     s.key_app_code: s.service_key_appcode,
-  //   };
-  //   HttpClient _client = HttpClient(context: await utils.globalContext);
-  //   _client.badCertificateCallback =
-  //       (X509Certificate cert, String host, int port) => false;
-  //   IOClient _ioClient = IOClient(_client);
-  //   var response = await _ioClient.post(url.login, body: request);
-  //   // http.Response response = await http.post(url.login, body: request);
-  //   print("checkVersion_url>>" + url.login.toString());
-  //   print("checkVersion_request>>" + request.toString());
-  //   if (response.statusCode == 200) {
-  //     // If the server did return a 201 CREATED response,
-  //     // then parse the JSON.
-  //     String data = response.body;
-  //     print("checkVersion_response>>" + data);
-  //     var decodedData = json.decode(data);
-  //     // var decodedData= await json.decode(json.encode(response.body));
-  //     String version = /*decodedData['version']*/ "1.8.0";
-  //     String app_version = await utils.getVersion();
-  //     if (decodedData[s.key_app_code] == "WI" && (version != app_version)) {
-  //       prefs.setString(s.download_apk, decodedData['apk_path']);
-  //       /* Navigator.push(
-  //           context,
-  //           MaterialPageRoute(
-  //               builder: (context) => AppUpdate(
-  //                     type: "W",
-  //                     url: s.download_apk,
-  //                   )));*/
-  //       utils.customAlertWidet(context, "Warning", s.download_apk);
-  //     } else {
-  //       if (prefs.getString(s.key_user_name) != null &&
-  //           prefs.getString(s.key_user_pwd) != null) {
-  //         checkBiometricSupport();
-  //       } else {
-  //         utils.gotoLoginPageFromSplash(context);
-  //       }
-  //     }
-  //   } else {
-  //     // If the server did not return a 201 CREATED response,
-  //     // then throw an exception.
-  //     throw Exception('Failed');
-  //   }
-  // }
 }

@@ -2,9 +2,9 @@
 
 import 'dart:ui';
 
-Color colorPrimary = Color(0xFF3BC3FF);
-Color colorPrimaryDark = Color(0xFF00a5ee);
-Color colorAccent = Color(0xFF67D0FE);
+Color colorPrimary = Color(0xFFff9d58);
+Color colorPrimaryDark = Color(0xFFff8465);
+Color colorAccent = Color(0xFFff935d);
 Color colorAccentlight = Color(0xFFC3E9FA);
 Color colorAccentverylight = Color(0xFFEFFAFE);
 Color colorAccentveryverylight = Color(0xFF5907B3A5);
@@ -113,3 +113,6 @@ Color satisfied_color = Color(0xFF00FA9A);
 Color yellow_new = Color(0xFFFFC947);
 Color green_new = Color(0xFF12C06A);
 Color red_new = Color(0xFFDE0239);
+
+Color splashBtn = Color(0xFF00b2ce);
+Color blueAccent = Color(0xFFd6f9ff);
