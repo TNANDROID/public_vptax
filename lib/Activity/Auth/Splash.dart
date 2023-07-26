@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:public_vptax/Activity/Auth/Login.dart';
 import 'package:public_vptax/Activity/Tax_Collection/taxCollection_view.dart';
+import 'package:public_vptax/Layout/customgradientbutton.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import '../../Resources/StringsKey.dart' as s;
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
@@ -45,9 +46,9 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
         AnimationController(vsync: this, duration: const Duration(seconds: 2));
 
     _rightToLeftAnimation = Tween<Offset>(
-            begin: const Offset(1.0, 0.0), end: const Offset(0.0, 0.0))
+        begin: const Offset(1.0, 0.0), end: const Offset(0.0, 0.0))
         .animate(CurvedAnimation(
-            parent: _rightToLeftAnimController, curve: Curves.easeInOut));
+        parent: _rightToLeftAnimController, curve: Curves.easeInOut));
 
     // Top-to-bottom slide animation
     _topAnimationController = AnimationController(
@@ -117,7 +118,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
 
               Container(
                 width: Screen.width(context),
-                height: Screen.height(context) / 4,
+                height: Screen.height(context) / 6,
                 padding: const EdgeInsets.all(15),
                 child: Align(
                   alignment: Alignment.topRight,
@@ -127,7 +128,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
                       isExpanded: false,
                       value: selectedLanguage,
                       icon: const Padding(
-                          padding: EdgeInsets.only(left: 15),
+                          padding: EdgeInsets.all(15),
                           child: Icon(
                             Icons.arrow_downward_rounded,
                             size: 15,
@@ -139,9 +140,9 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
                       ),
                       items: langItems
                           .map((item) => DropdownMenuItem<String>(
-                                value: item[s.key_langCode],
-                                child: Text(item[s.key_language]),
-                              ))
+                        value: item[s.key_langCode],
+                        child: Text(item[s.key_language]),
+                      ))
                           .toList(),
                       onChanged: (newValue) {
                         setState(() {
@@ -158,16 +159,24 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
 
               SlideTransition(
                 position: _topAnimation,
-                child: Text(
-                  'appName'.tr().toString(),
-                  style: TextStyle(
-                    fontSize: 32.0,
-                    fontWeight: FontWeight.bold,
-                    color: c.text_color,
-                    fontStyle: FontStyle.normal,
-                    decorationStyle: TextDecorationStyle.wavy,
+                child: Column(children: [
+                  Image.asset(
+                    imagepath.logo,
+                    fit: BoxFit.cover,
+                    height: 100,
+                    width: 100,
                   ),
-                ),
+                  Text(
+                    'appName'.tr().toString(),
+                    style: TextStyle(
+                      fontSize: 32.0,
+                      fontWeight: FontWeight.bold,
+                      color: c.text_color,
+                      fontStyle: FontStyle.normal,
+                      decorationStyle: TextDecorationStyle.wavy,
+                    ),
+                  ),
+                ]),
               ),
               UIHelper.verticalSpaceMedium,
 
@@ -200,10 +209,12 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
                         ),
                         UIHelper.horizontalSpaceSmall,
                         InkWell(
-                          onTap: () => { Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                          builder: (context) => Home(isLogin: "islogin")))},
+                          onTap: () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Home(isLogin: "islogin"))),
+                            print("Sign in Tapped ")},
                           child: Text(
                             'signUP'.tr().toString(),
                             style: TextStyle(
@@ -218,7 +229,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
                 ),
               ),
 
-              //  ****************** Image Container  ****************** //
+              //  ****************** Image Container ****************** //
 
               Align(
                 alignment: Alignment.bottomCenter,
@@ -237,44 +248,43 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
   //  ****************** Qucik Action Buttons Common Wdget  ****************** //
 
   Widget actionButton(int flag, String btnText, String imgPath) {
-    return ElevatedButton(
-      onPressed: () {
-        if (flag == 1) {
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => Login(),
-          ));
-        } else if (flag == 2) {
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => TaxCollectionView(),
-          ));
-        }
-      },
-      style: ElevatedButton.styleFrom(
-        fixedSize: Size(Screen.width(context) / 2.5, 40),
-        backgroundColor: c.splashBtn,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+    return CustomGradientButton(
+      topleft: 20,
+      topright: 20,
+      btmleft: 20,
+      btmright: 20,
+      width: Screen.width(context) / 2.5,
+      height: 45,
+      child: TextButton.icon(
+        onPressed: () {
+          if (flag == 1) {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => Login(),
+            ));
+          } else if (flag == 2) {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => TaxCollectionView(),
+            ));
+          }
+        },
+        style: ButtonStyle(
+          side: MaterialStateProperty.all(BorderSide.none),
         ),
-      ),
-      child: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Image.asset(
-              imgPath,
-              width: 25,
-              height: 25,
+        icon: Image.asset(
+          imgPath,
+          width: 30,
+          height: 30,
+        ),
+        label: Center(
+          child: Text(
+            btnText,
+            style: TextStyle(
+              color: c.white,
+              fontWeight: FontWeight.bold,
+              decorationStyle: TextDecorationStyle.wavy,
+              fontSize: btnText.length > 10 ? 10 : 12,
             ),
-            Text(
-              btnText,
-              style: TextStyle(
-                color: c.white,
-                fontWeight: FontWeight.bold,
-                decorationStyle: TextDecorationStyle.wavy,
-                fontSize: btnText.length > 10 ? 11 : 12,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
