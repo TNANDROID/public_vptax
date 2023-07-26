@@ -5,8 +5,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
+import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Utils/utils.dart';
@@ -21,6 +24,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   Utils utils = Utils();
   late SharedPreferences prefs;
+  List taxTypeList=[];
+  int _index = 0;
 
 
   @override
@@ -31,6 +36,40 @@ class _HomeState extends State<Home> {
 
   Future<void> initialize() async {
     prefs = await SharedPreferences.getInstance();
+
+    List list=[{'taxtypeid':'1','taxtypedesc_en':'House Tax','taxtypedesc_ta':'வீட்டு வரி'},
+      {'taxtypeid':'2','taxtypedesc_en':'Water Tax','taxtypedesc_ta':'குடிநீர் கட்டணங்கள்'},
+      {'taxtypeid':'3','taxtypedesc_en':'Professional Tax','taxtypedesc_ta':'தொழில் வரி'},
+      {'taxtypeid':'4','taxtypedesc_en':'Non Tax','taxtypedesc_ta':'இதர வரவினங்கள்'},
+      {'taxtypeid':'5','taxtypedesc_en':'Trade Licence','taxtypedesc_ta':'வர்த்தக உரிமம்'},
+    ];
+    taxTypeList.clear();
+     for (var item in list) {
+      switch (item['taxtypeid']) {
+        case "1":
+          item['img_path'] = imagePath.property;
+          break;
+        case "2":
+          item['img_path'] = imagePath.water;
+          break;
+        case "3":
+          item['img_path'] = imagePath.professional;
+          break;
+        case "4":
+          item['img_path'] = imagePath.nontax;
+          break;
+        case "5":
+          item['img_path'] = imagePath.trade;
+          break;
+        default:
+          item['img_path'] = imagePath.property;
+      }
+    }
+    taxTypeList.addAll(list);
+     print("tax>>"+taxTypeList.toString());
+
+
+
     setState(() {
       prefs.getString("lang")!= null &&  prefs.getString("lang")!="" &&  prefs.getString("lang")=="en"?
       context.setLocale(Locale('en', 'US')):
@@ -44,33 +83,13 @@ class _HomeState extends State<Home> {
     return WillPopScope(
         onWillPop: showExitPopup,
         child: Scaffold(
+          backgroundColor: c.white,
           appBar: PreferredSize(
             preferredSize: AppBar().preferredSize,
             child: Container(
               padding: EdgeInsets.only(top: 30,bottom: 10,right: 20),
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30),
-                    topLeft: Radius.circular(0),
-                    topRight: Radius.circular(0)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey,
-                    offset: Offset(0.0, 1.0), //(x,y)
-                    blurRadius: 3.0,
-                  ),
-                ],
-                gradient: LinearGradient(
-                    colors: [
-                      const Color(0xFF3366FF),
-                      const Color(0xFF00CCFF),
-                    ],
-                    begin: const FractionalOffset(0.0, 0.0),
-                    end: const FractionalOffset(1.0, 0.0),
-                    stops: [0.0, 1.0],
-                    tileMode: TileMode.clamp),
-              ),
+              decoration: UIHelper.GradientContainer(
+                  0, 0, 30, 30, [c.colorAccentlight, c.colorPrimaryDark]),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -81,7 +100,7 @@ class _HomeState extends State<Home> {
                       color: c.white,
                       onSelected: handleClick,
                       itemBuilder: (BuildContext context) {
-                        return {'Tamil', 'English'}.map((String choice) {
+                        return {'தமிழ்', 'English'}.map((String choice) {
                           return PopupMenuItem<String>(
                             value: choice,
                             child: Text(choice),
@@ -119,7 +138,10 @@ class _HomeState extends State<Home> {
             ),
           ),
           body: SingleChildScrollView(
-            child: Column(children: [
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
             Row(
                 children: [
             Container(
@@ -132,40 +154,70 @@ class _HomeState extends State<Home> {
           Expanded(
             child: Container(
               padding: EdgeInsets.only(top: 10,bottom: 10),
-              decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      bottomLeft: Radius.circular(20)),
-                gradient: LinearGradient(
-                    colors: [
-                      const Color(0xFF3366FF),
-                      const Color(0xFF00CCFF),
-                    ],
-                    begin: const FractionalOffset(0.0, 0.0),
-                    end: const FractionalOffset(1.0, 0.0),
-                    stops: [0.0, 1.0],
-                    tileMode: TileMode.clamp),
-              ),
+              decoration: UIHelper.GradientContainer(
+                  20, 0, 20, 0, [c.colorAccentlight,c.colorPrimaryDark]),
               child:
             Text(
             textAlign: TextAlign.center,
             'appName'.tr().toString(),
             style: TextStyle(
                 color: c.white,
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.bold),
           ),
           ),
           ),
           ]),
-              Container(child: Text(
-                textAlign: TextAlign.left,
-                'lang'.tr().toString(),
+              Container(
+                padding: EdgeInsets.only(left: 10,right: 10),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                'tax_types'.tr().toString(),
                 style: TextStyle(
                     color: c.grey_8,
-                    fontSize: 18,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold),
-              ),)
+              ),),
+                Container(
+                  height: 150,
+                    margin: EdgeInsets.symmetric(vertical: 0,horizontal: 10),
+                  child: PageView.builder(
+                  itemCount: taxTypeList == null ? 0 : taxTypeList.length,
+                  controller: PageController(viewportFraction: 0.5),
+                  padEnds: _index ==0?false:true,
+                  onPageChanged: (int index) => setState(() => _index = index),
+                  itemBuilder: (_, i) {
+                    return   Transform.scale(
+                      scale: i == _index ? 1 : 0.9,
+                      child: Container(
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.all(10),
+                        decoration: i == _index ?UIHelper.roundedBorderWithColorWithShadow(10,c.colorAccentverylight,c.colorPrimaryDark):UIHelper.roundedBorderWithColorWithShadow(10,c.white,c.white),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                          Image.asset(
+                            taxTypeList[i][key_img_path],
+                            height: 50,
+                            width:50,
+                          ),
+                            Container(
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.all(10),
+                              child: Text(
+                            prefs.getString('lang')=='en'?taxTypeList[i][key_taxtypedesc_en]:taxTypeList[i][key_taxtypedesc_ta],
+                            style: TextStyle(fontSize: 14,height: 1.5),
+                            textAlign: TextAlign.center,
+                          ),
+                          ),
+                        ],),
+                      ),
+                    );
+
+                  },
+                  )),
+
             ],),
           ),
 
@@ -204,7 +256,7 @@ class _HomeState extends State<Home> {
   }
   void handleClick(String value) {
     switch (value) {
-      case 'Tamil':
+      case 'தமிழ்':
         setState(() {
           prefs.setString("lang", "ta");
           context.setLocale(Locale('ta', 'IN'));

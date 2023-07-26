@@ -41,6 +41,10 @@ String key_key = "KEY";
 String key_data_content = "data_content";
 String key_enc_data = "enc_data";
 String key_user_passKey = "user_pass_key";
+String key_taxtypeid = "taxtypeid";
+String key_taxtypedesc_en = "taxtypedesc_en";
+String key_taxtypedesc_ta = "taxtypedesc_ta";
+String key_img_path = "img_path";
 
 // ************************** Service Key Strings ************************** //
 

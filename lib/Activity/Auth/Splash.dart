@@ -13,6 +13,7 @@ import 'package:public_vptax/Utils/utils.dart';
 import '../../Layout/screen_size.dart';
 import '../../Services/Preferenceservices.dart';
 import '../../Services/locator.dart';
+import 'Home.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -199,7 +200,10 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
                         ),
                         UIHelper.horizontalSpaceSmall,
                         InkWell(
-                          onTap: () => {print("Sign in Tapped ")},
+                          onTap: () => { Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                          builder: (context) => Home(isLogin: "islogin")))},
                           child: Text(
                             'signUP'.tr().toString(),
                             style: TextStyle(

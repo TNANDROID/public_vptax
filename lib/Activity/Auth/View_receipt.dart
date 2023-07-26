@@ -110,7 +110,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                       padding: EdgeInsets.all(20),
                       decoration:
                       UIHelper.roundedBorderWithColorWithShadow(
-                          15,c.white,borderColor: Colors.transparent,borderWidth: 5),
+                          15,c.white,c.white,borderColor: Colors.transparent,borderWidth: 5),
                       child:  Column(
                         children: [
                           Visibility(

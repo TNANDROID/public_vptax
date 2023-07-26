@@ -57,12 +57,20 @@ class UIHelper {
 
 //Container Style Provider with shadow
   static BoxDecoration roundedBorderWithColorWithShadow(
-      double radius, Color backgroundColor,
+      double radius, Color backgroundColor,Color backgroundColor2,
       {Color borderColor = Colors.transparent, double borderWidth = 1}) {
     return BoxDecoration(
         borderRadius: BorderRadius.circular(radius),
         border: Border.all(width: borderWidth, color: borderColor),
-        color: backgroundColor,
+      gradient: LinearGradient(
+          colors: [
+            backgroundColor,
+            backgroundColor2,
+          ],
+          begin: const FractionalOffset(0.0, 0.0),
+          end: const FractionalOffset(1.0, 0.0),
+          stops: [0.0, 1.0],
+          tileMode: TileMode.clamp),
         boxShadow: [
           BoxShadow(
             color: Colors.black26,
@@ -81,8 +89,8 @@ class UIHelper {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           stops: [
-            0.2,
-            0.8,
+            0.4,
+            0.6,
           ],
           colors: c1),
       borderRadius: BorderRadius.only(
@@ -94,13 +102,13 @@ class UIHelper {
   }
 
 //Neumorphic Container Style Provider
-  static BoxDecoration NeumorphicContainer(double radius,
+  static BoxDecoration NeumorphicContainer(double radius,Color clr,
       {Color borderColor = Colors.transparent}) {
     return BoxDecoration(
-        color: Colors.grey[300],
+        color: clr,
         borderRadius: BorderRadius.circular(radius),
         boxShadow: [
-          const BoxShadow(
+           BoxShadow(
             //  color: Color(0xFFBEBEBE),
             color: Colors.black38,
             offset: Offset(8, 8),
