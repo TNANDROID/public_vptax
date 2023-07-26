@@ -116,3 +116,4 @@ Color red_new = Color(0xFFDE0239);
 
 Color splashBtn = Color(0xFF00b2ce);
 Color blueAccent = Color(0xFFd6f9ff);
+Color inputGrey = Color(0xFFeeecec);
