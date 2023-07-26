@@ -1,16 +1,11 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:public_vptax/Layout/customclip.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Model/startup_model.dart';
+import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
-import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:stacked/stacked.dart';
-import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 
 class TaxCollectionDetailsView extends StatefulWidget {
   TaxCollectionDetailsView({Key? key}) : super(key: key);
@@ -72,8 +67,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
 
   Widget headerCardUIWidget() {
     return Container(
-        decoration:
-            UIHelper.roundedBorderWithColorWithShadow(20, Colors.blueGrey),
+        decoration: UIHelper.GradientContainer(
+            20, 20, 20, 20, [c.colorPrimaryDark, c.colorPrimary]),
         padding: EdgeInsets.all(12),
         child: Stack(
           children: [
@@ -91,11 +86,11 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                       width: 70,
                       height: 70,
                       decoration: UIHelper.GradientContainer(
-                          0, 0, 0, 0, [c.colorPrimary, c.colorPrimaryDark]),
-                      //  color: c.white,
+                          0, 0, 0, 0, [c.colorAccent4, c.followers]),
+                      // color: c.white,
                       child: Center(
                         child: UIHelper.titleTextStyle(
-                            "1457", c.black, 20, true, true),
+                            "1457", c.white, 20, true, true),
                       ),
                     ))),
           ],
@@ -209,6 +204,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
             width: Screen.width(context),
             height: dataWiseHeight + 5,
             child: ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
               itemCount: examplePropertyData.length,
               itemBuilder: (context, rowIndex) {
                 int siNo = rowIndex + 1;
@@ -279,7 +275,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                               Container(
                                   decoration:
                                       UIHelper.roundedBorderWithColorWithShadow(
-                                          10, c.grey_3),
+                                          10, c.grey_3, c.grey_3),
                                   padding: EdgeInsets.all(10),
                                   width: Screen.width(context),
                                   child: taxInvoiceWidget()),

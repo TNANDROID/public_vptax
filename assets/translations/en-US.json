@@ -1,5 +1,5 @@
 {
-  "appName": "Public VpTax",
+  "appName": "e-Ooragam",
   "signIN": "Sign In",
   "signUP": "Sign Up",
   "signupText": "Don't have an account ?",
@@ -20,5 +20,19 @@
   "tamil": "தமிழ்",
   "english": "English",
   "tax_types": "Tax Types",
-  "Submit": "SUBMIT"
+  "Submit": "SUBMIT",
+  "name": "Name",
+  "emailAddress": "Email Id",
+  "districtName": "District Name",
+  "blockName": "Block Name",
+  "villageName":"Village Panchayat Name",
+  "taxType": "Tax Type",
+  "assesmentNumber": "Assessment Number",
+  "waterConnectionNo" :"Water Connection Number",
+  "financialYear" : "Financial Year",
+  "lesseeNumber":"Lessee Number",
+  "tradeNumber": "Trade Number",
+  "computerRegisterNumber": "E - tax Number",
+  "tryAnotherWay": "Try Another Way",
+  "userName": "User Name"
 }

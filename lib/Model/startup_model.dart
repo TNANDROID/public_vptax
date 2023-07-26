@@ -18,6 +18,13 @@ class StartUpViewModel extends BaseViewModel {
   List<dynamic> villageList = [];
   List<dynamic> selectedBlockList = [];
   List<dynamic> selectedVillageList = [];
+  List<dynamic> taxType = [
+    {"taxCode": "01", "taxname": "Property Tax"},
+    {"taxCode": "02", "taxname": "Water Charges"},
+    {"taxCode": "03", "taxname": "Professional Tax"},
+    {"taxCode": "04", "taxname": "Non Tax"},
+    {"taxCode": "05", "taxname": "TradeLicence"},
+  ];
 
   // Get District List
   Future getDistrictList() async {

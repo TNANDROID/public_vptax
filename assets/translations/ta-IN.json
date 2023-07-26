@@ -1,5 +1,5 @@
 {
-  "appName": "கிராம வரி",
+  "appName": "e-ஊரகம்",
   "signIN": "உள்நுழை",
   "signUP": "பதிவுசெய்",
   "signupText": "கணக்கு இல்லையா ?",
@@ -20,5 +20,19 @@
   "tamil": "தமிழ்",
   "english": "English",
   "tax_types": "வரி வகைகள்",
-  "submit": "சமர்ப்பிக்கவும்"
+  "submit": "சமர்ப்பிக்கவும்",
+  "name": "பெயர் (ஆங்கிலத்தில்)",
+  "emailAddress": "மின்னஞ்சல் முகவரி",
+  "districtName": "மாவட்டத்தின் பெயர்",
+  "blockName": " ஊராட்சி ஒன்றியம்",
+  "villageName":"ஊராட்சியின் பெயர்",
+  "taxType": "வரி வகை",
+  "assesmentNumber": "வரிவிதிப்பு எண்",
+  "waterConnectionNo" :"குடிநீர் இணைப்பு எண்",
+  "financialYear" : "நிதி ஆண்டு",
+  "lesseeNumber":"குத்தகைதாரர் எண்",
+  "tradeNumber": "வர்த்தக எண்",
+  "computerRegisterNumber": "கணினி வரிவிதிப்பு எண்",
+  "tryAnotherWay": "வேறு வழியில் முயற்சிக்கவும்",
+  "userName": "பயனர் பெயர்"
 }
