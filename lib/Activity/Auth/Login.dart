@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:public_vptax/Layout/customgradientbutton.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
@@ -54,55 +55,82 @@ class LoginState extends State<Login> {
                       height: Screen.width(context) - 50,
                       decoration: UIHelper.roundedBorderWithColorWithShadow(
                           30.0, c.white),
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Container(
-                              margin: EdgeInsets.all(15),
-                              width: Screen.width(context) - 100,
-                              height: 50,
-                              decoration: UIHelper.GradientContainer(10, 10, 10,
-                                  10, [c.colorAccentlight, c.colorPrimaryDark]),
-                              child: Center(
-                                child: Text(
-                                  'signIN'.tr().toString(),
-                                  style: TextStyle(
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: c.white,
-                                    fontStyle: FontStyle.normal,
-                                    decorationStyle: TextDecorationStyle.wavy,
-                                  ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          inputContainer('userName'.tr().toString(),
+                              TextInputType.text, user_name),
+                          CustomGradientButton(
+                            onPressed: () {
+                              print("Btn clk");
+                            },
+                            width: Screen.width(context) - 100,
+                            height: 50,
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: Text(
+                                'signIN'.tr().toString(),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
-                            Text(
-                              'signupText'.tr().toString(),
+                          ),
+                          Text(
+                            'signupText'.tr().toString(),
+                            style: TextStyle(
+                              color: c.text_color,
+                              fontSize: 16,
+                            ),
+                          ),
+                          UIHelper.verticalSpaceSmall,
+                          InkWell(
+                            onTap: () => {print("Sign in Tapped ")},
+                            child: Text(
+                              'signUP'.tr().toString(),
                               style: TextStyle(
-                                color: c.text_color,
+                                color: c.sky_blue,
                                 fontSize: 16,
                               ),
                             ),
-                            UIHelper.verticalSpaceSmall,
-                            InkWell(
-                              onTap: () => {print("Sign in Tapped ")},
-                              child: Text(
-                                'signUP'.tr().toString(),
-                                style: TextStyle(
-                                  color: c.sky_blue,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                          UIHelper.verticalSpaceSmall,
+                        ],
                       )),
                 ),
               ],
             ),
           )),
+    );
+  }
+
+  Widget inputContainer(String textHint, TextInputType textInputType,
+      TextEditingController Controllers) {
+    return Container(
+      margin: EdgeInsets.all(15),
+      width: Screen.width(context) - 100,
+      height: 50,
+      child: TextField(
+        textAlign: TextAlign.center,
+        controller: Controllers,
+        keyboardType: textInputType,
+        decoration: InputDecoration(
+          hintText: textHint,
+          hintStyle: TextStyle(fontSize: 16),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide(
+              width: 0,
+              style: BorderStyle.none,
+            ),
+          ),
+          filled: true,
+          contentPadding: EdgeInsets.all(16),
+          fillColor: c.inputGrey,
+        ),
+      ),
     );
   }
 }
