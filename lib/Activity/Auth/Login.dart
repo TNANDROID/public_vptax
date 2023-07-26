@@ -3,6 +3,9 @@
 import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:otp_text_field/otp_text_field.dart';
+import 'package:otp_text_field/style.dart';
 import 'package:public_vptax/Layout/customgradientbutton.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
@@ -22,8 +25,8 @@ class LoginState extends State<Login> {
   Utils utils = Utils();
   ApiServices apiServices = ApiServices();
   PreferenceService preferencesService = locator<PreferenceService>();
-  TextEditingController user_name = TextEditingController();
-  TextEditingController user_password = TextEditingController();
+  TextEditingController mobileController = TextEditingController();
+  OtpFieldController OTPcontroller = OtpFieldController();
 
   @override
   void initState() {
@@ -35,102 +38,129 @@ class LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
-      child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          body: SingleChildScrollView(
-            child: Stack(
-              children: [
-                Container(
-                    width: Screen.width(context),
-                    height: Screen.height(context),
-                    color: c.dashboard_line_light),
-                Positioned(
-                  bottom: Screen.height(context) * 0.08,
-                  left: Screen.width(context) * 0.05,
-                  right: Screen.width(context) * 0.05,
-                  child: Container(
-                      width: Screen.width(context) - 50,
-                      height: Screen.width(context) - 50,
-                      decoration: UIHelper.roundedBorderWithColorWithShadow(
-                          30.0, c.white),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          inputContainer('userName'.tr().toString(),
-                              TextInputType.text, user_name),
-                          CustomGradientButton(
-                            onPressed: () {
-                              print("Btn clk");
-                            },
-                            width: Screen.width(context) - 100,
-                            height: 50,
-                            child: Container(
-                              alignment: Alignment.center,
-                              child: Text(
-                                'signIN'.tr().toString(),
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Container(
+                  width: Screen.width(context),
+                  height: Screen.height(context),
+                  color: c.dashboard_line_light),
+              Positioned(
+                bottom: Screen.height(context) * 0.05,
+                left: Screen.width(context) * 0.05,
+                right: Screen.width(context) * 0.05,
+                child: Container(
+                    width: Screen.width(context) - 50,
+                    height: Screen.width(context) - 50,
+                    decoration: UIHelper.roundedBorderWithColorWithShadow(
+                        30.0, c.white, c.white),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        UIHelper.verticalSpaceSmall,
+
+                        // ****************************** Mobile Number Field ****************************** //
+                        Container(
+                          margin: EdgeInsets.all(15),
+                          width: Screen.width(context) - 100,
+                          height: 50,
+                          child: TextField(
+                            textAlign: TextAlign.center,
+                            controller: mobileController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(10),
+                            ],
+                            decoration: InputDecoration(
+                              hintText: 'Mobile Number',
+                              hintStyle: TextStyle(fontSize: 16),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: BorderSide(
+                                  width: 0,
+                                  style: BorderStyle.none,
                                 ),
                               ),
+                              filled: true,
+                              contentPadding: EdgeInsets.all(16),
+                              fillColor: c.inputGrey,
                             ),
                           ),
-                          Text(
-                            'signupText'.tr().toString(),
-                            style: TextStyle(
-                              color: c.text_color,
-                              fontSize: 16,
+                        ),
+
+                        // ****************************** OTP verification Field ****************************** //
+
+                        Visibility(
+                          visible: true,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 10),
+                            child: OTPTextField(
+                              onCompleted: (value) {
+                                utils.closeKeypad(context);
+                                print(value);
+                              },
+                              width: Screen.width(context) - 100,
+                              controller: OTPcontroller,
+                              length: 6,
+                              fieldStyle: FieldStyle.box,
+                              fieldWidth: 40,
                             ),
                           ),
-                          UIHelper.verticalSpaceSmall,
-                          InkWell(
-                            onTap: () => {print("Sign in Tapped ")},
+                        ),
+
+                        // ****************************** Submit Action Field ****************************** //
+
+                        CustomGradientButton(
+                          onPressed: () {
+                            print("Btn clk");
+                          },
+                          width: Screen.width(context) - 100,
+                          height: 50,
+                          child: Container(
+                            alignment: Alignment.center,
                             child: Text(
-                              'signUP'.tr().toString(),
+                              'signIN'.tr().toString(),
                               style: TextStyle(
-                                color: c.sky_blue,
                                 fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
                               ),
                             ),
                           ),
-                          UIHelper.verticalSpaceSmall,
-                        ],
-                      )),
-                ),
-              ],
-            ),
-          )),
-    );
-  }
-
-  Widget inputContainer(String textHint, TextInputType textInputType,
-      TextEditingController Controllers) {
-    return Container(
-      margin: EdgeInsets.all(15),
-      width: Screen.width(context) - 100,
-      height: 50,
-      child: TextField(
-        textAlign: TextAlign.center,
-        controller: Controllers,
-        keyboardType: textInputType,
-        decoration: InputDecoration(
-          hintText: textHint,
-          hintStyle: TextStyle(fontSize: 16),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15),
-            borderSide: BorderSide(
-              width: 0,
-              style: BorderStyle.none,
-            ),
+                        ),
+                        // Visibility(
+                        //   visible: false,
+                        //   child: Column(children: [
+                        //     Text(
+                        //       'signupText'.tr().toString(),
+                        //       style: TextStyle(
+                        //         color: c.text_color,
+                        //         fontSize: 16,
+                        //       ),
+                        //     ),
+                        //     UIHelper.verticalSpaceSmall,
+                        //     InkWell(
+                        //       onTap: () => {print("Sign in Tapped ")},
+                        //       child: Text(
+                        //         'signUP'.tr().toString(),
+                        //         style: TextStyle(
+                        //           color: c.sky_blue,
+                        //           fontSize: 16,
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ]),
+                        // ),
+                        UIHelper.verticalSpaceSmall,
+                      ],
+                    )),
+              ),
+            ],
           ),
-          filled: true,
-          contentPadding: EdgeInsets.all(16),
-          fillColor: c.inputGrey,
-        ),
-      ),
-    );
+        ));
   }
 }

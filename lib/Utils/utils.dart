@@ -383,4 +383,9 @@ class Utils {
 
     return streetname;
   }
+
+  void closeKeypad(BuildContext context) {
+    // Unfocus the current focus node to close the keypad
+    FocusScope.of(context).unfocus();
+  }
 }

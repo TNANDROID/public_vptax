@@ -11,18 +11,20 @@ class CustomGradientButton extends StatelessWidget {
   final double? btmleft;
   final double? btmright;
   final double? btnPadding;
+  final double? elevation;
   final Widget? child;
 
   const CustomGradientButton({
     this.gradientColors,
     required this.width,
     required this.height,
-    required this.child,
+    this.child,
     this.topleft,
     this.topright,
     this.btmleft,
     this.btmright,
     this.btnPadding,
+    this.elevation,
     this.onPressed,
   });
 
@@ -42,7 +44,7 @@ class CustomGradientButton extends StatelessWidget {
               bottomRight: Radius.circular(btmright ?? 15),
             ),
           ),
-          elevation: 0.0,
+          elevation: elevation ?? 5,
           primary: Colors.white, // Remove the background color
           onPrimary: Colors.white, // Remove the ink splash color
         ),
@@ -64,7 +66,7 @@ class CustomGradientButton extends StatelessWidget {
                 bottomRight: Radius.circular(btmright ?? 15),
               ),
             ),
-            child: child),
+            child: child ?? const SizedBox()),
       ),
     );
   }
