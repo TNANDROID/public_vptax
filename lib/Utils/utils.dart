@@ -388,4 +388,8 @@ class Utils {
     // Unfocus the current focus node to close the keypad
     FocusScope.of(context).unfocus();
   }
+
+  bool isNumberValid(value) {
+    return RegExp(r'^[6789]\d{9}$').hasMatch(value);
+  }
 }
