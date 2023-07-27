@@ -18,6 +18,7 @@ import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stacked/stacked.dart';
 
 import '../../Model/startup_model.dart';
 import '../../Resources/StringsKey.dart';
@@ -37,6 +38,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
   String selectedDistrict = "";
   String selectedBlock = "";
   String selectedvillage = "";
+  String selectedTaxType = "";
   bool districtFlag=false;
   bool blockFlag=false;
   bool villageFlag=false;
@@ -48,6 +50,34 @@ class _ViewReceiptState extends State<ViewReceipt> {
   bool isLoadingV = false;
   bool listvisbility = false;
   PreferenceService preferencesService = locator<PreferenceService>();
+  List<dynamic> taxType = [
+    {"taxCode": "01", "taxname": 'propertyTax'.tr().toString()},
+    {"taxCode": "02", "taxname": 'waterCharges'.tr().toString()},
+    {"taxCode": "03", "taxname": 'professionalTax'.tr().toString()},
+    {"taxCode": "04", "taxname": 'nonTax'.tr().toString()},
+    {"taxCode": "05", "taxname": 'tradeLicense'.tr().toString()},
+  ];
+  List<dynamic> districtlist = [
+    {"dcode": "01", "dname": 'Ariyalur'},
+    {"dcode": "02", "dname": 'Coimbatore'},
+    {"dcode": "03", "dname": 'Kancheepuram'},
+    {"dcode": "04", "dname": 'Tanjavur'},
+    {"dcode": "05", "dname": 'Thiruvarur'},
+  ];
+  List<dynamic> blockList = [
+    {"bcode": "01", "bname": 'Ariyalur'},
+    {"bcode": "02", "bname": 'Coimbatore'},
+    {"bcode": "03", "bname": 'Kancheepuram'},
+    {"bcode": "04", "bname": 'Tanjavur'},
+    {"bcode": "05", "bname": 'Thiruvarur'},
+  ];
+  List<dynamic> villageList = [
+    {"pvcode": "01", "pvname": 'Ariyalur'},
+    {"pvcode": "02", "pvname": 'Coimbatore'},
+    {"pvcode": "03", "pvname": 'Kancheepuram'},
+    {"pvcode": "04", "pvname": 'Tanjavur'},
+    {"pvcode": "05", "pvname": 'Thiruvarur'},
+  ];
   Map<String, String> defaultSelectedDistrict = {
 
   };
@@ -63,6 +93,9 @@ class _ViewReceiptState extends State<ViewReceipt> {
     villageFlag=true;
     districtItems.add(defaultSelectedDistrict);
     setState(() {
+      prefs.getString("lang")!= null &&  prefs.getString("lang")!="" &&  prefs.getString("lang")=="en"?
+      context.setLocale(Locale('en', 'US')):
+      context.setLocale(Locale('ta', 'IN'));
 
     });
     /*List<Map> dlist =
@@ -76,6 +109,113 @@ class _ViewReceiptState extends State<ViewReceipt> {
     Navigator.of(context, rootNavigator: true).pop(context);
     return true;
   }
+  //Dropdown Input Field Widget
+  Widget addInputDropdownField(int index, String inputHint, String fieldName,
+      String errorText) {
+    List dropList = [];
+    String keyCode = "";
+    String titleText = "";
+    String titleTextTamil = "";
+
+    if (index == 0) {
+      dropList = taxType;
+      keyCode = "taxCode";
+      titleText = "taxname";
+      titleTextTamil = "taxname";
+    } else if (index == 1) {
+      dropList =districtlist;
+      keyCode = "dcode";
+      titleText = "dname";
+      titleTextTamil = "dname";
+    } else if (index == 2) {
+      dropList =blockList;
+      keyCode = "bcode";
+      titleText = "bname";
+      titleTextTamil = "bname";
+    } else if (index == 3) {
+      dropList =villageList;
+      keyCode = "pvcode";
+      titleText = "pvname";
+      titleTextTamil = "pvname";
+    } else {
+      print("End.....");
+    }
+    return FormBuilderDropdown(
+      style: TextStyle(
+          fontSize: 12, fontWeight: FontWeight.w400, color: c.grey_8),
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.only(left: 5),
+          hintText: inputHint,
+          hintStyle: TextStyle(fontSize: 11),
+          filled: true,
+          fillColor: Colors.white,
+          enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_6),
+          focusedBorder: UIHelper.getInputBorder(1, borderColor: c.grey_6),
+        ),
+        name: fieldName,
+      initialValue: index == 0
+          ? selectedTaxType
+          : index == 1
+          ? selectedDistrict
+          : index == 2
+          ? selectedBlock
+          : selectedvillage,
+      onTap: () async {
+        if (index == 1) {
+          selectedDistrict = "";
+          selectedBlock = "";
+          selectedvillage = "";
+          // model.selectedBlockList.clear();
+          // model.selectedVillageList.clear();
+        } else if (index == 2) {
+          selectedBlock = "";
+          selectedvillage = "";
+          // model.selectedVillageList.clear();
+        } else if (index == 3) {
+          selectedvillage = "";
+        } else {
+          print("End of the Statement......");
+        }
+        setState(() {});
+      },
+      iconSize: 28,
+      items: dropList.map((item) => DropdownMenuItem(
+        value: item[keyCode],
+        child: Text(
+          preferencesService.getUserInfo("lang") == "en"
+              ? item[titleText].toString()
+              : item[titleTextTamil].toString(),
+          style: TextStyle(
+              fontSize: 14.0,
+              fontWeight: FontWeight.w400,
+              color: c.grey_8),
+        ),
+      ))
+          .toList(),
+      onChanged: (value) async {
+        if (index == 0) {
+          selectedTaxType = value.toString();
+          selectedDistrict="";
+          selectedBlock="";
+          selectedvillage="";
+        } else if (index == 1) {
+          selectedDistrict = value.toString();
+          selectedBlock="";
+          selectedvillage="";
+          // await model.loadUIBlock(selectedDistrict);
+        } else if (index == 2) {
+          selectedBlock = value.toString();
+          selectedvillage="";
+          // await model.loadUIVillage(selectedDistrict, selectedBlock);
+        } else if (index == 3) {
+          selectedvillage = value.toString();
+        } else {
+          print("End of the Statement......");
+        }
+        setState(() {});
+      },
+    );
+  }
   @override
   Widget build (BuildContext context) {
     return WillPopScope(
@@ -87,8 +227,8 @@ class _ViewReceiptState extends State<ViewReceipt> {
             elevation: 2,
             title:Container(
                       child: Text(
-                        'View Receipt Details',
-                        style: TextStyle(fontSize: 15),
+                        'view_receipt_details'.tr().toString(),
+                        style: TextStyle(fontSize: 14),
                       ),
             ),
           ),
@@ -98,16 +238,16 @@ class _ViewReceiptState extends State<ViewReceipt> {
               Stack(
                   children: [
                     Container(
-                      /*child: Image.asset(
-                        // imagePath.house_tax,
-                       , fit: BoxFit.fitWidth,
+                      child: Image.asset(
+                        imagePath.house_tax,
+                        fit: BoxFit.fitWidth,
                         width: MediaQuery.of(context).size.width,
                         height: 250,
-                      ),*/
+                      ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 150,left: 20,right: 20),
-                      padding: EdgeInsets.all(20),
+                      margin: EdgeInsets.only(top: 150,left: 10,right: 10),
+                      padding: EdgeInsets.only(left: 20,right: 20,top: 20),
                       decoration:
                       UIHelper.roundedBorderWithColorWithShadow(
                           15,c.white,c.white,borderColor: Colors.transparent,borderWidth: 5),
@@ -120,7 +260,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                               children: [
                                 Container(
                                   child: Text(
-                                    'Tax Type'.tr().toString()+" : ",
+                                    'taxType'.tr().toString()+" : ",
                                     style: TextStyle(
                                         fontSize: 12,
                                         color: c.grey_10),
@@ -131,65 +271,9 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                     margin: EdgeInsets.only(left: 35),
                                     width:150,
                                     height: 25,
-                                    child: FormBuilderDropdown(
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.only(left: 10),
-                                        hintText: "Select Tax Type",
-                                        hintStyle: TextStyle(fontSize: 11),
-                                        filled: true,
-                                        fillColor: Colors.white,
-                                        enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_6),
-                                        focusedBorder: UIHelper.getInputBorder(1, borderColor: c.grey_6),
-                                      ),
-                                      name: "Select Tax Type",
-                                      onTap: () async {
-                                      },
-                                      iconSize: 28,
-                                      items: <DropdownMenuItem<int>>[
-                                        DropdownMenuItem(
-                                          child:Text(
-                                            'Property Tax',
-                                            style: TextStyle(
-                                                fontSize: 11
-                                            ),),value: 1,
-                                        ),
-                                        DropdownMenuItem(
-                                          child:Text(
-                                            'Water Charges',
-                                            style: TextStyle(
-                                                fontSize: 11
-                                            ),),
-                                          value: 2,
-                                        ),
-                                        DropdownMenuItem(
-                                          child:Text(
-                                            'Professional Tax',
-                                            style: TextStyle(
-                                                fontSize: 11
-                                            ),),
-                                          value: 3,
-                                        ),
-                                        DropdownMenuItem(
-                                          child:Text(
-                                            'Non Tax',
-                                            style: TextStyle(
-                                                fontSize: 11
-                                            ),),
-                                          value: 4,
-                                        ),
-                                        DropdownMenuItem(
-                                          child:Text(
-                                            'Trade License',
-                                            style: TextStyle(
-                                                fontSize: 11
-                                            ),),
-                                          value: 5,
-                                        ),
-                                      ],
-                                      onChanged: (value) async {
-
-                                      },
-                                    )
+                                    child: addInputDropdownField(
+                                        0, 'select_taxtype'.tr().toString(),
+                                        'taxType'.tr().toString(), "Required"),
                                 )
                               ],
                             ),
@@ -202,7 +286,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                               children: [
                                 Container(
                                   child: Text(
-                                    'District'.tr().toString()+" : ",
+                                    'district'.tr().toString()+" : ",
                                     style: TextStyle(
                                         fontSize: 12,
                                         color: c.grey_10),
@@ -214,47 +298,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                     width:150,
                                     height: 25,
                                     child:
-                                    FormBuilderDropdown(
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.only(left: 10),
-                                        hintText: "Select District",
-                                        hintStyle: TextStyle(fontSize: 12),
-                                        filled: true,
-                                        fillColor: Colors.white,
-                                        enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_6),
-                                        focusedBorder: UIHelper.getInputBorder(1, borderColor: c.grey_6),
-                                      ),
-                                      name: "Select District",
-                                      onTap: () async {
-                                      },
-                                      iconSize: 28,
-                                      items: <DropdownMenuItem<int>>[
-                                        DropdownMenuItem(
-                                          child:Text(
-                                            'Thanjavur',
-                                            style: TextStyle(
-                                                fontSize: 11
-                                            ),),
-                                          value: 1,
-                                        ),
-                                        DropdownMenuItem(
-                                          child:Text(
-                                            'Tiruvarur',style: TextStyle(
-                                              fontSize: 11
-                                          ),),
-                                          value: 2,
-                                        ),
-                                        DropdownMenuItem(
-                                          child:Text(
-                                            'Ariyalur',style: TextStyle(
-                                              fontSize: 11
-                                          ),),
-                                          value: 3,
-                                        ),
-                                      ],
-                                      onChanged: (value) async {
-                                      },
-                                    )
+                                    addInputDropdownField(1, 'select_District'.tr().toString(),'district', "Required"),
                                 )
                               ],
                             ),
@@ -267,7 +311,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                               children: [
                                 Container(
                                   child: Text(
-                                    'Block'.tr().toString()+" : ",
+                                    'block'.tr().toString()+" : ",
                                     style: TextStyle(
                                         fontSize: 12,
                                         color: c.grey_10),
@@ -275,57 +319,13 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                 ),
                                 UIHelper.horizontalSpaceMedium,
                                 Container(
-                                    margin: EdgeInsets.only(left: 55),
+                                    margin: EdgeInsets.only(left: 50),
                                     width:150,
                                     height: 25,
                                     child:
-                                    FormBuilderDropdown(
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.only(left: 10),
-                                        hintText: "Select Block",
-                                        hintStyle: TextStyle(fontSize: 12),
-                                        filled: true,
-                                        fillColor: Colors.white,
-                                        enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_6),
-                                        focusedBorder: UIHelper.getInputBorder(1, borderColor: c.grey_6),
-                                      ),
-                                      name: "Select Block",
-                                      onTap: () async {
-                                      },
-                                      iconSize: 28,
-                                      /*autovalidateMode: AutovalidateMode.onUserInteraction,
-                                validator: FormBuilderValidators.compose([
-                                  FormBuilderValidators.required(errorText: "Pleas Select Block "),
-                                ]),*/
-                                      items: <DropdownMenuItem<int>>[
-                                        DropdownMenuItem(
-                                          child:Text(
-                                            'Thanjavur',
-                                            style: TextStyle(
-                                                fontSize: 11
-                                            ),),
-                                          value: 1,
-                                        ),
-                                        DropdownMenuItem(
-                                          child:Text(
-                                            'Tiruvarur',
-                                            style: TextStyle(
-                                                fontSize: 11
-                                            ),),
-                                          value: 2,
-                                        ),
-                                        DropdownMenuItem(
-                                          child:Text(
-                                            'Ariyalur',
-                                            style: TextStyle(
-                                                fontSize: 11
-                                            ),),
-                                          value:3,
-                                        ),
-                                      ],
-                                      onChanged: (value) async {
-                                      },
-                                    )
+                                    addInputDropdownField(
+                                        2, 'select_Block'.tr().toString(),
+                                        "block", "Required"),
                                 )
                               ],
                             ),
@@ -339,60 +339,20 @@ class _ViewReceiptState extends State<ViewReceipt> {
                               children: [
                                 Container(
                                   child: Text(
-                                    'Village Panchayat'.tr().toString()+" : ",
+                                    'villagePanchayat'.tr().toString()+" : ",
                                     style: TextStyle(
                                         fontSize: 12,
                                         color: c.grey_10),
                                   ),
                                 ),
                                 Container(
-                                    margin: EdgeInsets.only(left: 10),
+                                    margin: EdgeInsets.only(left: 12),
                                     width:145,
                                     height: 25,
                                     child:
-                                    FormBuilderDropdown(
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.only(left: 4),
-                                        hintText: "Select Village Pancha...",
-                                        hintStyle: TextStyle(fontSize: 12),
-                                        filled: true,
-                                        fillColor: Colors.white,
-                                        enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_6),
-                                        focusedBorder: UIHelper.getInputBorder(1, borderColor: c.grey_6),
-                                      ),
-                                      name: "Select Village Panchayat",
-                                      onTap: () async {
-                                      },
-                                      iconSize: 28,
-                                      items: <DropdownMenuItem<int>>[
-                                        DropdownMenuItem(
-                                          child:Text(
-                                            'Thanjavur',
-                                            style: TextStyle(
-                                                fontSize: 11
-                                            ),),
-                                          value: 1,
-                                        ),
-                                        DropdownMenuItem(
-                                          child:Text(
-                                            'Tiruvarur',
-                                            style: TextStyle(
-                                                fontSize: 11
-                                            ),),
-                                          value: 2,
-                                        ),
-                                        DropdownMenuItem(
-                                          child:Text(
-                                            'Ariyalur',
-                                            style: TextStyle(
-                                                fontSize: 11
-                                            ),),
-                                          value: 3,
-                                        ),
-                                      ],
-                                      onChanged: (value) async {
-                                      },
-                                    )
+                                    addInputDropdownField(
+                                        3, 'select_VillagePanchayat'.tr().toString(),
+                                        "villagePanchayat", "Required"),
                                 )
                               ],
                             ),
@@ -406,7 +366,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                   children: [
                                     Container(
                                       child: Text(
-                                        'Assesment No'.tr().toString()+" : ",
+                                        'assesmentNo'.tr().toString()+" : ",
                                         style: TextStyle(
                                             fontSize: 12,
                                             color: c.grey_10),
@@ -415,7 +375,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                     Container(
                                       padding: EdgeInsets.only(top: 5),
                                       height:25,
-                                      width: 55,
+                                      width:45,
                                       decoration: BoxDecoration(
                                         color: c.grey_3,
                                         borderRadius: BorderRadius.only(
@@ -427,7 +387,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
 
                                       ),
                                       child: Padding(
-                                        padding: EdgeInsets.only(top: 5,left: 5),
+                                        padding: EdgeInsets.only(top: 5,left: 3),
                                         child: TextFormField(
                                           minLines: 1,
                                           decoration: const InputDecoration(
@@ -446,11 +406,10 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                 Row(
                                   children: [
                                     Container(
-                                      padding: EdgeInsets.only(left:3),
                                       child: Text(
-                                        "("+'OR'.tr().toString()+")",
+                                        "("+'or'.tr().toString()+")",
                                         style: TextStyle(
-                                            fontSize: 13,
+                                            fontSize: 12,
                                             color: c.grey_10),
                                       ),
                                     ),
@@ -459,9 +418,9 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                 Row(
                                   children: [
                                     Container(
-                                      padding: EdgeInsets.only(left: 5),
+                                      padding: EdgeInsets.only(left: 4),
                                       child: Text(
-                                        'Receipt No'.tr().toString()+" : ",
+                                        'receiptno'.tr().toString()+" : ",
                                         style: TextStyle(
                                             fontSize: 12,
                                             color: c.grey_10),
@@ -470,7 +429,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                     Container(
                                       padding: EdgeInsets.only(top: 5),
                                       height:25,
-                                      width: 55,
+                                      width: 45,
                                      decoration: BoxDecoration(
                                         color: c.grey_3,
                                         borderRadius: BorderRadius.only(
@@ -504,7 +463,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                           ),
                           Container(
                               child: TextButton(
-                                child: Text("Submit".tr().toString(),
+                                child: Text("submit".tr().toString(),
                                     style: TextStyle(color: c.white, fontSize: 13)),
                                 style: ButtonStyle(
                                     backgroundColor:
@@ -567,7 +526,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                       children: [
                                         Container(
                                             width: 100,
-                                            height: 150,
+                                            height: 180,
                                             decoration: BoxDecoration(
                                               gradient: LinearGradient(
                                                   colors: [
@@ -591,12 +550,12 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Container(
-                                                   padding: EdgeInsets.only(left: 10,),
+                                                   padding: EdgeInsets.only(left: 10,top: 10),
                                                       child: Column(
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
                                                           Text(
-                                                            'Collection Date:'.tr().toString(),
+                                                            'collectionDate'.tr().toString(),
                                                             style:
                                                             TextStyle(
                                                               fontSize: 12,
@@ -623,12 +582,12 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                                       ),
                                                 ),
                                                 Container(
-                                                  padding: EdgeInsets.only(left: 10),
+                                                  padding: EdgeInsets.only(left: 12),
                                                     child: Column(
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
                                                         Text(
-                                                          'Receipt Number'.tr().toString(),
+                                                          'receiptno'.tr().toString(),
                                                           style:
                                                           TextStyle(
                                                             fontSize: 12,
@@ -661,7 +620,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                                     children: [
                                                       UIHelper.horizontalSpaceSmall,
                                                       Text(
-                                                        "Download Receipt (In Tamil)",
+                                                        'download_tamil'.tr().toString()+"\n"+"tamil_1".tr().toString()+"\n",
                                                         style:
                                                         TextStyle(
                                                           fontSize: 12,
@@ -671,8 +630,8 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                                           color: c.grey_9,
                                                         ),
                                                       ),
-                                                      /*Padding(padding: EdgeInsets.only(bottom:15,left: 25),
-                                                        child:Image.asset(imagePath.download,height: 17,width: 17,),),*/
+                                                      Padding(padding: EdgeInsets.only(left: 25),
+                                                        child:Image.asset(imagePath.download,height: 17,width: 17,),),
                                                     ],
                                                   ),
                                                 ),
@@ -682,7 +641,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                                     children: [
                                                       UIHelper.horizontalSpaceSmall,
                                                       Text(
-                                                        "Download Receipt (In English)",
+                                                        'download_english'.tr().toString()+"\n"+"english_1".tr().toString()+"\n",
                                                         style:
                                                         TextStyle(
                                                           fontSize: 12,
@@ -692,8 +651,8 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                                           color: c.grey_9,
                                                         ),
                                                       ),
-                                                      /*Padding(padding: EdgeInsets.only(bottom:10,left: 15),
-                                                        child:Image.asset(imagePath.download,height: 17,width: 17,),),*/
+                                                      Padding(padding: EdgeInsets.only(left: 25),
+                                                        child:Image.asset(imagePath.download,height: 17,width: 17,),),
                                                     ],
                                                   ),
                                                 ),
