@@ -74,8 +74,33 @@ class UIHelper {
         boxShadow: [
           BoxShadow(
             color: Colors.black26,
-            offset: Offset(5, 5),
-            blurRadius: 10.0,
+            offset: Offset(2, 2),
+            blurRadius: 3.0,
+          )
+        ]);
+  }
+
+
+  static BoxDecoration circleWithColorWithShadow(
+      double radius, Color backgroundColor,Color backgroundColor2,
+      {Color borderColor = Colors.transparent, double borderWidth = 1}) {
+    return BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(width: borderWidth, color: borderColor),
+      gradient: LinearGradient(
+          colors: [
+            backgroundColor,
+            backgroundColor2,
+          ],
+          begin: const FractionalOffset(0.0, 0.0),
+          end: const FractionalOffset(1.0, 0.0),
+          stops: [0.0, 1.0],
+          tileMode: TileMode.clamp),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black26,
+            offset: Offset(2, 2),
+            blurRadius: 3.0,
           )
         ]);
   }
