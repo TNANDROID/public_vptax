@@ -18,3 +18,22 @@ class CustomClip extends CustomClipper<Path> {
     return false;
   }
 }
+
+class TriangleClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final path = Path()
+      ..lineTo(size.width - 40, 0) // Top-right point of the card
+      ..lineTo(size.width, size.height / 2) // Right-middle point of the card
+      ..lineTo(size.width - 40, size.height) // Bottom-right point of the card
+      ..lineTo(0, size.height) // Bottom-left point of the card
+      ..close(); // Close the path to complete the shape
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    return false;
+  }
+}
