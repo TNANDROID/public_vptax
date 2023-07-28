@@ -50,6 +50,8 @@ class _ViewReceiptState extends State<ViewReceipt> {
   bool isLoadingV = false;
   bool listvisbility = false;
   PreferenceService preferencesService = locator<PreferenceService>();
+  TextEditingController assessmentController = TextEditingController();
+  TextEditingController receiptController = TextEditingController();
   List<dynamic> taxType = [
     {"taxCode": "01", "taxname": 'propertyTax'.tr().toString()},
     {"taxCode": "02", "taxname": 'waterCharges'.tr().toString()},
@@ -198,17 +200,29 @@ class _ViewReceiptState extends State<ViewReceipt> {
           selectedDistrict="";
           selectedBlock="";
           selectedvillage="";
+          listvisbility=false;
+          assessmentController.text="";
+          receiptController.text="";
         } else if (index == 1) {
           selectedDistrict = value.toString();
           selectedBlock="";
           selectedvillage="";
+          listvisbility=false;
+          assessmentController.text="";
+          receiptController.text="";
           // await model.loadUIBlock(selectedDistrict);
         } else if (index == 2) {
           selectedBlock = value.toString();
           selectedvillage="";
+          listvisbility=false;
+          assessmentController.text="";
+          receiptController.text="";
           // await model.loadUIVillage(selectedDistrict, selectedBlock);
         } else if (index == 3) {
           selectedvillage = value.toString();
+          listvisbility=false;
+          assessmentController.text="";
+          receiptController.text="";
         } else {
           print("End of the Statement......");
         }
@@ -389,6 +403,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                       child: Padding(
                                         padding: EdgeInsets.only(top: 5,left: 3),
                                         child: TextFormField(
+                                          controller: assessmentController,
                                           minLines: 1,
                                           decoration: const InputDecoration(
                                               hintStyle: TextStyle(
@@ -443,6 +458,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                      child: Padding(
                                        padding: EdgeInsets.only(top: 5,left: 5),
                                        child: TextFormField(
+                                         controller: receiptController,
                                          minLines: 1,
                                          decoration: const InputDecoration(
                                              border:InputBorder.none
@@ -480,7 +496,9 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                           ),
                                         ))),
                                 onPressed: () {
-                                  // ValidatePassword();
+                                  setState(() {
+                                    Validate();
+                                  });
                                 },
                               )),
                         ],
@@ -489,7 +507,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                   ]
               ),
               Visibility(
-                visible: true,
+                visible:listvisbility,
                 child: Container(
                     padding: EdgeInsets.only(left: 10,right: 10,top: 20),
                     margin: EdgeInsets.only(top: 15),
@@ -672,5 +690,42 @@ class _ViewReceiptState extends State<ViewReceipt> {
           ),
       ),
     ));
+  }
+  Validate()
+  {
+   if(selectedTaxType!=null && selectedTaxType !="")
+     {
+       if(selectedDistrict!=null && selectedDistrict!="")
+       {
+         if(selectedBlock!=null && selectedBlock!="")
+         {
+           if(selectedvillage !=null && selectedvillage !="")
+           {
+            if((assessmentController.text!=""||receiptController.text!="")&&(assessmentController.text!=null||receiptController.text!=null))
+              {
+                listvisbility=true;
+              }
+            else
+              {
+                listvisbility=false;
+                utils.showAlert(context,'please_enter_assessment_number'.tr().toString());
+              }
+           }
+           else{
+             utils.showAlert(context,'select_VillagePanchayat');
+           }
+         }
+         else{
+           utils.showAlert(context, "Please Select Block");
+         }
+       }
+       else{
+         utils.showAlert(context, "Please Select District");
+       }
+     }
+   else
+     {
+       utils.showAlert(context, "Please Select Taxtype");
+     }
   }
 }
