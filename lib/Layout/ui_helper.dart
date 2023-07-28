@@ -57,20 +57,20 @@ class UIHelper {
 
 //Container Style Provider with shadow
   static BoxDecoration roundedBorderWithColorWithShadow(
-      double radius, Color backgroundColor,Color backgroundColor2,
+      double radius, Color backgroundColor, Color backgroundColor2,
       {Color borderColor = Colors.transparent, double borderWidth = 1}) {
     return BoxDecoration(
         borderRadius: BorderRadius.circular(radius),
         border: Border.all(width: borderWidth, color: borderColor),
-      gradient: LinearGradient(
-          colors: [
-            backgroundColor,
-            backgroundColor2,
-          ],
-          begin: const FractionalOffset(0.0, 0.0),
-          end: const FractionalOffset(1.0, 0.0),
-          stops: [0.0, 1.0],
-          tileMode: TileMode.clamp),
+        gradient: LinearGradient(
+            colors: [
+              backgroundColor,
+              backgroundColor2,
+            ],
+            begin: const FractionalOffset(0.0, 0.0),
+            end: const FractionalOffset(1.0, 0.0),
+            stops: [0.0, 1.0],
+            tileMode: TileMode.clamp),
         boxShadow: [
           BoxShadow(
             color: Colors.black26,
@@ -80,22 +80,21 @@ class UIHelper {
         ]);
   }
 
-
   static BoxDecoration circleWithColorWithShadow(
-      double radius, Color backgroundColor,Color backgroundColor2,
+      double radius, Color backgroundColor, Color backgroundColor2,
       {Color borderColor = Colors.transparent, double borderWidth = 1}) {
     return BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(width: borderWidth, color: borderColor),
-      gradient: LinearGradient(
-          colors: [
-            backgroundColor,
-            backgroundColor2,
-          ],
-          begin: const FractionalOffset(0.0, 0.0),
-          end: const FractionalOffset(1.0, 0.0),
-          stops: [0.0, 1.0],
-          tileMode: TileMode.clamp),
+        gradient: LinearGradient(
+            colors: [
+              backgroundColor,
+              backgroundColor2,
+            ],
+            begin: const FractionalOffset(0.0, 0.0),
+            end: const FractionalOffset(1.0, 0.0),
+            stops: [0.0, 1.0],
+            tileMode: TileMode.clamp),
         boxShadow: [
           BoxShadow(
             color: Colors.black26,
@@ -127,13 +126,13 @@ class UIHelper {
   }
 
 //Neumorphic Container Style Provider
-  static BoxDecoration NeumorphicContainer(double radius,Color clr,
+  static BoxDecoration NeumorphicContainer(double radius, Color clr,
       {Color borderColor = Colors.transparent}) {
     return BoxDecoration(
         color: clr,
         borderRadius: BorderRadius.circular(radius),
         boxShadow: [
-           BoxShadow(
+          BoxShadow(
             //  color: Color(0xFFBEBEBE),
             color: Colors.black38,
             offset: Offset(8, 8),
@@ -154,7 +153,7 @@ class UIHelper {
     return ClipPath(
       clipper: CustomClip(),
       child: Container(
-          padding: EdgeInsets.all(5),
+          padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(radius),
             color: Colors.blue,

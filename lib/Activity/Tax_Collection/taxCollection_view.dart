@@ -7,6 +7,7 @@ import 'package:public_vptax/Activity/Tax_Collection/taxCollection_details.dart'
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Model/startup_model.dart';
+import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
@@ -31,10 +32,10 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
   int selectedEntryType = 1;
 
   Widget addInputFormControl(
-      String nameField, String hintText, String fieldType, String errorTxt) {
+      String nameField, String hintText, String fieldType) {
     return FormBuilderTextField(
       style: TextStyle(
-          fontSize: 14.0, fontWeight: FontWeight.w400, color: c.grey_8),
+          fontSize: 14.0, fontWeight: FontWeight.w400, color: c.grey_9),
       name: nameField,
       autocorrect: false,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -42,7 +43,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
       decoration: InputDecoration(
         labelText: hintText,
         labelStyle: TextStyle(
-            fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.black),
+            fontSize: 16.0, fontWeight: FontWeight.w800, color: c.black),
         filled: true,
         fillColor: Colors.white,
         enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
@@ -52,30 +53,36 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
         contentPadding: EdgeInsets.symmetric(
             vertical: 8, horizontal: 12), // Optional: Adjust padding
       ),
-      validator: fieldType == 'Email'
-          ? FormBuilderValidators.compose([
-              FormBuilderValidators.required(errorText: errorTxt),
-              FormBuilderValidators.email(),
-            ])
-          : fieldType == 'Mobile Number'
+      validator:
+          // fieldType == 'Email'
+          //     ? FormBuilderValidators.compose([
+          //         FormBuilderValidators.required(errorText: errorTxt),
+          //         FormBuilderValidators.email(),
+          //       ])
+          //     :
+          fieldType == key_mobileNumber
               ? FormBuilderValidators.compose([
-                  FormBuilderValidators.required(errorText: errorTxt),
-                  FormBuilderValidators.minLength(10),
-                  FormBuilderValidators.maxLength(10),
+                  FormBuilderValidators.required(
+                      errorText: hintText + " " + 'isEmpty'.tr().toString()),
+                  FormBuilderValidators.minLength(10,
+                      errorText: hintText + " " + 'isInvalid'.tr().toString()),
+                  FormBuilderValidators.maxLength(10,
+                      errorText: hintText + " " + 'isInvalid'.tr().toString()),
                   FormBuilderValidators.numeric(),
                 ])
               : FormBuilderValidators.compose([
-                  FormBuilderValidators.required(errorText: errorTxt),
+                  FormBuilderValidators.required(
+                      errorText: hintText + " " + 'isEmpty'.tr().toString()),
                 ]),
-      keyboardType: fieldType == 'Mobile Number' || fieldType == "Number"
+      keyboardType: fieldType == key_mobileNumber || fieldType == key_number
           ? TextInputType.number
           : TextInputType.text,
     );
   }
 
   //Dropdown Input Field Widget
-  Widget addInputDropdownField(int index, String inputHint, String fieldName,
-      String errorText, StartUpViewModel model) {
+  Widget addInputDropdownField(
+      int index, String inputHint, String fieldName, StartUpViewModel model) {
     List dropList = [];
     String keyCode = "";
     String titleText = "";
@@ -88,19 +95,19 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
       titleTextTamil = "taxname";
     } else if (index == 1) {
       dropList = model.districtList;
-      keyCode = "dcode";
-      titleText = "dname";
-      titleTextTamil = "lldname";
+      keyCode = key_dcode;
+      titleText = key_dname;
+      titleTextTamil = key_dname_ta;
     } else if (index == 2) {
       dropList = model.selectedBlockList;
-      keyCode = "bcode";
-      titleText = "bname";
-      titleTextTamil = "llbname";
+      keyCode = key_bcode;
+      titleText = key_bname;
+      titleTextTamil = key_bname_ta;
     } else if (index == 3) {
       dropList = model.selectedVillageList;
-      keyCode = "pvcode";
-      titleText = "pvname";
-      titleTextTamil = "pvname";
+      keyCode = key_pvcode;
+      titleText = key_pvname;
+      titleTextTamil = key_pvname_ta;
     } else {
       print("End.....");
     }
@@ -110,7 +117,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
       decoration: InputDecoration(
         labelText: inputHint,
         labelStyle: TextStyle(
-            fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.black),
+            fontSize: 16.0, fontWeight: FontWeight.w800, color: c.black),
         filled: true,
         fillColor: Colors.white,
         enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
@@ -149,7 +156,8 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
       iconSize: 30,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(errorText: errorText),
+        FormBuilderValidators.required(
+            errorText: inputHint + " " + 'isEmpty'.tr().toString()),
       ]),
       items: dropList
           .map((item) => DropdownMenuItem(
@@ -161,7 +169,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                   style: TextStyle(
                       fontSize: 14.0,
                       fontWeight: FontWeight.w400,
-                      color: c.grey_8),
+                      color: c.grey_9),
                 ),
               ))
           .toList(),
@@ -217,49 +225,36 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                     padding: EdgeInsets.all(15),
                     child: Column(
                       children: [
-                        addInputDropdownField(0, 'taxType'.tr().toString(),
-                            "taxtype", "Required", model),
+                        addInputDropdownField(
+                            0, 'taxType'.tr().toString(), "taxtype", model),
                         UIHelper.verticalSpaceSmall,
                         radioButtonWidget(1, 'mobileNumber'.tr().toString()),
                         radioButtonWidget(
                             2, 'computerRegisterNumber'.tr().toString()),
                         radioButtonWidget(3, 'tryAnotherWay'.tr().toString()),
                         UIHelper.verticalSpaceSmall,
-                        // addInputFormControl('name', 'name'.tr().toString(),
-                        //     "String", "Required"),
-                        // UIHelper.verticalSpaceSmall,
                         selectedEntryType == 1
                             ? Column(
                                 children: [
                                   addInputFormControl(
                                       'mobile',
                                       'mobileNumber'.tr().toString(),
-                                      "Mobile Number",
-                                      "Required"),
+                                      key_mobileNumber),
                                   UIHelper.verticalSpaceSmall,
                                 ],
                               )
                             : SizedBox(),
-
                         selectedEntryType == 2
                             ? Column(
                                 children: [
                                   addInputFormControl(
                                       'computerRegNo',
                                       'computerRegisterNumber'.tr().toString(),
-                                      "Number",
-                                      "Required"),
+                                      key_number),
                                   UIHelper.verticalSpaceSmall,
                                 ],
                               )
                             : SizedBox(),
-
-                        // addInputFormControl(
-                        //     'email',
-                        //     'emailAddress'.tr().toString(),
-                        //     "Email",
-                        //     "Required"),
-                        // UIHelper.verticalSpaceSmall,
                         selectedEntryType == 3
                             ? Column(
                                 children: [
@@ -267,7 +262,6 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                                       1,
                                       'districtName'.tr().toString(),
                                       "district",
-                                      "Required",
                                       model),
                                   UIHelper.verticalSpaceSmall,
                                   if (model.selectedBlockList.length > 0)
@@ -275,7 +269,6 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                                         2,
                                         'blockName'.tr().toString(),
                                         "block",
-                                        "Required",
                                         model),
                                   if (model.selectedBlockList.length > 0)
                                     UIHelper.verticalSpaceSmall,
@@ -284,7 +277,6 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                                         3,
                                         'villageName'.tr().toString(),
                                         "village",
-                                        "Required",
                                         model),
                                   if (model.selectedVillageList.length > 0)
                                     UIHelper.verticalSpaceSmall,
@@ -293,16 +285,14 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                                       ? addInputFormControl(
                                           'assesment',
                                           'assesmentNumber'.tr().toString(),
-                                          "Number",
-                                          "Required")
+                                          key_number)
                                       : selectedTaxType == "02"
                                           ? addInputFormControl(
                                               'waterConnectionNumber',
                                               'waterConnectionNo'
                                                   .tr()
                                                   .toString(),
-                                              "Number",
-                                              "Required")
+                                              key_number)
                                           : selectedTaxType == "03"
                                               ? Column(
                                                   children: [
@@ -312,7 +302,6 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                                                             .tr()
                                                             .toString(),
                                                         "vip",
-                                                        "Required",
                                                         model),
                                                     UIHelper.verticalSpaceSmall,
                                                     addInputFormControl(
@@ -320,8 +309,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                                                         'assesmentNumber'
                                                             .tr()
                                                             .toString(),
-                                                        "Number",
-                                                        "Required"),
+                                                        key_number),
                                                   ],
                                                 )
                                               : selectedTaxType == "04"
@@ -330,8 +318,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                                                       'lesseeNumber'
                                                           .tr()
                                                           .toString(),
-                                                      "Number",
-                                                      "Required")
+                                                      key_number)
                                                   : Column(
                                                       children: [
                                                         addInputDropdownField(
@@ -340,7 +327,6 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                                                                 .tr()
                                                                 .toString(),
                                                             "vip",
-                                                            "Required",
                                                             model),
                                                         UIHelper
                                                             .verticalSpaceSmall,
@@ -349,15 +335,13 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                                                             'tradeNumber'
                                                                 .tr()
                                                                 .toString(),
-                                                            "Number",
-                                                            "Required"),
+                                                            key_number),
                                                       ],
                                                     ),
                                   UIHelper.verticalSpaceSmall,
                                 ],
                               )
                             : SizedBox(),
-
                         Container(
                             width: Screen.width(context) / 2,
                             alignment: Alignment.center,
@@ -368,8 +352,6 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                                       Map.from(_formKey.currentState!.value);
                                   postParams.removeWhere(
                                       (key, value) => value == null);
-                                  print("tested-------------" +
-                                      postParams.toString());
                                   Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
@@ -435,7 +417,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                           child: Container(
                             decoration:
                                 UIHelper.roundedBorderWithColorWithShadow(
-                                    20, c.grey_3, c.grey_3),
+                                    20, c.grey_1, c.grey_3),
                             child: Column(
                               children: [
                                 UIHelper.verticalSpaceMedium,
