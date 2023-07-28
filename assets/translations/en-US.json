@@ -63,7 +63,9 @@
   "verifyOTP": "Verify OTP",
   "resendOTP": "Resend OTP",
   "isEmpty":"is Empty",
-  "isInvalid": "is Invalid Please Check"
-
-
+  "isInvalid": "is Invalid Please Check",
+  "swmUserCharges":"SWM User Charges",
+  "downloadApk": "Download the latest version and install the new APK.",
+  "noInternet": "No Internet",
+  "internetError": "Internet Connection is not available..Please Turn ON Network Connection OR Continue With Off-line Mode.."
 }
