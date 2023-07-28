@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:public_vptax/Activity/Auth/View_receipt.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
@@ -272,6 +273,10 @@ class _HomeState extends State<Home> {
 
                                       }else if(selected_index==2){
                                         print("service3");
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => ViewReceipt()));
                                       }else if(selected_index==3){
 
                                       }
