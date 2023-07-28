@@ -36,12 +36,9 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
         Container(
             width: Screen.width(context),
             padding: EdgeInsets.all(15),
-            decoration: isShowFlag.contains(mainIndex)
-                ? UIHelper.GradientContainer(
-                    30, 30, 0, 0, [c.colorAccentlight, c.colorPrimaryDark])
-                : UIHelper.roundedBorderWithColorWithShadow(
-                    5, c.need_improvement2, c.need_improvement2,
-                    borderWidth: 0),
+            decoration: UIHelper.roundedBorderWithColorWithShadow(
+                5, c.need_improvement2, c.need_improvement2,
+                borderWidth: 0),
             child: Column(children: [
               Stack(
                 children: [
@@ -136,7 +133,9 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                           alignment: Alignment.topLeft,
                           margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                           child: Icon(
-                            Icons.arrow_circle_down_rounded,
+                            isShowFlag.contains(mainIndex)
+                                ? Icons.arrow_circle_up_rounded
+                                : Icons.arrow_circle_down_rounded,
                             color: Colors.blue,
                             size: 30,
                           ),
@@ -149,12 +148,12 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
           Container(
               width: Screen.width(context),
               decoration: UIHelper.roundedBorderWithColor(
-                  0, 0, 15, 15, c.colorPrimaryDark),
+                  0, 0, 15, 15, c.need_improvement2),
               child: Column(children: [
                 Container(
                     margin: EdgeInsets.fromLTRB(15, 0, 15, 15),
                     decoration: UIHelper.roundedBorderWithColorWithShadow(
-                        5, c.need_improvement2, c.need_improvement2,
+                        5, c.white, c.white,
                         borderWidth: 0),
                     child: propertyTaxCollectionWidget(mainIndex))
               ])),
@@ -171,110 +170,126 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
     for (var item in checkedListData["$mainIndex"]!) {
       totalAmount = totalAmount + examplePropertyData[item]['Amount'];
     }
-    return Column(
-      children: [
-        Container(
-            height: dataWiseHeight + 5,
-            child: ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: examplePropertyData.length,
-              itemBuilder: (context, rowIndex) {
-                int siNo = rowIndex + 1;
-                return Container(
-                    height: 40,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                              padding: EdgeInsets.all(8.0),
-                              child: Center(
-                                  child: UIHelper.titleTextStyle(
-                                      "$siNo", c.grey_10, 14, false, true))),
-                        ),
-                        Expanded(
-                            flex: 3,
-                            child: Container(
-                                padding: EdgeInsets.all(8.0),
-                                child: Center(
-                                    child: UIHelper.titleTextStyle(
-                                        examplePropertyData[rowIndex]
-                                            ['fin_year'],
-                                        c.grey_10,
-                                        14,
-                                        false,
-                                        true)))),
-                        Expanded(
-                          flex: 2,
-                          child: Container(
-                              padding: EdgeInsets.all(8.0),
-                              child: Center(
-                                  child: UIHelper.titleTextStyle(
-                                      examplePropertyData[rowIndex]['Amount']
-                                          .toString(),
-                                      c.grey_10,
-                                      14,
-                                      true,
-                                      true))),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                              padding: EdgeInsets.all(8.0),
-                              child: Center(
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                          width: 20,
-                                          height: 20,
-                                          child: Checkbox(
-                                            value: checkedListData["$mainIndex"]
-                                                ?.contains(rowIndex),
-                                            onChanged: (v) {
-                                              if (rowIndex == 0 ||
-                                                  checkedListData["$mainIndex"]!
-                                                      .contains(rowIndex - 1)) {
-                                                if (checkedListData[
-                                                        "$mainIndex"]!
-                                                    .contains(rowIndex)) {
-                                                  int endIndex =
+    return Container(
+        padding: EdgeInsets.all(5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+                height: dataWiseHeight + 5,
+                child: ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: examplePropertyData.length,
+                  itemBuilder: (context, rowIndex) {
+                    int siNo = rowIndex + 1;
+                    return Container(
+                        height: 40,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Center(
+                                      child: UIHelper.titleTextStyle("$siNo",
+                                          c.grey_10, 14, false, true))),
+                            ),
+                            Expanded(
+                                flex: 3,
+                                child: Container(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Center(
+                                        child: UIHelper.titleTextStyle(
+                                            examplePropertyData[rowIndex]
+                                                ['fin_year'],
+                                            c.grey_10,
+                                            14,
+                                            false,
+                                            true)))),
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Center(
+                                      child: UIHelper.titleTextStyle(
+                                          examplePropertyData[rowIndex]
+                                                  ['Amount']
+                                              .toString(),
+                                          c.grey_10,
+                                          14,
+                                          true,
+                                          true))),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Center(
+                                    child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          SizedBox(
+                                              width: 20,
+                                              height: 20,
+                                              child: Checkbox(
+                                                value: checkedListData[
+                                                        "$mainIndex"]
+                                                    ?.contains(rowIndex),
+                                                onChanged: (v) {
+                                                  if (rowIndex == 0 ||
                                                       checkedListData[
-                                                                  "$mainIndex"]!
-                                                              .length -
-                                                          1;
-                                                  checkedListData["$mainIndex"]
-                                                      ?.removeRange(rowIndex,
-                                                          endIndex + 1);
-                                                } else {
-                                                  checkedListData["$mainIndex"]
-                                                      ?.add(rowIndex);
-                                                }
-                                              }
+                                                              "$mainIndex"]!
+                                                          .contains(
+                                                              rowIndex - 1)) {
+                                                    if (checkedListData[
+                                                            "$mainIndex"]!
+                                                        .contains(rowIndex)) {
+                                                      int endIndex =
+                                                          checkedListData[
+                                                                      "$mainIndex"]!
+                                                                  .length -
+                                                              1;
+                                                      checkedListData[
+                                                              "$mainIndex"]
+                                                          ?.removeRange(
+                                                              rowIndex,
+                                                              endIndex + 1);
+                                                    } else {
+                                                      checkedListData[
+                                                              "$mainIndex"]
+                                                          ?.add(rowIndex);
+                                                    }
+                                                  }
 
-                                              setState(() {});
-                                            },
-                                          ))
-                                    ]),
-                              )),
-                        ),
-                      ],
-                    ));
-              },
-            )),
-        UIHelper.titleTextStyle(
-            "swmUserCharges".tr().toString(), c.grey_9, 14, true, true),
-        SizedBox(
-            width: Screen.width(context) / 1.2,
-            child: UIHelper.tinyLinewidget(borderColor: c.grey_8)),
-        // UIHelper.verticalSpaceSmall,
-        UIHelper.titleTextStyle(
-            "Total : $totalAmount", c.grey_9, 14, true, true),
-        UIHelper.verticalSpaceSmall,
-      ],
-    );
+                                                  setState(() {});
+                                                },
+                                              ))
+                                        ]),
+                                  )),
+                            ),
+                          ],
+                        ));
+                  },
+                )),
+            UIHelper.titleTextStyle("swmUserCharges".tr().toString() + " : 500",
+                c.grey_9, 14, true, true),
+            UIHelper.verticalSpaceSmall,
+            SizedBox(
+                width: Screen.width(context) / 1.2,
+                child: UIHelper.tinyLinewidget(borderColor: c.grey_8)),
+            // UIHelper.verticalSpaceSmall,
+            Container(
+                decoration: UIHelper.GradientContainer(
+                    5, 5, 5, 5, [c.yello, c.colorPrimaryDark]),
+                padding: EdgeInsets.all(10),
+                child: UIHelper.titleTextStyle(
+                    "$totalAmount", c.grey_9, 14, true, true)),
+            UIHelper.verticalSpaceSmall,
+          ],
+        ));
   }
 
   Widget taxInvoiceWidget() {
