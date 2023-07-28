@@ -71,10 +71,10 @@ class _HomeState extends State<Home> {
     taxTypeList.addAll(list);
      print("tax>>"+taxTypeList.toString());
 
-    List s_list=[{'service_id':'1','service_name':'check_your_dues','img_path':imagePath.due4},
-      {'service_id':'2','service_name':'quickPay','img_path':imagePath.quick_pay1},
-      {'service_id':'3','service_name':'view_receipt_details','img_path':imagePath.reciept},
-      {'service_id':'4','service_name':'download_receipt','img_path':imagePath.download_receipt},
+    List s_list=[{'service_id':0,'service_name':'check_your_dues','img_path':imagePath.due4},
+      {'service_id':1,'service_name':'quickPay','img_path':imagePath.quick_pay1},
+      {'service_id':2,'service_name':'view_receipt_details','img_path':imagePath.reciept},
+      {'service_id':3,'service_name':'download_receipt','img_path':imagePath.download_receipt},
     ];
     servicesList.clear();
     servicesList.addAll(s_list);
@@ -190,7 +190,7 @@ class _HomeState extends State<Home> {
                     fontWeight: FontWeight.bold),
               ),),
                 Container(
-                  height: MediaQuery.of(context).size.height/6,
+                  height: MediaQuery.of(context).size.height/4,
                   margin: EdgeInsets.only(left: 15,right: 15),
                   child: ListView.builder(
                     scrollDirection:  Axis.horizontal,
@@ -217,8 +217,8 @@ class _HomeState extends State<Home> {
                               padding: EdgeInsets.all( 10),
                               child:Image.asset(
                             taxTypeList[i][key_img_path],
-                            height: 40,
-                            width:40,
+                            height: (MediaQuery.of(context).size.height/4)/4,
+                            width:(MediaQuery.of(context).size.height/4)/4,
                           ),
                           ),
                             Container(
@@ -266,13 +266,13 @@ class _HomeState extends State<Home> {
                                   onTap: (){
                                     setState(() {
                                       selected_index=index;
-                                      if(selected_index=="1"){
+                                      if(selected_index==0){
 
-                                      }else if(selected_index=="2"){
+                                      }else if(selected_index==1){
 
-                                      }else if(selected_index=="3"){
-
-                                      }else if(selected_index=="4"){
+                                      }else if(selected_index==2){
+                                        print("service3");
+                                      }else if(selected_index==3){
 
                                       }
                                     });
@@ -287,7 +287,7 @@ class _HomeState extends State<Home> {
                                           child:Image.asset(
                                             servicesList[index][key_img_path],
                                           ),
-                                          height: 60,
+                                          height: MediaQuery.of(context).size.height/8,
                                           margin: EdgeInsets.only(left: MediaQuery.of(context).size.width/20,right: MediaQuery.of(context).size.width/20,top: 10),
                                           padding: EdgeInsets.all(5),
                                           width: MediaQuery.of(context).size.width,
