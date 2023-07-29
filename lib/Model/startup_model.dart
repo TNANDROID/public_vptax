@@ -47,14 +47,14 @@ class StartUpViewModel extends BaseViewModel {
 
   Future<void> loadUIBlock(String value) async {
     selectedBlockList.clear();
-    selectedBlockList = blockList.where((e) {
+    selectedBlockList = preferencesService.blockList.where((e) {
       return e['dcode'].toString().toLowerCase().contains(value.toLowerCase());
     }).toList();
   }
 
   Future<void> loadUIVillage(String distcode, String blockcode) async {
     selectedVillageList.clear();
-    selectedVillageList = villageList.where((e) {
+    selectedVillageList = preferencesService.villageList.where((e) {
       return e['dcode']
               .toString()
               .toLowerCase()
@@ -77,6 +77,7 @@ class StartUpViewModel extends BaseViewModel {
     var response = await apiServices.openServiceFunction(requestData);
     if (type == "District") {
       districtList = response;
+      preferencesService.districtList=districtList.toList();
     } else if (type == "Block") {
       blockList = response;
     } else {

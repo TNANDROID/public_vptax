@@ -10,7 +10,8 @@ import 'package:stacked/stacked.dart';
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 
 class TaxCollectionDetailsView extends StatefulWidget {
-  TaxCollectionDetailsView({Key? key}) : super(key: key);
+  final flag;
+  TaxCollectionDetailsView({this.flag});
 
   @override
   _TaxCollectionDetailsViewState createState() =>
@@ -37,7 +38,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
             width: Screen.width(context),
             padding: EdgeInsets.all(15),
             decoration: UIHelper.roundedBorderWithColorWithShadow(
-                5, c.need_improvement2, c.need_improvement2,
+                5, c.need_improvement1, c.need_improvement1,
                 borderWidth: 0),
             child: Column(children: [
               Stack(
@@ -146,9 +147,10 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
             ])),
         if (isShowFlag.contains(mainIndex))
           Container(
+            transform: Matrix4.translationValues(0, -5, 0),
               width: Screen.width(context),
               decoration: UIHelper.roundedBorderWithColor(
-                  0, 0, 15, 15, c.need_improvement2),
+                  0, 0, 15, 15, c.need_improvement1),
               child: Column(children: [
                 Container(
                     margin: EdgeInsets.fromLTRB(15, 0, 15, 15),
@@ -173,17 +175,18 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
     return Container(
         padding: EdgeInsets.all(5),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-                height: dataWiseHeight + 5,
+              margin: EdgeInsets.only(top: 5),
+                height: dataWiseHeight +0.02,
                 child: ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   itemCount: examplePropertyData.length,
                   itemBuilder: (context, rowIndex) {
                     int siNo = rowIndex + 1;
                     return Container(
-                        height: 40,
+                        height: 35,
                         child: Row(
                           children: [
                             Expanded(
@@ -192,7 +195,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                                   padding: EdgeInsets.all(8.0),
                                   child: Center(
                                       child: UIHelper.titleTextStyle("$siNo",
-                                          c.grey_10, 14, false, true))),
+                                          c.grey_8, 12, false, true))),
                             ),
                             Expanded(
                                 flex: 3,
@@ -202,8 +205,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                                         child: UIHelper.titleTextStyle(
                                             examplePropertyData[rowIndex]
                                                 ['fin_year'],
-                                            c.grey_10,
-                                            14,
+                                            c.grey_8,
+                                            12,
                                             false,
                                             true)))),
                             Expanded(
@@ -215,9 +218,9 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                                           examplePropertyData[rowIndex]
                                                   ['Amount']
                                               .toString(),
-                                          c.grey_10,
-                                          14,
-                                          true,
+                                          c.black,
+                                          13,
+                                          false,
                                           true))),
                             ),
                             Expanded(
@@ -225,68 +228,94 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                               child: Container(
                                   padding: EdgeInsets.all(8.0),
                                   child: Center(
-                                    child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          SizedBox(
-                                              width: 20,
-                                              height: 20,
-                                              child: Checkbox(
-                                                value: checkedListData[
-                                                        "$mainIndex"]
-                                                    ?.contains(rowIndex),
-                                                onChanged: (v) {
-                                                  if (rowIndex == 0 ||
-                                                      checkedListData[
-                                                              "$mainIndex"]!
-                                                          .contains(
-                                                              rowIndex - 1)) {
-                                                    if (checkedListData[
-                                                            "$mainIndex"]!
-                                                        .contains(rowIndex)) {
-                                                      int endIndex =
-                                                          checkedListData[
-                                                                      "$mainIndex"]!
-                                                                  .length -
-                                                              1;
-                                                      checkedListData[
-                                                              "$mainIndex"]
-                                                          ?.removeRange(
-                                                              rowIndex,
-                                                              endIndex + 1);
-                                                    } else {
-                                                      checkedListData[
-                                                              "$mainIndex"]
-                                                          ?.add(rowIndex);
-                                                    }
-                                                  }
+                                    child: Checkbox(
+                                      side:
+                                      BorderSide(width: 1, color: c.grey_6),
+                                      value: checkedListData[
+                                      "$mainIndex"]
+                                          ?.contains(rowIndex),
+                                      onChanged: (v) {
+                                        if (rowIndex == 0 ||
+                                            checkedListData[
+                                            "$mainIndex"]!
+                                                .contains(
+                                                rowIndex - 1)) {
+                                          if (checkedListData[
+                                          "$mainIndex"]!
+                                              .contains(rowIndex)) {
+                                            int endIndex =
+                                                checkedListData[
+                                                "$mainIndex"]!
+                                                    .length -
+                                                    1;
+                                            checkedListData[
+                                            "$mainIndex"]
+                                                ?.removeRange(
+                                                rowIndex,
+                                                endIndex + 1);
+                                          } else {
+                                            checkedListData[
+                                            "$mainIndex"]
+                                                ?.add(rowIndex);
+                                          }
+                                        }
 
-                                                  setState(() {});
-                                                },
-                                              ))
-                                        ]),
+                                        setState(() {});
+                                      },
+                                    ),
                                   )),
                             ),
                           ],
                         ));
                   },
                 )),
-            UIHelper.titleTextStyle("swmUserCharges".tr().toString() + " : 500",
-                c.grey_9, 14, true, true),
+            UIHelper.titleTextStyle("swmUserCharges".tr().toString(),
+                c.grey_9, 11, false, true),
             UIHelper.verticalSpaceSmall,
-            SizedBox(
+/*            SizedBox(
                 width: Screen.width(context) / 1.2,
-                child: UIHelper.tinyLinewidget(borderColor: c.grey_8)),
+                child: UIHelper.tinyLinewidget(borderColor: c.grey_6)),*/
             // UIHelper.verticalSpaceSmall,
-            Container(
-                decoration: UIHelper.GradientContainer(
-                    5, 5, 5, 5, [c.yello, c.colorPrimaryDark]),
-                padding: EdgeInsets.all(10),
-                child: UIHelper.titleTextStyle(
-                    "$totalAmount", c.grey_9, 14, true, true)),
+            Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child:Container(
+                    alignment: Alignment.centerRight,
+                      child: Text(
+                          "amount_to_pay".tr().toString(),
+                        style: TextStyle(
+                            color: c.grey_10,
+                            fontSize: 10,
+                            decoration:TextDecoration.none,
+                            fontWeight:  FontWeight.bold),
+                        textAlign: TextAlign.right,
+                      )),
+                ),
+                Expanded(
+                  flex: 2,
+                  child:Container(
+                      decoration: UIHelper.GradientContainer(
+                          5, 5, 5, 5, [c.grey, c.grey]),
+                      padding: EdgeInsets.fromLTRB(10,5,10,8),
+                      margin: EdgeInsets.all(10),
+                      child: UIHelper.titleTextStyle(
+                          "  $totalAmount", c.grey_9, 14, true, true)),
+                ),
+              ],),
+            Align(
+              alignment: Alignment.centerRight,
+              child:Visibility(
+                visible: true,
+                child: Container(
+                    margin: EdgeInsets.only(top: 5,right: 10),
+                  decoration: UIHelper.GradientContainer(
+                      5, 5, 5, 5, [c.account_status_green_color, c.account_status_green_color]),
+                  padding: EdgeInsets.fromLTRB(10,5,10,8),
+                  child: UIHelper.titleTextStyle(
+                      "pay".tr().toString(), c.white, 14, true, true)),)
+            )
+      ,
             UIHelper.verticalSpaceSmall,
           ],
         ));
@@ -322,95 +351,67 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: c.white,
-        appBar: PreferredSize(
-          preferredSize: AppBar().preferredSize,
-          child: Container(
-              padding: EdgeInsets.only(top: 30, bottom: 10, right: 20),
-              decoration: UIHelper.GradientContainer(
-                  0, 0, 30, 30, [c.colorAccentlight, c.colorPrimaryDark]),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: PopupMenuButton<String>(
-                      color: c.white,
-                      // onSelected: handleClick,
-                      itemBuilder: (BuildContext context) {
-                        return {'தமிழ்', 'English'}.map((String choice) {
-                          return PopupMenuItem<String>(
-                            value: choice,
-                            child: Text(choice),
-                          );
-                        }).toList();
-                      },
+        appBar: AppBar(
+          backgroundColor: c.colorPrimary,
+          centerTitle: true,
+          elevation: 2,
+          title: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Align(
+                  alignment: AlignmentDirectional.center,
+                  child: Container(
+                    transform: Matrix4.translationValues(-30.0, 0.0, 0.0),
+                    alignment: Alignment.center,
+                    child: Text(
+                      'house_details'.tr().toString(),
+                      style: TextStyle(fontSize: 15),
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: Text(
-                        'quickPay'.tr().toString(),
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: c.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              )),
+                ),
+              ],
+            ),
+          ),
         ),
         body: SafeArea(
           top: true,
           child: ViewModelBuilder<StartUpViewModel>.reactive(
               builder: (context, model, child) {
-                return model.isBusy
-                    ? CircularProgressIndicator()
-                    : Container(
+                return  Container(
                         padding: EdgeInsets.all(10),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              UIHelper.verticalSpaceSmall,
-                              UIHelper.titleTextStyle(
-                                  "propertyTax".tr().toString(),
-                                  c.grey_8,
-                                  14,
-                                  true,
-                                  false),
-                              UIHelper.verticalSpaceSmall,
-                              Container(
-                                  height: Screen.height(context) / 1.3,
-                                  child: ListView.builder(
-                                      //physics: NeverScrollableScrollPhysics(),
-                                      itemCount: 3,
-                                      itemBuilder: (context, mainIndex) {
-                                        return Column(
-                                          children: [
-                                            headerCardUIWidget(mainIndex),
-                                            UIHelper.verticalSpaceMedium,
-                                          ],
-                                        );
-                                      })),
-                              UIHelper.verticalSpaceSmall,
-                              Center(
-                                  child: Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: UIHelper.GradientContainer(
-                                    10,
-                                    10,
-                                    10,
-                                    10,
-                                    [c.colorAccentlight, c.colorPrimaryDark]),
-                                child: UIHelper.titleTextStyle(
-                                    "Pay Now", c.white, 12, true, true),
-                              ))
-                            ],
-                          ),
-                        ));
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                         children: [
+                           UIHelper.verticalSpaceSmall,
+                           Align(
+                             alignment:Alignment.centerLeft,
+                             child: UIHelper.titleTextStyle(
+                               "propertyTax".tr().toString(),
+                               c.grey_8,
+                               14,
+                               true,
+                               false),),
+                           UIHelper.verticalSpaceSmall,
+                           Expanded(child: Container(
+                             height: MediaQuery.of(context).size.height,
+                               child: ListView.builder(
+                                  shrinkWrap: true,
+                                 // physics: NeverScrollableScrollPhysics(),
+                                   itemCount: 3,
+                                   itemBuilder: (context, mainIndex) {
+                                     return Column(
+                                       children: [
+                                         headerCardUIWidget(mainIndex),
+                                         UIHelper.verticalSpaceMedium,
+                                       ],
+                                     );
+                                   }))),
+                           taxInvoiceWidget()
+                         ],
+                            ));
               },
               viewModelBuilder: () => StartUpViewModel()),
         ));

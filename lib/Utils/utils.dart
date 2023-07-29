@@ -9,6 +9,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:open_settings/open_settings.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
@@ -240,16 +241,16 @@ class Utils {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // SpinKitFadingCircle(
-                      //   color: c.primary_text_color2,
-                      //   duration: const Duration(seconds: 1, milliseconds: 500),
-                      //   size: 50,
-                      // ),
+                      SpinKitFadingCircle(
+                        color: c.primary_text_color2,
+                        duration: const Duration(seconds: 1, milliseconds: 500),
+                        size: 50,
+                      ),
                       const SizedBox(
                         height: 15,
                       ),
                       UIHelper.titleTextStyle(
-                          message, c.primary_text_color2, 10, true, false)
+                          message, c.primary_text_color2, 12, true, false)
                     ],
                   ),
                 ],

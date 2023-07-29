@@ -67,5 +67,9 @@
   "swmUserCharges":"SWM User Charges",
   "downloadApk": "Download the latest version and install the new APK.",
   "noInternet": "No Internet",
-  "internetError": "Internet Connection is not available..Please Turn ON Network Connection OR Continue With Off-line Mode.."
+  "internetError": "Internet Connection is not available..Please Turn ON Network Connection OR Continue With Off-line Mode..",
+  "loading": "Loading...",
+  "pay": "Pay",
+  "amount_to_pay": "Total Amount to pay",
+  "downloading": "Downloading..."
 }

@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:public_vptax/Activity/Auth/View_receipt.dart';
+import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
@@ -14,6 +15,8 @@ import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Utils/utils.dart';
+import '../Tax_Collection/taxCollection_details.dart';
+import '../Tax_Collection/taxCollection_view.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key, required isLogin});
@@ -41,28 +44,28 @@ class _HomeState extends State<Home> {
     prefs = await SharedPreferences.getInstance();
     index_val = -1;
     selected_index = -1;
-    List list=[{'taxtypeid':'1','taxtypedesc_en':'House Tax','taxtypedesc_ta':'வீட்டு வரி'},
-      {'taxtypeid':'2','taxtypedesc_en':'Water Tax','taxtypedesc_ta':'குடிநீர் கட்டணங்கள்'},
-      {'taxtypeid':'3','taxtypedesc_en':'Professional Tax','taxtypedesc_ta':'தொழில் வரி'},
-      {'taxtypeid':'4','taxtypedesc_en':'Non Tax','taxtypedesc_ta':'இதர வரவினங்கள்'},
-      {'taxtypeid':'5','taxtypedesc_en':'Trade Licence','taxtypedesc_ta':'வர்த்தக உரிமம்'},
+    List list=[{'taxtypeid':1,'taxtypedesc_en':'House Tax','taxtypedesc_ta':'வீட்டு வரி'},
+      {'taxtypeid':2,'taxtypedesc_en':'Water Tax','taxtypedesc_ta':'குடிநீர் கட்டணங்கள்'},
+      {'taxtypeid':3,'taxtypedesc_en':'Professional Tax','taxtypedesc_ta':'தொழில் வரி'},
+      {'taxtypeid':4,'taxtypedesc_en':'Non Tax','taxtypedesc_ta':'இதர வரவினங்கள்'},
+      {'taxtypeid':5,'taxtypedesc_en':'Trade Licence','taxtypedesc_ta':'வர்த்தக உரிமம்'},
     ];
     taxTypeList.clear();
      for (var item in list) {
       switch (item['taxtypeid']) {
-        case "1":
+        case 1:
           item['img_path'] = imagePath.house;
           break;
-        case "2":
+        case 2:
           item['img_path'] = imagePath.water;
           break;
-        case "3":
+        case 3:
           item['img_path'] = imagePath.professional1;
           break;
-        case "4":
+        case 4:
           item['img_path'] = imagePath.nontax1;
           break;
-        case "5":
+        case 5:
           item['img_path'] = imagePath.trade;
           break;
         default:
@@ -152,7 +155,7 @@ class _HomeState extends State<Home> {
             child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
             Row(
                 children: [
@@ -191,7 +194,7 @@ class _HomeState extends State<Home> {
                     fontWeight: FontWeight.bold),
               ),),
                 Container(
-                  height: MediaQuery.of(context).size.height/4,
+                  height: MediaQuery.of(context).size.height/5,
                   margin: EdgeInsets.only(left: 15,right: 15),
                   child: ListView.builder(
                     scrollDirection:  Axis.horizontal,
@@ -201,14 +204,18 @@ class _HomeState extends State<Home> {
                         onTap: (){
                           setState(() {
                             index_val=i;
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) =>
+                                        TaxCollectionDetailsView()));
                           });
                         },
                         child: Container(
-                        alignment: Alignment.center,
-                        margin: EdgeInsets.fromLTRB(2,10,2,10),
+                        margin: EdgeInsets.fromLTRB(2,20,2,10),
                         // decoration: i == index_val ?UIHelper.circleWithColorWithShadow(360,c.colorAccentverylight,c.colorPrimaryDark):UIHelper.circleWithColorWithShadow(360,c.white,c.white),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Container(
@@ -283,6 +290,8 @@ class _HomeState extends State<Home> {
                                     });
                                     },
                                   child:  Container(
+                                    height: (Screen.height(context) / 2)-10,
+                                    width: (Screen.height(context) / 2)-10,
                                     alignment: Alignment.center,
                                     margin: EdgeInsets.all(10),
                                     decoration: index == selected_index ?UIHelper.roundedBorderWithColorWithShadow(5,c.colorAccentverylight,c.colorPrimaryDark,borderWidth: 0):UIHelper.roundedBorderWithColorWithShadow(5,c.need_improvement2,c.need_improvement2,borderWidth: 0),
@@ -292,7 +301,7 @@ class _HomeState extends State<Home> {
                                           child:Image.asset(
                                             servicesList[index][key_img_path],
                                           ),
-                                          height: MediaQuery.of(context).size.height/8,
+                                          height: MediaQuery.of(context).size.width * 0.2,
                                           margin: EdgeInsets.only(left: MediaQuery.of(context).size.width/20,right: MediaQuery.of(context).size.width/20,top: 10),
                                           padding: EdgeInsets.all(5),
                                           width: MediaQuery.of(context).size.width,
@@ -324,7 +333,7 @@ class _HomeState extends State<Home> {
 
                                         Container(
                                           alignment: Alignment.center,
-                                          margin: EdgeInsets.all(10),
+                                          margin: EdgeInsets.fromLTRB(5,10,5,10),
                                           child: Text(
                                               getServiceName(servicesList[index][key_service_name]),
                                             style: TextStyle(fontSize: 12,height: 1.5,color:  index == selected_index ?c.white:c.grey_9),

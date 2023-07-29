@@ -1,5 +1,7 @@
 // ignore_for_file: file_names, library_private_types_in_public_api, unrelated_type_equality_checks
 
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
@@ -7,6 +9,7 @@ import 'package:public_vptax/Activity/Auth/Login.dart';
 import 'package:public_vptax/Activity/Tax_Collection/taxCollection_view.dart';
 import 'package:public_vptax/Layout/customgradientbutton.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
+import '../../Model/startup_model.dart';
 import '../../Resources/StringsKey.dart' as s;
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagepath;
@@ -64,10 +67,9 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
       curve: Curves.easeInOut,
     ));
 
-    initialize();
-
     _topAnimationController.forward();
     _rightToLeftAnimController.forward();
+    initialize();
   }
 
   Future<void> initialize() async {
@@ -76,6 +78,13 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
         : langItems[1][s.key_langCode];
 
     setState(() {});
+  }
+  Future<void> apiCalls() async {
+    Utils().showProgress(context, 1);
+    await StartUpViewModel().getOpenServiceList("District");
+    await StartUpViewModel().getOpenServiceList("Block");
+    await StartUpViewModel().getOpenServiceList("Village");
+    Utils().hideProgress(context);
   }
 
   void handleClick(String value) async {
@@ -256,12 +265,13 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
       width: Screen.width(context) / 2.5,
       height: 45,
       child: TextButton.icon(
-        onPressed: () {
+        onPressed: () async {
           if (flag == 1) {
             Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => Login(),
             ));
           } else if (flag == 2) {
+            await apiCalls();
             Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => TaxCollectionView(),
             ));
