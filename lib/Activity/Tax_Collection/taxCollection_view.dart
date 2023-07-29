@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:public_vptax/Activity/Tax_Collection/taxCollection_details.dart';
@@ -29,8 +30,8 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
   String selectedDistrict = "";
   String selectedBlock = "";
   String selectedVillage = "";
-  int selectedTaxType = 0;
-  int selectedEntryType = 0;
+  int selectedTaxType = 1;
+  int selectedEntryType = 1;
   List taxlist = [
     {
       'taxtypeid': '1',
@@ -102,6 +103,12 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                   FormBuilderValidators.required(
                       errorText: hintText + " " + 'isEmpty'.tr().toString()),
                 ]),
+      inputFormatters: fieldType == key_mobileNumber
+          ? [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(10),
+            ]
+          : [],
       keyboardType: fieldType == key_mobileNumber || fieldType == key_number
           ? TextInputType.number
           : TextInputType.text,
@@ -218,17 +225,18 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
           setState(() {});
         },
         child: ClipPath(
-            clipper: TriangleClipper(),
+            clipper: LeftTriangleClipper(),
             child: Card(
                 elevation: 4,
                 child: Container(
-                    width: Screen.width(context) / 1.5,
-                    padding: EdgeInsets.all(10),
+                    width: Screen.width(context),
+                    padding: EdgeInsets.all(9),
                     color: selectedEntryType == index
                         ? Colors.teal
                         : c.need_improvement2,
                     child: Row(
                       children: [
+                        UIHelper.horizontalSpaceSmall,
                         Icon(
                           selectedEntryType == index
                               ? Icons.radio_button_checked_rounded
@@ -435,16 +443,17 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
         },
         child: Container(
             width: Screen.width(context) / 2.5,
-            height: 90,
+            height: 100,
             padding: EdgeInsets.all(10),
             decoration: selectedTaxType == index
                 ? UIHelper.GradientContainer(10, 10, 10, 10,
-                    [c.colorAccentverylight, c.colorAccentveryverylight])
+                    [c.colorAccentverylight, c.colorAccentveryverylight],
+                    borderColor: c.red, intwid: 2)
                 : UIHelper.roundedBorderWithColorWithShadow(
                     10, c.white, c.white),
             //UIHelper.roundedBorderWithColor(40, 0, 0, 40, c.white),
-            child: Center(
-                child: Column(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 InkWell(
                     child: Image.asset(
@@ -464,7 +473,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                     true,
                     true)
               ],
-            ))));
+            )));
   }
 
   Widget taxWidgetGridView() {
@@ -540,6 +549,22 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                                         true),
                                     UIHelper.verticalSpaceSmall,
                                     taxWidgetGridView(),
+                                    Container(
+                                        width:
+                                            200, // Adjust the width as per your requirements
+                                        height:
+                                            200, // Adjust the height as per your requirements
+                                        decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                          colors: [
+                                            Colors.red,
+                                            Colors.green,
+                                            Colors.blue,
+                                            Colors.yellow,
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ))),
                                     UIHelper.verticalSpaceSmall,
                                     UIHelper.titleTextStyle(
                                         "Please Select Anyone",

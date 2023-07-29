@@ -35,6 +35,7 @@ class UIHelper {
       style: TextStyle(
           color: clr,
           fontSize: fntsize,
+          decoration: TextDecoration.none,
           fontWeight: isBold ? FontWeight.bold : FontWeight.normal),
       textAlign: isCenterAliignment ? TextAlign.center : TextAlign.left,
     );
@@ -107,7 +108,7 @@ class UIHelper {
 //Gradient Container Style Provider
   static BoxDecoration GradientContainer(double topleft, double topright,
       double btmleft, double btmright, List<Color> c1,
-      {Color borderColor = Colors.transparent}) {
+      {Color borderColor = Colors.transparent, double intwid = 0}) {
     return BoxDecoration(
       gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -117,6 +118,7 @@ class UIHelper {
             0.6,
           ],
           colors: c1),
+      border: Border.all(color: borderColor, width: intwid),
       borderRadius: BorderRadius.only(
           topRight: Radius.circular(topright),
           topLeft: Radius.circular(topleft),

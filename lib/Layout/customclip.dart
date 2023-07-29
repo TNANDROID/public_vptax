@@ -37,3 +37,24 @@ class TriangleClipper extends CustomClipper<Path> {
     return false;
   }
 }
+
+class LeftTriangleClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final path = Path()
+      ..lineTo(40, 0) // Top-left point of the card
+      ..lineTo(0, size.height / 2) // Left-middle point of the card
+      ..lineTo(40, size.height) // Bottom-left point of the card
+      ..lineTo(size.width, size.height) // Bottom-right point of the card
+      ..lineTo(size.width,
+          0) // Top-right point of the card (to create the rectangle shape)
+      ..close(); // Close the path to complete the shape
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    return false;
+  }
+}
