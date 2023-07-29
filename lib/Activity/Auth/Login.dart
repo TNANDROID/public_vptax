@@ -50,8 +50,6 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
             end: const Offset(0.0, 0.0))
         .animate(CurvedAnimation(
             parent: _rightToLeftAnimController, curve: Curves.easeInOut));
-
-    initialize();
   }
 
   @override
@@ -60,31 +58,31 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  Future<void> initialize() async {}
-
-  Future<void> onBackpress() async {
+  Future<bool> onBackpress() async {
+    bool flag;
     if (otpFlag) {
       otpFlag = !otpFlag;
       changeImageAndAnimate();
+      flag = false;
     } else {
+      flag = true;
       Navigator.of(context).pop();
     }
+    return flag;
   }
 
-  void changeImageAndAnimate() {
-    setState(() {
-      if (otpFlag) {
-        _rightToLeftAnimController.forward();
-      } else {
-        _rightToLeftAnimController.reverse();
-      }
-    });
+  void changeImageAndAnimate() async {
+    if (otpFlag) {
+      _rightToLeftAnimController.forward();
+    } else {
+      await _rightToLeftAnimController.reverse();
+    }
+    setState(() {});
   }
 
   Future<void> validate() async {
-    // Get OTP
     if (!otpFlag) {
-      print('mobileController.text: ${mobileController.text}');
+      utils.closeKeypad(context);
       if (utils.isNumberValid(mobileController.text)) {
         otpFlag = !otpFlag;
         changeImageAndAnimate();
@@ -101,227 +99,237 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
       top: true,
       child: Scaffold(
           resizeToAvoidBottomInset: true,
-          body: SingleChildScrollView(
-            child: Stack(
-              alignment: Alignment.topCenter,
-              children: [
-                // ****************************** Background Color alone Field ****************************** //
+          body: WillPopScope(
+            onWillPop: onBackpress,
+            child: SingleChildScrollView(
+              child: Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  // ****************************** Background Color alone Field ****************************** //
 
-                CustomGradientButton(
-                  width: Screen.width(context),
-                  height: Screen.height(context) - 40,
-                  topleft: 0,
-                  topright: 0,
-                  btnPadding: 0,
-                ),
+                  CustomGradientButton(
+                    width: Screen.width(context),
+                    height: Screen.height(context) - 40,
+                    topleft: 0,
+                    topright: 0,
+                    btmleft: 0,
+                    btmright: 0,
+                    btnPadding: 0,
+                  ),
 
-                // ****************************** Upper Card Image Design Field ****************************** //
+                  // ****************************** Upper Card Image Design Field ****************************** //
 
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      margin: EdgeInsets.only(
-                          top: Screen.width(context) * 0.07,
-                          left: Screen.width(context) * 0.07),
-                      child: InkWell(
-                        onTap: () {
-                          onBackpress();
-                        },
-                        child: Icon(
-                          Icons.arrow_circle_left_outlined,
-                          size: 30,
-                          color: c.white,
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        margin: EdgeInsets.only(
+                            top: Screen.width(context) * 0.07,
+                            left: Screen.width(context) * 0.07),
+                        child: InkWell(
+                          onTap: () {
+                            onBackpress();
+                          },
+                          child: Icon(
+                            Icons.arrow_circle_left_outlined,
+                            size: 30,
+                            color: c.white,
+                          ),
                         ),
                       ),
-                    ),
-                    Visibility(
-                        visible: !otpFlag,
-                        child: Container(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          margin: EdgeInsets.only(
-                              top: Screen.height(context) * 0.02),
-                          width: Screen.width(context) - 150,
-                          height: Screen.width(context) - 150,
-                          decoration: UIHelper.roundedBorderWithColorWithShadow(
-                              30.0, c.white, c.white),
-                          child: ClipRect(
-                            child: SizedBox(
-                              height: Screen.width(context) - 50,
-                              width: Screen.width(context) - 50,
-                              child: Image.asset(
-                                imagepath.loginEnc,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ),
-                        )),
-                    Visibility(
-                        visible: otpFlag,
-                        child: Container(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          margin: EdgeInsets.only(
-                              top: Screen.height(context) * 0.02),
-                          width: Screen.width(context) - 150,
-                          height: Screen.width(context) - 150,
-                          decoration: UIHelper.roundedBorderWithColorWithShadow(
-                              30.0, c.white, c.white),
-                          child: ClipRect(
-                            child: SizedBox(
-                              height: Screen.width(context) - 50,
-                              width: Screen.width(context) - 50,
-                              child: AnimatedBuilder(
-                                  animation: _rightToLeftAnimation,
-                                  builder: (context, child) {
-                                    return SlideTransition(
-                                      position: _rightToLeftAnimation,
-                                      child: Image.asset(
-                                        imagepath.loginPass,
-                                        fit: BoxFit.contain,
-                                      ),
-                                    );
-                                  }),
-                            ),
-                          ),
-                        )),
-                    Container(
-                      margin:
-                          EdgeInsets.only(top: Screen.height(context) * 0.05),
-                      child: Text(
-                        'signIN'.tr().toString(),
-                        style: TextStyle(
-                          fontSize: 32.0,
-                          fontWeight: FontWeight.bold,
-                          color: c.white,
-                          fontStyle: FontStyle.normal,
-                          decorationStyle: TextDecorationStyle.wavy,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-
-                // ****************************** Log in Field ****************************** //
-
-                Positioned(
-                  bottom: 0,
-                  child: Container(
-                      margin: EdgeInsets.only(
-                          bottom: Screen.height(context) * 0.02),
-                      width: Screen.width(context) - 50,
-                      height: Screen.width(context) - 50,
-                      decoration: UIHelper.roundedBorderWithColorWithShadow(
-                          30.0, c.white, c.white),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(),
-
-                          // ****************************** Mobile Number Field ****************************** //
-                          Container(
-                            margin: EdgeInsets.all(15),
-                            width: Screen.width(context) - 100,
-                            height: 50,
-                            child: IgnorePointer(
-                              ignoring: otpFlag,
-                              child: FormBuilderTextField(
-                                name: 'mobile',
-                                textAlign: TextAlign.center,
-                                controller: mobileController,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                  LengthLimitingTextInputFormatter(10),
-                                ],
-                                decoration: InputDecoration(
-                                  labelText: 'Mobile Number',
-                                  labelStyle: TextStyle(
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black),
-                                  hintText: 'Mobile Number',
-                                  hintStyle: TextStyle(fontSize: 16),
-                                  enabledBorder: UIHelper.getInputBorder(1,
-                                      borderColor: c.grey_7),
-                                  focusedBorder: UIHelper.getInputBorder(1,
-                                      borderColor: c.grey_7),
-                                  filled: true,
-                                  contentPadding: EdgeInsets.all(16),
-                                  fillColor: c.inputGrey,
+                      Visibility(
+                          visible: !otpFlag,
+                          child: Container(
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            margin: EdgeInsets.only(
+                                top: Screen.height(context) * 0.02),
+                            width: Screen.width(context) - 150,
+                            height: Screen.width(context) - 150,
+                            decoration:
+                                UIHelper.roundedBorderWithColorWithShadow(
+                                    30.0, c.white, c.white),
+                            child: ClipRect(
+                              child: SizedBox(
+                                height: Screen.width(context) - 50,
+                                width: Screen.width(context) - 50,
+                                child: Image.asset(
+                                  imagepath.loginEnc,
+                                  fit: BoxFit.contain,
                                 ),
                               ),
                             ),
+                          )),
+                      Visibility(
+                          visible: otpFlag,
+                          child: Container(
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            margin: EdgeInsets.only(
+                                top: Screen.height(context) * 0.02),
+                            width: Screen.width(context) - 150,
+                            height: Screen.width(context) - 150,
+                            decoration:
+                                UIHelper.roundedBorderWithColorWithShadow(
+                                    30.0, c.white, c.white),
+                            child: ClipRect(
+                              child: SizedBox(
+                                height: Screen.width(context) - 50,
+                                width: Screen.width(context) - 50,
+                                child: AnimatedBuilder(
+                                    animation: _rightToLeftAnimation,
+                                    builder: (context, child) {
+                                      return SlideTransition(
+                                        position: _rightToLeftAnimation,
+                                        child: Image.asset(
+                                          imagepath.loginPass,
+                                          fit: BoxFit.contain,
+                                        ),
+                                      );
+                                    }),
+                              ),
+                            ),
+                          )),
+                      Container(
+                        margin:
+                            EdgeInsets.only(top: Screen.height(context) * 0.05),
+                        child: Text(
+                          'signIN'.tr().toString(),
+                          style: TextStyle(
+                            fontSize: 25.0,
+                            fontWeight: FontWeight.bold,
+                            color: c.white,
+                            fontStyle: FontStyle.normal,
+                            decorationStyle: TextDecorationStyle.wavy,
                           ),
+                        ),
+                      )
+                    ],
+                  ),
 
-                          // ****************************** OTP verification Field ****************************** //
+                  // ****************************** Log in Field ****************************** //
 
-                          Visibility(
-                            visible: otpFlag,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 15, horizontal: 10),
-                                  child: OTPTextField(
-                                    onChanged: (pin) {
-                                      print("Changed: " + pin);
-                                    },
-                                    onCompleted: (pin) {
-                                      utils.closeKeypad(context);
-                                      finalOTP = pin;
-                                    },
-                                    width: Screen.width(context) - 100,
-                                    controller: OTPcontroller,
-                                    length: 6,
-                                    fieldStyle: FieldStyle.box,
-                                    fieldWidth: 40,
+                  Positioned(
+                    bottom: 0,
+                    child: Container(
+                        margin: EdgeInsets.only(
+                            bottom: Screen.height(context) * 0.02),
+                        width: Screen.width(context) - 50,
+                        height: Screen.width(context) - 50,
+                        decoration: UIHelper.roundedBorderWithColorWithShadow(
+                            30.0, c.white, c.white),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(),
+
+                            // ****************************** Mobile Number Field ****************************** //
+                            Container(
+                              margin: EdgeInsets.all(15),
+                              width: Screen.width(context) - 100,
+                              height: 50,
+                              child: IgnorePointer(
+                                ignoring: otpFlag,
+                                child: FormBuilderTextField(
+                                  // onTapOutside: (event) {
+                                  //   utils.closeKeypad(context);
+                                  // },
+                                  name: 'mobile',
+                                  textAlign: TextAlign.center,
+                                  controller: mobileController,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                    LengthLimitingTextInputFormatter(10),
+                                  ],
+                                  decoration: InputDecoration(
+                                    labelText: 'Mobile Number',
+                                    labelStyle: TextStyle(
+                                        fontSize: 14.0,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black),
+                                    hintText: 'Mobile Number',
+                                    hintStyle: TextStyle(fontSize: 16),
+                                    enabledBorder: UIHelper.getInputBorder(1,
+                                        borderColor: c.grey_7),
+                                    focusedBorder: UIHelper.getInputBorder(1,
+                                        borderColor: c.grey_7),
+                                    filled: true,
+                                    contentPadding: EdgeInsets.all(16),
+                                    fillColor: c.inputGrey,
                                   ),
                                 ),
-                                Container(
-                                  width: Screen.width(context) - 100,
-                                  margin: EdgeInsets.only(right: 5),
-                                  alignment: Alignment.centerRight,
-                                  child: Text(
-                                    "{ ${'resendOTP'.tr().toString()} }",
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                      color: c.primary_text_color2,
+                              ),
+                            ),
+
+                            // ****************************** OTP verification Field ****************************** //
+
+                            Visibility(
+                              visible: otpFlag,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 15, horizontal: 10),
+                                    child: OTPTextField(
+                                      onChanged: (pin) {
+                                        print("Changed: " + pin);
+                                      },
+                                      onCompleted: (pin) {
+                                        utils.closeKeypad(context);
+                                        finalOTP = pin;
+                                      },
+                                      width: Screen.width(context) - 100,
+                                      controller: OTPcontroller,
+                                      length: 6,
+                                      fieldStyle: FieldStyle.box,
+                                      fieldWidth: 40,
                                     ),
                                   ),
-                                )
-                              ],
+                                  Container(
+                                    width: Screen.width(context) - 100,
+                                    margin: EdgeInsets.only(right: 5),
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      "{ ${'resendOTP'.tr().toString()} }",
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        color: c.primary_text_color2,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
 
-                          // ****************************** Submit Action Field ****************************** //
+                            // ****************************** Submit Action Field ****************************** //
 
-                          CustomGradientButton(
-                            onPressed: () async {
-                              await validate();
-                            },
-                            width: Screen.width(context) - 100,
-                            height: 50,
-                            child: Container(
-                              alignment: Alignment.center,
-                              child: Text(
-                                otpFlag
-                                    ? 'verifyOTP'.tr().toString()
-                                    : 'getOTP'.tr().toString(),
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                            CustomGradientButton(
+                              onPressed: () async {
+                                await validate();
+                              },
+                              width: Screen.width(context) - 100,
+                              height: 50,
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  otpFlag
+                                      ? 'verifyOTP'.tr().toString()
+                                      : 'getOTP'.tr().toString(),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          SizedBox()
-                        ],
-                      )),
-                ),
-              ],
+                            SizedBox()
+                          ],
+                        )),
+                  ),
+                ],
+              ),
             ),
           )),
     );

@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, prefer_const_constructors, use_full_hex_values_for_flutter_colors
+// ignore_for_file: non_constant_identifier_names, prefer_const_constructors, use_full_hex_values_for_flutter_colors, file_names
 
 import 'dart:ui';
 
@@ -118,3 +118,9 @@ Color splashBtn = Color(0xFF00b2ce);
 Color blueAccent = Color(0xFFd6f9ff);
 Color inputGrey = Color(0xFFeeecec);
 Color need_improvement2 = Color(0xFFEDF3FA);
+
+//ALert Colors
+Color helpBlue = Color(0xff3282B8);
+Color failureRed = Color(0xffc72c41);
+Color successGreen = Color(0xff2D6A4F);
+Color warningYellow = Color(0xffFCA652);

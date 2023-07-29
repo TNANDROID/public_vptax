@@ -10,6 +10,7 @@ import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:open_settings/open_settings.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
@@ -18,7 +19,7 @@ import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:url_launcher/url_launcher.dart';
-
+import 'dart:ui' as ui;
 import '../Resources/StringsKey.dart';
 
 class Utils {
@@ -255,6 +256,158 @@ class Utils {
                   ),
                 ],
               ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Color getDarkerColor(Color color) {
+    final hsl = HSLColor.fromColor(color);
+    final hslDark = hsl.withLightness((hsl.lightness - 0.1).clamp(0.0, 1.0));
+    return hslDark.toColor();
+  }
+
+  ui.ColorFilter? getColorFilter(Color? color, ui.BlendMode colorBlendMode) {
+    return color == null ? null : ui.ColorFilter.mode(color, colorBlendMode);
+  }
+
+  String assetSVG(String contentType) {
+    switch (contentType) {
+      case 'fail':
+        return imagePath.failure;
+      case 'success':
+        return imagePath.success;
+      case 'warning':
+        return imagePath.warning;
+      case 'help':
+        return imagePath.help;
+      default:
+        return imagePath.failure;
+    }
+  }
+
+  Color getColor(String contentType) {
+    switch (contentType) {
+      case 'fail':
+        return c.failureRed;
+      case 'success':
+        return c.successGreen;
+      case 'warning':
+        return c.warningYellow;
+      case 'help':
+        return c.helpBlue;
+      default:
+        return c.failureRed;
+    }
+  }
+
+  Future<void> showAlerts(
+      BuildContext context, String type, String title, String message,
+      [double? titleFontSize, double? messageFontSize]) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        // Size
+        final size = MediaQuery.of(context).size;
+        double rightSpace = size.width * 0.12;
+        double leftSpace = size.width * 0.12;
+
+        Color color = getColor(type);
+
+        final hsl = HSLColor.fromColor(color);
+        final hslDark =
+            hsl.withLightness((hsl.lightness - 0.1).clamp(0.0, 1.0));
+
+        return Center(
+          child: Container(
+            width: size.width,
+            height: size.width * 0.45,
+            margin: EdgeInsets.symmetric(horizontal: size.width * 0.045),
+            decoration:
+                UIHelper.roundedBorderWithColorWithShadow(20, color, color),
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.center,
+              children: [
+                // ***********************  Bottom Splash Icon *********************** //
+
+                Positioned(
+                  bottom: 0,
+                  left: size.width * 0.001,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                    ),
+                    child: SvgPicture.asset(
+                      imagePath.bubbles,
+                      height: size.height * 0.06,
+                      width: size.width * 0.05,
+                      colorFilter:
+                          getColorFilter(hslDark.toColor(), ui.BlendMode.srcIn),
+                    ),
+                  ),
+                ),
+
+                // ***********************  Bubble With Icon *********************** //
+                Positioned(
+                  top: -size.height * 0.035,
+                  left: size.width * 0.125,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        imagePath.back,
+                        height: size.height * 0.08,
+                        colorFilter: getColorFilter(
+                            hslDark.toColor(), ui.BlendMode.srcIn),
+                      ),
+                      Positioned(
+                        top: size.height * 0.025,
+                        child: SvgPicture.asset(
+                          assetSVG(type),
+                          height: size.height * 0.022,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+
+                // ***********************  Text Content *********************** //
+
+                Positioned(
+                  top: 25,
+                  child: Text(
+                    'signIN'.tr().toString(),
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                      color: c.white,
+                      fontStyle: FontStyle.normal,
+                      decoration: TextDecoration.none,
+                      decorationStyle: TextDecorationStyle.wavy,
+                    ),
+                  ),
+                ),
+
+                Container(
+                  margin: EdgeInsets.all(size.width * 0.05),
+                  child: Text(
+                    'downloadApk'.tr().toString(),
+                    style: TextStyle(
+                      fontSize: 11.0,
+                      fontWeight: FontWeight.bold,
+                      color: c.white,
+                      decoration: TextDecoration.none,
+                      decorationStyle: TextDecorationStyle.wavy,
+                    ),
+                    textAlign: TextAlign.center,
+                    softWrap: true,
+                  ),
+                ),
+              ],
             ),
           ),
         );
