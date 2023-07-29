@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:public_vptax/Activity/Tax_Collection/taxCollection_details.dart';
+import 'package:public_vptax/Layout/customclip.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Model/startup_model.dart';
@@ -28,8 +29,35 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
   String selectedDistrict = "";
   String selectedBlock = "";
   String selectedVillage = "";
-  String selectedTaxType = "";
-  int selectedEntryType = 1;
+  int selectedTaxType = 0;
+  int selectedEntryType = 0;
+  List taxlist = [
+    {
+      'taxtypeid': '1',
+      'taxtypedesc_en': 'House Tax',
+      'taxtypedesc_ta': 'வீட்டு வரி'
+    },
+    {
+      'taxtypeid': '2',
+      'taxtypedesc_en': 'Water Tax',
+      'taxtypedesc_ta': 'குடிநீர் கட்டணங்கள்'
+    },
+    {
+      'taxtypeid': '3',
+      'taxtypedesc_en': 'Professional Tax',
+      'taxtypedesc_ta': 'தொழில் வரி'
+    },
+    {
+      'taxtypeid': '4',
+      'taxtypedesc_en': 'Non Tax',
+      'taxtypedesc_ta': 'இதர வரவினங்கள்'
+    },
+    {
+      'taxtypeid': '5',
+      'taxtypedesc_en': 'Trade Licence',
+      'taxtypedesc_ta': 'வர்த்தக உரிமம்'
+    },
+  ];
 
   Widget addInputFormControl(
       String nameField, String hintText, String fieldType) {
@@ -43,7 +71,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
       decoration: InputDecoration(
         labelText: hintText,
         labelStyle: TextStyle(
-            fontSize: 16.0, fontWeight: FontWeight.w800, color: c.black),
+            fontSize: 14.0, fontWeight: FontWeight.w800, color: c.grey_9),
         filled: true,
         fillColor: Colors.white,
         enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
@@ -88,12 +116,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
     String titleText = "";
     String titleTextTamil = "";
 
-    if (index == 0) {
-      dropList = model.taxType.toList();
-      keyCode = "taxCode";
-      titleText = "taxname";
-      titleTextTamil = "taxname";
-    } else if (index == 1) {
+    if (index == 1) {
       dropList = model.districtList;
       keyCode = key_dcode;
       titleText = key_dname;
@@ -117,7 +140,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
       decoration: InputDecoration(
         labelText: inputHint,
         labelStyle: TextStyle(
-            fontSize: 16.0, fontWeight: FontWeight.w800, color: c.black),
+            fontSize: 14.0, fontWeight: FontWeight.w800, color: c.grey_9),
         filled: true,
         fillColor: Colors.white,
         enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
@@ -128,13 +151,11 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
             vertical: 8, horizontal: 12), // Optional: Adjust padding
       ),
       name: fieldName,
-      initialValue: index == 0
-          ? selectedTaxType
-          : index == 1
-              ? selectedDistrict
-              : index == 2
-                  ? selectedBlock
-                  : selectedVillage,
+      initialValue: index == 1
+          ? selectedDistrict
+          : index == 2
+              ? selectedBlock
+              : selectedVillage,
       onTap: () async {
         if (index == 1) {
           selectedDistrict = "";
@@ -174,9 +195,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
               ))
           .toList(),
       onChanged: (value) async {
-        if (index == 0) {
-          selectedTaxType = value.toString();
-        } else if (index == 1) {
+        if (index == 1) {
           selectedDistrict = value.toString();
           await model.loadUIBlock(selectedDistrict);
         } else if (index == 2) {
@@ -193,108 +212,155 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
   }
 
   Widget radioButtonWidget(int index, String title) {
-    return Row(
+    return GestureDetector(
+        onTap: () {
+          selectedEntryType = index;
+          setState(() {});
+        },
+        child: ClipPath(
+            clipper: TriangleClipper(),
+            child: Card(
+                elevation: 4,
+                child: Container(
+                    width: Screen.width(context) / 1.5,
+                    padding: EdgeInsets.all(10),
+                    color: selectedEntryType == index
+                        ? Colors.teal
+                        : c.need_improvement2,
+                    child: Row(
+                      children: [
+                        Icon(
+                          selectedEntryType == index
+                              ? Icons.radio_button_checked_rounded
+                              : Icons.radio_button_off_rounded,
+                          color:
+                              selectedEntryType == index ? c.white : c.grey_9,
+                          size: 20,
+                        ),
+                        UIHelper.horizontalSpaceSmall,
+                        Expanded(
+                            child: UIHelper.titleTextStyle(
+                                title,
+                                selectedEntryType == index ? c.white : c.grey_9,
+                                12,
+                                true,
+                                false)),
+                      ],
+                    )))));
+  }
+
+  Widget radioButtonListWidget() {
+    return Column(
       children: [
-        Radio(
-          value: index,
-          groupValue: selectedEntryType,
-          onChanged: (value) {
-            selectedEntryType = int.parse(value.toString());
-            setState(() {});
-          },
-        ),
-        Expanded(
-            child:
-                UIHelper.titleTextStyle(title, Colors.black, 12, true, false)),
+        radioButtonWidget(1, 'mobileNumber'.tr().toString()),
+        UIHelper.verticalSpaceSmall,
+        radioButtonWidget(2, 'computerRegisterNumber'.tr().toString()),
+        UIHelper.verticalSpaceSmall,
+        radioButtonWidget(3, 'tryAnotherWay'.tr().toString()),
       ],
     );
   }
 
   Widget formControls(BuildContext context, StartUpViewModel model) {
-    return Padding(
-        padding: const EdgeInsets.only(left: 5, right: 5),
-        child: FormBuilder(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+    return FormBuilder(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Column(
             children: [
-              Column(
-                children: [
-                  Container(
-                    width: Screen.width(context),
-                    padding: EdgeInsets.all(15),
-                    child: Column(
-                      children: [
-                        addInputDropdownField(
-                            0, 'taxType'.tr().toString(), "taxtype", model),
-                        UIHelper.verticalSpaceSmall,
-                        radioButtonWidget(1, 'mobileNumber'.tr().toString()),
-                        radioButtonWidget(
-                            2, 'computerRegisterNumber'.tr().toString()),
-                        radioButtonWidget(3, 'tryAnotherWay'.tr().toString()),
-                        UIHelper.verticalSpaceSmall,
-                        selectedEntryType == 1
-                            ? Column(
-                                children: [
-                                  addInputFormControl(
-                                      'mobile',
-                                      'mobileNumber'.tr().toString(),
-                                      key_mobileNumber),
-                                  UIHelper.verticalSpaceSmall,
-                                ],
-                              )
-                            : SizedBox(),
-                        selectedEntryType == 2
-                            ? Column(
-                                children: [
-                                  addInputFormControl(
-                                      'computerRegNo',
-                                      'computerRegisterNumber'.tr().toString(),
-                                      key_number),
-                                  UIHelper.verticalSpaceSmall,
-                                ],
-                              )
-                            : SizedBox(),
-                        selectedEntryType == 3
-                            ? Column(
-                                children: [
-                                  addInputDropdownField(
-                                      1,
-                                      'districtName'.tr().toString(),
-                                      "district",
-                                      model),
-                                  UIHelper.verticalSpaceSmall,
-                                  if (model.selectedBlockList.length > 0)
-                                    addInputDropdownField(
-                                        2,
-                                        'blockName'.tr().toString(),
-                                        "block",
-                                        model),
-                                  if (model.selectedBlockList.length > 0)
-                                    UIHelper.verticalSpaceSmall,
-                                  if (model.selectedVillageList.length > 0)
-                                    addInputDropdownField(
-                                        3,
-                                        'villageName'.tr().toString(),
-                                        "village",
-                                        model),
-                                  if (model.selectedVillageList.length > 0)
-                                    UIHelper.verticalSpaceSmall,
-                                  UIHelper.verticalSpaceSmall,
-                                  selectedTaxType == "01"
+              Container(
+                width: Screen.width(context),
+                // padding: EdgeInsets.all(15),
+                child: Column(
+                  children: [
+                    UIHelper.verticalSpaceSmall,
+                    UIHelper.verticalSpaceSmall,
+                    selectedEntryType == 1
+                        ? Column(
+                            children: [
+                              addInputFormControl(
+                                  'mobile',
+                                  'mobileNumber'.tr().toString(),
+                                  key_mobileNumber),
+                              UIHelper.verticalSpaceSmall,
+                            ],
+                          )
+                        : SizedBox(),
+                    selectedEntryType == 2
+                        ? Column(
+                            children: [
+                              addInputFormControl(
+                                  'computerRegNo',
+                                  'computerRegisterNumber'.tr().toString(),
+                                  key_number),
+                              UIHelper.verticalSpaceSmall,
+                            ],
+                          )
+                        : SizedBox(),
+                    selectedEntryType == 3
+                        ? Column(
+                            children: [
+                              addInputDropdownField(
+                                  1,
+                                  'districtName'.tr().toString(),
+                                  "district",
+                                  model),
+                              UIHelper.verticalSpaceSmall,
+                              if (model.selectedBlockList.length > 0)
+                                addInputDropdownField(
+                                    2,
+                                    'blockName'.tr().toString(),
+                                    "block",
+                                    model),
+                              if (model.selectedBlockList.length > 0)
+                                UIHelper.verticalSpaceSmall,
+                              if (model.selectedVillageList.length > 0)
+                                addInputDropdownField(
+                                    3,
+                                    'villageName'.tr().toString(),
+                                    "village",
+                                    model),
+                              if (model.selectedVillageList.length > 0)
+                                UIHelper.verticalSpaceSmall,
+                              UIHelper.verticalSpaceSmall,
+                              selectedTaxType == 1
+                                  ? addInputFormControl(
+                                      'assesment',
+                                      'assesmentNumber'.tr().toString(),
+                                      key_number)
+                                  : selectedTaxType == 2
                                       ? addInputFormControl(
-                                          'assesment',
-                                          'assesmentNumber'.tr().toString(),
+                                          'waterConnectionNumber',
+                                          'waterConnectionNo'.tr().toString(),
                                           key_number)
-                                      : selectedTaxType == "02"
-                                          ? addInputFormControl(
-                                              'waterConnectionNumber',
-                                              'waterConnectionNo'
-                                                  .tr()
-                                                  .toString(),
-                                              key_number)
-                                          : selectedTaxType == "03"
-                                              ? Column(
+                                      : selectedTaxType == 3
+                                          ? Column(
+                                              children: [
+                                                addInputDropdownField(
+                                                    4,
+                                                    'financialYear'
+                                                        .tr()
+                                                        .toString(),
+                                                    "vip",
+                                                    model),
+                                                UIHelper.verticalSpaceSmall,
+                                                addInputFormControl(
+                                                    'assesmentNumber',
+                                                    'assesmentNumber'
+                                                        .tr()
+                                                        .toString(),
+                                                    key_number),
+                                              ],
+                                            )
+                                          : selectedTaxType == 4
+                                              ? addInputFormControl(
+                                                  'lesseeNumber',
+                                                  'lesseeNumber'
+                                                      .tr()
+                                                      .toString(),
+                                                  key_number)
+                                              : Column(
                                                   children: [
                                                     addInputDropdownField(
                                                         4,
@@ -305,131 +371,193 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                                                         model),
                                                     UIHelper.verticalSpaceSmall,
                                                     addInputFormControl(
-                                                        'assesmentNumber',
-                                                        'assesmentNumber'
+                                                        'tradeNumber',
+                                                        'tradeNumber'
                                                             .tr()
                                                             .toString(),
                                                         key_number),
                                                   ],
-                                                )
-                                              : selectedTaxType == "04"
-                                                  ? addInputFormControl(
-                                                      'lesseeNumber',
-                                                      'lesseeNumber'
-                                                          .tr()
-                                                          .toString(),
-                                                      key_number)
-                                                  : Column(
-                                                      children: [
-                                                        addInputDropdownField(
-                                                            4,
-                                                            'financialYear'
-                                                                .tr()
-                                                                .toString(),
-                                                            "vip",
-                                                            model),
-                                                        UIHelper
-                                                            .verticalSpaceSmall,
-                                                        addInputFormControl(
-                                                            'tradeNumber',
-                                                            'tradeNumber'
-                                                                .tr()
-                                                                .toString(),
-                                                            key_number),
-                                                      ],
-                                                    ),
-                                  UIHelper.verticalSpaceSmall,
-                                ],
-                              )
-                            : SizedBox(),
-                        Container(
-                            width: Screen.width(context) / 2,
-                            alignment: Alignment.center,
-                            child: GestureDetector(
-                              onTap: () async {
-                                if (_formKey.currentState!.saveAndValidate()) {
-                                  Map<String, dynamic> postParams =
-                                      Map.from(_formKey.currentState!.value);
-                                  postParams.removeWhere(
-                                      (key, value) => value == null);
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) =>
-                                              TaxCollectionDetailsView()));
-                                }
-                              },
-                              child: Container(
-                                decoration: UIHelper.GradientContainer(
-                                    10,
-                                    10,
-                                    10,
-                                    10,
-                                    [c.colorPrimary, c.colorPrimaryDark]),
-                                padding: EdgeInsets.all(7),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    UIHelper.titleTextStyle(
-                                        'submit'.tr().toString(),
-                                        c.white,
-                                        15,
-                                        true,
-                                        false),
-                                  ],
-                                ),
-                              ),
-                            ))
-                      ],
-                    ),
-                  ),
-                ],
+                                                ),
+                              UIHelper.verticalSpaceSmall,
+                            ],
+                          )
+                        : SizedBox(),
+                    Container(
+                        width: Screen.width(context) / 2,
+                        alignment: Alignment.center,
+                        child: GestureDetector(
+                          onTap: () async {
+                            if (_formKey.currentState!.saveAndValidate()) {
+                              Map<String, dynamic> postParams =
+                                  Map.from(_formKey.currentState!.value);
+                              postParams
+                                  .removeWhere((key, value) => value == null);
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) =>
+                                          TaxCollectionDetailsView()));
+                            }
+                          },
+                          child: Container(
+                            decoration: UIHelper.GradientContainer(10, 10, 10,
+                                10, [c.colorPrimary, c.colorPrimaryDark]),
+                            padding: EdgeInsets.all(7),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                UIHelper.titleTextStyle(
+                                    'submit'.tr().toString(),
+                                    c.white,
+                                    15,
+                                    true,
+                                    false),
+                              ],
+                            ),
+                          ),
+                        ))
+                  ],
+                ),
               ),
             ],
           ),
-        ));
+        ],
+      ),
+    );
+  }
+
+  Widget taxWidgetGridData(String imgURL, dynamic data, int index) {
+    return GestureDetector(
+        onTap: () {
+          selectedTaxType = index;
+          setState(() {});
+        },
+        child: Container(
+            width: Screen.width(context) / 2.5,
+            height: 90,
+            padding: EdgeInsets.all(10),
+            decoration: selectedTaxType == index
+                ? UIHelper.GradientContainer(10, 10, 10, 10,
+                    [c.colorAccentverylight, c.colorAccentveryverylight])
+                : UIHelper.roundedBorderWithColorWithShadow(
+                    10, c.white, c.white),
+            //UIHelper.roundedBorderWithColor(40, 0, 0, 40, c.white),
+            child: Center(
+                child: Column(
+              children: [
+                InkWell(
+                    child: Image.asset(
+                      imgURL,
+                      fit: BoxFit.contain,
+                      height: 35,
+                      width: 35,
+                    ),
+                    onTap: () async {
+                      // logout();
+                    }),
+                UIHelper.verticalSpaceTiny,
+                UIHelper.titleTextStyle(
+                    data['taxtypedesc_ta'],
+                    selectedTaxType == index ? c.white : c.grey_9,
+                    12,
+                    true,
+                    true)
+              ],
+            ))));
+  }
+
+  Widget taxWidgetGridView() {
+    return Column(children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          taxWidgetGridData(imagePath.house, taxlist[0], 1),
+          taxWidgetGridData(imagePath.water, taxlist[1], 2)
+        ],
+      ),
+      UIHelper.verticalSpaceSmall,
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          taxWidgetGridData(imagePath.professional1, taxlist[2], 3),
+          taxWidgetGridData(imagePath.nontax1, taxlist[3], 4)
+        ],
+      ),
+      UIHelper.verticalSpaceSmall,
+      taxWidgetGridData(imagePath.trade, taxlist[4], 5)
+    ]);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          backgroundColor: c.colorPrimary,
+          centerTitle: true,
+          elevation: 2,
+          title: Container(
+            child: Text(
+              'quickPay'.tr().toString(),
+              style: TextStyle(fontSize: 14),
+            ),
+          ),
+        ),
         body: SafeArea(
-      top: true,
-      child: ViewModelBuilder<StartUpViewModel>.reactive(
-          onModelReady: (model) async {
-            await model.getOpenServiceList("District");
-            await model.getOpenServiceList("Block");
-            await model.getOpenServiceList("Village");
-          },
-          builder: (context, model, child) {
-            return model.isBusy
-                ? Center(child: CircularProgressIndicator())
-                : Container(
-                    color: Colors.white,
-                    width: Screen.width(context),
-                    padding: EdgeInsets.all(16),
-                    child: Column(
-                      children: [
-                        UIHelper.verticalSpaceMedium,
-                        Expanded(
-                            child: SingleChildScrollView(
-                          child: Container(
-                            decoration:
-                                UIHelper.roundedBorderWithColorWithShadow(
-                                    20, c.grey_1, c.grey_3),
-                            child: Column(
-                              children: [
-                                UIHelper.verticalSpaceMedium,
-                                formControls(context, model),
-                              ],
-                            ),
-                          ),
-                        )),
-                      ],
-                    ));
-          },
-          viewModelBuilder: () => StartUpViewModel()),
-    ));
+          top: true,
+          child: ViewModelBuilder<StartUpViewModel>.reactive(
+              onModelReady: (model) async {
+                await model.getOpenServiceList("District");
+                await model.getOpenServiceList("Block");
+                await model.getOpenServiceList("Village");
+              },
+              builder: (context, model, child) {
+                return model.isBusy
+                    ? Center(child: CircularProgressIndicator())
+                    : Container(
+                        color: Colors.white,
+                        width: Screen.width(context),
+                        padding: EdgeInsets.all(16),
+                        child: Column(
+                          children: [
+                            UIHelper.verticalSpaceMedium,
+                            Expanded(
+                                child: SingleChildScrollView(
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                decoration:
+                                    UIHelper.roundedBorderWithColorWithShadow(
+                                        20, c.grey_3, c.grey_3),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    UIHelper.verticalSpaceSmall,
+                                    UIHelper.titleTextStyle(
+                                        'tax_types'.tr().toString(),
+                                        c.grey_8,
+                                        14,
+                                        true,
+                                        true),
+                                    UIHelper.verticalSpaceSmall,
+                                    taxWidgetGridView(),
+                                    UIHelper.verticalSpaceSmall,
+                                    UIHelper.titleTextStyle(
+                                        "Please Select Anyone",
+                                        c.grey_8,
+                                        14,
+                                        true,
+                                        true),
+                                    UIHelper.verticalSpaceSmall,
+                                    radioButtonListWidget(),
+                                    formControls(context, model),
+                                  ],
+                                ),
+                              ),
+                            )),
+                          ],
+                        ));
+              },
+              viewModelBuilder: () => StartUpViewModel()),
+        ));
   }
 }
