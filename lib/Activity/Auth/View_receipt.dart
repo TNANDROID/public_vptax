@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
@@ -13,6 +14,8 @@ import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../Model/startup_model.dart';
+
 class ViewReceipt extends StatefulWidget {
   @override
   State<ViewReceipt> createState() => _ViewReceiptState();
@@ -20,6 +23,7 @@ class ViewReceipt extends StatefulWidget {
 class _ViewReceiptState extends State<ViewReceipt> {
   @override
   Utils utils = Utils();
+  late StartUpViewModel model;
   late SharedPreferences prefs;
   var dbClient;
   List districtItems = [];
@@ -104,7 +108,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
   }
   //Dropdown Input Field Widget
   Widget addInputDropdownField(int index, String inputHint, String fieldName,
-      String errorText) {
+    ) {
     List dropList = [];
     String keyCode = "";
     String titleText = "";
@@ -148,6 +152,10 @@ class _ViewReceiptState extends State<ViewReceipt> {
             borderRadius:BorderRadius.circular(8),
           ),
           focusedBorder: UIHelper.getInputBorder(1, borderColor: c.dot_light_screen_lite),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(width: 2.0),
+            borderRadius: BorderRadius.circular(14), // Increase the radius to adjust the height
+          ),
         ),
         name: fieldName,
       initialValue: index == 0
@@ -162,18 +170,25 @@ class _ViewReceiptState extends State<ViewReceipt> {
           selectedDistrict = "";
           selectedBlock = "";
           selectedvillage = "";
-          // model.selectedBlockList.clear();
-          // model.selectedVillageList.clear();
+          selectedDistrict = "";
+          selectedBlock = "";
+          model.selectedBlockList.clear();
+          model.selectedVillageList.clear();
         } else if (index == 2) {
           selectedBlock = "";
           selectedvillage = "";
-          // model.selectedVillageList.clear();
+          model.selectedVillageList.clear();
         } else if (index == 3) {
           selectedvillage = "";
         }
         setState(() {});
       },
       iconSize: 28,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: FormBuilderValidators.compose([
+        FormBuilderValidators.required(
+            errorText: inputHint.tr().toString()),
+      ]),
       items: dropList.map((item) => DropdownMenuItem(
         value: item[keyCode],
         child: Text(
@@ -278,7 +293,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                             flex: 2,
                             child: addInputDropdownField(
                                 0, 'select_taxtype'.tr().toString(),
-                                'taxType'.tr().toString(), "Required"),
+                                'taxType'.tr().toString(),),
                           )
                         ],
                       ),
@@ -302,7 +317,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                           Expanded(
                             flex: 2,
                             child:
-                            addInputDropdownField(1, 'select_District'.tr().toString(),'district', "Required"),
+                            addInputDropdownField(1, 'select_District'.tr().toString(),'district',),
                           )
                         ],
                       ),
@@ -327,7 +342,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                             flex: 2,
                             child:addInputDropdownField(
                                 2, 'select_Block'.tr().toString(),
-                                "block", "Required"),
+                                "block", ),
                           )
                         ],
                       ),
@@ -352,7 +367,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                             flex: 2,
                             child: addInputDropdownField(
                                 3, 'select_VillagePanchayat'.tr().toString(),
-                                "villagePanchayat", "Required"),
+                                "villagePanchayat"),
                           )
                         ],
                       ),
@@ -695,23 +710,28 @@ class _ViewReceiptState extends State<ViewReceipt> {
               {
                 listvisbility=false;
                 utils.showAlert(context,'enter_assessment_number'.tr().toString());
+                // utils.showAlerts(context, ContentType.warning,'enter_assessment_number'.tr().toString());
               }
            }
            else{
              utils.showAlert(context,'select_VillagePanchayat'.tr().toString());
+             // utils.showAlerts(context, ContentType.warning,'enter_assessment_number'.tr().toString());
            }
          }
          else{
            utils.showAlert(context,  "select_Block".tr().toString());
+           // utils.showAlerts(context, ContentType.warning,'enter_assessment_number'.tr().toString());
          }
        }
        else{
          utils.showAlert(context, 'select_District'.tr().toString());
+         // utils.showAlerts(context, ContentType.warning,'enter_assessment_number'.tr().toString());
        }
      }
    else
      {
        utils.showAlert(context, 'select_taxtype'.tr().toString());
+       // utils.showAlerts(context, ContentType.warning,'enter_assessment_number'.tr().toString());
      }
   }
 }

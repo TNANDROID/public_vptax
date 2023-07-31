@@ -16,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../Utils/utils.dart';
 import '../Tax_Collection/taxCollection_details.dart';
 import '../Tax_Collection/taxCollection_view.dart';
+import 'Download_receipt.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key, required isLogin});
@@ -342,7 +343,13 @@ class _HomeState extends State<Home> {
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       ViewReceipt()));
-                                        } else if (selected_index == 3) {}
+                                        } else if (selected_index == 3) {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      DownloadReceipt()));
+                                        }
                                       });
                                     },
                                     child: Container(
