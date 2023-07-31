@@ -69,6 +69,27 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
   Future<void> initialize() async {
     selectedLang = await preferencesService.getUserInfo("lang");
 
+    for (var item in taxlist) {
+      switch (item['taxtypeid']) {
+        case 1:
+          item['img_path'] = imagePath.house;
+          break;
+        case 2:
+          item['img_path'] = imagePath.water;
+          break;
+        case 3:
+          item['img_path'] = imagePath.professional1;
+          break;
+        case 4:
+          item['img_path'] = imagePath.nontax1;
+          break;
+        case 5:
+          item['img_path'] = imagePath.trade;
+          break;
+        default:
+          item['img_path'] = imagePath.property;
+      }
+    }
     setState(() {});
   }
 

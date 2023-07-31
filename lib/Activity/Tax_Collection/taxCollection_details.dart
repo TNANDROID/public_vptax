@@ -21,6 +21,7 @@ class TaxCollectionDetailsView extends StatefulWidget {
 
 class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
   PreferenceService preferencesService = locator<PreferenceService>();
+  String selectedLang = "";
   List isShowFlag = [];
   double main_totalAmount = 0.00;
   int main_count = 0;
@@ -143,6 +144,16 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
     },
   ];
 
+  void initState() {
+    super.initState();
+    initialize();
+  }
+
+  Future<void> initialize() async {
+    selectedLang = await preferencesService.getUserInfo("lang");
+    setState(() {});
+  }
+
   Widget headerCardUIWidget(int mainIndex) {
     return Column(
       children: [
@@ -192,7 +203,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                                         mainList[mainIndex]['street'] +
                                         ", " +
                                         mainList[mainIndex]['village'] +
-                                        ", " +
+                                        ",\n" +
                                         mainList[mainIndex]['block'] +
                                         ", " +
                                         mainList[mainIndex]['district'],
@@ -208,20 +219,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                           child: UIHelper.tinyLinewidget(borderColor: c.white),
                         ),
                         UIHelper.verticalSpaceSmall,
-                        UIHelper.titleTextStyle(
-                            "Building Licence Number : " +
-                                mainList[mainIndex]['building_licence_number'],
-                            c.white,
-                            12,
-                            true,
-                            true),
-                        UIHelper.titleTextStyle(
-                            "Assesment Number : " +
-                                mainList[mainIndex]['assesment_no'],
-                            c.white,
-                            12,
-                            true,
-                            true),
+                        taxWiseReturnDataWidget(mainIndex),
                       ],
                     ),
                   ),
@@ -239,7 +237,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                                 UIHelper.roundedBorderWithColorWithShadow(
                                     5, c.white, c.grey_2),
                             child: Image.asset(
-                              imagePath.house,
+                              widget.selectedTaxTypeData["img_path"],
                               fit: BoxFit.contain,
                               height: 35,
                               width: 35,
@@ -281,6 +279,67 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
             ])),
       ],
     );
+  }
+
+  Widget taxWiseReturnDataWidget(int mainIndex) {
+    return widget.selectedTaxTypeData["taxtypeid"] == 1
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              UIHelper.titleTextStyle(
+                  "Building Licence Number : " +
+                      mainList[mainIndex]['building_licence_number'],
+                  c.white,
+                  12,
+                  true,
+                  true),
+              UIHelper.titleTextStyle(
+                  "Assesment Number : " + mainList[mainIndex]['assesment_no'],
+                  c.white,
+                  12,
+                  true,
+                  true),
+            ],
+          )
+        : widget.selectedTaxTypeData["taxtypeid"] == 2
+            ? UIHelper.titleTextStyle(
+                "Water Connection Number : " +
+                    mainList[mainIndex]['assesment_no'],
+                c.white,
+                12,
+                true,
+                true)
+            : widget.selectedTaxTypeData["taxtypeid"] == 3
+                ? UIHelper.titleTextStyle(
+                    "Assesment Number : " + mainList[mainIndex]['assesment_no'],
+                    c.white,
+                    12,
+                    true,
+                    true)
+                : widget.selectedTaxTypeData["taxtypeid"] == 4
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          UIHelper.titleTextStyle(
+                              "Lease From Date : " + "05-03-2015",
+                              c.white,
+                              12,
+                              true,
+                              true),
+                          UIHelper.titleTextStyle(
+                              "Lease To Date : " + "05-03-2018",
+                              c.white,
+                              12,
+                              true,
+                              true),
+                        ],
+                      )
+                    : UIHelper.titleTextStyle(
+                        "Traders Code : " + mainList[mainIndex]['assesment_no'],
+                        c.white,
+                        12,
+                        true,
+                        true);
   }
 
   Widget propertyTaxCollectionWidget(int mainIndex) {
@@ -419,7 +478,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                 )),
             UIHelper.verticalSpaceSmall,
             Visibility(
-                visible: swmData.length > 0,
+                visible: swmData.length > 0 &&
+                    widget.selectedTaxTypeData["taxtypeid"] == 1,
                 child: Column(
                   children: [
                     UIHelper.titleTextStyle("swmUserCharges".tr().toString(),
@@ -615,7 +675,13 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                 margin: EdgeInsets.only(top: 10, left: 10, bottom: 10),
                 padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
                 child: UIHelper.titleTextStyle(
-                    "propertyTax".tr().toString(), c.grey_8, 12, true, true))),
+                    selectedLang == "en"
+                        ? widget.selectedTaxTypeData["taxtypedesc_en"]
+                        : widget.selectedTaxTypeData["taxtypedesc_ta"],
+                    c.grey_8,
+                    12,
+                    true,
+                    true))),
         Align(
             alignment: Alignment.centerRight,
             child: Container(
