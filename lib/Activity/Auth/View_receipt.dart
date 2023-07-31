@@ -1,26 +1,17 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
-import 'package:public_vptax/Services/Apiservices.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stacked/stacked.dart';
-
-import '../../Model/startup_model.dart';
-import '../../Resources/StringsKey.dart';
 
 class ViewReceipt extends StatefulWidget {
   @override
@@ -139,8 +130,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
       keyCode = "pvcode";
       titleText = "pvname";
       titleTextTamil = "pvname";
-    } else {
-      print("End.....");
     }
     return FormBuilderDropdown(
       style: TextStyle(
@@ -181,8 +170,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
           // model.selectedVillageList.clear();
         } else if (index == 3) {
           selectedvillage = "";
-        } else {
-          print("End of the Statement......");
         }
         setState(() {});
       },
@@ -229,8 +216,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
           listvisbility=false;
           assessmentController.text="";
           receiptController.text="";
-        } else {
-          print("End of the Statement......");
         }
         setState(() {});
       },
@@ -264,10 +249,10 @@ class _ViewReceiptState extends State<ViewReceipt> {
                       ),
                     ),
               Container(
-                transform: Matrix4.translationValues(-6.0,-70.0,10.0),
+                transform: Matrix4.translationValues(-6.0,-100.0,10.0),
                 margin: EdgeInsets.only(left: 25,right: 15,top:5),
-                padding:  EdgeInsets.only(top: 10,left: 5,right: 5),
-                height: MediaQuery.of(context).size.height/1.8,
+                padding:  EdgeInsets.only(top: 10,left: 5,right: 5,bottom: 50),
+                // height: MediaQuery.of(context).size.height/1.5,
                 // padding: EdgeInsets.only(left: 12,top: 20),
                 decoration:
                 UIHelper.roundedBorderWithColorWithShadow(
@@ -351,7 +336,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
                     Visibility(
                       visible: villageFlag ? true : false,
                       child: Row(
-
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Expanded(
@@ -414,9 +398,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                        FilteringTextInputFormatter.digitsOnly
                                      ],
                                      decoration: const InputDecoration(
-                                         hintStyle: TextStyle(
-                                           fontSize: 12,
-                                         ),
                                          border:InputBorder.none
                                      ),
                                      style: TextStyle(
@@ -432,9 +413,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                          Row(
                            mainAxisAlignment: MainAxisAlignment.center,
                            children: [
-                             Text("("+'or'.tr().toString()+")",style: TextStyle(
-                                 fontSize: 12
-                             ),)
+                             Text("("+'or'.tr().toString()+")",style: TextStyle(fontSize: 12),)
                            ],
                          ),
                          UIHelper.verticalSpaceSmall,
@@ -473,9 +452,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                          FilteringTextInputFormatter.digitsOnly
                                        ],
                                        decoration: const InputDecoration(
-                                           hintStyle: TextStyle(
-                                             fontSize: 12,
-                                           ),
                                            border:InputBorder.none
                                        ),
                                        style: TextStyle(
@@ -489,31 +465,33 @@ class _ViewReceiptState extends State<ViewReceipt> {
                        ],
                       )
                     ),
-                    Container(
-                      padding: EdgeInsets.only(top: 5),
-                      child: TextButton(
-                        child: Text("submit".tr().toString(),
-                            style: TextStyle(color: c.white, fontSize: 13)),
-                        style: TextButton.styleFrom(
-                            fixedSize: const Size(120, 20),
-                            shape:StadiumBorder(),
-                            backgroundColor: c.colorPrimary
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            Validate();
-
-                          });
-                        },
-                      ),
-                    )
                   ],
+                ),
+              ),
+              Container(
+                transform: Matrix4.translationValues(5.0,-125.0,10.0),
+                child: TextButton(
+                  child:Padding(
+                    padding: EdgeInsets.only(left: 5,right: 5),
+                    child: Text("submit".tr().toString(),
+                          style: TextStyle(color: c.white, fontSize: 13))
+                  ),
+                  style: TextButton.styleFrom(
+                      fixedSize: const Size(130, 20),
+                      shape:StadiumBorder(),
+                      backgroundColor: c.colorPrimary
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      Validate();
+                    });
+                  },
                 ),
               ),
               Visibility(
                 visible:listvisbility,
                 child: Container(
-                    transform: Matrix4.translationValues(-5.0,-50.0,10.0),
+                    transform: Matrix4.translationValues(-5.0,-80.0,10.0),
                     padding: EdgeInsets.only(left: 10,right: 10),
                     child: AnimationLimiter(
                       child: ListView.builder(
@@ -608,7 +586,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      'receiptno'.tr().toString(),
+                                                      'receiptno'.tr().toString()+":",
                                                       style:
                                                       TextStyle(
                                                         fontSize: 12,
@@ -644,21 +622,19 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                                       style:
                                                       TextStyle(
                                                         fontSize: 12,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold,
-                                                        color: c.grey_9,
-                                                      ),
+                                                        fontWeight: FontWeight.bold,color: c.grey_9
+                                                      )
                                                     ),
                                                     InkWell(
-                                                      onTap: (){
-                                                        print('download_tamil'.tr().toString()+"tamil_1".tr().toString());
+                                                      onTap: ()
+                                                      {
+                                                        print("download_tamil".tr().toString()+"\n"+"tamil_1".tr().toString()+"\n");
                                                       },
-                                                     child: Padding(padding: EdgeInsets.only(left: 25),
+                                                      child: Padding(padding: EdgeInsets.only(left: 25),
                                                         child:Image.asset(imagePath.download,height: 17,width: 17,),),
                                                     )
                                                   ],
-                                                ),
+                                                )
                                               ),
                                               Container(
                                                 child: Row(
