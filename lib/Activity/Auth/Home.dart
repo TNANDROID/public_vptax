@@ -246,7 +246,9 @@ class _HomeState extends State<Home> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (_) =>
-                                            TaxCollectionDetailsView()));
+                                            TaxCollectionDetailsView(
+                                                selectedTaxTypeData:
+                                                    taxTypeList[i])));
                               });
                             },
                             child: Container(

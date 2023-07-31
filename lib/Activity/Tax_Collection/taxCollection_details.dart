@@ -10,8 +10,9 @@ import 'package:stacked/stacked.dart';
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 
 class TaxCollectionDetailsView extends StatefulWidget {
-  final flag;
-  TaxCollectionDetailsView({this.flag});
+  dynamic selectedTaxTypeData;
+  TaxCollectionDetailsView({Key? key, required this.selectedTaxTypeData})
+      : super(key: key);
 
   @override
   _TaxCollectionDetailsViewState createState() =>
@@ -23,53 +24,123 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
   List isShowFlag = [];
   double main_totalAmount = 0.00;
   int main_count = 0;
-  List mainList = [
-    {"name": "SaravanaKumar", "door_no": "54/A", "street": "North street", "village":"Vadamalappur","block": "Nathampannai","district": "PUDUKKOTTAI","building_licence_number": "1534","assesment_no":"54","rows":[],"swm":[],"total":0.00,"taxData":[
-      {"fin_year": "2022-2023", "Amount": 480,"flag":false},
-      {"fin_year": "2023-2024", "Amount": 380,"flag":false},
-      {"fin_year": "2022-2023", "Amount": 680,"flag":false},
-      {"fin_year": "2023-2024", "Amount": 280,"flag":false},
-    ] ,"swmData":[
-      {"fin_year": "2022-2023", "Amount": 180,"flag":false},
-      {"fin_year": "2023-2024", "Amount": 230,"flag":false},
-    ] },
-    {"name": "SaravanaKumar", "door_no": "54/B", "street": "North street", "village":"Vadamalappur","block": "Nathampannai","district": "PUDUKKOTTAI","building_licence_number": "1534","assesment_no":"54","rows":[],"swm":[],"total":0.00,"taxData":[
-      {"fin_year": "2022-2023", "Amount": 480,"flag":false},
-      {"fin_year": "2023-2024", "Amount": 380,"flag":false},
-      {"fin_year": "2022-2023", "Amount": 680,"flag":false},
-      {"fin_year": "2023-2024", "Amount": 280,"flag":false},
-    ] ,"swmData":[
-      {"fin_year": "2022-2023", "Amount": 180,"flag":false},
-      {"fin_year": "2023-2024", "Amount": 230,"flag":false},
-    ] },
-    {"name": "SaravanaKumar", "door_no": "54/C", "street": "North street", "village":"Vadamalappur","block": "Nathampannai","district": "PUDUKKOTTAI","building_licence_number": "1534","assesment_no":"54","rows":[],"swm":[],"total":0.00,"taxData":[
-      {"fin_year": "2022-2023", "Amount": 480,"flag":false},
-      {"fin_year": "2023-2024", "Amount": 380,"flag":false},
-      {"fin_year": "2022-2023", "Amount": 680,"flag":false},
-      {"fin_year": "2023-2024", "Amount": 280,"flag":false},
-    ] ,"swmData":[
-      {"fin_year": "2022-2023", "Amount": 180,"flag":false},
-      {"fin_year": "2023-2024", "Amount": 230,"flag":false},
-    ] },
-    {"name": "SaravanaKumar", "door_no": "54/D", "street": "North street", "village":"Vadamalappur","block": "Nathampannai","district": "PUDUKKOTTAI","building_licence_number": "1534","assesment_no":"54","rows":[],"swm":[],"total":0.00,"taxData":[
-      {"fin_year": "2022-2023", "Amount": 480,"flag":false},
-      {"fin_year": "2023-2024", "Amount": 380,"flag":false},
-      {"fin_year": "2022-2023", "Amount": 680,"flag":false},
-      {"fin_year": "2023-2024", "Amount": 280,"flag":false},
-    ] ,"swmData":[
-      {"fin_year": "2022-2023", "Amount": 180,"flag":false},
-      {"fin_year": "2023-2024", "Amount": 230,"flag":false},
-    ] },
-    {"name": "SaravanaKumar", "door_no": "54/E", "street": "North street", "village":"Vadamalappur","block": "Nathampannai","district": "PUDUKKOTTAI","building_licence_number": "1534","assesment_no":"54","rows":[],"swm":[],"total":0.00,"taxData":[
-      {"fin_year": "2022-2023", "Amount": 480,"flag":false},
-      {"fin_year": "2023-2024", "Amount": 380,"flag":false},
-      {"fin_year": "2022-2023", "Amount": 680,"flag":false},
-      {"fin_year": "2023-2024", "Amount": 280,"flag":false},
-    ] ,"swmData":[
-      {"fin_year": "2022-2023", "Amount": 180,"flag":false},
-      {"fin_year": "2023-2024", "Amount": 230,"flag":false},
-    ] },
 
+  List mainList = [
+    {
+      "name": "SaravanaKumar",
+      "door_no": "54/A",
+      "street": "North street",
+      "village": "Vadamalappur",
+      "block": "Nathampannai",
+      "district": "PUDUKKOTTAI",
+      "building_licence_number": "1534",
+      "assesment_no": "54",
+      "rows": [],
+      "swm": [],
+      "total": 0.00,
+      "taxData": [
+        {"fin_year": "2022-2023", "Amount": 480, "flag": false},
+        {"fin_year": "2023-2024", "Amount": 380, "flag": false},
+        {"fin_year": "2022-2023", "Amount": 680, "flag": false},
+        {"fin_year": "2023-2024", "Amount": 280, "flag": false},
+      ],
+      "swmData": [
+        {"fin_year": "2022-2023", "Amount": 180, "flag": false},
+        {"fin_year": "2023-2024", "Amount": 230, "flag": false},
+      ]
+    },
+    {
+      "name": "SaravanaKumar",
+      "door_no": "54/B",
+      "street": "North street",
+      "village": "Vadamalappur",
+      "block": "Nathampannai",
+      "district": "PUDUKKOTTAI",
+      "building_licence_number": "1534",
+      "assesment_no": "54",
+      "rows": [],
+      "swm": [],
+      "total": 0.00,
+      "taxData": [
+        {"fin_year": "2022-2023", "Amount": 480, "flag": false},
+        {"fin_year": "2023-2024", "Amount": 380, "flag": false},
+        {"fin_year": "2022-2023", "Amount": 680, "flag": false},
+        {"fin_year": "2023-2024", "Amount": 280, "flag": false},
+      ],
+      "swmData": [
+        {"fin_year": "2022-2023", "Amount": 180, "flag": false},
+        {"fin_year": "2023-2024", "Amount": 230, "flag": false},
+      ]
+    },
+    {
+      "name": "SaravanaKumar",
+      "door_no": "54/C",
+      "street": "North street",
+      "village": "Vadamalappur",
+      "block": "Nathampannai",
+      "district": "PUDUKKOTTAI",
+      "building_licence_number": "1534",
+      "assesment_no": "54",
+      "rows": [],
+      "swm": [],
+      "total": 0.00,
+      "taxData": [
+        {"fin_year": "2022-2023", "Amount": 480, "flag": false},
+        {"fin_year": "2023-2024", "Amount": 380, "flag": false},
+        {"fin_year": "2022-2023", "Amount": 680, "flag": false},
+        {"fin_year": "2023-2024", "Amount": 280, "flag": false},
+      ],
+      "swmData": [
+        {"fin_year": "2022-2023", "Amount": 180, "flag": false},
+        {"fin_year": "2023-2024", "Amount": 230, "flag": false},
+      ]
+    },
+    {
+      "name": "SaravanaKumar",
+      "door_no": "54/D",
+      "street": "North street",
+      "village": "Vadamalappur",
+      "block": "Nathampannai",
+      "district": "PUDUKKOTTAI",
+      "building_licence_number": "1534",
+      "assesment_no": "54",
+      "rows": [],
+      "swm": [],
+      "total": 0.00,
+      "taxData": [
+        {"fin_year": "2022-2023", "Amount": 480, "flag": false},
+        {"fin_year": "2023-2024", "Amount": 380, "flag": false},
+        {"fin_year": "2022-2023", "Amount": 680, "flag": false},
+        {"fin_year": "2023-2024", "Amount": 280, "flag": false},
+      ],
+      "swmData": [
+        {"fin_year": "2022-2023", "Amount": 180, "flag": false},
+        {"fin_year": "2023-2024", "Amount": 230, "flag": false},
+      ]
+    },
+    {
+      "name": "SaravanaKumar",
+      "door_no": "54/E",
+      "street": "North street",
+      "village": "Vadamalappur",
+      "block": "Nathampannai",
+      "district": "PUDUKKOTTAI",
+      "building_licence_number": "1534",
+      "assesment_no": "54",
+      "rows": [],
+      "swm": [],
+      "total": 0.00,
+      "taxData": [
+        {"fin_year": "2022-2023", "Amount": 480, "flag": false},
+        {"fin_year": "2023-2024", "Amount": 380, "flag": false},
+        {"fin_year": "2022-2023", "Amount": 680, "flag": false},
+        {"fin_year": "2023-2024", "Amount": 280, "flag": false},
+      ],
+      "swmData": [
+        {"fin_year": "2022-2023", "Amount": 180, "flag": false},
+        {"fin_year": "2023-2024", "Amount": 230, "flag": false},
+      ]
+    },
   ];
 
   Widget headerCardUIWidget(int mainIndex) {
@@ -77,7 +148,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
       children: [
         Container(
             width: Screen.width(context),
-            margin: EdgeInsets.only(left: 15,right: 15),
+            margin: EdgeInsets.only(left: 15, right: 15),
             padding: EdgeInsets.all(15),
             decoration: UIHelper.roundedBorderWithColorWithShadow(
                 5, c.need_improvement1, c.need_improvement1,
@@ -96,7 +167,11 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                           children: [
                             Expanded(
                               child: UIHelper.titleTextStyle(
-                                  mainList[mainIndex]['name'], c.white, 14, true, false),
+                                  mainList[mainIndex]['name'],
+                                  c.white,
+                                  14,
+                                  true,
+                                  false),
                             ),
                           ],
                         ),
@@ -112,8 +187,15 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                             UIHelper.horizontalSpaceSmall,
                             Expanded(
                                 child: UIHelper.titleTextStyle(
-                                    mainList[mainIndex]['door_no']+", "+mainList[mainIndex]['street']+", "+mainList[mainIndex]['village']
-                                        +", "+mainList[mainIndex]['block']+", "+mainList[mainIndex]['district'],
+                                    mainList[mainIndex]['door_no'] +
+                                        ", " +
+                                        mainList[mainIndex]['street'] +
+                                        ", " +
+                                        mainList[mainIndex]['village'] +
+                                        ", " +
+                                        mainList[mainIndex]['block'] +
+                                        ", " +
+                                        mainList[mainIndex]['district'],
                                     c.white,
                                     12,
                                     true,
@@ -127,13 +209,19 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                         ),
                         UIHelper.verticalSpaceSmall,
                         UIHelper.titleTextStyle(
-                            "Building Licence Number : "+mainList[mainIndex]['building_licence_number'],
+                            "Building Licence Number : " +
+                                mainList[mainIndex]['building_licence_number'],
                             c.white,
                             12,
                             true,
                             true),
                         UIHelper.titleTextStyle(
-                            "Assesment Number : "+mainList[mainIndex]['assesment_no'], c.white, 12, true, true),
+                            "Assesment Number : " +
+                                mainList[mainIndex]['assesment_no'],
+                            c.white,
+                            12,
+                            true,
+                            true),
                       ],
                     ),
                   ),
@@ -188,9 +276,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                 ],
               ),
               Visibility(
-                  visible:isShowFlag.contains(mainIndex),
-               child:
-              propertyTaxCollectionWidget(mainIndex)),
+                  visible: isShowFlag.contains(mainIndex),
+                  child: propertyTaxCollectionWidget(mainIndex)),
             ])),
       ],
     );
@@ -202,8 +289,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
 
     int dataWiseHeight = taxData.length * 30;
     int swmHeight = swmData.length * 30;
-    return  Container(
-      margin: EdgeInsets.only(top: 10),
+    return Container(
+        margin: EdgeInsets.only(top: 10),
         decoration: UIHelper.roundedBorderWithColorWithShadow(
             3, c.white, c.white,
             borderWidth: 0),
@@ -212,8 +299,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              margin: EdgeInsets.only(top: 5),
-                height: dataWiseHeight +0.02,
+                margin: EdgeInsets.only(top: 5),
+                height: dataWiseHeight + 0.02,
                 child: ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   itemCount: taxData.length,
@@ -228,8 +315,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                               child: Container(
                                   padding: EdgeInsets.all(8.0),
                                   child: Center(
-                                      child: UIHelper.titleTextStyle("$siNo",
-                                          c.grey_8, 12, false, true))),
+                                      child: UIHelper.titleTextStyle(
+                                          "$siNo", c.grey_8, 12, false, true))),
                             ),
                             Expanded(
                                 flex: 3,
@@ -237,8 +324,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                                     padding: EdgeInsets.all(8.0),
                                     child: Center(
                                         child: UIHelper.titleTextStyle(
-                                            taxData[rowIndex]
-                                                ['fin_year'],
+                                            taxData[rowIndex]['fin_year'],
                                             c.grey_8,
                                             12,
                                             false,
@@ -249,8 +335,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                                   padding: EdgeInsets.all(8.0),
                                   child: Center(
                                       child: UIHelper.titleTextStyle(
-                                          taxData[rowIndex]
-                                                  ['Amount']
+                                          taxData[rowIndex]['Amount']
                                               .toString(),
                                           c.black,
                                           13,
@@ -264,47 +349,65 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                                   child: Center(
                                     child: Checkbox(
                                       side:
-                                      BorderSide(width: 1, color: c.grey_6),
+                                          BorderSide(width: 1, color: c.grey_6),
                                       value: taxData[rowIndex]['flag'],
                                       onChanged: (v) {
                                         if (rowIndex == 0 ||
-                                            taxData[rowIndex-1]['flag']==true) {
-                                          if (taxData[rowIndex]['flag']==true) {
-                                            for(int i=0;i<taxData.length;i++){
-                                              if(i>=rowIndex){
-                                                taxData[i]['flag']=false;
-                                                mainList[mainIndex]['total'] = mainList[mainIndex]['total']-taxData[i]['Amount'];
+                                            taxData[rowIndex - 1]['flag'] ==
+                                                true) {
+                                          if (taxData[rowIndex]['flag'] ==
+                                              true) {
+                                            for (int i = 0;
+                                                i < taxData.length;
+                                                i++) {
+                                              if (i >= rowIndex) {
+                                                taxData[i]['flag'] = false;
+                                                mainList[mainIndex]['total'] =
+                                                    mainList[mainIndex]
+                                                            ['total'] -
+                                                        taxData[i]['Amount'];
                                               }
                                             }
-
                                           } else {
-                                            taxData[rowIndex]['flag']=true;
-                                            mainList[mainIndex]['total'] = mainList[mainIndex]['total']+taxData[rowIndex]['Amount'];
+                                            taxData[rowIndex]['flag'] = true;
+                                            mainList[mainIndex]['total'] =
+                                                mainList[mainIndex]['total'] +
+                                                    taxData[rowIndex]['Amount'];
                                           }
                                         }
 
                                         setState(() {
-                                          main_count=0;
-                                          main_totalAmount=0.00;
+                                          main_count = 0;
+                                          main_totalAmount = 0.00;
 
-                                          for(int i=0;i<mainList.length;i++){
-                                            List taxData = mainList[i]['taxData'];
-                                            List swmData = mainList[i]['swmData'];
-                                            for(int i=0;i<taxData.length;i++){
-                                              if (taxData[i]['flag']==true) {
-                                                main_count=main_count+1;
-                                                main_totalAmount=main_totalAmount+taxData[i]['Amount'];
-
+                                          for (int i = 0;
+                                              i < mainList.length;
+                                              i++) {
+                                            List taxData =
+                                                mainList[i]['taxData'];
+                                            List swmData =
+                                                mainList[i]['swmData'];
+                                            for (int i = 0;
+                                                i < taxData.length;
+                                                i++) {
+                                              if (taxData[i]['flag'] == true) {
+                                                main_count = main_count + 1;
+                                                main_totalAmount =
+                                                    main_totalAmount +
+                                                        taxData[i]['Amount'];
                                               }
                                             }
-                                            for(int i=0;i<swmData.length;i++){
-                                              if (swmData[i]['flag']==true) {
-                                                main_count=main_count+1;
-                                                main_totalAmount=main_totalAmount+swmData[i]['Amount'];
+                                            for (int i = 0;
+                                                i < swmData.length;
+                                                i++) {
+                                              if (swmData[i]['flag'] == true) {
+                                                main_count = main_count + 1;
+                                                main_totalAmount =
+                                                    main_totalAmount +
+                                                        swmData[i]['Amount'];
                                               }
                                             }
                                           }
-
                                         });
                                       },
                                     ),
@@ -316,211 +419,261 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                 )),
             UIHelper.verticalSpaceSmall,
             Visibility(
-              visible: swmData.length > 0,
-                child: Column(children: [
-                  UIHelper.titleTextStyle("swmUserCharges".tr().toString(),
-                      c.grey_9, 11, false, true),
-                  UIHelper.verticalSpaceSmall,
-                  Container(
-                      margin: EdgeInsets.only(top: 5),
-                      height: swmHeight +0.02,
-                      child: ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: swmData.length,
-                        itemBuilder: (context, rowIndex) {
-                          int siNo = rowIndex + 1;
-                          return Container(
-                              height: 30,
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Center(
-                                            child: UIHelper.titleTextStyle("$siNo",
-                                                c.grey_8, 12, false, true))),
-                                  ),
-                                  Expanded(
-                                      flex: 3,
+                visible: swmData.length > 0,
+                child: Column(
+                  children: [
+                    UIHelper.titleTextStyle("swmUserCharges".tr().toString(),
+                        c.grey_9, 11, false, true),
+                    UIHelper.verticalSpaceSmall,
+                    Container(
+                        margin: EdgeInsets.only(top: 5),
+                        height: swmHeight + 0.02,
+                        child: ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: swmData.length,
+                          itemBuilder: (context, rowIndex) {
+                            int siNo = rowIndex + 1;
+                            return Container(
+                                height: 30,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
                                       child: Container(
                                           padding: EdgeInsets.all(8.0),
                                           child: Center(
                                               child: UIHelper.titleTextStyle(
-                                                  swmData[rowIndex]
-                                                  ['fin_year'],
+                                                  "$siNo",
                                                   c.grey_8,
                                                   12,
                                                   false,
-                                                  true)))),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Center(
-                                            child: UIHelper.titleTextStyle(
-                                                swmData[rowIndex]
-                                                ['Amount']
-                                                    .toString(),
-                                                c.black,
-                                                13,
-                                                false,
-                                                true))),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Center(
-                                          child: Checkbox(
-                                            side:
-                                            BorderSide(width: 1, color: c.grey_6),
-                                            value: swmData[rowIndex]['flag'],
-                                            onChanged: (v) {
-                                              if (rowIndex == 0 ||
-                                                  swmData[rowIndex-1]['flag']==true) {
-                                                if (swmData[rowIndex]['flag']==true) {
-                                                  for(int i=0;i<swmData.length;i++){
-                                                    if(i>=rowIndex){
-                                                      swmData[i]['flag']=false;
-                                                      mainList[mainIndex]['total'] = mainList[mainIndex]['total']-swmData[i]['Amount'];
+                                                  true))),
+                                    ),
+                                    Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: Center(
+                                                child: UIHelper.titleTextStyle(
+                                                    swmData[rowIndex]
+                                                        ['fin_year'],
+                                                    c.grey_8,
+                                                    12,
+                                                    false,
+                                                    true)))),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Center(
+                                              child: UIHelper.titleTextStyle(
+                                                  swmData[rowIndex]['Amount']
+                                                      .toString(),
+                                                  c.black,
+                                                  13,
+                                                  false,
+                                                  true))),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Center(
+                                            child: Checkbox(
+                                              side: BorderSide(
+                                                  width: 1, color: c.grey_6),
+                                              value: swmData[rowIndex]['flag'],
+                                              onChanged: (v) {
+                                                if (rowIndex == 0 ||
+                                                    swmData[rowIndex - 1]
+                                                            ['flag'] ==
+                                                        true) {
+                                                  if (swmData[rowIndex]
+                                                          ['flag'] ==
+                                                      true) {
+                                                    for (int i = 0;
+                                                        i < swmData.length;
+                                                        i++) {
+                                                      if (i >= rowIndex) {
+                                                        swmData[i]['flag'] =
+                                                            false;
+                                                        mainList[mainIndex]
+                                                                ['total'] =
+                                                            mainList[mainIndex]
+                                                                    ['total'] -
+                                                                swmData[i]
+                                                                    ['Amount'];
+                                                      }
                                                     }
+                                                  } else {
+                                                    swmData[rowIndex]['flag'] =
+                                                        true;
+                                                    mainList[mainIndex]
+                                                            ['total'] =
+                                                        mainList[mainIndex]
+                                                                ['total'] +
+                                                            swmData[rowIndex]
+                                                                ['Amount'];
                                                   }
-                                                } else {
-                                                  swmData[rowIndex]['flag']=true;
-                                                  mainList[mainIndex]['total'] = mainList[mainIndex]['total']+swmData[rowIndex]['Amount'];
                                                 }
-                                              }
 
-                                              setState(() {
-                                                main_count=0;
-                                                main_totalAmount=0.00;
+                                                setState(() {
+                                                  main_count = 0;
+                                                  main_totalAmount = 0.00;
 
-                                                for(int i=0;i<mainList.length;i++){
-                                                  List taxData = mainList[i]['taxData'];
-                                                  List swmData = mainList[i]['swmData'];
-                                                  for(int i=0;i<taxData.length;i++){
-                                                    if (taxData[i]['flag']==true) {
-                                                      main_count=main_count+1;
-                                                      main_totalAmount=main_totalAmount+taxData[i]['Amount'];
+                                                  for (int i = 0;
+                                                      i < mainList.length;
+                                                      i++) {
+                                                    List taxData =
+                                                        mainList[i]['taxData'];
+                                                    List swmData =
+                                                        mainList[i]['swmData'];
+                                                    for (int i = 0;
+                                                        i < taxData.length;
+                                                        i++) {
+                                                      if (taxData[i]['flag'] ==
+                                                          true) {
+                                                        main_count =
+                                                            main_count + 1;
+                                                        main_totalAmount =
+                                                            main_totalAmount +
+                                                                taxData[i]
+                                                                    ['Amount'];
+                                                      }
+                                                    }
+                                                    for (int i = 0;
+                                                        i < swmData.length;
+                                                        i++) {
+                                                      if (swmData[i]['flag'] ==
+                                                          true) {
+                                                        main_count =
+                                                            main_count + 1;
+                                                        main_totalAmount =
+                                                            main_totalAmount +
+                                                                swmData[i]
+                                                                    ['Amount'];
+                                                      }
                                                     }
                                                   }
-                                                  for(int i=0;i<swmData.length;i++){
-                                                    if (swmData[i]['flag']==true) {
-                                                      main_count=main_count+1;
-                                                      main_totalAmount=main_totalAmount+swmData[i]['Amount'];
-                                                    }
-                                                  }
-
-                                                }
-
-                                              });
-                                            },
-                                          ),
-                                        )),
-                                  ),
-                                ],
-                              ));
-                        },
-                      )),
-            ],)),
+                                                });
+                                              },
+                                            ),
+                                          )),
+                                    ),
+                                  ],
+                                ));
+                          },
+                        )),
+                  ],
+                )),
 
             // UIHelper.verticalSpaceSmall,
             Row(
               children: [
                 Expanded(
                   flex: 3,
-                  child:Container(
-                    alignment: Alignment.centerRight,
+                  child: Container(
+                      alignment: Alignment.centerRight,
                       child: Text(
-                          "amount_to_pay".tr().toString(),
+                        "amount_to_pay".tr().toString(),
                         style: TextStyle(
                             color: c.grey_10,
                             fontSize: 10,
-                            decoration:TextDecoration.none,
-                            fontWeight:  FontWeight.bold),
+                            decoration: TextDecoration.none,
+                            fontWeight: FontWeight.bold),
                         textAlign: TextAlign.right,
                       )),
                 ),
                 Expanded(
                   flex: 2,
-                  child:Container(
+                  child: Container(
                       decoration: UIHelper.GradientContainer(
                           5, 5, 5, 5, [c.grey, c.grey]),
-                      padding: EdgeInsets.fromLTRB(10,5,10,8),
+                      padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
                       margin: EdgeInsets.all(10),
                       child: UIHelper.titleTextStyle(
-                          "\u{20B9}"+mainList[mainIndex]['total'].toString(), c.grey_9, 14, true, true)),
+                          "\u{20B9}" + mainList[mainIndex]['total'].toString(),
+                          c.grey_9,
+                          14,
+                          true,
+                          true)),
                 ),
-              ],),
+              ],
+            ),
 
             UIHelper.verticalSpaceSmall,
           ],
         ));
   }
 
-
   Widget addToPayWidget() {
     return Stack(
       children: [
         Align(
             alignment: Alignment.centerLeft,
-            child:Container(
-                margin: EdgeInsets.only(top: 10,left: 10,bottom: 10),
-                padding: EdgeInsets.fromLTRB(10,5,10,8),
+            child: Container(
+                margin: EdgeInsets.only(top: 10, left: 10, bottom: 10),
+                padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
                 child: UIHelper.titleTextStyle(
-                    "propertyTax".tr().toString(), c.grey_8, 12, true, true))
-        ),
+                    "propertyTax".tr().toString(), c.grey_8, 12, true, true))),
         Align(
             alignment: Alignment.centerRight,
-            child:Container(
-                margin: EdgeInsets.only(top: 10,right: 30,bottom: 10),
+            child: Container(
+                margin: EdgeInsets.only(top: 10, right: 30, bottom: 10),
                 decoration: UIHelper.GradientContainer(
                     5, 5, 5, 5, [c.grey_7, c.grey_7]),
-                padding: EdgeInsets.fromLTRB(10,5,10,8),
+                padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
                 child: UIHelper.titleTextStyle(
-                    "added_to_pay".tr().toString(), c.white, 12, true, true))
-        ),
+                    "added_to_pay".tr().toString(), c.white, 12, true, true))),
         Align(
             alignment: Alignment.topRight,
-            child:Container(
+            child: Container(
               child: Container(
-                transform: Matrix4.translationValues(0,-5,0,),
-                  margin: EdgeInsets.only(top: 0,right: 10,bottom: 10),
-                  decoration: UIHelper.circleWithColorWithShadow(360,
-                     c.account_status_green_color, c.account_status_green_color),
-                  padding: EdgeInsets.fromLTRB(10,5,10,8),
+                  transform: Matrix4.translationValues(
+                    0,
+                    -5,
+                    0,
+                  ),
+                  margin: EdgeInsets.only(top: 0, right: 10, bottom: 10),
+                  decoration: UIHelper.circleWithColorWithShadow(
+                      360,
+                      c.account_status_green_color,
+                      c.account_status_green_color),
+                  padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
                   child: UIHelper.titleTextStyle(
-                      (main_count).toString(), c.white, 12, true, true)),)
-        )
-
+                      (main_count).toString(), c.white, 12, true, true)),
+            ))
       ],
     );
   }
+
   Widget payWidget() {
     return Stack(
       children: [
         Align(
             alignment: Alignment.centerLeft,
-            child:Container(
-                margin: EdgeInsets.only(top: 10,left: 30,bottom: 10),
+            child: Container(
+                margin: EdgeInsets.only(top: 10, left: 30, bottom: 10),
                 decoration: UIHelper.GradientContainer(
                     5, 5, 5, 5, [c.grey_7, c.grey_7]),
-                padding: EdgeInsets.fromLTRB(10,5,10,8),
+                padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
                 child: UIHelper.titleTextStyle(
-                   "\u{20B9}"+main_totalAmount.toString(), c.white, 12, true, true))
-        ),
+                    "\u{20B9}" + main_totalAmount.toString(),
+                    c.white,
+                    12,
+                    true,
+                    true))),
         Align(
             alignment: Alignment.centerRight,
-            child:Container(
-                margin: EdgeInsets.only(top: 10,right: 30,bottom: 10),
-                decoration: UIHelper.GradientContainer(
-                    5, 5, 5, 5, [c.account_status_green_color, c.account_status_green_color]),
-                padding: EdgeInsets.fromLTRB(10,5,10,8),
+            child: Container(
+                margin: EdgeInsets.only(top: 10, right: 30, bottom: 10),
+                decoration: UIHelper.GradientContainer(5, 5, 5, 5, [
+                  c.account_status_green_color,
+                  c.account_status_green_color
+                ]),
+                padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
                 child: UIHelper.titleTextStyle(
-                    "pay".tr().toString(), c.white, 12, true, true))
-        ),
-
+                    "pay".tr().toString(), c.white, 12, true, true))),
       ],
     );
   }
@@ -557,31 +710,32 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
           top: true,
           child: ViewModelBuilder<StartUpViewModel>.reactive(
               builder: (context, model, child) {
-                return  Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                         children: [
-                           UIHelper.verticalSpaceSmall,
-                           addToPayWidget(),
-                           UIHelper.verticalSpaceSmall,
-                           Expanded(child: Container(
-                             height: MediaQuery.of(context).size.height,
-                               child: ListView.builder(
-                                  shrinkWrap: true,
-                                 // physics: NeverScrollableScrollPhysics(),
-                                   itemCount: mainList.length,
-                                   itemBuilder: (context, mainIndex) {
-                                     return Column(
-                                       children: [
-                                         headerCardUIWidget(mainIndex),
-                                         UIHelper.verticalSpaceMedium,
-                                       ],
-                                     );
-                                   }))),
-                           payWidget()
-                         ],
-                            ));
+                return Container(
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    UIHelper.verticalSpaceSmall,
+                    addToPayWidget(),
+                    UIHelper.verticalSpaceSmall,
+                    Expanded(
+                        child: Container(
+                            height: MediaQuery.of(context).size.height,
+                            child: ListView.builder(
+                                shrinkWrap: true,
+                                // physics: NeverScrollableScrollPhysics(),
+                                itemCount: mainList.length,
+                                itemBuilder: (context, mainIndex) {
+                                  return Column(
+                                    children: [
+                                      headerCardUIWidget(mainIndex),
+                                      UIHelper.verticalSpaceMedium,
+                                    ],
+                                  );
+                                }))),
+                    payWidget()
+                  ],
+                ));
               },
               viewModelBuilder: () => StartUpViewModel()),
         ));

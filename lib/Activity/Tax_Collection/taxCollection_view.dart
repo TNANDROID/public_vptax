@@ -27,6 +27,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
   PreferenceService preferencesService = locator<PreferenceService>();
 
+  String selectedLang = "";
   String selectedDistrict = "";
   String selectedBlock = "";
   String selectedVillage = "";
@@ -59,6 +60,17 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
       'taxtypedesc_ta': 'வர்த்தக உரிமம்'
     },
   ];
+
+  void initState() {
+    super.initState();
+    initialize();
+  }
+
+  Future<void> initialize() async {
+    selectedLang = await preferencesService.getUserInfo("lang");
+
+    setState(() {});
+  }
 
   Widget addInputFormControl(
       String nameField, String hintText, String fieldType) {
@@ -122,7 +134,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
       titleText = key_dname;
       titleTextTamil = key_dname_ta;
     } else if (index == 2) {
-      dropList = preferencesService.blockList;
+      dropList = model.selectedBlockList;
       keyCode = key_bcode;
       titleText = key_bname;
       titleTextTamil = key_bname_ta;
@@ -184,7 +196,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
           .map((item) => DropdownMenuItem(
                 value: item[keyCode],
                 child: Text(
-                  preferencesService.getUserInfo("lang") == "en"
+                  selectedLang == "en"
                       ? item[titleText].toString()
                       : item[titleTextTamil].toString(),
                   style: TextStyle(
@@ -386,11 +398,11 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                                   Map.from(_formKey.currentState!.value);
                               postParams
                                   .removeWhere((key, value) => value == null);
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) =>
-                                          TaxCollectionDetailsView()));
+                              // Navigator.pushReplacement(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (_) =>
+                              //             TaxCollectionDetailsView()));
                             }
                           },
                           child: Container(

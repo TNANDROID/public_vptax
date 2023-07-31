@@ -49,20 +49,21 @@ class StartUpViewModel extends BaseViewModel {
 
   Future<void> loadUIBlock(String value) async {
     selectedBlockList.clear();
-    selectedBlockList = preferencesService.blockList.where((e) {
-      return e['dcode'].toString().toLowerCase().contains(value.toLowerCase());
-    }).toList();
+    for (var item in preferencesService.blockList) {
+      if (item['dcode'].toString() == value) {
+        selectedBlockList.add(item);
+      }
+    }
   }
 
   Future<void> loadUIVillage(String distcode, String blockcode) async {
     selectedVillageList.clear();
-    selectedVillageList = preferencesService.villageList.where((e) {
-      return e['dcode']
-              .toString()
-              .toLowerCase()
-              .contains(distcode.toLowerCase()) &&
-          e['bcode'].toString().toLowerCase().contains(blockcode.toLowerCase());
-    }).toList();
+    for (var item in preferencesService.villageList) {
+      if (item['dcode'].toString() == distcode &&
+          item['bcode'].toString() == blockcode) {
+        selectedVillageList.add(item);
+      }
+    }
   }
 
   // Get District List
@@ -82,8 +83,10 @@ class StartUpViewModel extends BaseViewModel {
       preferencesService.districtList = districtList.toList();
     } else if (type == "Block") {
       blockList = response;
+      preferencesService.blockList = blockList.toList();
     } else {
       villageList = response;
+      preferencesService.villageList = villageList.toList();
     }
     setBusy(false);
   }
