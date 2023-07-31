@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, library_private_types_in_public_api, unrelated_type_equality_checks
+// ignore_for_file: file_names, library_private_types_in_public_api, unrelated_type_equality_checks, use_build_context_synchronously
 
 import 'dart:async';
 
@@ -7,15 +7,17 @@ import 'package:flutter/material.dart';
 import 'package:public_vptax/Activity/Auth/Login.dart';
 import 'package:public_vptax/Layout/customgradientbutton.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
-import 'package:public_vptax/Utils/ContentInfo.dart';
-import '../../Model/startup_model.dart';
-import '../../Resources/StringsKey.dart' as s;
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagepath;
 import 'package:public_vptax/Utils/utils.dart';
+
 import '../../Layout/screen_size.dart';
+import '../../Model/startup_model.dart';
+import '../../Resources/StringsKey.dart' as s;
 import '../../Services/Preferenceservices.dart';
 import '../../Services/locator.dart';
+import '../../Utils/ContentInfo.dart';
+import '../Tax_Collection/taxCollection_view.dart';
 import 'Home.dart';
 
 class Splash extends StatefulWidget {
@@ -272,16 +274,18 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
               builder: (context) => Login(),
             ));
           } else if (flag == 2) {
-            // await apiCalls();
-            // Navigator.of(context).push(MaterialPageRoute(
-            //   builder: (context) => TaxCollectionView(),
-            // ));
-            utils.showAlerts(
-              context,
-              ContentType.help,
-              "noInternet".tr().toString(),
-              'Sorry !',
-            );
+            if (await utils.isOnline()) {
+              await apiCalls();
+            } else {
+              utils.showAlert(
+                context,
+                ContentType.fail,
+                "noInternet".tr().toString(),
+              );
+            }
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => TaxCollectionView(),
+            ));
           }
         },
         style: ButtonStyle(
