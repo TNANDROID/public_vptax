@@ -20,7 +20,7 @@
   "tamil": "தமிழ்",
   "english": "English",
   "tax_types": "Tax Types",
-  "Submit": "SUBMIT",
+  "submit": "SUBMIT",
   "name": "Name",
   "emailAddress": "Email Id",
   "districtName": "District Name",
@@ -72,5 +72,11 @@
   "pay": "Pay",
   "amount_to_pay": "Total Amount to pay",
   "downloading": "Downloading...",
-  "enter_assessment_number": "Please enter assessment number or receipt number"
+  "enter_assessment_number": "Please enter assessment number or receipt number",
+  "enter_the_details":"Please enter the below details",
+  "select_anyOne":"Please select any one",
+  "added_to_pay": "Added to pay",
+  "tax_details": "Tax Details",
+  "warning": "Warning !",
+  "fail": "Oops!"
 }

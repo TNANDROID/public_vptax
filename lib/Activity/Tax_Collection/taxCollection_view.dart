@@ -82,27 +82,20 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
         contentPadding: EdgeInsets.symmetric(
             vertical: 8, horizontal: 12), // Optional: Adjust padding
       ),
-      validator:
-          // fieldType == 'Email'
-          //     ? FormBuilderValidators.compose([
-          //         FormBuilderValidators.required(errorText: errorTxt),
-          //         FormBuilderValidators.email(),
-          //       ])
-          //     :
-          fieldType == key_mobileNumber
-              ? FormBuilderValidators.compose([
-                  FormBuilderValidators.required(
-                      errorText: hintText + " " + 'isEmpty'.tr().toString()),
-                  FormBuilderValidators.minLength(10,
-                      errorText: hintText + " " + 'isInvalid'.tr().toString()),
-                  FormBuilderValidators.maxLength(10,
-                      errorText: hintText + " " + 'isInvalid'.tr().toString()),
-                  FormBuilderValidators.numeric(),
-                ])
-              : FormBuilderValidators.compose([
-                  FormBuilderValidators.required(
-                      errorText: hintText + " " + 'isEmpty'.tr().toString()),
-                ]),
+      validator: fieldType == key_mobileNumber
+          ? FormBuilderValidators.compose([
+              FormBuilderValidators.required(
+                  errorText: hintText + " " + 'isEmpty'.tr().toString()),
+              FormBuilderValidators.minLength(10,
+                  errorText: hintText + " " + 'isInvalid'.tr().toString()),
+              FormBuilderValidators.maxLength(10,
+                  errorText: hintText + " " + 'isInvalid'.tr().toString()),
+              FormBuilderValidators.numeric(),
+            ])
+          : FormBuilderValidators.compose([
+              FormBuilderValidators.required(
+                  errorText: hintText + " " + 'isEmpty'.tr().toString()),
+            ]),
       inputFormatters: fieldType == key_mobileNumber
           ? [
               FilteringTextInputFormatter.digitsOnly,
@@ -124,12 +117,12 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
     String titleTextTamil = "";
 
     if (index == 1) {
-      dropList = model.districtList;
+      dropList = preferencesService.districtList;
       keyCode = key_dcode;
       titleText = key_dname;
       titleTextTamil = key_dname_ta;
     } else if (index == 2) {
-      dropList = model.selectedBlockList;
+      dropList = preferencesService.blockList;
       keyCode = key_bcode;
       titleText = key_bname;
       titleTextTamil = key_bname_ta;
@@ -232,7 +225,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                     width: Screen.width(context),
                     padding: EdgeInsets.all(9),
                     color: selectedEntryType == index
-                        ? Colors.teal
+                        ? c.blueAccent
                         : c.need_improvement2,
                     child: Row(
                       children: [
@@ -241,18 +234,13 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                           selectedEntryType == index
                               ? Icons.radio_button_checked_rounded
                               : Icons.radio_button_off_rounded,
-                          color:
-                              selectedEntryType == index ? c.white : c.grey_9,
+                          color: c.grey_9,
                           size: 20,
                         ),
                         UIHelper.horizontalSpaceSmall,
                         Expanded(
                             child: UIHelper.titleTextStyle(
-                                title,
-                                selectedEntryType == index ? c.white : c.grey_9,
-                                12,
-                                true,
-                                false)),
+                                title, c.grey_9, 12, true, false)),
                       ],
                     )))));
   }
@@ -282,8 +270,6 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                 // padding: EdgeInsets.all(15),
                 child: Column(
                   children: [
-                    UIHelper.verticalSpaceSmall,
-                    UIHelper.verticalSpaceSmall,
                     selectedEntryType == 1
                         ? Column(
                             children: [
@@ -443,17 +429,16 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
         },
         child: Container(
             width: Screen.width(context) / 2.5,
-            height: 100,
             padding: EdgeInsets.all(10),
-            decoration: selectedTaxType == index
-                ? UIHelper.GradientContainer(10, 10, 10, 10,
-                    [c.colorAccentverylight, c.colorAccentveryverylight],
-                    borderColor: c.red, intwid: 2)
-                : UIHelper.roundedBorderWithColorWithShadow(
-                    10, c.white, c.white),
+            decoration: UIHelper.roundedBorderWithColorWithShadow(
+              10,
+              selectedTaxType == index ? c.blueAccent : c.white,
+              selectedTaxType == index ? c.blueAccent : c.white,
+            ),
+
             //UIHelper.roundedBorderWithColor(40, 0, 0, 40, c.white),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Row(
+              //  mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 InkWell(
                     child: Image.asset(
@@ -465,13 +450,10 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                     onTap: () async {
                       // logout();
                     }),
-                UIHelper.verticalSpaceTiny,
-                UIHelper.titleTextStyle(
-                    data['taxtypedesc_ta'],
-                    selectedTaxType == index ? c.white : c.grey_9,
-                    12,
-                    true,
-                    true)
+                UIHelper.horizontalSpaceSmall,
+                Expanded(
+                    child: UIHelper.titleTextStyle(
+                        data['taxtypedesc_ta'], c.grey_9, 12, true, true))
               ],
             )));
   }
@@ -515,72 +497,58 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
         body: SafeArea(
           top: true,
           child: ViewModelBuilder<StartUpViewModel>.reactive(
-              onModelReady: (model) async {
-                await model.getOpenServiceList("District");
-                await model.getOpenServiceList("Block");
-                await model.getOpenServiceList("Village");
-              },
+              onModelReady: (model) async {},
               builder: (context, model, child) {
-                return model.isBusy
-                    ? Center(child: CircularProgressIndicator())
-                    : Container(
-                        color: Colors.white,
-                        width: Screen.width(context),
-                        padding: EdgeInsets.all(16),
-                        child: Column(
-                          children: [
-                            UIHelper.verticalSpaceMedium,
-                            Expanded(
-                                child: SingleChildScrollView(
-                              child: Container(
-                                padding: EdgeInsets.all(10),
-                                decoration:
-                                    UIHelper.roundedBorderWithColorWithShadow(
-                                        20, c.grey_3, c.grey_3),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    UIHelper.verticalSpaceSmall,
-                                    UIHelper.titleTextStyle(
-                                        'tax_types'.tr().toString(),
-                                        c.grey_8,
-                                        14,
-                                        true,
-                                        true),
-                                    UIHelper.verticalSpaceSmall,
-                                    taxWidgetGridView(),
-                                    Container(
-                                        width:
-                                            200, // Adjust the width as per your requirements
-                                        height:
-                                            200, // Adjust the height as per your requirements
-                                        decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                          colors: [
-                                            Colors.red,
-                                            Colors.green,
-                                            Colors.blue,
-                                            Colors.yellow,
-                                          ],
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                        ))),
-                                    UIHelper.verticalSpaceSmall,
-                                    UIHelper.titleTextStyle(
-                                        "Please Select Anyone",
-                                        c.grey_8,
-                                        14,
-                                        true,
-                                        true),
-                                    UIHelper.verticalSpaceSmall,
-                                    radioButtonListWidget(),
-                                    formControls(context, model),
-                                  ],
-                                ),
-                              ),
-                            )),
-                          ],
-                        ));
+                return Container(
+                    color: Colors.white,
+                    width: Screen.width(context),
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        UIHelper.verticalSpaceMedium,
+                        Expanded(
+                            child: SingleChildScrollView(
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            decoration:
+                                UIHelper.roundedBorderWithColorWithShadow(
+                                    20, c.grey_3, c.grey_3),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                UIHelper.verticalSpaceSmall,
+                                UIHelper.titleTextStyle(
+                                    'select_taxtype'.tr().toString(),
+                                    c.grey_8,
+                                    14,
+                                    true,
+                                    true),
+                                UIHelper.verticalSpaceSmall,
+                                taxWidgetGridView(),
+                                UIHelper.verticalSpaceMedium,
+                                UIHelper.titleTextStyle(
+                                    'select_anyOne'.tr().toString(),
+                                    c.grey_8,
+                                    14,
+                                    true,
+                                    true),
+                                UIHelper.verticalSpaceSmall,
+                                radioButtonListWidget(),
+                                UIHelper.verticalSpaceMedium,
+                                UIHelper.titleTextStyle(
+                                    'enter_the_details'.tr().toString(),
+                                    c.grey_8,
+                                    14,
+                                    true,
+                                    true),
+                                UIHelper.verticalSpaceSmall,
+                                formControls(context, model),
+                              ],
+                            ),
+                          ),
+                        )),
+                      ],
+                    ));
               },
               viewModelBuilder: () => StartUpViewModel()),
         ));

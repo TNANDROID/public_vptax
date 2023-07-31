@@ -34,6 +34,7 @@ class StartUpViewModel extends BaseViewModel {
       key_service_id: service_key_district_list_all,
     };
     districtList = await apiServices.masterServiceFunction(request);
+    preferencesService.districtList = districtList.toList();
     setBusy(false);
   }
 
@@ -43,6 +44,7 @@ class StartUpViewModel extends BaseViewModel {
       key_service_id: service_key_block_list_all,
     };
     blockList = await apiServices.masterServiceFunction(request);
+    preferencesService.blockList = blockList.toList();
   }
 
   Future<void> loadUIBlock(String value) async {
@@ -77,7 +79,7 @@ class StartUpViewModel extends BaseViewModel {
     var response = await apiServices.openServiceFunction(requestData);
     if (type == "District") {
       districtList = response;
-      preferencesService.districtList=districtList.toList();
+      preferencesService.districtList = districtList.toList();
     } else if (type == "Block") {
       blockList = response;
     } else {
