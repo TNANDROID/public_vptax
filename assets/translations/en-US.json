@@ -69,14 +69,19 @@
   "noInternet": "No Internet",
   "internetError": "Internet Connection is not available..Please Turn ON Network Connection OR Continue With Off-line Mode..",
   "loading": "Loading...",
-  "pay": "Pay",
+  "pay": "Proceed to Pay",
   "amount_to_pay": "Total Amount to pay",
   "downloading": "Downloading...",
   "enter_assessment_number": "Please enter assessment number or receipt number",
-  "enter_the_details":"Please enter the below details",
-  "select_anyOne":"Please select any one",
+  "enter_the_details": "Please enter the below details",
+  "select_anyOne": "Please select any one",
   "added_to_pay": "Added to pay",
   "tax_details": "Tax Details",
   "warning": "Warning !",
-  "fail": "Oops!"
+  "fail": "Oops !",
+  "mobileNotValid": "Please verify mobile number",
+  "download": "Download",
+  "select_language": "Select Language for downloading receipt",
+  "enter_receipt": "Please enter receipt number",
+  "enter_mobile_number": "Please enter mobile number"
 }

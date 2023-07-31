@@ -17,6 +17,8 @@ import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/utils.dart';
 
+import '../../Utils/ContentInfo.dart';
+
 class Login extends StatefulWidget {
   @override
   State<Login> createState() => LoginState();
@@ -83,9 +85,23 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
   Future<void> validate() async {
     if (!otpFlag) {
       utils.closeKeypad(context);
-      if (utils.isNumberValid(mobileController.text)) {
-        otpFlag = !otpFlag;
-        changeImageAndAnimate();
+      if (mobileController.text.isNotEmpty) {
+        if (utils.isNumberValid(mobileController.text)) {
+          otpFlag = !otpFlag;
+          changeImageAndAnimate();
+        } else {
+          utils.showAlert(
+            context,
+            ContentType.warning,
+            "mobileNotValid".tr().toString(),
+          );
+        }
+      } else {
+        utils.showAlert(
+          context,
+          ContentType.warning,
+          "enter_mobile_number".tr().toString(),
+        );
       }
     } else {
       print('finalOTP: $finalOTP');
@@ -306,7 +322,15 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
 
                             CustomGradientButton(
                               onPressed: () async {
-                                await validate();
+                                if (await utils.isOnline()) {
+                                  await validate();
+                                } else {
+                                  utils.showAlert(
+                                    context,
+                                    ContentType.fail,
+                                    "noInternet".tr().toString(),
+                                  );
+                                }
                               },
                               width: Screen.width(context) - 100,
                               height: 50,

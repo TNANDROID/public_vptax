@@ -274,7 +274,7 @@ class Utils {
     return color == null ? null : ui.ColorFilter.mode(color, colorBlendMode);
   }
 
-  Future<void> showAlerts(
+  Future<void> showAlert(
       BuildContext context, ContentType contentType, String message,
       [String? title, double? titleFontSize, double? messageFontSize]) async {
     return showDialog<void>(
@@ -358,7 +358,11 @@ class Utils {
                 ),
 
                 Container(
-                  margin: EdgeInsets.all(size.width * 0.05),
+                  margin: EdgeInsets.only(
+                      bottom: size.width * 0.05,
+                      left: size.width * 0.05,
+                      right: size.width * 0.05,
+                      top: size.width * 0.02),
                   child: Text(
                     message,
                     style:
@@ -390,67 +394,75 @@ class Utils {
 
                 // ***********************  Action Buttons Content *********************** //
 
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        print("object");
-                      },
-                      style: ButtonStyle(
-                        elevation: MaterialStateProperty.all(5.0),
-                        backgroundColor: MaterialStateProperty.all(c.white),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                                20.0), // Set the desired border radius here
+                Visibility(
+                  visible: contentType == ContentType.help ||
+                          contentType == ContentType.warning
+                      ? true
+                      : false,
+                  child: Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Row(children: [
+                      Visibility(
+                        visible: contentType == ContentType.help ? true : false,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 10),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              print("object");
+                            },
+                            style: ButtonStyle(
+                              elevation: MaterialStateProperty.all(5.0),
+                              backgroundColor:
+                                  MaterialStateProperty.all(c.white),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      20.0), // Set the desired border radius here
+                                ),
+                              ),
+                            ),
+                            child: Text(
+                              'OK',
+                              style: TextStyle(
+                                  color: contentInfo.color, fontSize: 11),
+                            ),
                           ),
                         ),
                       ),
-                      child: Text(
-                        'Go to Settings',
-                        style:
-                            TextStyle(color: contentInfo.color, fontSize: 11),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 10),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            print("object");
+                          },
+                          style: ButtonStyle(
+                            elevation: MaterialStateProperty.all(5.0),
+                            backgroundColor: MaterialStateProperty.all(c.white),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    20.0), // Set the desired border radius here
+                              ),
+                            ),
+                          ),
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                                color: contentInfo.color, fontSize: 11),
+                          ),
+                        ),
                       ),
-                    ),
+                    ]),
                   ),
                 )
               ],
             ),
           ),
-        );
-      },
-    );
-  }
-
-  Future<void> showAlert(BuildContext context, String msg) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Alert'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(msg),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context, 'Cancel'),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, 'OK'),
-              child: const Text('OK'),
-            ),
-          ],
         );
       },
     );
@@ -463,7 +475,11 @@ class Utils {
     if (username == userName && password == passWord) {
       //  gotoHomePage(context);
     } else {
-      showAlert(context, 'no_offline_data'.tr().toString());
+      showAlert(
+        context,
+        ContentType.fail,
+        "noInternet".tr().toString(),
+      );
     }
   }
 
