@@ -21,6 +21,7 @@ import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui' as ui;
 import '../Resources/StringsKey.dart';
+import 'ContentInfo.dart';
 
 class Utils {
   PreferenceService preferencesService = locator<PreferenceService>();
@@ -55,7 +56,7 @@ class Utils {
 
   Future<SecurityContext> get globalContext async {
     final sslCert1 = await rootBundle.load(imagePath.certificate);
-    SecurityContext sc = new SecurityContext(withTrustedRoots: false);
+    SecurityContext sc = SecurityContext(withTrustedRoots: false);
     sc.setTrustedCertificatesBytes(sslCert1.buffer.asInt8List());
     return sc;
   }
@@ -97,7 +98,7 @@ class Utils {
           child: Center(
             child: Container(
               height: 320,
-              margin: EdgeInsets.all(50),
+              margin: const EdgeInsets.all(50),
               decoration: BoxDecoration(
                   color: c.white,
                   borderRadius: BorderRadius.circular(15),
@@ -234,7 +235,7 @@ class Utils {
         return WillPopScope(
           onWillPop: () async => false,
           child: Center(
-            child: Container(
+            child: SizedBox(
               height: 100,
               width: 100,
               child: Stack(
@@ -273,39 +274,9 @@ class Utils {
     return color == null ? null : ui.ColorFilter.mode(color, colorBlendMode);
   }
 
-  String assetSVG(String contentType) {
-    switch (contentType) {
-      case 'fail':
-        return imagePath.failure;
-      case 'success':
-        return imagePath.success;
-      case 'warning':
-        return imagePath.warning;
-      case 'help':
-        return imagePath.help;
-      default:
-        return imagePath.failure;
-    }
-  }
-
-  Color getColor(String contentType) {
-    switch (contentType) {
-      case 'fail':
-        return c.failureRed;
-      case 'success':
-        return c.successGreen;
-      case 'warning':
-        return c.warningYellow;
-      case 'help':
-        return c.helpBlue;
-      default:
-        return c.failureRed;
-    }
-  }
-
   Future<void> showAlerts(
-      BuildContext context, String type, String title, String message,
-      [double? titleFontSize, double? messageFontSize]) async {
+      BuildContext context, ContentType contentType, String message,
+      [String? title, double? titleFontSize, double? messageFontSize]) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: true, // user must tap button!
@@ -315,9 +286,9 @@ class Utils {
         double rightSpace = size.width * 0.12;
         double leftSpace = size.width * 0.12;
 
-        Color color = getColor(type);
+        ContentInfo contentInfo = getContentInfo(contentType);
 
-        final hsl = HSLColor.fromColor(color);
+        final hsl = HSLColor.fromColor(contentInfo.color);
         final hslDark =
             hsl.withLightness((hsl.lightness - 0.1).clamp(0.0, 1.0));
 
@@ -326,8 +297,8 @@ class Utils {
             width: size.width,
             height: size.width * 0.45,
             margin: EdgeInsets.symmetric(horizontal: size.width * 0.045),
-            decoration:
-                UIHelper.roundedBorderWithColorWithShadow(20, color, color),
+            decoration: UIHelper.roundedBorderWithColorWithShadow(
+                20, contentInfo.color, contentInfo.color),
             child: Stack(
               clipBehavior: Clip.none,
               alignment: Alignment.center,
@@ -354,7 +325,7 @@ class Utils {
                 // ***********************  Bubble With Icon *********************** //
                 Positioned(
                   top: -size.height * 0.035,
-                  left: size.width * 0.125,
+                  left: size.width * 0.08,
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
@@ -367,7 +338,7 @@ class Utils {
                       Positioned(
                         top: size.height * 0.025,
                         child: SvgPicture.asset(
-                          assetSVG(type),
+                          contentInfo.assetPath,
                           height: size.height * 0.022,
                         ),
                       )
@@ -380,33 +351,74 @@ class Utils {
                 Positioned(
                   top: 25,
                   child: Text(
-                    'signIN'.tr().toString(),
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                      color: c.white,
-                      fontStyle: FontStyle.normal,
-                      decoration: TextDecoration.none,
-                      decorationStyle: TextDecorationStyle.wavy,
-                    ),
+                    title ?? contentInfo.title,
+                    style: UIHelper.textDecoration(titleFontSize ?? 18, c.white,
+                        bold: true),
                   ),
                 ),
 
                 Container(
                   margin: EdgeInsets.all(size.width * 0.05),
                   child: Text(
-                    'downloadApk'.tr().toString(),
-                    style: TextStyle(
-                      fontSize: 11.0,
-                      fontWeight: FontWeight.bold,
-                      color: c.white,
-                      decoration: TextDecoration.none,
-                      decorationStyle: TextDecorationStyle.wavy,
-                    ),
+                    message,
+                    style:
+                        UIHelper.textDecoration(messageFontSize ?? 15, c.white),
                     textAlign: TextAlign.center,
                     softWrap: true,
                   ),
                 ),
+
+                // ***********************  Close Icon button *********************** //
+
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.all(10.0),
+                      child: Icon(
+                        Icons.close_rounded,
+                        size: 20,
+                        color: c.white,
+                      ),
+                    ),
+                  ),
+                ),
+
+                // ***********************  Action Buttons Content *********************** //
+
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        print("object");
+                      },
+                      style: ButtonStyle(
+                        elevation: MaterialStateProperty.all(5.0),
+                        backgroundColor: MaterialStateProperty.all(c.white),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                                20.0), // Set the desired border radius here
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        'Go to Settings',
+                        style:
+                            TextStyle(color: contentInfo.color, fontSize: 11),
+                      ),
+                    ),
+                  ),
+                )
               ],
             ),
           ),
@@ -463,7 +475,7 @@ class Utils {
         encrypt.AES(key, mode: encrypt.AESMode.cbc, padding: 'PKCS7'));
     final encrypted = encrypter.encrypt(plainText, iv: iv);
 
-    return encrypted.base64 + ":" + iv.base64;
+    return "${encrypted.base64}:${iv.base64}";
   }
 
   String decryption(String plainText, String ENCRYPTION_KEY) {
@@ -475,7 +487,7 @@ class Utils {
         encrypt.AES(key, mode: encrypt.AESMode.cbc, padding: 'PKCS7'));
     final decrypted =
         encrypter.decrypt(encrypt.Encrypted.from64(dateList[0]), iv: iv);
-    print("Final Result: " + decrypted);
+    print("Final Result: $decrypted");
 
     return decrypted;
   }
@@ -511,10 +523,10 @@ class Utils {
   }
 
   String generateRandomString(int length) {
-    final _random = Random();
-    const _availableChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    final random = Random();
+    const availableChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     final randomString = List.generate(length,
-            (index) => _availableChars[_random.nextInt(_availableChars.length)])
+            (index) => availableChars[random.nextInt(availableChars.length)])
         .join();
 
     return randomString;

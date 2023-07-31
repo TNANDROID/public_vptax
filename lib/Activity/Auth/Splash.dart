@@ -4,11 +4,10 @@ import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:public_vptax/Activity/Auth/Login.dart';
-import 'package:public_vptax/Activity/Tax_Collection/taxCollection_view.dart';
 import 'package:public_vptax/Layout/customgradientbutton.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
+import 'package:public_vptax/Utils/ContentInfo.dart';
 import '../../Model/startup_model.dart';
 import '../../Resources/StringsKey.dart' as s;
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
@@ -32,7 +31,6 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
 
   Utils utils = Utils();
   PreferenceService preferencesService = locator<PreferenceService>();
-  final LocalAuthentication auth = LocalAuthentication();
 
   String? selectedLanguage;
 
@@ -49,9 +47,9 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
         AnimationController(vsync: this, duration: const Duration(seconds: 2));
 
     _rightToLeftAnimation = Tween<Offset>(
-        begin: const Offset(1.0, 0.0), end: const Offset(0.0, 0.0))
+            begin: const Offset(1.0, 0.0), end: const Offset(0.0, 0.0))
         .animate(CurvedAnimation(
-        parent: _rightToLeftAnimController, curve: Curves.easeInOut));
+            parent: _rightToLeftAnimController, curve: Curves.easeInOut));
 
     // Top-to-bottom slide animation
     _topAnimationController = AnimationController(
@@ -79,6 +77,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
 
     setState(() {});
   }
+
   Future<void> apiCalls() async {
     Utils().showProgress(context, 1);
     await StartUpViewModel().getOpenServiceList("District");
@@ -149,9 +148,9 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
                       ),
                       items: langItems
                           .map((item) => DropdownMenuItem<String>(
-                        value: item[s.key_langCode],
-                        child: Text(item[s.key_language]),
-                      ))
+                                value: item[s.key_langCode],
+                                child: Text(item[s.key_language]),
+                              ))
                           .toList(),
                       onChanged: (newValue) {
                         setState(() {
@@ -222,8 +221,10 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const Home(isLogin: "islogin"))),
-                            print("Sign in Tapped ")},
+                                    builder: (context) =>
+                                        const Home(isLogin: "islogin"))),
+                            print("Sign in Tapped ")
+                          },
                           child: Text(
                             'signUP'.tr().toString(),
                             style: TextStyle(
@@ -271,10 +272,16 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
               builder: (context) => Login(),
             ));
           } else if (flag == 2) {
-            await apiCalls();
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => TaxCollectionView(),
-            ));
+            // await apiCalls();
+            // Navigator.of(context).push(MaterialPageRoute(
+            //   builder: (context) => TaxCollectionView(),
+            // ));
+            utils.showAlerts(
+              context,
+              ContentType.help,
+              "noInternet".tr().toString(),
+              'Sorry !',
+            );
           }
         },
         style: ButtonStyle(

@@ -1,8 +1,9 @@
 // ignore: file_names
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, non_constant_identifier_names
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:public_vptax/Layout/customclip.dart';
-import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 
 class UIHelper {
   // Vertically Space Provider
@@ -53,6 +54,18 @@ class UIHelper {
           bottomRight: Radius.circular(btmright)),
       border: Border.all(width: borderWidth, color: borderColor),
       color: backgroundColor,
+    );
+  }
+
+  static TextStyle textDecoration(double fontSize, Color fontColor,
+      {bool bold = false}) {
+    return TextStyle(
+      fontSize: fontSize,
+      fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+      color: fontColor,
+      fontStyle: FontStyle.normal,
+      decoration: TextDecoration.none,
+      fontFamily: 'RobotoSlab',
     );
   }
 
