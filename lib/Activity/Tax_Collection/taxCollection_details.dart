@@ -21,7 +21,8 @@ class TaxCollectionDetailsView extends StatefulWidget {
 class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
   PreferenceService preferencesService = locator<PreferenceService>();
   List isShowFlag = [];
-
+  double main_totalAmount = 0.00;
+  int main_count = 0;
   List<dynamic> examplePropertyData = [
     {"fin_year": "2022-2023", "Amount": 480},
     {"fin_year": "2023-2024", "Amount": 380},
@@ -36,6 +37,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
       children: [
         Container(
             width: Screen.width(context),
+            margin: EdgeInsets.only(left: 15,right: 15),
             padding: EdgeInsets.all(15),
             decoration: UIHelper.roundedBorderWithColorWithShadow(
                 5, c.need_improvement1, c.need_improvement1,
@@ -144,21 +146,27 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                       )),
                 ],
               ),
+              Visibility(
+                  visible:isShowFlag.contains(mainIndex),
+               child:
+              propertyTaxCollectionWidget(mainIndex)),
             ])),
-        if (isShowFlag.contains(mainIndex))
+/*        if (isShowFlag.contains(mainIndex))
           Container(
+              margin: EdgeInsets.only(left: 15,right: 15),
             transform: Matrix4.translationValues(0, -5, 0),
               width: Screen.width(context),
-              decoration: UIHelper.roundedBorderWithColor(
-                  0, 0, 15, 15, c.need_improvement1),
+              decoration: UIHelper.roundedBorderWithColorWithShadow(
+                  2, c.need_improvement1, c.need_improvement1,
+                  borderWidth: 0),
               child: Column(children: [
                 Container(
                     margin: EdgeInsets.fromLTRB(15, 0, 15, 15),
                     decoration: UIHelper.roundedBorderWithColorWithShadow(
-                        5, c.white, c.white,
+                        3, c.white, c.white,
                         borderWidth: 0),
                     child: propertyTaxCollectionWidget(mainIndex))
-              ])),
+              ])),*/
       ],
     );
   }
@@ -169,10 +177,17 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
     }
     int dataWiseHeight = examplePropertyData.length * 40;
     double totalAmount = 0.00;
+    int count = 0;
     for (var item in checkedListData["$mainIndex"]!) {
       totalAmount = totalAmount + examplePropertyData[item]['Amount'];
+      main_totalAmount=main_totalAmount+totalAmount;
+      main_count=main_count+1;
     }
-    return Container(
+    return  Container(
+      margin: EdgeInsets.only(top: 10),
+        decoration: UIHelper.roundedBorderWithColorWithShadow(
+            3, c.white, c.white,
+            borderWidth: 0),
         padding: EdgeInsets.all(5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -303,6 +318,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                           "  $totalAmount", c.grey_9, 14, true, true)),
                 ),
               ],),
+/*
             Align(
               alignment: Alignment.centerRight,
               child:Visibility(
@@ -316,6 +332,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                       "pay".tr().toString(), c.white, 14, true, true)),)
             )
       ,
+*/
             UIHelper.verticalSpaceSmall,
           ],
         ));
@@ -333,6 +350,48 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
         taxInvoiceRowWidget("Advance Available (₹).", "0.00"),
         UIHelper.verticalSpaceTiny,
         taxInvoiceRowWidget("Amount payable (₹).", "480.00"),
+        Align(
+            alignment: Alignment.centerRight,
+            child:Visibility(
+              visible: true,
+              child: Container(
+                  margin: EdgeInsets.only(top: 5,right: 10),
+                  decoration: UIHelper.GradientContainer(
+                      5, 5, 5, 5, [c.account_status_green_color, c.account_status_green_color]),
+                  padding: EdgeInsets.fromLTRB(10,5,10,8),
+                  child: UIHelper.titleTextStyle(
+                      "pay".tr().toString(), c.white, 14, true, true)),)
+        )
+
+      ],
+    );
+  }
+  Widget addToPayWidget() {
+    return Stack(
+      children: [
+        Align(
+            alignment: Alignment.centerRight,
+            child:Container(
+                margin: EdgeInsets.only(top: 20,right: 30,bottom: 10),
+                decoration: UIHelper.GradientContainer(
+                    5, 5, 5, 5, [c.grey_7, c.grey_7]),
+                padding: EdgeInsets.fromLTRB(10,5,10,8),
+                child: UIHelper.titleTextStyle(
+                    "added_to_pay".tr().toString(), c.white, 14, true, true))
+        ),
+        Align(
+            alignment: Alignment.topRight,
+            child:Container(
+              child: Container(
+                // transform: Matrix4.translationValues(0,-5,0,),
+                  margin: EdgeInsets.only(top: 10,right: 10,bottom: 10),
+                  decoration: UIHelper.circleWithColorWithShadow(360,
+                     c.account_status_green_color, c.account_status_green_color),
+                  padding: EdgeInsets.fromLTRB(10,5,10,8),
+                  child: UIHelper.titleTextStyle(
+                      (main_count).toString(), c.white, 14, true, true)),)
+        )
+
       ],
     );
   }
@@ -366,7 +425,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                     transform: Matrix4.translationValues(-30.0, 0.0, 0.0),
                     alignment: Alignment.center,
                     child: Text(
-                      'house_details'.tr().toString(),
+                      'tax_details'.tr().toString(),
                       style: TextStyle(fontSize: 15),
                     ),
                   ),
@@ -380,7 +439,6 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
           child: ViewModelBuilder<StartUpViewModel>.reactive(
               builder: (context, model, child) {
                 return  Container(
-                        padding: EdgeInsets.all(10),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.end,
@@ -388,12 +446,14 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                            UIHelper.verticalSpaceSmall,
                            Align(
                              alignment:Alignment.centerLeft,
-                             child: UIHelper.titleTextStyle(
-                               "propertyTax".tr().toString(),
-                               c.grey_8,
-                               14,
-                               true,
-                               false),),
+                             child: Container(
+                               margin: EdgeInsets.all(10),
+                               child: UIHelper.titleTextStyle(
+                                 "propertyTax".tr().toString(),
+                                 c.grey_8,
+                                 14,
+                                 true,
+                                 false),),),
                            UIHelper.verticalSpaceSmall,
                            Expanded(child: Container(
                              height: MediaQuery.of(context).size.height,
@@ -409,7 +469,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                                        ],
                                      );
                                    }))),
-                           taxInvoiceWidget()
+                           addToPayWidget()
                          ],
                             ));
               },
