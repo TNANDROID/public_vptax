@@ -40,10 +40,34 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
       "swm": [],
       "total": 0.00,
       "taxData": [
-        {"fin_year": "2022-2023", "Amount": 480, "flag": false},
-        {"fin_year": "2023-2024", "Amount": 380, "flag": false},
-        {"fin_year": "2022-2023", "Amount": 680, "flag": false},
-        {"fin_year": "2023-2024", "Amount": 280, "flag": false},
+        {
+          "fin_year": "2022-2023",
+          "year": "April-March",
+          "month": "Jan",
+          "Amount": 480,
+          "flag": false
+        },
+        {
+          "fin_year": "2023-2024",
+          "year": "April-March",
+          "month": "Feb",
+          "Amount": 380,
+          "flag": false
+        },
+        {
+          "fin_year": "2022-2023",
+          "year": "April-March",
+          "month": "Mar",
+          "Amount": 680,
+          "flag": false
+        },
+        {
+          "fin_year": "2023-2024",
+          "year": "April-March",
+          "month": "Apr",
+          "Amount": 280,
+          "flag": false
+        },
       ],
       "swmData": [
         {"fin_year": "2022-2023", "Amount": 180, "flag": false},
@@ -52,7 +76,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
     },
     {
       "name": "SaravanaKumar",
-      "door_no": "54/B",
+      "door_no": "54/A",
       "street": "North street",
       "village": "Vadamalappur",
       "block": "Nathampannai",
@@ -63,10 +87,34 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
       "swm": [],
       "total": 0.00,
       "taxData": [
-        {"fin_year": "2022-2023", "Amount": 480, "flag": false},
-        {"fin_year": "2023-2024", "Amount": 380, "flag": false},
-        {"fin_year": "2022-2023", "Amount": 680, "flag": false},
-        {"fin_year": "2023-2024", "Amount": 280, "flag": false},
+        {
+          "fin_year": "2022-2023",
+          "year": "April-March",
+          "month": "Jan",
+          "Amount": 480,
+          "flag": false
+        },
+        {
+          "fin_year": "2023-2024",
+          "year": "April-March",
+          "month": "Feb",
+          "Amount": 380,
+          "flag": false
+        },
+        {
+          "fin_year": "2022-2023",
+          "year": "April-March",
+          "month": "Mar",
+          "Amount": 680,
+          "flag": false
+        },
+        {
+          "fin_year": "2023-2024",
+          "year": "April-March",
+          "month": "Apr",
+          "Amount": 280,
+          "flag": false
+        },
       ],
       "swmData": [
         {"fin_year": "2022-2023", "Amount": 180, "flag": false},
@@ -75,7 +123,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
     },
     {
       "name": "SaravanaKumar",
-      "door_no": "54/C",
+      "door_no": "54/A",
       "street": "North street",
       "village": "Vadamalappur",
       "block": "Nathampannai",
@@ -86,56 +134,34 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
       "swm": [],
       "total": 0.00,
       "taxData": [
-        {"fin_year": "2022-2023", "Amount": 480, "flag": false},
-        {"fin_year": "2023-2024", "Amount": 380, "flag": false},
-        {"fin_year": "2022-2023", "Amount": 680, "flag": false},
-        {"fin_year": "2023-2024", "Amount": 280, "flag": false},
-      ],
-      "swmData": [
-        {"fin_year": "2022-2023", "Amount": 180, "flag": false},
-        {"fin_year": "2023-2024", "Amount": 230, "flag": false},
-      ]
-    },
-    {
-      "name": "SaravanaKumar",
-      "door_no": "54/D",
-      "street": "North street",
-      "village": "Vadamalappur",
-      "block": "Nathampannai",
-      "district": "PUDUKKOTTAI",
-      "building_licence_number": "1534",
-      "assesment_no": "54",
-      "rows": [],
-      "swm": [],
-      "total": 0.00,
-      "taxData": [
-        {"fin_year": "2022-2023", "Amount": 480, "flag": false},
-        {"fin_year": "2023-2024", "Amount": 380, "flag": false},
-        {"fin_year": "2022-2023", "Amount": 680, "flag": false},
-        {"fin_year": "2023-2024", "Amount": 280, "flag": false},
-      ],
-      "swmData": [
-        {"fin_year": "2022-2023", "Amount": 180, "flag": false},
-        {"fin_year": "2023-2024", "Amount": 230, "flag": false},
-      ]
-    },
-    {
-      "name": "SaravanaKumar",
-      "door_no": "54/E",
-      "street": "North street",
-      "village": "Vadamalappur",
-      "block": "Nathampannai",
-      "district": "PUDUKKOTTAI",
-      "building_licence_number": "1534",
-      "assesment_no": "54",
-      "rows": [],
-      "swm": [],
-      "total": 0.00,
-      "taxData": [
-        {"fin_year": "2022-2023", "Amount": 480, "flag": false},
-        {"fin_year": "2023-2024", "Amount": 380, "flag": false},
-        {"fin_year": "2022-2023", "Amount": 680, "flag": false},
-        {"fin_year": "2023-2024", "Amount": 280, "flag": false},
+        {
+          "fin_year": "2022-2023",
+          "year": "April-March",
+          "month": "Jan",
+          "Amount": 480,
+          "flag": false
+        },
+        {
+          "fin_year": "2023-2024",
+          "year": "April-March",
+          "month": "Feb",
+          "Amount": 380,
+          "flag": false
+        },
+        {
+          "fin_year": "2022-2023",
+          "year": "April-March",
+          "month": "Mar",
+          "Amount": 680,
+          "flag": false
+        },
+        {
+          "fin_year": "2023-2024",
+          "year": "April-March",
+          "month": "Apr",
+          "Amount": 280,
+          "flag": false
+        },
       ],
       "swmData": [
         {"fin_year": "2022-2023", "Amount": 180, "flag": false},
@@ -218,7 +244,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                           width: Screen.width(context) / 2,
                           child: UIHelper.tinyLinewidget(borderColor: c.white),
                         ),
-                        UIHelper.verticalSpaceMedium,
+                        UIHelper.verticalSpaceSmall,
                         taxWiseReturnDataWidget(mainIndex),
                       ],
                     ),
@@ -384,6 +410,21 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                                     child: Center(
                                         child: UIHelper.titleTextStyle(
                                             taxData[rowIndex]['fin_year'],
+                                            c.grey_8,
+                                            12,
+                                            false,
+                                            true)))),
+                            Expanded(
+                                flex: 3,
+                                child: Container(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Center(
+                                        child: UIHelper.titleTextStyle(
+                                            widget.selectedTaxTypeData[
+                                                        "taxtypeid"] ==
+                                                    2
+                                                ? taxData[rowIndex]['month']
+                                                : taxData[rowIndex]['year'],
                                             c.grey_8,
                                             12,
                                             false,
@@ -789,7 +830,6 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                             height: MediaQuery.of(context).size.height,
                             child: ListView.builder(
                                 shrinkWrap: true,
-                                // physics: NeverScrollableScrollPhysics(),
                                 itemCount: mainList.length,
                                 itemBuilder: (context, mainIndex) {
                                   return Column(
