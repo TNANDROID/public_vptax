@@ -35,27 +35,27 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
   int selectedEntryType = 1;
   List taxlist = [
     {
-      'taxtypeid': '1',
+      'taxtypeid': 1,
       'taxtypedesc_en': 'House Tax',
       'taxtypedesc_ta': 'வீட்டு வரி'
     },
     {
-      'taxtypeid': '2',
+      'taxtypeid': 2,
       'taxtypedesc_en': 'Water Tax',
       'taxtypedesc_ta': 'குடிநீர் கட்டணங்கள்'
     },
     {
-      'taxtypeid': '3',
+      'taxtypeid': 3,
       'taxtypedesc_en': 'Professional Tax',
       'taxtypedesc_ta': 'தொழில் வரி'
     },
     {
-      'taxtypeid': '4',
+      'taxtypeid': 4,
       'taxtypedesc_en': 'Non Tax',
       'taxtypedesc_ta': 'இதர வரவினங்கள்'
     },
     {
-      'taxtypeid': '5',
+      'taxtypeid': 5,
       'taxtypedesc_en': 'Trade Licence',
       'taxtypedesc_ta': 'வர்த்தக உரிமம்'
     },
@@ -97,7 +97,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
       String nameField, String hintText, String fieldType) {
     return FormBuilderTextField(
       style: TextStyle(
-          fontSize: 14.0, fontWeight: FontWeight.w400, color: c.grey_9),
+          fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_9),
       name: nameField,
       autocorrect: false,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -105,7 +105,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
       decoration: InputDecoration(
         labelText: hintText,
         labelStyle: TextStyle(
-            fontSize: 14.0, fontWeight: FontWeight.w800, color: c.grey_9),
+            fontSize: 12.0, fontWeight: FontWeight.w800, color: c.grey_7),
         filled: true,
         fillColor: Colors.white,
         enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
@@ -169,11 +169,11 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
     }
     return FormBuilderDropdown(
       style: TextStyle(
-          fontSize: 14.0, fontWeight: FontWeight.w400, color: c.grey_8),
+          fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_8),
       decoration: InputDecoration(
         labelText: inputHint,
         labelStyle: TextStyle(
-            fontSize: 14.0, fontWeight: FontWeight.w800, color: c.grey_9),
+            fontSize: 12.0, fontWeight: FontWeight.w800, color: c.grey_9),
         filled: true,
         fillColor: Colors.white,
         enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
@@ -221,7 +221,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                       ? item[titleText].toString()
                       : item[titleTextTamil].toString(),
                   style: TextStyle(
-                      fontSize: 14.0,
+                      fontSize: 12.0,
                       fontWeight: FontWeight.w400,
                       color: c.grey_9),
                 ),
@@ -253,13 +253,13 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
         child: ClipPath(
             clipper: LeftTriangleClipper(),
             child: Card(
-                elevation: 4,
+                elevation: 2,
                 child: Container(
                     width: Screen.width(context),
-                    padding: EdgeInsets.all(9),
+                    padding: EdgeInsets.all(7),
                     color: selectedEntryType == index
                         ? c.blueAccent
-                        : c.need_improvement2,
+                        : c.bg,
                     child: Row(
                       children: [
                         UIHelper.horizontalSpaceSmall,
@@ -268,7 +268,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                               ? Icons.radio_button_checked_rounded
                               : Icons.radio_button_off_rounded,
                           color: c.grey_9,
-                          size: 20,
+                          size: 17,
                         ),
                         UIHelper.horizontalSpaceSmall,
                         Expanded(
@@ -419,11 +419,13 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                                   Map.from(_formKey.currentState!.value);
                               postParams
                                   .removeWhere((key, value) => value == null);
-                              // Navigator.pushReplacement(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (_) =>
-                              //             TaxCollectionDetailsView()));
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => TaxCollectionDetailsView(
+                                          selectedTaxTypeData:
+                                          taxlist[selectedTaxType - 1])));
+
                             }
                           },
                           child: Container(
@@ -460,35 +462,29 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
           selectedTaxType = index;
           setState(() {});
         },
-        child: Container(
-            width: Screen.width(context) / 2.5,
-            padding: EdgeInsets.all(10),
-            decoration: UIHelper.roundedBorderWithColorWithShadow(
-              10,
-              selectedTaxType == index ? c.blueAccent : c.white,
-              selectedTaxType == index ? c.blueAccent : c.white,
-            ),
+        child: Row(
+          mainAxisAlignment:MainAxisAlignment.center,
+          children: [
+          Image.asset(
+            imgURL,
+            fit: BoxFit.contain,
+            height: 25,
+            width: 25,
+          ),
+          UIHelper.horizontalSpaceSmall,
+          Container(
+              width: Screen.width(context) / 3.5,
+              padding: EdgeInsets.all(10),
+              decoration: UIHelper.roundedBorderWithColorWithShadow(
+                10,
+                selectedTaxType == index ? c.blueAccent : c.white,
+                selectedTaxType == index ? c.blueAccent : c.white,
+              ),
 
-            //UIHelper.roundedBorderWithColor(40, 0, 0, 40, c.white),
-            child: Row(
-              //  mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                InkWell(
-                    child: Image.asset(
-                      imgURL,
-                      fit: BoxFit.contain,
-                      height: 35,
-                      width: 35,
-                    ),
-                    onTap: () async {
-                      // logout();
-                    }),
-                UIHelper.horizontalSpaceSmall,
-                Expanded(
-                    child: UIHelper.titleTextStyle(
-                        data['taxtypedesc_ta'], c.grey_9, 12, true, true))
-              ],
-            )));
+              //UIHelper.roundedBorderWithColor(40, 0, 0, 40, c.white),
+              child: UIHelper.titleTextStyle(
+                  data['taxtypedesc_ta'], c.grey_9, 10, true, true))
+        ],));
   }
 
   Widget taxWidgetGridView() {
@@ -538,43 +534,41 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                     padding: EdgeInsets.all(16),
                     child: Column(
                       children: [
-                        UIHelper.verticalSpaceMedium,
                         Expanded(
                             child: SingleChildScrollView(
                           child: Container(
                             padding: EdgeInsets.all(10),
-                            decoration:
+                            /*decoration:
                                 UIHelper.roundedBorderWithColorWithShadow(
-                                    20, c.grey_3, c.grey_3),
+                                    20, c.grey_3, c.grey_3),*/
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                UIHelper.verticalSpaceSmall,
                                 UIHelper.titleTextStyle(
                                     'select_taxtype'.tr().toString(),
-                                    c.grey_8,
-                                    14,
+                                    c.grey_9,
+                                    12,
                                     true,
                                     true),
-                                UIHelper.verticalSpaceSmall,
+                                UIHelper.verticalSpaceMedium,
                                 taxWidgetGridView(),
                                 UIHelper.verticalSpaceMedium,
                                 UIHelper.titleTextStyle(
                                     'select_anyOne'.tr().toString(),
-                                    c.grey_8,
-                                    14,
+                                    c.grey_9,
+                                    12,
                                     true,
                                     true),
-                                UIHelper.verticalSpaceSmall,
+                                UIHelper.verticalSpaceMedium,
                                 radioButtonListWidget(),
                                 UIHelper.verticalSpaceMedium,
                                 UIHelper.titleTextStyle(
                                     'enter_the_details'.tr().toString(),
-                                    c.grey_8,
-                                    14,
+                                    c.grey_9,
+                                    12,
                                     true,
                                     true),
-                                UIHelper.verticalSpaceSmall,
+                                UIHelper.verticalSpaceMedium,
                                 formControls(context, model),
                               ],
                             ),

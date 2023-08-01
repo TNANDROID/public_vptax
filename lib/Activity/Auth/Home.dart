@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ import '../../Utils/utils.dart';
 import '../Tax_Collection/taxCollection_details.dart';
 import '../Tax_Collection/taxCollection_view.dart';
 import 'Download_receipt.dart';
+import 'Splash.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key, required isLogin});
@@ -32,11 +34,30 @@ class _HomeState extends State<Home> {
   List servicesList = [];
   int index_val = -1;
   int selected_index = -1;
+  final _controller = ScrollController();
+  bool flag=true;
 
   @override
   void initState() {
     super.initState();
     initialize();
+    // Setup the listener.
+    _controller.addListener(() {
+      if (_controller.position.atEdge) {
+        bool isTop = _controller.position.pixels == 0;
+        if (isTop) {
+          setState(() {
+            flag=true;
+          });
+          print('At the top');
+        } else {
+          setState(() {
+            flag=false;
+          });
+          print('At the bottom');
+        }
+      }
+    });
   }
 
   Future<void> initialize() async {
@@ -183,7 +204,7 @@ class _HomeState extends State<Home> {
                             width: 25,
                           ),
                           onTap: () async {
-                            // logout();
+                            logout();
                           }),
                     )
                   ],
@@ -231,78 +252,104 @@ class _HomeState extends State<Home> {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  Container(
-                      height: MediaQuery.of(context).size.height / 5,
-                      margin: EdgeInsets.only(left: 15, right: 15),
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: taxTypeList == null ? 0 : taxTypeList.length,
-                        itemBuilder: (context, i) {
-                          return InkWell(
-                            onTap: () {
-                              setState(() {
-                                index_val = i;
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) =>
-                                            TaxCollectionDetailsView(
-                                                selectedTaxTypeData:
-                                                    taxTypeList[i])));
-                              });
-                            },
-                            child: Container(
-                              margin: EdgeInsets.fromLTRB(2, 20, 2, 10),
-                              // decoration: i == index_val ?UIHelper.circleWithColorWithShadow(360,c.colorAccentverylight,c.colorPrimaryDark):UIHelper.circleWithColorWithShadow(360,c.white,c.white),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    decoration: i == index_val
-                                        ? UIHelper.circleWithColorWithShadow(
-                                            360,
-                                            c.colorAccentverylight,
-                                            c.colorPrimaryDark)
-                                        : UIHelper.circleWithColorWithShadow(
-                                            360, c.white, c.white),
-                                    alignment: Alignment.center,
-                                    margin: EdgeInsets.only(top: 0),
-                                    padding: EdgeInsets.all(10),
-                                    child: Image.asset(
-                                      taxTypeList[i][key_img_path],
-                                      height:
-                                          (MediaQuery.of(context).size.height /
-                                                  4) /
-                                              4,
-                                      width:
-                                          (MediaQuery.of(context).size.height /
-                                                  4) /
-                                              4,
-                                    ),
+                  Column(
+                    children: [
+                    Container(
+                    height: MediaQuery.of(context).size.height / 5,
+                    margin: EdgeInsets.only(left: 15),
+                    child: ScrollConfiguration(
+                        behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
+                          PointerDeviceKind.touch,
+                          PointerDeviceKind.mouse,
+                        },),
+                        child: ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                          shrinkWrap: true,// new
+                      controller: _controller,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: taxTypeList == null ? 0 : taxTypeList.length,
+                      itemBuilder: (context, i) {
+                        return InkWell(
+                          onTap: () {
+                            setState(() {
+                              index_val = i;
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) =>
+                                          TaxCollectionDetailsView(
+                                              selectedTaxTypeData:
+                                              taxTypeList[i])));
+                            });
+                          },
+                          child: Container(
+                            padding: EdgeInsets.fromLTRB(2, 20, 2, 0),
+                            // decoration: i == index_val ?UIHelper.circleWithColorWithShadow(360,c.colorAccentverylight,c.colorPrimaryDark):UIHelper.circleWithColorWithShadow(360,c.white,c.white),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  decoration: i == index_val
+                                      ? UIHelper.circleWithColorWithShadow(
+                                      360,
+                                      c.colorAccentverylight,
+                                      c.colorPrimaryDark)
+                                      : UIHelper.circleWithColorWithShadow(
+                                      360, c.white, c.white),
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.only(top: 0),
+                                  padding: EdgeInsets.all(10),
+                                  child: Image.asset(
+                                    taxTypeList[i][key_img_path],
+                                    height:
+                                    (MediaQuery.of(context).size.height /
+                                        4) /
+                                        4,
+                                    width:
+                                    (MediaQuery.of(context).size.height /
+                                        4) /
+                                        4,
                                   ),
-                                  Container(
-                                    alignment: Alignment.center,
-                                    margin: EdgeInsets.all(10),
-                                    child: Text(
-                                      prefs.getString('lang') == 'en'
-                                          ? taxTypeList[i][key_taxtypedesc_en]
-                                          : taxTypeList[i][key_taxtypedesc_ta],
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          height: 1.5,
-                                          color: c.grey_9),
-                                      textAlign: TextAlign.center,
-                                    ),
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.all(10),
+                                  child: Text(
+                                    prefs.getString('lang') == 'en'
+                                        ? taxTypeList[i][key_taxtypedesc_en]
+                                        : taxTypeList[i][key_taxtypedesc_ta],
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        height: 1.5,
+                                        color: c.grey_9),
+                                    textAlign: TextAlign.center,
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          );
-                        },
-                      )),
+                          ),
+                        );
+                      },
+                    )),),
+                    Visibility(
+                      visible: flag,
+                        child: Container(
+                          transform: Matrix4.translationValues(0, -20, 0),
+                      alignment: Alignment.bottomRight,
+                      color: c.full_transparent,
+                      margin: EdgeInsets.only(top: 0,right: 10),
+                      child: Image.asset(
+                        imagePath.right_arrow,
+                        height: 25,
+                        color: c.grey_9,
+                      ),
+                    ))
+
+                  ],)
+                  ,
                   Container(
-                    padding: EdgeInsets.only(left: 20, right: 20, top: 5),
+                    padding: EdgeInsets.only(left: 20, right: 20),
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'services'.tr().toString(),
@@ -510,5 +557,12 @@ class _HomeState extends State<Home> {
         });
         break;
     }
+  }
+
+  void logout() {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => Splash()),
+            (route) => false);
   }
 }

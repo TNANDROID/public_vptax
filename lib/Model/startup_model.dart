@@ -26,26 +26,6 @@ class StartUpViewModel extends BaseViewModel {
     {"taxCode": "05", "taxname": "TradeLicence"},
   ];
 
-  // Get District List
-  Future getDistrictList() async {
-    setBusy(true);
-    Map request = {
-      key_scode: await preferencesService.getUserInfo(key_scode),
-      key_service_id: service_key_district_list_all,
-    };
-    districtList = await apiServices.masterServiceFunction(request);
-    preferencesService.districtList = districtList.toList();
-    setBusy(false);
-  }
-
-  Future<void> getBlockList() async {
-    dynamic request = {
-      key_scode: await preferencesService.getUserInfo(key_scode),
-      key_service_id: service_key_block_list_all,
-    };
-    blockList = await apiServices.masterServiceFunction(request);
-    preferencesService.blockList = blockList.toList();
-  }
 
   Future<void> loadUIBlock(String value) async {
     selectedBlockList.clear();
