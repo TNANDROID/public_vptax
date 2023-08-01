@@ -32,7 +32,8 @@ Color sky_blue = Color(0xFF61BEE1);
 Color helpBlue = Color(0xff3282B8);
 Color primary_text_color2 = Color(0xFF1e9bff);
 Color text_color = Color(0xFF1E4175);
-
+Color bg = Color(0xFFF5F5F5);
+Color full_transparent = Color(0xFF00FF0000);
 
 //*********Un Used Variables**************/
 
@@ -58,7 +59,6 @@ Color text_color = Color(0xFF1E4175);
 //Color followersBg = Color(0xFF6bce67);
 //Color followingBg = Color(0xFF45c240);
 //Color light_green = Color(0xFFf3fff3);
-//Color bg = Color(0xFFF5F5F5);
 //Color pink = Color(0xFFbf63f9);
 //Color pink_light = Color(0xFFdaa6fd);
 //Color pink_very_light = Color(0xFFf5e7ff);
@@ -73,7 +73,6 @@ Color text_color = Color(0xFF1E4175);
 //Color d_grey2 = Color(0xFF747474);
 //Color d_grey3 = Color(0xFF746C7C);
 //Color d_grey4 = Color(0xFFB8B8BA);
-//Color full_transparent = Color(0xFF00FF0000);
 //Color primary_text_color = Color(0xFF2A4AFB);
 //Color dark_pink = Color(0xFFFF90CF);
 //Color blue_background = Color(0xFF242b35);
