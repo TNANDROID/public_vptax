@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:open_settings/open_settings.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
@@ -161,7 +161,7 @@ class Utils {
                                               BorderRadius.circular(15),
                                         ))),
                                     onPressed: () {
-                                      OpenSettings.openWIFISetting();
+                                      performAction('wifi');
                                       Navigator.pop(context, false);
                                     },
                                     child: UIHelper.titleTextStyle(
@@ -475,16 +475,23 @@ class Utils {
     );
   }
 
-  performAction(String type) {
+  performAction(String type) async {
+    const MethodChannel channel = MethodChannel('open_settings');
     switch (type) {
-      case 'openAppSetting':
-        OpenSettings.openAppSetting();
+      case 'appSetting':
+        openAppSettings();
 
       case 'openLocation':
-        OpenSettings.openLocationSourceSetting();
+        await channel.invokeMethod('openSettings', 'location_source');
 
       case 'openDate':
-        OpenSettings.openDateSetting();
+        await channel.invokeMethod('openSettings', 'date');
+
+      case 'internet':
+        await channel.invokeMethod('openSettings', 'network_operator');
+
+      case 'wifi':
+        await channel.invokeMethod('openSettings', 'wifi');
 
       default:
         return true;
