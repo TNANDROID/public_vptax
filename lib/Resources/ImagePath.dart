@@ -1,4 +1,6 @@
 //SSl Certificate path
+// ignore_for_file: non_constant_identifier_names, file_names
+
 String certificate = "assets/certificate/tnrdtngovin.pem";
 
 //png icons
@@ -7,7 +9,6 @@ String lock = "assets/images/lock.png";
 String tamilnadu_logo = "assets/images/tamilnadu_logo.png";
 String user = "assets/images/user.png";
 String warnings = "assets/images/warning.png";
-String pay = "assets/images/pay.png";
 String logo = "assets/images/logo.png";
 String login = "assets/images/login.png";
 String logout = "assets/images/log_out.png";
@@ -30,6 +31,8 @@ String due4 = "assets/images/due4.png";
 String reciept = "assets/images/reciept.png";
 String bg = "assets/images/bg.png";
 String bg1 = "assets/images/bg1.png";
+String right_arrow = "assets/images/right_arrow.png";
+String right_arrow_icon = "assets/images/right_arrow_icon.png";
 
 String help = 'assets/images/help.svg';
 String failure = 'assets/images/failure.svg';

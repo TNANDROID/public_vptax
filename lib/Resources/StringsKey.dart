@@ -48,9 +48,15 @@ String key_img_path = "img_path";
 String key_service_name = "service_name";
 String key_number = "Number";
 String key_mobileNumber = "Mobile Number";
+String key_user_login_key = "user_login_key";
+String key_imei_number = "imei_number";
+String key_serial_number = "serial_number";
+String key_os_version = "os_version";
+String key_appcode = "appcode";
 
 // ************************** Service Key Strings ************************** //
 
+String service_key_login = "login";
 String service_key_district_list_all = "district_list_all";
 String service_key_block_list_all = "block_list_all";
 

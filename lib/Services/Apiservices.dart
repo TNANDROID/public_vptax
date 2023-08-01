@@ -14,10 +14,13 @@ class ApiServices {
     "Accept": "application/json",
   };
 
+  // Live Demo
+  // String endPointURL =
+  //     "https://vptax.tnrd.tn.gov.in/vptax_test/project/webservices";
+
+  // Local
   String endPointURL =
       "http://10.163.19.137:8090/tnrd/project/webservices_forms";
-  //String endPointURL = "https://tnrd.tn.gov.in/project/webservices_forms/";
-  //String endPointURL = "http://10.163.19.140:8080/rdweb/project/webservices_forms";
 
   ioclientCertificate() async {
     HttpClient _client = HttpClient(context: await utils.globalContext);

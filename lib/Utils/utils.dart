@@ -276,15 +276,16 @@ class Utils {
 
   Future<void> showAlert(
       BuildContext context, ContentType contentType, String message,
-      [String? title, double? titleFontSize, double? messageFontSize]) async {
+      {String? title,
+      String? flag,
+      double? titleFontSize,
+      double? messageFontSize}) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: true, // user must tap button!
       builder: (BuildContext context) {
         // Size
         final size = MediaQuery.of(context).size;
-        double rightSpace = size.width * 0.12;
-        double leftSpace = size.width * 0.12;
 
         ContentInfo contentInfo = getContentInfo(contentType);
 
@@ -404,13 +405,19 @@ class Utils {
                     right: 0,
                     child: Row(children: [
                       Visibility(
-                        visible: contentType == ContentType.help ? true : false,
+                        visible:
+                            contentType == ContentType.warning ? true : false,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 5, horizontal: 10),
                           child: ElevatedButton(
                             onPressed: () {
-                              print("object");
+                              flag = flag ?? '';
+                              if (flag == "ok") {
+                                print("object");
+                              } else {
+                                performAction(flag ?? '');
+                              }
                             },
                             style: ButtonStyle(
                               elevation: MaterialStateProperty.all(5.0),
@@ -468,6 +475,22 @@ class Utils {
     );
   }
 
+  performAction(String type) {
+    switch (type) {
+      case 'openAppSetting':
+        OpenSettings.openAppSetting();
+
+      case 'openLocation':
+        OpenSettings.openLocationSourceSetting();
+
+      case 'openDate':
+        OpenSettings.openDateSetting();
+
+      default:
+        return true;
+    }
+  }
+
   Future<void> offlineMode(
       String username, String password, BuildContext context) async {
     String userName = await preferencesService.getUserInfo(key_user_name);
@@ -480,6 +503,14 @@ class Utils {
         ContentType.fail,
         "noInternet".tr().toString(),
       );
+    }
+  }
+
+  String notNullString(String text) {
+    if (text == "" || text == "null") {
+      return "";
+    } else {
+      return text;
     }
   }
 

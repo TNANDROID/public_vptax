@@ -1,5 +1,7 @@
 // ignore_for_file: unused_local_variable, non_constant_identifier_names, file_names, camel_case_types, prefer_typing_uninitialized_variables, prefer_const_constructors_in_immutables, use_key_in_widget_constructors, avoid_print, library_prefixes, prefer_const_constructors, prefer_interpolation_to_compose_strings, use_build_context_synchronously, avoid_unnecessary_containers, no_leading_underscores_for_local_identifiers
 
+import 'dart:convert';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +13,7 @@ import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagepath;
-// import 'package:public_vptax/Resources/StringsKey.dart' as s;
+import 'package:public_vptax/Resources/StringsKey.dart' as s;
 import 'package:public_vptax/Services/Apiservices.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
@@ -104,7 +106,7 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
         );
       }
     } else {
-      print('finalOTP: $finalOTP');
+      await goToLogin();
     }
     setState(() {});
   }
@@ -322,6 +324,7 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
 
                             CustomGradientButton(
                               onPressed: () async {
+                                mobileController.text = '9445621154';
                                 if (await utils.isOnline()) {
                                   await validate();
                                 } else {
@@ -357,5 +360,39 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
             ),
           )),
     );
+  }
+
+  // *************************************** API CALL  *************************************** //
+
+  Future<void> goToLogin() async {
+    String ss = String.fromCharCodes(Runes('\u0024'));
+
+    String random = utils.generateRandomString(15);
+
+    Map request = {
+      s.key_service_id: s.service_key_login,
+      s.key_user_login_key: random,
+      s.key_user_name: 'vpadm7233@gmail.com',
+      s.key_user_pwd: random,
+      s.key_imei_number: '860535062210228',
+      s.key_serial_number: '9222050471',
+      s.key_os_version: "10",
+      s.key_appcode: "VP",
+    };
+    print('request: ${request}');
+    var loginResponceList = await apiServices.loginServiceFunction(request);
+
+    if (loginResponceList.statusCode == 200) {
+      var data = loginResponceList.body;
+      var loginResponce = jsonDecode(data);
+      String status = loginResponce[s.key_status];
+      print('status: ${status}');
+      String responce = loginResponce[s.key_response];
+      print('loginResponce: $responce');
+      String mess = loginResponce[s.key_message];
+      print('mess: $mess');
+      String erro = loginResponce['ERROR_ID'].toString();
+      print('erro: $erro');
+    }
   }
 }

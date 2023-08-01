@@ -202,8 +202,8 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
                         actionButton(
                             1, 'signIN'.tr().toString(), imagepath.login),
                         UIHelper.horizontalSpaceMedium,
-                        actionButton(
-                            2, 'quickPay'.tr().toString(), imagepath.pay),
+                        actionButton(2, 'quickPay'.tr().toString(),
+                            imagepath.quick_pay1),
                       ],
                     ),
                     UIHelper.verticalSpaceMedium,
@@ -274,18 +274,20 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
               builder: (context) => Login(),
             ));
           } else if (flag == 2) {
-            if (await utils.isOnline()) {
-              await apiCalls();
-            } else {
-              utils.showAlert(
-                context,
-                ContentType.fail,
-                "noInternet".tr().toString(),
-              );
-            }
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => TaxCollectionView(),
-            ));
+            // if (await utils.isOnline()) {
+            //   await apiCalls();
+            //   Navigator.of(context).push(MaterialPageRoute(
+            //   builder: (context) => TaxCollectionView(),
+            // ));
+            // } else {
+            //   utils.showAlert(
+            //     context,
+            //     ContentType.fail,
+            //     "noInternet".tr().toString(),
+            //   );
+            // }
+            utils.showAlert(context, ContentType.warning, "message",
+                flag: 'openAppSetting');
           }
         },
         style: ButtonStyle(
