@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +13,10 @@ import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stacked/stacked.dart';
 
 import '../../Model/startup_model.dart';
+import '../../Resources/StringsKey.dart';
 import '../../Utils/ContentInfo.dart';
 
 class ViewReceipt extends StatefulWidget {
@@ -49,6 +50,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
   PreferenceService preferencesService = locator<PreferenceService>();
   TextEditingController assessmentController = TextEditingController();
   TextEditingController receiptController = TextEditingController();
+  ScrollController scrollController = ScrollController();
   List<dynamic> taxType = [
     {"taxCode": "01", "taxname": 'propertyTax'.tr().toString()},
     {"taxCode": "02", "taxname": 'waterCharges'.tr().toString()},
@@ -87,6 +89,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
   }
   Future<void> initialize() async {
     prefs = await SharedPreferences.getInstance();
+    taxFlag=true;
     districtFlag = true;
     blockFlag=true;
     villageFlag=true;
@@ -109,7 +112,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
     return true;
   }
   //Dropdown Input Field Widget
-  Widget addInputDropdownField(int index, String inputHint, String fieldName,
+  Widget addInputDropdownField(int index, String inputHint, String fieldName,StartUpViewModel model
     ) {
     List dropList = [];
     String keyCode = "";
@@ -122,9 +125,9 @@ class _ViewReceiptState extends State<ViewReceipt> {
       titleText = "taxname";
       titleTextTamil = "taxname";
     } else if (index == 1) {
-      dropList =districtlist;
+      dropList = districtlist;
       keyCode = "dcode";
-      titleText = "dname";
+      titleText ="dname";
       titleTextTamil = "dname";
     } else if (index == 2) {
       dropList =blockList;
@@ -143,7 +146,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
         decoration: InputDecoration(
           contentPadding: EdgeInsets.only(left: 5),
           constraints: BoxConstraints(
-            maxHeight: 30
+            maxHeight: 35
           ),
           hintText: inputHint,
           hintStyle: TextStyle(fontSize: 11),
@@ -155,7 +158,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
           ),
           focusedBorder: UIHelper.getInputBorder(1, borderColor: c.dot_light_screen_lite),
           focusedErrorBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 20.0),
+            borderSide: BorderSide(width: 10.0),
             borderRadius: BorderRadius.circular(20), // Increase the radius to adjust the height
           ),
         ),
@@ -186,11 +189,12 @@ class _ViewReceiptState extends State<ViewReceipt> {
         setState(() {});
       },
       iconSize: 28,
-      // autovalidateMode: AutovalidateMode.onUserInteraction,
-      // validator: FormBuilderValidators.compose([
-      //   FormBuilderValidators.required(
-      //       errorText: inputHint.tr().toString()),
-      // ]),
+      autofocus: true,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: FormBuilderValidators.compose([
+        FormBuilderValidators.required(
+            errorText: inputHint.tr().toString()),
+      ]),
       items: dropList.map((item) => DropdownMenuItem(
         value: item[keyCode],
         child: Text(
@@ -226,7 +230,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
           selectedvillage="";
           listvisbility=false;
           assessmentController.text="";
-          villageError=true;
           receiptController.text="";
           // await model.loadUIVillage(selectedDistrict, selectedBlock);
         } else if (index == 3) {
@@ -255,120 +258,149 @@ class _ViewReceiptState extends State<ViewReceipt> {
                       ),
             ),
           ),
-        body:SingleChildScrollView(
-          child: Column(
+          body: SafeArea(
+            top: true,
+            child: ViewModelBuilder<StartUpViewModel>.reactive(
+                onModelReady: (model) async {},
+                builder: (context, model, child) {
+                  return Container(
+                      color: Colors.white,
+                      child: Column(
+                        children: [
+                          UIHelper.verticalSpaceMedium,
+                          Expanded(
+                              child: SingleChildScrollView(
+                               child: dropdown(context, model),
+                              )),
+                        ],
+                      ));
+                },
+                viewModelBuilder: () => StartUpViewModel()),
+          )));
+  }
+  Widget dropdown(BuildContext context,StartUpViewModel model)
+  {
+    return Column(
+      children: [
+        Container(
+          transform: Matrix4.translationValues(-6.0,-50.0,10.0),
+          height: MediaQuery.of(context).size.height/2,
+          child: Image.asset(
+            imagePath.house_tax,
+            fit: BoxFit.fitWidth,
+            width: MediaQuery.of(context).size.width,
+          ),
+        ),
+        Container(
+          transform: Matrix4.translationValues(-6.0,-120.0,10.0),
+          margin: EdgeInsets.only(left: 25,right: 15,top:5),
+          padding:  EdgeInsets.only(top: 10,left: 5,right: 5,bottom: 50),
+          // height: MediaQuery.of(context).size.height/1.5,
+          // padding: EdgeInsets.only(left: 12,top: 20),
+          decoration:
+          UIHelper.roundedBorderWithColorWithShadow(
+              15,c.white,c.white,borderColor: Colors.transparent,borderWidth: 5),
+          child:  Column(
             children: [
-                    Container(
-                      height: MediaQuery.of(context).size.height/2,
-                      child: Image.asset(
-                        imagePath.house_tax,
-                        fit: BoxFit.fitWidth,
-                        width: MediaQuery.of(context).size.width,
-                      ),
-                    ),
-              Container(
-                transform: Matrix4.translationValues(-6.0,-100.0,10.0),
-                margin: EdgeInsets.only(left: 25,right: 15,top:5),
-                padding:  EdgeInsets.only(top: 10,left: 5,right: 5,bottom: 50),
-                // height: MediaQuery.of(context).size.height/1.5,
-                // padding: EdgeInsets.only(left: 12,top: 20),
-                decoration:
-                UIHelper.roundedBorderWithColorWithShadow(
-                    15,c.white,c.white,borderColor: Colors.transparent,borderWidth: 5),
-                child:  Column(
-                  children: [
-                    Visibility(
-                      visible: districtFlag ? true : false,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex:1,
-                            child: Text(
-                              'taxType'.tr().toString()+" : ",
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: c.grey_10),
-                            ),
-                          ),
-                          UIHelper.horizontalSpaceMedium,
-                          Expanded(
-                            flex: 2,
-                            child: addInputDropdownField(
-                                0, 'select_taxtype'.tr().toString(),
-                                'taxType'.tr().toString(),),
-                          )
-                        ],
-                      ),
-                    ),
-                    UIHelper.verticalSpaceSmall,
-                    Visibility(
-                      visible: districtFlag ? true : false,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex:1,
-                            child: Text(
-                              'district'.tr().toString()+" : ",
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: c.grey_10),
-                            ),
-                          ),
-                          UIHelper.horizontalSpaceMedium,
-                          Expanded(
-                            flex: 2,
-                            child:
-                            addInputDropdownField(1, 'select_District'.tr().toString(),'district',),
-                          )
-                        ],
-                      ),
-                    ),
-                    UIHelper.verticalSpaceSmall,
-                    Visibility(
-                      visible: blockFlag ? true : false,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex:1,
-                            child: Text(
-                              'block'.tr().toString()+" : ",
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: c.grey_10),
-                            ),
-                          ),
-                          UIHelper.horizontalSpaceMedium,
-                          Expanded(
-                            flex: 2,
-                            child:addInputDropdownField(
-                                2, 'select_Block'.tr().toString(),
-                                "block", ),
-                          )
-                        ],
-                      ),
-                    ),
-                    UIHelper.verticalSpaceSmall,
-                    Visibility(
-                      visible: villageFlag ? true : false,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              'villagePanchayat'.tr().toString()+" : ",
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: c.grey_10),
-                            ),
-                          ),
-                          UIHelper.horizontalSpaceMedium,
-                          Expanded(
-                            flex: 2,
-                            child: Container(
+              Visibility(
+          visible: taxFlag ? true : false,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex:1,
+                  child: Text(
+                    'taxType'.tr().toString()+" : ",
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: c.grey_10),
+                  ),
+                ),
+                UIHelper.horizontalSpaceMedium,
+                Expanded(
+                  flex: 2,
+                  child: addInputDropdownField(
+                      0, 'select_taxtype'.tr().toString(),
+                      'taxType'.tr().toString(),model),
+                )
+              ],
+            ),
+          ),
+          UIHelper.verticalSpaceSmall,
+          Visibility(
+            visible: districtFlag ? true : false,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex:1,
+                  child: Text(
+                    'district'.tr().toString()+" : ",
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: c.grey_10),
+                  ),
+                ),
+                UIHelper.horizontalSpaceMedium,
+                Expanded(
+                  flex: 2,
+                  child:
+                  addInputDropdownField(
+                      1,
+                      'districtName'.tr().toString(),
+                      "district",
+                      model),
+                )
+              ],
+            ),
+          ),
+          UIHelper.verticalSpaceSmall,
+          Visibility(
+            visible: blockFlag ? true : false,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex:1,
+                  child: Text(
+                    'block'.tr().toString()+" : ",
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: c.grey_10),
+                  ),
+                ),
+                UIHelper.horizontalSpaceMedium,
+                Expanded(
+                  flex: 2,
+                  child:addInputDropdownField(
+                      2, 'select_Block'.tr().toString(),
+                      "block",model ),
+                )
+              ],
+            ),
+          ),
+          UIHelper.verticalSpaceSmall,
+          Visibility(
+            visible: villageFlag ? true : false,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    'villagePanchayat'.tr().toString()+" : ",
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: c.grey_10),
+                  ),
+                ),
+                UIHelper.horizontalSpaceMedium,
+                Expanded(
+                  flex: 2,
+                  child:addInputDropdownField(
+                      3, 'select_VillagePanchayat'.tr().toString(),
+                      "",model),
+                  /*child: Container(
                               decoration:BoxDecoration(
                                   color: c.grey_out,
                                   border: Border.all(
@@ -378,331 +410,333 @@ class _ViewReceiptState extends State<ViewReceipt> {
                              child: addInputDropdownField(
                                   3, 'select_VillagePanchayat'.tr().toString(),
                                   "villagePanchayat"),
-                            )
-                          )
-                        ],
-                      ),
+                            )*/
+                )
+              ],
+            ),
+          ),
+          UIHelper.verticalSpaceSmall,
+          Container(
+            decoration:UIHelper.roundedBorderWithColorWithShadow(
+                15,c.need_improvement2,c.need_improvement2,borderColor: Colors.transparent,borderWidth: 5),
+            padding: EdgeInsets.only(top: 15,bottom: 10,left: 10,right: 10),
+            child:Column(
+              children: [
+            Row(
+            children: [
+            Expanded(
+            flex: 1,
+              child: Text(
+                'assesmentNo'.tr().toString()+" : ",
+                style: TextStyle(
+                    fontSize: 12,
+                    color: c.grey_10),
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Container(
+                padding: EdgeInsets.only(top: 5),
+                height:25,
+                width:45,
+                decoration: BoxDecoration(
+                  color: c.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
+                    bottomLeft: Radius.circular(10),
+                  ),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.only(top: 5,left: 3),
+                  child: TextFormField(
+                    controller: assessmentController,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                        border:InputBorder.none
                     ),
-                    UIHelper.verticalSpaceSmall,
-                    Container(
-                      decoration:UIHelper.roundedBorderWithColorWithShadow(
-                          15,c.need_improvement2,c.need_improvement2,borderColor: Colors.transparent,borderWidth: 5),
-                      padding: EdgeInsets.only(top: 15,bottom: 10,left: 10,right: 10),
-                      child:Column(
-                       children: [
-                         Row(
-                           children: [
-                             Expanded(
-                               flex: 1,
-                               child: Text(
-                                 'assesmentNo'.tr().toString()+" : ",
-                                 style: TextStyle(
-                                     fontSize: 12,
-                                     color: c.grey_10),
-                               ),
-                             ),
-                             Expanded(
-                               flex: 2,
-                               child: Container(
-                                 padding: EdgeInsets.only(top: 5),
-                                 height:25,
-                                 width:45,
-                                 decoration: BoxDecoration(
-                                   color: c.white,
-                                   borderRadius: BorderRadius.only(
-                                     topLeft: Radius.circular(10),
-                                     topRight: Radius.circular(10),
-                                     bottomRight: Radius.circular(10),
-                                     bottomLeft: Radius.circular(10),
-                                   ),
-                                 ),
-                                 child: Padding(
-                                   padding: EdgeInsets.only(top: 5,left: 3),
-                                   child: TextFormField(
-                                     controller: assessmentController,
-                                     inputFormatters: <TextInputFormatter>[
-                                       FilteringTextInputFormatter.digitsOnly
-                                     ],
-                                     decoration: const InputDecoration(
-                                         border:InputBorder.none
-                                     ),
-                                     style: TextStyle(
-                                         fontSize: 12
-                                     ),
-                                   ),
-                                 ),
-                               ),
-                             ),
-                           ],
-                         ),
-                         UIHelper.verticalSpaceSmall,
-                         Row(
-                           mainAxisAlignment: MainAxisAlignment.center,
-                           children: [
-                             Text("("+'or'.tr().toString()+")",style: TextStyle(fontSize: 12),)
-                           ],
-                         ),
-                         UIHelper.verticalSpaceSmall,
-                         Row(
-                           mainAxisAlignment: MainAxisAlignment.spaceAround,
-                           children: [
-                             Expanded(
-                               flex:1,
-                               child: Text(
-                                 'receiptno'.tr().toString()+" : ",
-                                 style: TextStyle(
-                                     fontSize: 12,
-                                     color: c.grey_10),
-                               ),
-                             ),
-                             Expanded(
-                                 flex: 2,
-                                 child: Container(
-                                   padding: EdgeInsets.only(top: 5),
-                                   height:25,
-                                   width:45,
-                                   decoration: BoxDecoration(
-                                     color: c.white,
-                                     borderRadius: BorderRadius.only(
-                                       topLeft: Radius.circular(10),
-                                       topRight: Radius.circular(10),
-                                       bottomRight: Radius.circular(10),
-                                       bottomLeft: Radius.circular(10),
-                                     ),
-                                   ),
-                                   child: Padding(
-                                     padding: EdgeInsets.only(top: 5,left: 3),
-                                     child: TextFormField(
-                                       controller: receiptController,
-                                       inputFormatters: <TextInputFormatter>[
-                                         FilteringTextInputFormatter.digitsOnly
-                                       ],
-                                       decoration: const InputDecoration(
-                                           border:InputBorder.none
-                                       ),
-                                       style: TextStyle(
-                                           fontSize: 12
-                                       ),
-                                     ),
-                                   ),
-                                 ))
-                           ],
-                         ),
-                       ],
-                      )
+                    style: TextStyle(
+                        fontSize: 12
                     ),
-                  ],
+                  ),
                 ),
               ),
-              Container(
-                transform: Matrix4.translationValues(5.0,-125.0,10.0),
-                child: TextButton(
-                  child:Padding(
-                    padding: EdgeInsets.only(left: 5,right: 5),
-                    child: Text("submit".tr().toString(),
-                          style: TextStyle(color: c.white, fontSize: 13))
-                  ),
-                  style: TextButton.styleFrom(
-                      fixedSize: const Size(130, 20),
-                      shape:StadiumBorder(),
-                      backgroundColor: c.colorPrimary
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      Validate();
-                    });
-                  },
-                ),
-              ),
-              Visibility(
-                visible:listvisbility,
-                child: Container(
-                    transform: Matrix4.translationValues(-5.0,-80.0,10.0),
-                    padding: EdgeInsets.only(left: 10,right: 10),
-                    child: AnimationLimiter(
-                      child: ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount:1,
-                        // itemCount: houseList == null ? 0 : houseList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return  AnimationConfiguration.staggeredList(
-                            position: index,
-                            duration: const Duration(milliseconds: 800),
-                            child: SlideAnimation(
-                              horizontalOffset: 200.0,
-                              child: FlipAnimation(
-                                child: InkWell(
-                                  onTap: () { },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: c.white,
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(10),
-                                          topRight: Radius.circular(10),
-                                          bottomRight: Radius.circular(10),
-                                          bottomLeft: Radius.circular(10),
-                                        ),
-                                        border: Border.all(
-                                            color: c.colorPrimary,width: 2
-                                        )
-                                    ),
-                                    margin:  EdgeInsets.symmetric(horizontal:10, vertical: 10),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          width: 100,
-                                          height: 185,
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                                colors: [
-                                                  c.colorPrimary,
-                                                  c.colorPrimaryDark,
-                                                ],
-                                                begin: const FractionalOffset(0.0, 0.0),
-                                                end: const FractionalOffset(1.0, 0.0),
-                                                stops: [1.0, 0.0],
-                                                tileMode: TileMode.clamp),
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(5),
-                                              topRight: Radius.circular(110),
-                                              bottomRight: Radius.circular(110),
-                                              bottomLeft: Radius.circular(5),
+            ),
+            ],
+          ),
+          UIHelper.verticalSpaceSmall,
+           Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+  Text("("+'or'.tr().toString()+")",style: TextStyle(fontSize: 12),)
+  ],
+  ),
+           UIHelper.verticalSpaceSmall,
+           Row(
+  mainAxisAlignment: MainAxisAlignment.spaceAround,
+  children: [
+  Expanded(
+  flex:1,
+  child: Text(
+  'receiptno'.tr().toString()+" : ",
+  style: TextStyle(
+  fontSize: 12,
+  color: c.grey_10),
+  ),
+  ),
+  Expanded(
+  flex: 2,
+  child: Container(
+  padding: EdgeInsets.only(top: 5),
+  height:25,
+  width:45,
+  decoration: BoxDecoration(
+  color: c.white,
+  borderRadius: BorderRadius.only(
+  topLeft: Radius.circular(10),
+  topRight: Radius.circular(10),
+  bottomRight: Radius.circular(10),
+  bottomLeft: Radius.circular(10),
+  ),
+  ),
+  child: Padding(
+  padding: EdgeInsets.only(top: 5,left: 3),
+  child: TextFormField(
+  controller: receiptController,
+  inputFormatters: <TextInputFormatter>[
+  FilteringTextInputFormatter.digitsOnly,
+  ],
+  keyboardType: TextInputType.number,
+  decoration: const InputDecoration(
+  border:InputBorder.none
+  ),
+  style: TextStyle(
+  fontSize: 12
+  ),
+  ),
+  ),
+  ))
+  ],
+  ),
+    ])),])),
+        Container(
+          transform: Matrix4.translationValues(5.0,-150.0,10.0),
+          child: TextButton(
+            child:Padding(
+                padding: EdgeInsets.only(left: 5,right: 5),
+                child: Text("submit".tr().toString(),
+                    style: TextStyle(color: c.white, fontSize: 13))
+            ),
+            style: TextButton.styleFrom(
+                fixedSize: const Size(130, 20),
+                shape:StadiumBorder(),
+                backgroundColor: c.colorPrimary
+            ),
+            onPressed: () {
+              scrollController.animateTo(500,  duration: const Duration(milliseconds: 500), curve: Curves.linear);
+              setState(() {
+                Validate();
+              });
+            },
+          ),
+        ),
+        listview()
+    ]
+    );
+  }
+  Widget listview()
+  {
+    return  Visibility(
+      visible:listvisbility,
+      child: Container(
+          transform: Matrix4.translationValues(-5.0,-80.0,10.0),
+          padding: EdgeInsets.only(left: 10,right: 10),
+          child: AnimationLimiter(
+            child: ListView.builder(
+              controller: scrollController,
+              scrollDirection: Axis.vertical,
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount:1,
+              // itemCount: houseList == null ? 0 : houseList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return  AnimationConfiguration.staggeredList(
+                  position: index,
+                  duration: const Duration(milliseconds: 800),
+                  child: SlideAnimation(
+                    horizontalOffset: 200.0,
+                    child: FlipAnimation(
+                      child: InkWell(
+                        onTap: () { },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: c.white,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10),
+                                bottomRight: Radius.circular(10),
+                                bottomLeft: Radius.circular(10),
+                              ),
+                              border: Border.all(
+                                  color: c.colorPrimary,width: 2
+                              )
+                          ),
+                          margin:  EdgeInsets.symmetric(horizontal:10, vertical: 10),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 100,
+                                height: 185,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                      colors: [
+                                        c.colorPrimary,
+                                        c.colorPrimaryDark,
+                                      ],
+                                      begin: const FractionalOffset(0.0, 0.0),
+                                      end: const FractionalOffset(1.0, 0.0),
+                                      stops: [1.0, 0.0],
+                                      tileMode: TileMode.clamp),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(5),
+                                    topRight: Radius.circular(110),
+                                    bottomRight: Radius.circular(110),
+                                    bottomLeft: Radius.circular(5),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                child:  Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.only(left: 10,top: 10),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'collectionDate'.tr().toString(),
+                                            style:
+                                            TextStyle(
+                                              fontSize: 12,
+                                              fontWeight:
+                                              FontWeight
+                                                  .bold,
+                                              color: c.grey_9,
                                             ),
                                           ),
-                                        ),
-                                        Container(
-                                          child:  Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                padding: EdgeInsets.only(left: 10,top: 10),
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'collectionDate'.tr().toString(),
-                                                      style:
-                                                      TextStyle(
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold,
-                                                        color: c.grey_9,
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height: 5),
-                                                    Text(
-                                                      "",
-                                                      style:
-                                                      TextStyle(
-                                                        fontSize: 13,
-                                                        fontWeight:
-                                                        FontWeight.bold,
-                                                        color: c.grey_10,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Container(
-                                                padding: EdgeInsets.only(left: 12),
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'receiptno'.tr().toString()+":",
-                                                      style:
-                                                      TextStyle(
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .normal,
-                                                        color: Colors
-                                                            .black,
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height: 5),
-                                                    Text(
-                                                      "",
-                                                      style:
-                                                      TextStyle(
-                                                        fontSize: 13,
-                                                        fontWeight:
-                                                        FontWeight.bold,
-                                                        color: c.grey_10,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Container(
-                                                child: Row(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    UIHelper.horizontalSpaceSmall,
-                                                    Text(
-                                                      'download_tamil'.tr().toString()+"\n"+"tamil_1".tr().toString()+"\n",
-                                                      style:
-                                                      TextStyle(
-                                                        fontSize: 12,
-                                                        fontWeight: FontWeight.bold,color: c.grey_9
-                                                      )
-                                                    ),
-                                                    InkWell(
-                                                      onTap: ()
-                                                      {
-                                                        print("download_tamil".tr().toString()+"\n"+"tamil_1".tr().toString()+"\n");
-                                                      },
-                                                      child: Padding(padding: EdgeInsets.only(left: 25),
-                                                        child:Image.asset(imagePath.download,height: 17,width: 17,),),
-                                                    )
-                                                  ],
-                                                )
-                                              ),
-                                              Container(
-                                                child: Row(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    UIHelper.horizontalSpaceSmall,
-                                                    Text(
-                                                      'download_english'.tr().toString()+"\n"+"english_1".tr().toString()+"\n",
-                                                      style:
-                                                      TextStyle(
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                        FontWeight.bold,
-                                                        color: c.grey_9,
-                                                      ),
-                                                    ),
-                                                    InkWell(
-                                                      onTap: (){
-                                                        print('download_english'.tr().toString()+"english_1".tr().toString());
-                                                      },
-                                                      child: Padding(padding: EdgeInsets.only(left: 25),
-                                                        child:Image.asset(imagePath.download,height: 17,width: 17,),),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),)
-                                      ],
+                                          SizedBox(
+                                              height: 5),
+                                          Text(
+                                            "",
+                                            style:
+                                            TextStyle(
+                                              fontSize: 13,
+                                              fontWeight:
+                                              FontWeight.bold,
+                                              color: c.grey_10,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
+                                    Container(
+                                      padding: EdgeInsets.only(left: 12),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'receiptno'.tr().toString()+":",
+                                            style:
+                                            TextStyle(
+                                              fontSize: 12,
+                                              fontWeight:
+                                              FontWeight
+                                                  .normal,
+                                              color: Colors
+                                                  .black,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                              height: 5),
+                                          Text(
+                                            "",
+                                            style:
+                                            TextStyle(
+                                              fontSize: 13,
+                                              fontWeight:
+                                              FontWeight.bold,
+                                              color: c.grey_10,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                        child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            UIHelper.horizontalSpaceSmall,
+                                            Text(
+                                                'download_tamil'.tr().toString()+"\n"+"tamil_1".tr().toString()+"\n",
+                                                style:
+                                                TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,color: c.grey_9
+                                                )
+                                            ),
+                                            InkWell(
+                                              onTap: ()
+                                              {
+                                                print("download_tamil".tr().toString()+"\n"+"tamil_1".tr().toString()+"\n");
+                                              },
+                                              child: Padding(padding: EdgeInsets.only(left: 25),
+                                                child:Image.asset(imagePath.download,height: 17,width: 17,),),
+                                            )
+                                          ],
+                                        )
+                                    ),
+                                    Container(
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          UIHelper.horizontalSpaceSmall,
+                                          Text(
+                                            'download_english'.tr().toString()+"\n"+"english_1".tr().toString()+"\n",
+                                            style:
+                                            TextStyle(
+                                              fontSize: 12,
+                                              fontWeight:
+                                              FontWeight.bold,
+                                              color: c.grey_9,
+                                            ),
+                                          ),
+                                          InkWell(
+                                            onTap: (){
+                                              print('download_english'.tr().toString()+"english_1".tr().toString());
+                                            },
+                                            child: Padding(padding: EdgeInsets.only(left: 25),
+                                              child:Image.asset(imagePath.download,height: 17,width: 17,),),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),)
+                            ],
+                          ),
 
-                                  ),),),
-                            ),
-                          );
-                        },
-                      ),
-                    )),
-              )
-              ],
-          ),
-      ),
-    ));
+                        ),),),
+                  ),
+                );
+              },
+            ),
+          )),
+    );
   }
   Validate() {
    if(selectedTaxType!=null && selectedTaxType !="")
