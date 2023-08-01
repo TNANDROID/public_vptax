@@ -3,9 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
@@ -13,8 +11,8 @@ import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../Utils/ContentInfo.dart';
 
-import '../../Layout/customclip.dart';
 
 class DownloadReceipt extends StatefulWidget {
   @override
@@ -371,7 +369,7 @@ class _DownloadReceiptState extends State<DownloadReceipt> {
             else
             {
               listvisbility=false;
-              utils.showAlert(context,'enter_receipt'.tr().toString());
+              utils.showAlert(context, ContentType.warning,'enter_assessment_number'.tr().toString());
             }
           }
 

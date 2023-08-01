@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ import 'package:public_vptax/Utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Model/startup_model.dart';
+import '../../Utils/ContentInfo.dart';
 
 class ViewReceipt extends StatefulWidget {
   @override
@@ -153,8 +155,8 @@ class _ViewReceiptState extends State<ViewReceipt> {
           ),
           focusedBorder: UIHelper.getInputBorder(1, borderColor: c.dot_light_screen_lite),
           focusedErrorBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 2.0),
-            borderRadius: BorderRadius.circular(14), // Increase the radius to adjust the height
+            borderSide: BorderSide(width: 20.0),
+            borderRadius: BorderRadius.circular(20), // Increase the radius to adjust the height
           ),
         ),
         name: fieldName,
@@ -184,11 +186,11 @@ class _ViewReceiptState extends State<ViewReceipt> {
         setState(() {});
       },
       iconSize: 28,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(
-            errorText: inputHint.tr().toString()),
-      ]),
+      // autovalidateMode: AutovalidateMode.onUserInteraction,
+      // validator: FormBuilderValidators.compose([
+      //   FormBuilderValidators.required(
+      //       errorText: inputHint.tr().toString()),
+      // ]),
       items: dropList.map((item) => DropdownMenuItem(
         value: item[keyCode],
         child: Text(
@@ -224,6 +226,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
           selectedvillage="";
           listvisbility=false;
           assessmentController.text="";
+          villageError=true;
           receiptController.text="";
           // await model.loadUIVillage(selectedDistrict, selectedBlock);
         } else if (index == 3) {
@@ -365,9 +368,17 @@ class _ViewReceiptState extends State<ViewReceipt> {
                           UIHelper.horizontalSpaceMedium,
                           Expanded(
                             flex: 2,
-                            child: addInputDropdownField(
-                                3, 'select_VillagePanchayat'.tr().toString(),
-                                "villagePanchayat"),
+                            child: Container(
+                              decoration:BoxDecoration(
+                                  color: c.grey_out,
+                                  border: Border.all(
+                                      width: villageError ? 1 : 0.1,
+                                      color: villageError ? c.red : c.grey_10),
+                                  borderRadius: BorderRadius.circular(10.0)),
+                             child: addInputDropdownField(
+                                  3, 'select_VillagePanchayat'.tr().toString(),
+                                  "villagePanchayat"),
+                            )
                           )
                         ],
                       ),
@@ -709,29 +720,25 @@ class _ViewReceiptState extends State<ViewReceipt> {
             else
               {
                 listvisbility=false;
-                utils.showAlert(context,'enter_assessment_number'.tr().toString());
-                // utils.showAlerts(context, ContentType.warning,'enter_assessment_number'.tr().toString());
+                utils.showAlert(context, ContentType.warning,'enter_assessment_number'.tr().toString());
               }
            }
            else{
-             utils.showAlert(context,'select_VillagePanchayat'.tr().toString());
-             // utils.showAlerts(context, ContentType.warning,'enter_assessment_number'.tr().toString());
+             utils.showAlert(context, ContentType.warning,'select_VillagePanchayat'.tr().toString());
            }
          }
          else{
-           utils.showAlert(context,  "select_Block".tr().toString());
-           // utils.showAlerts(context, ContentType.warning,'enter_assessment_number'.tr().toString());
+           utils.showAlert(context, ContentType.warning,'select_Block'.tr().toString());
          }
        }
        else{
-         utils.showAlert(context, 'select_District'.tr().toString());
-         // utils.showAlerts(context, ContentType.warning,'enter_assessment_number'.tr().toString());
+         utils.showAlert(context, ContentType.warning,'select_District'.tr().toString());
        }
      }
    else
      {
-       utils.showAlert(context, 'select_taxtype'.tr().toString());
-       // utils.showAlerts(context, ContentType.warning,'enter_assessment_number'.tr().toString());
+       utils.showAlert(context, ContentType.warning, "select_taxtype".tr().toString(),
+       );
      }
   }
 }
