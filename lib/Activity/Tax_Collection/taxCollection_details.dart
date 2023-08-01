@@ -218,7 +218,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> {
                           width: Screen.width(context) / 2,
                           child: UIHelper.tinyLinewidget(borderColor: c.white),
                         ),
-                        UIHelper.verticalSpaceSmall,
+                        UIHelper.verticalSpaceMedium,
                         taxWiseReturnDataWidget(mainIndex),
                       ],
                     ),
