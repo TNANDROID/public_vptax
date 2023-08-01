@@ -130,12 +130,12 @@ class _HomeState extends State<Home> {
       {
         'service_id': 2,
         'service_name': 'view_receipt_details',
-        'img_path': imagePath.reciept
+        'img_path': imagePath.download_receipt
       },
       {
         'service_id': 3,
-        'service_name': 'download_receipt',
-        'img_path': imagePath.download_receipt
+        'service_name': 'know_about_your_village',
+        'img_path': imagePath.village
       },
     ];
     servicesList.clear();
@@ -393,11 +393,11 @@ class _HomeState extends State<Home> {
                                                   builder: (context) =>
                                                       ViewReceipt()));
                                         } else if (selected_index == 3) {
-                                          Navigator.push(
+                                          /*Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      DownloadReceipt()));
+                                                      DownloadReceipt()));*/
                                         }
                                       });
                                     },

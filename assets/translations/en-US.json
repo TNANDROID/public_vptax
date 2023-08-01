@@ -36,7 +36,7 @@
   "tryAnotherWay": "Try Another Way",
   "userName": "User Name",
   "services": "Services",
-  "view_receipt_details": "View Receipt Details",
+  "view_receipt_details": "View Receipt Details And  Download Your Receipts",
   "check_your_dues": "Check Your Dues",
   "download_receipt": "Download Receipt",
   "select_taxtype": "Select Tax Type",
@@ -50,7 +50,7 @@
   "villagePanchayat": "Village Panchayat",
   "select_District": "Select District",
   "select_Block": "Select Block",
-  "select_VillagePanchayat": "Select Village Pancha...",
+  "select_VillagePanchayat": "Select Village Panchayat",
   "assesmentNo": "Assesment No",
   "or": "OR",
   "receiptno": "Receipt No",
@@ -83,5 +83,7 @@
   "download": "Download",
   "select_language": "Select Language for downloading receipt",
   "enter_receipt": "Please enter receipt number",
-  "enter_mobile_number": "Please enter mobile number"
+  "enter_mobile_number": "Please enter mobile number",
+  "know_about_your_village": "Know About Your Village and Your Village Development Works",
+  "swm_charges": "SWM Charges"
 }

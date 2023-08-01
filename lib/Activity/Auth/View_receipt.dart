@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -48,8 +49,8 @@ class _ViewReceiptState extends State<ViewReceipt> {
   bool isLoadingV = false;
   bool listvisbility = false;
   PreferenceService preferencesService = locator<PreferenceService>();
-  TextEditingController assessmentController = TextEditingController();
-  TextEditingController receiptController = TextEditingController();
+ final  TextEditingController assessmentController = TextEditingController();
+ final  TextEditingController receiptController = TextEditingController();
   ScrollController scrollController = ScrollController();
   List<dynamic> taxType = [
     {"taxCode": "01", "taxname": 'propertyTax'.tr().toString()},
@@ -94,6 +95,16 @@ class _ViewReceiptState extends State<ViewReceipt> {
     blockFlag=true;
     villageFlag=true;
     districtItems.add(defaultSelectedDistrict);
+    receiptController.addListener(() {
+      if (receiptController.text.isNotEmpty) {
+        assessmentController.clear();
+      }
+    });
+    assessmentController.addListener(() {
+      if (assessmentController.text.isNotEmpty) {
+        receiptController.clear();
+      }
+    });
     setState(() {
       prefs.getString("lang")!= null &&  prefs.getString("lang")!="" &&  prefs.getString("lang")=="en"?
       context.setLocale(Locale('en', 'US')):
@@ -128,7 +139,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
       dropList = districtlist;
       keyCode = "dcode";
       titleText ="dname";
-      titleTextTamil = "dname";
+      titleTextTamil ="dname";
     } else if (index == 2) {
       dropList =blockList;
       keyCode = "bcode";
@@ -175,8 +186,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
           selectedDistrict = "";
           selectedBlock = "";
           selectedvillage = "";
-          selectedDistrict = "";
-          selectedBlock = "";
           model.selectedBlockList.clear();
           model.selectedVillageList.clear();
         } else if (index == 2) {
@@ -269,138 +278,129 @@ class _ViewReceiptState extends State<ViewReceipt> {
                         children: [
                           UIHelper.verticalSpaceMedium,
                           Expanded(
-                              child: SingleChildScrollView(
                                child: dropdown(context, model),
-                              )),
+                              ),
                         ],
                       ));
                 },
                 viewModelBuilder: () => StartUpViewModel()),
           )));
   }
-  Widget dropdown(BuildContext context,StartUpViewModel model)
-  {
-    return Column(
-      children: [
-        Container(
-          transform: Matrix4.translationValues(-6.0,-50.0,10.0),
-          height: MediaQuery.of(context).size.height/2,
-          child: Image.asset(
-            imagePath.house_tax,
-            fit: BoxFit.fitWidth,
-            width: MediaQuery.of(context).size.width,
-          ),
-        ),
-        Container(
-          transform: Matrix4.translationValues(-6.0,-120.0,10.0),
-          margin: EdgeInsets.only(left: 25,right: 15,top:5),
-          padding:  EdgeInsets.only(top: 10,left: 5,right: 5,bottom: 50),
-          // height: MediaQuery.of(context).size.height/1.5,
-          // padding: EdgeInsets.only(left: 12,top: 20),
-          decoration:
-          UIHelper.roundedBorderWithColorWithShadow(
-              15,c.white,c.white,borderColor: Colors.transparent,borderWidth: 5),
-          child:  Column(
-            children: [
-              Visibility(
-          visible: taxFlag ? true : false,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex:1,
-                  child: Text(
-                    'taxType'.tr().toString()+" : ",
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: c.grey_10),
-                  ),
-                ),
-                UIHelper.horizontalSpaceMedium,
-                Expanded(
-                  flex: 2,
-                  child: addInputDropdownField(
-                      0, 'select_taxtype'.tr().toString(),
-                      'taxType'.tr().toString(),model),
-                )
-              ],
+  Widget dropdown(BuildContext context,StartUpViewModel model) {
+    return SingleChildScrollView(
+      child:  Column(
+          children: [
+            Container(
+              transform: Matrix4.translationValues(-6.0,-50.0,10.0),
+              height: MediaQuery.of(context).size.height/2,
+              child: Image.asset(
+                imagePath.house_tax,
+                fit: BoxFit.fitWidth,
+                width: MediaQuery.of(context).size.width,
+              ),
             ),
-          ),
-          UIHelper.verticalSpaceSmall,
-          Visibility(
-            visible: districtFlag ? true : false,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex:1,
-                  child: Text(
-                    'district'.tr().toString()+" : ",
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: c.grey_10),
-                  ),
-                ),
-                UIHelper.horizontalSpaceMedium,
-                Expanded(
-                  flex: 2,
-                  child:
-                  addInputDropdownField(
-                      1,
-                      'districtName'.tr().toString(),
-                      "district",
-                      model),
-                )
-              ],
-            ),
-          ),
-          UIHelper.verticalSpaceSmall,
-          Visibility(
-            visible: blockFlag ? true : false,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex:1,
-                  child: Text(
-                    'block'.tr().toString()+" : ",
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: c.grey_10),
-                  ),
-                ),
-                UIHelper.horizontalSpaceMedium,
-                Expanded(
-                  flex: 2,
-                  child:addInputDropdownField(
-                      2, 'select_Block'.tr().toString(),
-                      "block",model ),
-                )
-              ],
-            ),
-          ),
-          UIHelper.verticalSpaceSmall,
-          Visibility(
-            visible: villageFlag ? true : false,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                    'villagePanchayat'.tr().toString()+" : ",
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: c.grey_10),
-                  ),
-                ),
-                UIHelper.horizontalSpaceMedium,
-                Expanded(
-                  flex: 2,
-                  child:addInputDropdownField(
-                      3, 'select_VillagePanchayat'.tr().toString(),
-                      "",model),
-                  /*child: Container(
+            Container(
+                transform: Matrix4.translationValues(-6.0,-120.0,10.0),
+                margin: EdgeInsets.only(left: 25,right: 15,top:5),
+                padding:  EdgeInsets.only(top: 10,left: 5,right: 5,bottom: 50),
+                // height: MediaQuery.of(context).size.height/1.5,
+                // padding: EdgeInsets.only(left: 12,top: 20),
+                decoration:
+                UIHelper.roundedBorderWithColorWithShadow(
+                    15,c.white,c.white,borderColor: Colors.transparent,borderWidth: 5),
+                child:  Column(
+                    children: [
+                      Visibility(
+                        visible: taxFlag ? true : false,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex:1,
+                              child: Text(
+                                'taxType'.tr().toString()+" : ",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: c.grey_10),
+                              ),
+                            ),
+                            UIHelper.horizontalSpaceMedium,
+                            Expanded(
+                              flex: 2,
+                              child: addInputDropdownField(
+                                  0, 'select_taxtype'.tr().toString(),
+                                  'taxType'.tr().toString(),model),
+                            )
+                          ],
+                        ),
+                      ),
+                      UIHelper.verticalSpaceSmall,
+                      Visibility(
+                        visible: districtFlag ? true : false,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex:1,
+                              child: Text(
+                                'district'.tr().toString()+" : ",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: c.grey_10),
+                              ),
+                            ),
+                            UIHelper.horizontalSpaceMedium,
+                            Expanded(
+                              flex: 2,
+                              child:
+                              addInputDropdownField(1, 'select_District'.tr().toString(), "district", model),
+                            )
+                          ],
+                        ),
+                      ),
+                      UIHelper.verticalSpaceSmall,
+                      Visibility(
+                        visible: blockFlag ? true : false,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex:1,
+                              child: Text(
+                                'block'.tr().toString()+" : ",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: c.grey_10),
+                              ),
+                            ),
+                            UIHelper.horizontalSpaceMedium,
+                            Expanded(
+                              flex: 2,
+                              child:addInputDropdownField(2, 'select_Block'.tr().toString(), "block",model ),
+                            )
+                          ],
+                        ),
+                      ),
+                      UIHelper.verticalSpaceSmall,
+                      Visibility(
+                        visible: villageFlag ? true : false,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                'villagePanchayat'.tr().toString()+" : ",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: c.grey_10),
+                              ),
+                            ),
+                            UIHelper.horizontalSpaceMedium,
+                            Expanded(
+                              flex: 2,
+                              child:addInputDropdownField(3, 'select_VillagePanchayat'.tr().toString(),"villagePanchayat",model),
+                              /*child: Container(
                               decoration:BoxDecoration(
                                   color: c.grey_out,
                                   border: Border.all(
@@ -411,141 +411,146 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                   3, 'select_VillagePanchayat'.tr().toString(),
                                   "villagePanchayat"),
                             )*/
-                )
-              ],
-            ),
-          ),
-          UIHelper.verticalSpaceSmall,
-          Container(
-            decoration:UIHelper.roundedBorderWithColorWithShadow(
-                15,c.need_improvement2,c.need_improvement2,borderColor: Colors.transparent,borderWidth: 5),
-            padding: EdgeInsets.only(top: 15,bottom: 10,left: 10,right: 10),
-            child:Column(
-              children: [
-            Row(
-            children: [
-            Expanded(
-            flex: 1,
-              child: Text(
-                'assesmentNo'.tr().toString()+" : ",
-                style: TextStyle(
-                    fontSize: 12,
-                    color: c.grey_10),
+                            )
+                          ],
+                        ),
+                      ),
+                      UIHelper.verticalSpaceSmall,
+                      Container(
+                          decoration:UIHelper.roundedBorderWithColorWithShadow(
+                              15,c.need_improvement2,c.need_improvement2,borderColor: Colors.transparent,borderWidth: 5),
+                          padding: EdgeInsets.only(top: 15,bottom: 10,left: 10,right: 10),
+                          child:Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: Text(
+                                        'assesmentNo'.tr().toString()+" : ",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: c.grey_10),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        padding: EdgeInsets.only(top: 5),
+                                        height:25,
+                                        width:45,
+                                        decoration: BoxDecoration(
+                                          color: c.white,
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10),
+                                            bottomRight: Radius.circular(10),
+                                            bottomLeft: Radius.circular(10),
+                                          ),
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.only(top: 5,left: 3),
+                                          child: TextFormField(
+                                            controller: assessmentController,
+                                            inputFormatters: <TextInputFormatter>[
+                                              FilteringTextInputFormatter.digitsOnly
+                                            ],
+                                            keyboardType: TextInputType.number,
+                                            decoration: const InputDecoration(
+                                                border:InputBorder.none
+                                            ),
+                                            style: TextStyle(
+                                                fontSize: 12
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                UIHelper.verticalSpaceSmall,
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text("("+'or'.tr().toString()+")",style: TextStyle(fontSize: 12),)
+                                    ]
+                                ),
+                                UIHelper.verticalSpaceSmall,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Expanded(
+                                      flex:1,
+                                      child: Text(
+                                        'receiptno'.tr().toString()+" : ",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: c.grey_10),
+                                      ),
+                                    ),
+                                    Expanded(
+                                        flex: 2,
+                                        child: Container(
+                                          padding: EdgeInsets.only(top: 5),
+                                          height:25,
+                                          width:45,
+                                          decoration: BoxDecoration(
+                                            color: c.white,
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(10),
+                                              topRight: Radius.circular(10),
+                                              bottomRight: Radius.circular(10),
+                                              bottomLeft: Radius.circular(10),
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.only(top: 5,left: 3),
+                                            child: TextFormField(
+                                              controller: receiptController,
+                                              inputFormatters: <TextInputFormatter>[
+                                                FilteringTextInputFormatter.digitsOnly,
+                                              ],
+                                              keyboardType: TextInputType.number,
+                                              decoration: const InputDecoration(
+                                                  border:InputBorder.none
+                                              ),
+                                              style: TextStyle(
+                                                  fontSize: 12
+                                              ),
+                                            ),
+                                          ),
+                                        ))
+                                  ],
+                                ),
+
+                              ])),])),
+            Container(
+              transform: Matrix4.translationValues(5.0,-150.0,10.0),
+              child: TextButton(
+                child:Padding(
+                    padding: EdgeInsets.only(left: 5,right: 5),
+                    child: Text("submit".tr().toString(),
+                        style: TextStyle(color: c.white, fontSize: 13))
+                ),
+                style: TextButton.styleFrom(
+                    fixedSize: const Size(130, 20),
+                    shape:StadiumBorder(),
+                    backgroundColor: c.colorPrimary
+                ),
+                onPressed: () {
+                  scrollController.animateTo(0,
+                    duration: const Duration(milliseconds: 10),
+                    curve: Curves.linear,
+                  );
+                  setState(() {
+                    Validate();
+                  });
+                },
               ),
             ),
-            Expanded(
-              flex: 2,
-              child: Container(
-                padding: EdgeInsets.only(top: 5),
-                height:25,
-                width:45,
-                decoration: BoxDecoration(
-                  color: c.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                    bottomLeft: Radius.circular(10),
-                  ),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.only(top: 5,left: 3),
-                  child: TextFormField(
-                    controller: assessmentController,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                        border:InputBorder.none
-                    ),
-                    style: TextStyle(
-                        fontSize: 12
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            ],
-          ),
-          UIHelper.verticalSpaceSmall,
-           Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-  Text("("+'or'.tr().toString()+")",style: TextStyle(fontSize: 12),)
-  ],
-  ),
-           UIHelper.verticalSpaceSmall,
-           Row(
-  mainAxisAlignment: MainAxisAlignment.spaceAround,
-  children: [
-  Expanded(
-  flex:1,
-  child: Text(
-  'receiptno'.tr().toString()+" : ",
-  style: TextStyle(
-  fontSize: 12,
-  color: c.grey_10),
-  ),
-  ),
-  Expanded(
-  flex: 2,
-  child: Container(
-  padding: EdgeInsets.only(top: 5),
-  height:25,
-  width:45,
-  decoration: BoxDecoration(
-  color: c.white,
-  borderRadius: BorderRadius.only(
-  topLeft: Radius.circular(10),
-  topRight: Radius.circular(10),
-  bottomRight: Radius.circular(10),
-  bottomLeft: Radius.circular(10),
-  ),
-  ),
-  child: Padding(
-  padding: EdgeInsets.only(top: 5,left: 3),
-  child: TextFormField(
-  controller: receiptController,
-  inputFormatters: <TextInputFormatter>[
-  FilteringTextInputFormatter.digitsOnly,
-  ],
-  keyboardType: TextInputType.number,
-  decoration: const InputDecoration(
-  border:InputBorder.none
-  ),
-  style: TextStyle(
-  fontSize: 12
-  ),
-  ),
-  ),
-  ))
-  ],
-  ),
-    ])),])),
-        Container(
-          transform: Matrix4.translationValues(5.0,-150.0,10.0),
-          child: TextButton(
-            child:Padding(
-                padding: EdgeInsets.only(left: 5,right: 5),
-                child: Text("submit".tr().toString(),
-                    style: TextStyle(color: c.white, fontSize: 13))
-            ),
-            style: TextButton.styleFrom(
-                fixedSize: const Size(130, 20),
-                shape:StadiumBorder(),
-                backgroundColor: c.colorPrimary
-            ),
-            onPressed: () {
-              scrollController.animateTo(500,  duration: const Duration(milliseconds: 500), curve: Curves.linear);
-              setState(() {
-                Validate();
-              });
-            },
-          ),
-        ),
-        listview()
-    ]
+            listview()
+          ]
+      ),
     );
   }
   Widget listview()
