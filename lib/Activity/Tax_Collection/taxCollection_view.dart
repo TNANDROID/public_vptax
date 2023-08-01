@@ -456,7 +456,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
     );
   }
 
-  Widget taxWidgetGridData(String imgURL, dynamic data, int index) {
+  Widget taxWidgetGridData(String imgURL, dynamic data, int index, double val) {
     return GestureDetector(
         onTap: () {
           selectedTaxType = index;
@@ -473,12 +473,14 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
           ),
           UIHelper.horizontalSpaceSmall,
           Container(
-              width: Screen.width(context) / 3.5,
+              width: Screen.width(context) / val,
               padding: EdgeInsets.all(10),
               decoration: UIHelper.roundedBorderWithColorWithShadow(
                 10,
                 selectedTaxType == index ? c.blueAccent : c.white,
                 selectedTaxType == index ? c.blueAccent : c.white,
+                borderColor: selectedTaxType == index ? c.sky_blue : c.white,
+                borderWidth: selectedTaxType == index ?1:0
               ),
 
               //UIHelper.roundedBorderWithColor(40, 0, 0, 40, c.white),
@@ -492,20 +494,20 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          taxWidgetGridData(imagePath.house, taxlist[0], 1),
-          taxWidgetGridData(imagePath.water, taxlist[1], 2)
+          taxWidgetGridData(imagePath.house, taxlist[0], 1,3.5),
+          taxWidgetGridData(imagePath.water, taxlist[1], 2,3.5)
         ],
       ),
       UIHelper.verticalSpaceSmall,
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          taxWidgetGridData(imagePath.professional1, taxlist[2], 3),
-          taxWidgetGridData(imagePath.nontax1, taxlist[3], 4)
+          taxWidgetGridData(imagePath.professional1, taxlist[2], 3,3.5),
+          taxWidgetGridData(imagePath.nontax1, taxlist[3], 4,3.5)
         ],
       ),
       UIHelper.verticalSpaceSmall,
-      taxWidgetGridData(imagePath.trade, taxlist[4], 5)
+      taxWidgetGridData(imagePath.trade, taxlist[4], 5,3)
     ]);
   }
 

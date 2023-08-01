@@ -274,20 +274,20 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
               builder: (context) => Login(),
             ));
           } else if (flag == 2) {
-            // if (await utils.isOnline()) {
-            //   await apiCalls();
-            //   Navigator.of(context).push(MaterialPageRoute(
-            //   builder: (context) => TaxCollectionView(),
-            // ));
-            // } else {
-            //   utils.showAlert(
-            //     context,
-            //     ContentType.fail,
-            //     "noInternet".tr().toString(),
-            //   );
-            // }
-            utils.showAlert(context, ContentType.warning, "message",
-                flag: 'openAppSetting');
+            if (await utils.isOnline()) {
+              await apiCalls();
+              Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => TaxCollectionView(),
+            ));
+            } else {
+              utils.showAlert(
+                context,
+                ContentType.fail,
+                "noInternet".tr().toString(),
+              );
+            }
+           /* utils.showAlert(context, ContentType.warning, "message",
+                flag: 'openAppSetting');*/
           }
         },
         style: ButtonStyle(

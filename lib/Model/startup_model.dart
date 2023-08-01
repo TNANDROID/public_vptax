@@ -58,6 +58,7 @@ class StartUpViewModel extends BaseViewModel {
       requestData = {key_service_id: "village_list_all"};
     }
     var response = await apiServices.openServiceFunction(requestData);
+    print("response>>"+response.toString());
     if (type == "District") {
       districtList = response;
       preferencesService.districtList = districtList.toList();
