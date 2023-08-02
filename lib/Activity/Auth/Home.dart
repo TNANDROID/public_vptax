@@ -16,7 +16,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Utils/utils.dart';
 import '../Tax_Collection/taxCollection_details.dart';
-import '../Tax_Collection/taxCollection_details_with_Add.dart';
 import '../Tax_Collection/taxCollection_view.dart';
 import 'Download_receipt.dart';
 import 'Splash.dart';
@@ -248,7 +247,7 @@ class _HomeState extends State<Home> {
                     ),
                   ]),
                   Container(
-                    padding: EdgeInsets.only(left: 20, right: 20),
+                    padding: EdgeInsets.only(left: 20, right: 20,bottom: 10),
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'tax_types'.tr().toString(),
@@ -258,10 +257,10 @@ class _HomeState extends State<Home> {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  Stack(
+                  Column(
                     children: [
                       Container(
-                        height: MediaQuery.of(context).size.height / 5,
+                        height: MediaQuery.of(context).size.width*0.3,
                         margin: EdgeInsets.only(left: 15),
                         child: ScrollConfiguration(
                             behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
@@ -283,20 +282,14 @@ class _HomeState extends State<Home> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (_) =>
-                                                  TaxCollectionDetailsWithAdd(
+                                                  TaxCollectionDetailsView(
                                                       selectedTaxTypeData:
-                                                      taxTypeList[i])));
-                                      /*  Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) =>
-                                          TaxCollectionDetailsView(
-                                              selectedTaxTypeData:
-                                              taxTypeList[i])));*/
+                                                      taxTypeList[i],isHome: false,)));
+
                                     });
                                   },
                                   child: Container(
-                                    padding: EdgeInsets.fromLTRB(2, 20, 2, 0),
+                                    padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
                                     // decoration: i == index_val ?UIHelper.circleWithColorWithShadow(360,c.colorAccentverylight,c.colorPrimaryDark):UIHelper.circleWithColorWithShadow(360,c.white,c.white),
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
@@ -345,33 +338,28 @@ class _HomeState extends State<Home> {
                                 );
                               },
                             )),),
-                      Positioned(
-                        left: 0,
-                          right: 0,
-                          bottom: 1,
-                          top: 0,
-                          child: Visibility(
-                          visible: flag,
-                          child: InkWell(
-                            onTap: (){
-                              _controller.animateTo(500,
-                                  duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
-                            },
-                            child: Container(
-                              alignment: Alignment.bottomRight,
-                              color: c.full_transparent,
-                              margin: EdgeInsets.only(top: 0,right: 10),
-                              child: Image.asset(
-                                imagePath.right_arrow,
-                                height: 25,
-                                color: c.grey_9,
-                              ),
-                            ),)))
+                      Visibility(
+                      visible: flag,
+                      child: InkWell(
+                        onTap: (){
+                          _controller.animateTo(500,
+                              duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+                        },
+                        child: Container(
+                          alignment: Alignment.bottomRight,
+                          color: c.full_transparent,
+                          margin: EdgeInsets.only(top: 0,right: 10),
+                          child: Image.asset(
+                            imagePath.right_arrow,
+                            height: 25,
+                            color: c.grey_9,
+                          ),
+                        ),))
 
                     ],)
                   ,
                   Container(
-                    padding: EdgeInsets.only(left: 20, right: 20),
+                    padding: EdgeInsets.only(left: 20, right: 20,top: 10),
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'services'.tr().toString(),
@@ -406,7 +394,7 @@ class _HomeState extends State<Home> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (_) =>
-                                                      TaxCollectionDetailsView()));
+                                                      TaxCollectionDetailsView(isHome: true,)));
 
                                         } else if (selected_index == 1) {
                                           Navigator.push(

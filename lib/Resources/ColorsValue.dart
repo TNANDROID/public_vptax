@@ -23,6 +23,7 @@ Color grey_9 = Color(0xFF514f4d);
 Color grey_10 = Color(0xFF3e3e3c);
 Color black = Color(0xFF000000);
 Color white = Color(0xFFFFFFFF);
+Color need_improvement = Color(0xFF77B7F5);
 Color need_improvement1 = Color(0xFFD2E9FF);
 Color dot_light_screen_lite = Color(0xFFC4DDFA);
 Color inputGrey = Color(0xFFeeecec);

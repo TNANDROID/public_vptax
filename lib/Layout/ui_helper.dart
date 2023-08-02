@@ -4,6 +4,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:public_vptax/Layout/customclip.dart';
+import 'package:public_vptax/Resources/ColorsValue.dart' as c;
+
 
 class UIHelper {
   // Vertically Space Provider
@@ -14,7 +16,7 @@ class UIHelper {
   static const Widget verticalSpaceVeryLarge = SizedBox(height: 100.00);
 
 // Horizontal Space provider
-  static const Widget horizontalSpaceTiny = SizedBox(width: 2.0);
+  static const Widget horizontalSpaceTiny = SizedBox(width: 5.0);
   static const Widget horizontalSpaceSmall = SizedBox(width: 10.0);
   static const Widget horizontalSpaceMedium = SizedBox(width: 20.0);
   static const Widget horizontalSpaceLarge = SizedBox(width: 40.0);
@@ -38,7 +40,7 @@ class UIHelper {
           fontSize: fntsize,
           decoration: TextDecoration.none,
           fontWeight: isBold ? FontWeight.bold : FontWeight.normal),
-      textAlign: isCenterAliignment ? TextAlign.center : TextAlign.left,
+      textAlign: isCenterAliignment ? TextAlign.center : title.contains("\u{20B9}")?TextAlign.right:TextAlign.left,
     );
   }
 
@@ -171,7 +173,7 @@ class UIHelper {
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(radius),
-            color: Colors.blue,
+            color: c.need_improvement,
           ),
           child: contentWidget),
     );

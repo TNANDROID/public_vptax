@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:otp_text_field/otp_field.dart';
+import 'package:otp_text_field/style.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
@@ -16,6 +18,7 @@ import 'package:public_vptax/Utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../Layout/customgradientbutton.dart';
 import '../../Model/startup_model.dart';
 import '../../Resources/StringsKey.dart';
 import '../../Utils/ContentInfo.dart';
@@ -48,10 +51,17 @@ class _ViewReceiptState extends State<ViewReceipt> {
   bool isLoadingB = false;
   bool isLoadingV = false;
   bool listvisbility = false;
+  bool downloadflag=false;
+  bool isErrorVisible = true;
+  bool otpFlag = false;
+  String finalOTP = '';
   PreferenceService preferencesService = locator<PreferenceService>();
- final  TextEditingController assessmentController = TextEditingController();
- final  TextEditingController receiptController = TextEditingController();
-  ScrollController scrollController = ScrollController();
+  final  TextEditingController assessmentController = TextEditingController();
+  final  TextEditingController receiptController = TextEditingController();
+  final  scrollController = ScrollController();
+  TextEditingController mobileController = TextEditingController();
+  OtpFieldController OTPcontroller = OtpFieldController();
+  final GlobalKey _listViewKey = GlobalKey();
   List<dynamic> taxType = [
     {"taxCode": "01", "taxname": 'propertyTax'.tr().toString()},
     {"taxCode": "02", "taxname": 'waterCharges'.tr().toString()},
@@ -124,7 +134,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
   }
   //Dropdown Input Field Widget
   Widget addInputDropdownField(int index, String inputHint, String fieldName,StartUpViewModel model
-    ) {
+      ) {
     List dropList = [];
     String keyCode = "";
     String titleText = "";
@@ -154,26 +164,26 @@ class _ViewReceiptState extends State<ViewReceipt> {
     return FormBuilderDropdown(
       style: TextStyle(
           fontSize: 12, fontWeight: FontWeight.w400, color: c.grey_8),
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.only(left: 5),
-          constraints: BoxConstraints(
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.only(left: 5),
+        constraints: BoxConstraints(
             maxHeight: 35
-          ),
-          hintText: inputHint,
-          hintStyle: TextStyle(fontSize: 11),
-          filled: true,
-          fillColor: c.need_improvement2,
-          enabledBorder: OutlineInputBorder(
-            borderSide:BorderSide(color: c.need_improvement1, width: 0.0),
-            borderRadius:BorderRadius.circular(8),
-          ),
-          focusedBorder: UIHelper.getInputBorder(1, borderColor: c.dot_light_screen_lite),
-          focusedErrorBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 10.0),
-            borderRadius: BorderRadius.circular(20), // Increase the radius to adjust the height
-          ),
         ),
-        name: fieldName,
+        hintText:inputHint,
+        hintStyle: TextStyle(fontSize: 11,),
+        filled: true,
+        fillColor: c.need_improvement2,
+        enabledBorder: OutlineInputBorder(
+          borderSide:BorderSide(color: c.need_improvement2, width: 10.0),
+          borderRadius:BorderRadius.circular(18),
+        ),
+        focusedBorder: UIHelper.getInputBorder(1, borderColor: c.dot_light_screen_lite),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(width: 10.0),
+          borderRadius: BorderRadius.circular(20), // Increase the radius to adjust the height
+        ),
+      ),
+      name: fieldName,
       initialValue: index == 0
           ? selectedTaxType
           : index == 1
@@ -182,27 +192,26 @@ class _ViewReceiptState extends State<ViewReceipt> {
           ? selectedBlock
           : selectedvillage,
       onTap: () async {
-        if (index == 1) {
+        if (index == 0) {
           selectedDistrict = "";
           selectedBlock = "";
           selectedvillage = "";
           model.selectedBlockList.clear();
           model.selectedVillageList.clear();
-        } else if (index == 2) {
+        } else if (index == 1) {
           selectedBlock = "";
           selectedvillage = "";
           model.selectedVillageList.clear();
-        } else if (index == 3) {
+        } else if (index == 2) {
           selectedvillage = "";
         }
         setState(() {});
       },
       iconSize: 28,
-      autofocus: true,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(
-            errorText: inputHint.tr().toString()),
+            errorText: "")
       ]),
       items: dropList.map((item) => DropdownMenuItem(
         value: item[keyCode],
@@ -254,44 +263,47 @@ class _ViewReceiptState extends State<ViewReceipt> {
   @override
   Widget build (BuildContext context) {
     return WillPopScope(
-      onWillPop: _onWillPop,
-      child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: c.colorPrimary,
-            centerTitle: true,
-            elevation: 2,
-            title:Container(
-                      child: Text(
-                        'view_receipt_details'.tr().toString(),
-                        style: TextStyle(fontSize: 14),
-                      ),
+        onWillPop: _onWillPop,
+        child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: c.colorPrimary,
+              centerTitle: true,
+              elevation: 2,
+              title:Container(
+                child: Text(
+                  'view_receipt_details'.tr().toString(),
+                  style: TextStyle(fontSize: 14),
+                ),
+              ),
             ),
-          ),
-          body: SafeArea(
-            top: true,
-            child: ViewModelBuilder<StartUpViewModel>.reactive(
-                onModelReady: (model) async {},
-                builder: (context, model, child) {
-                  return Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          UIHelper.verticalSpaceMedium,
-                          Expanded(
-                               child: dropdown(context, model),
-                              ),
-                        ],
-                      ));
-                },
-                viewModelBuilder: () => StartUpViewModel()),
-          )));
+            /*bottomSheet: Visibility(
+            visible:true,
+            child: Container(
+            child: Text('Hello World'),
+          ),),*/
+            body: SafeArea(
+              top: true,
+              child: ViewModelBuilder<StartUpViewModel>.reactive(
+                  onModelReady: (model) async {},
+                  builder: (context, model, child) {
+                    return Container(
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: dropdown(context, model),
+                            ),
+                          ],
+                        ));
+                  },
+                  viewModelBuilder: () => StartUpViewModel()),
+            )));
   }
   Widget dropdown(BuildContext context,StartUpViewModel model) {
     return SingleChildScrollView(
       child:  Column(
           children: [
             Container(
-              transform: Matrix4.translationValues(-6.0,-50.0,10.0),
+              transform: Matrix4.translationValues(0.0,-50.0,0.0),
               height: MediaQuery.of(context).size.height/2,
               child: Image.asset(
                 imagePath.house_tax,
@@ -327,9 +339,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                             UIHelper.horizontalSpaceMedium,
                             Expanded(
                               flex: 2,
-                              child: addInputDropdownField(
-                                  0, 'select_taxtype'.tr().toString(),
-                                  'taxType'.tr().toString(),model),
+                              child: addInputDropdownField(0, 'select_taxtype'.tr().toString(),'',model),
                             )
                           ],
                         ),
@@ -353,7 +363,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                             Expanded(
                               flex: 2,
                               child:
-                              addInputDropdownField(1, 'select_District'.tr().toString(), "district", model),
+                              addInputDropdownField(1, 'select_District'.tr().toString(), "", model),
                             )
                           ],
                         ),
@@ -376,7 +386,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                             UIHelper.horizontalSpaceMedium,
                             Expanded(
                               flex: 2,
-                              child:addInputDropdownField(2, 'select_Block'.tr().toString(), "block",model ),
+                              child:addInputDropdownField(2, 'select_Block'.tr().toString(), "", model),
                             )
                           ],
                         ),
@@ -525,28 +535,29 @@ class _ViewReceiptState extends State<ViewReceipt> {
 
                               ])),])),
             Container(
-              transform: Matrix4.translationValues(5.0,-150.0,10.0),
-              child: TextButton(
-                child:Padding(
-                    padding: EdgeInsets.only(left: 5,right: 5),
-                    child: Text("submit".tr().toString(),
-                        style: TextStyle(color: c.white, fontSize: 13))
-                ),
-                style: TextButton.styleFrom(
-                    fixedSize: const Size(130, 20),
-                    shape:StadiumBorder(),
-                    backgroundColor: c.colorPrimary
-                ),
-                onPressed: () {
-                  scrollController.animateTo(0,
-                    duration: const Duration(milliseconds: 10),
-                    curve: Curves.linear,
-                  );
-                  setState(() {
-                    Validate();
-                  });
-                },
-              ),
+                transform: Matrix4.translationValues(5.0,-150.0,10.0),
+                child:InkWell(
+                  onTap: ()
+                  {
+                    scrollController.animateTo(-500,
+                        duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+                  },
+                  child: TextButton(
+                    child:Padding(
+                        padding: EdgeInsets.only(left: 5,right: 5),
+                        child: Text("submit".tr().toString(),
+                            style: TextStyle(color: c.white, fontSize: 13))
+                    ),
+                    style: TextButton.styleFrom(
+                        fixedSize: const Size(130, 20),
+                        shape:StadiumBorder(),
+                        backgroundColor: c.colorPrimary
+                    ),
+                    onPressed: () {
+                      _handleSubmitButtonPressed();
+                    },
+                  ),
+                )
             ),
             listview()
           ]
@@ -562,9 +573,10 @@ class _ViewReceiptState extends State<ViewReceipt> {
           padding: EdgeInsets.only(left: 10,right: 10),
           child: AnimationLimiter(
             child: ListView.builder(
+              key: _listViewKey,
               controller: scrollController,
               scrollDirection: Axis.vertical,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount:1,
               // itemCount: houseList == null ? 0 : houseList.length,
@@ -697,6 +709,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                             InkWell(
                                               onTap: ()
                                               {
+                                                downloadflag=true;
                                                 print("download_tamil".tr().toString()+"\n"+"tamil_1".tr().toString()+"\n");
                                               },
                                               child: Padding(padding: EdgeInsets.only(left: 25),
@@ -722,6 +735,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                           ),
                                           InkWell(
                                             onTap: (){
+                                              _settingModalBottomSheet(context);
                                               print('download_english'.tr().toString()+"english_1".tr().toString());
                                             },
                                             child: Padding(padding: EdgeInsets.only(left: 25),
@@ -743,41 +757,132 @@ class _ViewReceiptState extends State<ViewReceipt> {
           )),
     );
   }
+
   Validate() {
-   if(selectedTaxType!=null && selectedTaxType !="")
-     {
-       if(selectedDistrict!=null && selectedDistrict!="")
-       {
-         if(selectedBlock!=null && selectedBlock!="")
-         {
-           if(selectedvillage !=null && selectedvillage !="")
-           {
+    if(selectedTaxType!=null && selectedTaxType !="")
+    {
+      if(selectedDistrict!=null && selectedDistrict!="")
+      {
+        if(selectedBlock!=null && selectedBlock!="")
+        {
+          if(selectedvillage !=null && selectedvillage !="")
+          {
             if((assessmentController.text!=""||receiptController.text!="")&&(assessmentController.text!=null||receiptController.text!=null))
-              {
-                listvisbility=true;
-              }
+            {
+              listvisbility=true;
+              listview();
+
+            }
             else
-              {
-                listvisbility=false;
-                utils.showAlert(context, ContentType.warning,'enter_assessment_number'.tr().toString());
-              }
-           }
-           else{
-             utils.showAlert(context, ContentType.warning,'select_VillagePanchayat'.tr().toString());
-           }
-         }
-         else{
-           utils.showAlert(context, ContentType.warning,'select_Block'.tr().toString());
-         }
-       }
-       else{
-         utils.showAlert(context, ContentType.warning,'select_District'.tr().toString());
-       }
-     }
-   else
-     {
-       utils.showAlert(context, ContentType.warning, "select_taxtype".tr().toString(),
-       );
-     }
+            {
+              listvisbility=false;
+              utils.showAlert(context, ContentType.warning,'enter_assessment_number'.tr().toString());
+            }
+          }
+          else{
+            utils.showAlert(context, ContentType.warning,'select_VillagePanchayat'.tr().toString());
+          }
+        }
+        else{
+          utils.showAlert(context, ContentType.warning,'select_Block'.tr().toString());
+        }
+      }
+      else{
+        utils.showAlert(context, ContentType.warning,'select_District'.tr().toString());
+      }
+    }
+    else
+    {
+      utils.showAlert(context, ContentType.warning, "select_taxtype".tr().toString(),
+      );
+    }
+  }
+  void _handleSubmitButtonPressed() {
+    Validate();
+    _listViewKey.currentContext?.findRenderObject()?.showOnScreen(duration: Duration(milliseconds: 300),curve: Curves.easeOut);
+  }
+  void _settingModalBottomSheet(context) {
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: c.full_transparent,
+        builder: (BuildContext bc) {
+          return Wrap(
+            children: <Widget>[
+              Container(
+                // padding:EdgeInsets.only(left: 10,right: 10,top: 5,bottom: 10),
+                // margin: EdgeInsets.only(
+                //     bottom: 10,top: 10,left: 10,right: 10),
+                  decoration: UIHelper.GradientContainer(
+                      30.0,30,0,0, [c.white, c.white]),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(top: 10),
+                        alignment:Alignment.center,
+                        child: Text(
+                            "Enter  OTP"
+                        ),
+                      ),
+                      Visibility(
+                        visible: true,
+                        child: Column(
+                          children: [
+                            Padding(
+                              // padding:EdgeInsets.all(25),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 20, horizontal: 5),
+                              child: OTPTextField(
+                                onChanged: (pin) {
+                                  print("Changed: " + pin);
+                                },
+                                onCompleted: (pin) {
+                                  utils.closeKeypad(context);
+                                  finalOTP = pin;
+                                },
+                                width: 250,
+                                controller: OTPcontroller,
+                                length: 6,
+                                fieldStyle: FieldStyle.box,
+                                fieldWidth:35,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      CustomGradientButton(
+                        onPressed: () async {
+                          if (await utils.isOnline()) {
+                            Navigator.pop(context);
+                            utils.showAlert(context, ContentType.success, "Receipt Downloaded Successfully");
+                          } else {
+                            utils.showAlert(
+                              context,
+                              ContentType.fail,
+                              "noInternet".tr().toString(),
+                            );
+                          }
+                        },
+                        // btnPadding: 5,
+                        width: 90,
+                        height: 40,
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'verifyOTP'.tr().toString(),
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )),
+            ],
+          );
+        }
+    );
   }
 }
