@@ -427,7 +427,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                     Expanded(
                                       flex: 1,
                                       child: Text(
-                                        'assesmentNo'.tr().toString()+" : ",
+                                        'assesmentNumber'.tr().toString()+" : ",
                                         style: TextStyle(
                                             fontSize: 12,
                                             color: c.grey_10),

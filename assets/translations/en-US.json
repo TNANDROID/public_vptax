@@ -1,9 +1,10 @@
 {
-  "appName": "e-Ooragam",
+  "appName": "Ooragam",
   "signIN": "Sign In",
   "signUP": "Sign Up",
   "signupText": "Don't have an account ?",
   "quickPay": "Quick Pay",
+  "payToOthers": "To pay other people's taxes",
   "password": "Password",
   "mobileNumber": "Mobile Number",
   "no_internet": "No Internet Connection!",
@@ -70,7 +71,7 @@
   "internetError": "Internet Connection is not available..Please Turn ON Network Connection OR Continue With Off-line Mode..",
   "loading": "Loading...",
   "pay": "Proceed to Pay",
-  "amount_to_pay": "Total Amount to pay",
+  "amount_to_pay": "Amount to pay",
   "downloading": "Downloading...",
   "enter_assessment_number": "Please enter assessment number or receipt number",
   "enter_the_details": "Please enter the below details",
@@ -85,5 +86,12 @@
   "enter_receipt": "Please enter receipt number",
   "enter_mobile_number": "Please enter mobile number",
   "know_about_your_village": "Know About Your Village and Your Village Development Works",
-  "swm_charges": "SWM Charges"
+  "demand_selected": "Demand Selected",
+  "advance": "Advance Available",
+  "swm_charges": "SWM Charges",
+  "know_about_your_village": "Know About Your Village ",
+  "village_development_works": "Your Village Development Works",
+  "swm_charges": "SWM Charges",
+  "add": "Add"
+
 }

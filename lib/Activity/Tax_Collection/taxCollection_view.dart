@@ -423,8 +423,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (_) => TaxCollectionDetailsView(
-                                          selectedTaxTypeData:
-                                          taxlist[selectedTaxType - 1])));
+                                      )));
 
                             }
                           },

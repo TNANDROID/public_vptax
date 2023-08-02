@@ -34,6 +34,7 @@ String bg1 = "assets/images/bg1.png";
 String right_arrow = "assets/images/right_arrow.png";
 String right_arrow_icon = "assets/images/right_arrow_icon.png";
 String village="assets/images/village.png";
+String village_development="assets/images/village_2.png";
 
 String help = 'assets/images/help.svg';
 String failure = 'assets/images/failure.svg';

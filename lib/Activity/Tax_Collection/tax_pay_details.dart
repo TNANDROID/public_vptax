@@ -13,8 +13,7 @@ import '../../Model/startup_model.dart';
 class TaxPayDetailsView extends StatefulWidget {
   final mainList;
   final selectedTaxTypeData;
-  TaxPayDetailsView({Key? key, this.mainList, this.selectedTaxTypeData})
-      : super(key: key);
+  TaxPayDetailsView({Key? key, this.mainList, this.selectedTaxTypeData});
 
   @override
   _TaxPayDetailsViewState createState() =>
@@ -88,7 +87,9 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
                     transform: Matrix4.translationValues(-30.0, 0.0, 0.0),
                     alignment: Alignment.center,
                     child: Text(
-                      'tax_details'.tr().toString(),
+                      selectedLang == "en"
+                          ? widget.selectedTaxTypeData["taxtypedesc_en"]
+                          : widget.selectedTaxTypeData["taxtypedesc_ta"],
                       style: TextStyle(fontSize: 15),
                     ),
                   ),
@@ -101,41 +102,34 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
           top: true,
           child: ViewModelBuilder<StartUpViewModel>.reactive(
               builder: (context, model, child) {
-                return Container(
+                return SingleChildScrollView(
+                    child:Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
                     margin: EdgeInsets.only(top: 10),
-                    decoration: UIHelper.roundedBorderWithColorWithShadow(
-                        3, c.white, c.white,
-                        borderWidth: 0),
                     padding: EdgeInsets.all(5),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Container(
-                            padding: EdgeInsets.all(8.0),
-                            child: Center(
-                                child: UIHelper.titleTextStyle(
-                                    selectedLang == "en"
-                                        ? widget.selectedTaxTypeData["taxtypedesc_en"]
-                                        : widget.selectedTaxTypeData["taxtypedesc_ta"],
-                                    c.black,
-                                    13,
-                                    false,
-                                    true))),
                         UIHelper.verticalSpaceSmall,
                          ListView.builder(
+                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           itemCount: mainDataList.length,
                           itemBuilder: (context, index) {
                             return Container(
-                              margin: EdgeInsets.only(top: 10),
+                              margin: EdgeInsets.all( 10),
                               decoration: UIHelper.roundedBorderWithColorWithShadow(
                                   3, c.need_improvement1, c.need_improvement1,
                                   borderWidth: 0),
                               padding: EdgeInsets.all(5),
                               child:Column(children: [
+                                UIHelper.verticalSpaceSmall,
                                 taxWiseReturnDataWidget(index),
-                                Column(children: [
+                                UIHelper.verticalSpaceSmall,
+                                Visibility(
+                                  visible: mainDataList[index]['total'] > 0,
+                                    child: Container(
+                                  padding: EdgeInsets.only(top: 10,bottom: 10,left: 10,right: 10),child: Column(children: [
                                   UIHelper.titleTextStyle(
                                       selectedLang == "en"
                                           ? widget.selectedTaxTypeData["taxtypedesc_en"]
@@ -146,11 +140,11 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
                                   Row(
                                     children: [
                                       Expanded(
-                                        flex: 3,
+                                        flex: 4,
                                         child: Container(
                                             alignment: Alignment.centerRight,
                                             child: Text(
-                                              "amount_to_pay".tr().toString(),
+                                              "demand_selected".tr().toString(),
                                               style: TextStyle(
                                                   color: c.grey_10,
                                                   fontSize: 10,
@@ -162,12 +156,58 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
                                       Expanded(
                                         flex: 2,
                                         child: Container(
-                                            decoration: UIHelper.GradientContainer(
-                                                5, 5, 5, 5, [c.grey, c.grey]),
+                                            decoration: BoxDecoration(
+                                              color: c.white,
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(10),
+                                                topRight: Radius.circular(10),
+                                                bottomRight: Radius.circular(10),
+                                                bottomLeft: Radius.circular(10),
+                                              ),
+                                            ),
                                             padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
-                                            margin: EdgeInsets.all(10),
+                                            margin: EdgeInsets.all(5),
                                             child: UIHelper.titleTextStyle(
-                                                "\u{20B9}" + "main.toString()",
+                                                getDemandTotal(),
+                                                c.grey_9,
+                                                13,
+                                                true,
+                                                true)),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 4,
+                                        child: Container(
+                                            alignment: Alignment.centerRight,
+                                            child: Text(
+                                              "advance".tr().toString(),
+                                              style: TextStyle(
+                                                  color: c.grey_10,
+                                                  fontSize: 10,
+                                                  decoration: TextDecoration.none,
+                                                  fontWeight: FontWeight.bold),
+                                              textAlign: TextAlign.right,
+                                            )),
+                                      ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                              color: c.white,
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(10),
+                                                topRight: Radius.circular(10),
+                                                bottomRight: Radius.circular(10),
+                                                bottomLeft: Radius.circular(10),
+                                              ),
+                                            ),
+                                            padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
+                                            margin: EdgeInsets.all(5),
+                                            child: UIHelper.titleTextStyle(
+                                                "\u{20B9}" + mainDataList[index]['tax_advance'].toString(),
                                                 c.grey_9,
                                                 14,
                                                 true,
@@ -193,39 +233,15 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
                                       Expanded(
                                         flex: 2,
                                         child: Container(
-                                            decoration: UIHelper.GradientContainer(
-                                                5, 5, 5, 5, [c.grey, c.grey]),
-                                            padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
-                                            margin: EdgeInsets.all(10),
-                                            child: UIHelper.titleTextStyle(
-                                                "\u{20B9}" + "main.toString()",
-                                                c.grey_9,
-                                                14,
-                                                true,
-                                                true)),
-                                      ),
-                                    ],
-                                  ),Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 3,
-                                        child: Container(
-                                            alignment: Alignment.centerRight,
-                                            child: Text(
-                                              "amount_to_pay".tr().toString(),
-                                              style: TextStyle(
-                                                  color: c.grey_10,
-                                                  fontSize: 10,
-                                                  decoration: TextDecoration.none,
-                                                  fontWeight: FontWeight.bold),
-                                              textAlign: TextAlign.right,
-                                            )),
-                                      ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: Container(
-                                            decoration: UIHelper.GradientContainer(
-                                                5, 5, 5, 5, [c.grey, c.grey]),
+                                            decoration: BoxDecoration(
+                                              color: c.white,
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(10),
+                                                topRight: Radius.circular(10),
+                                                bottomRight: Radius.circular(10),
+                                                bottomLeft: Radius.circular(10),
+                                              ),
+                                            ),
                                             padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
                                             margin: EdgeInsets.all(10),
                                             child: UIHelper.titleTextStyle(
@@ -238,7 +254,137 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
                                     ],
                                   ),
 
-                                ],)
+                                ],))
+                                ),
+                                Visibility(
+                                  visible: mainDataList[index]['swm_total'] > 0,
+                                    child: Container(
+                                    decoration:UIHelper.roundedBorderWithColorWithShadow(
+                                        15,c.need_improvement2,c.need_improvement2,borderColor: Colors.transparent,borderWidth: 5),
+                                    padding: EdgeInsets.only(top: 15,bottom: 10,left: 10,right: 10),child: Column(children: [
+                                  UIHelper.titleTextStyle(
+                                      'swm_charges'.tr().toString(),
+                                      c.grey_9,
+                                      12,
+                                      true,true),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                            alignment: Alignment.centerRight,
+                                            child: Text(
+                                              "demand_selected".tr().toString(),
+                                              style: TextStyle(
+                                                  color: c.grey_10,
+                                                  fontSize: 12,
+                                                  decoration: TextDecoration.none,
+                                                  fontWeight: FontWeight.bold),
+                                              textAlign: TextAlign.right,
+                                            )),
+                                      ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                              color: c.white,
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(10),
+                                                topRight: Radius.circular(10),
+                                                bottomRight: Radius.circular(10),
+                                                bottomLeft: Radius.circular(10),
+                                              ),
+                                            ),
+                                            padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
+                                            margin: EdgeInsets.all(10),
+                                            child: UIHelper.titleTextStyle(
+                                                getDemandTotal(),
+                                                c.grey_9,
+                                                13,
+                                                true,
+                                                true)),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                            alignment: Alignment.centerRight,
+                                            child: Text(
+                                              "advance".tr().toString(),
+                                              style: TextStyle(
+                                                  color: c.grey_10,
+                                                  fontSize: 10,
+                                                  decoration: TextDecoration.none,
+                                                  fontWeight: FontWeight.bold),
+                                              textAlign: TextAlign.right,
+                                            )),
+                                      ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                              color: c.white,
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(10),
+                                                topRight: Radius.circular(10),
+                                                bottomRight: Radius.circular(10),
+                                                bottomLeft: Radius.circular(10),
+                                              ),
+                                            ),
+                                            margin: EdgeInsets.all(10),
+                                            child: UIHelper.titleTextStyle(
+                                                "\u{20B9}" + mainDataList[index]['swm_advance'].toString(),
+                                                c.grey_9,
+                                                14,
+                                                true,
+                                                true)),
+                                      ),
+                                    ],
+                                  ),Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                            alignment: Alignment.centerRight,
+                                            child: Text(
+                                              "amount_to_pay".tr().toString(),
+                                              style: TextStyle(
+                                                  color: c.grey_10,
+                                                  fontSize: 10,
+                                                  decoration: TextDecoration.none,
+                                                  fontWeight: FontWeight.bold),
+                                              textAlign: TextAlign.right,
+                                            )),
+                                      ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                              color: c.white,
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(10),
+                                                topRight: Radius.circular(10),
+                                                bottomRight: Radius.circular(10),
+                                                bottomLeft: Radius.circular(10),
+                                              ),
+                                            ),
+                                            margin: EdgeInsets.all(10),
+                                            child: UIHelper.titleTextStyle(
+                                                "\u{20B9}" + "main.toString()",
+                                                c.grey_9,
+                                                14,
+                                                true,
+                                                true)),
+                                      ),
+                                    ],
+                                  ),
+
+                                ],))
+                                )
+
 
                               ],) ,
                             );
@@ -248,13 +394,18 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
                     Container(
                     margin: EdgeInsets.only(top: 10),
                 decoration: UIHelper.roundedBorderWithColorWithShadow(
-                3, c.white, c.white,
+                3, c.account_status_green_color, c.account_status_green_color,
                 borderWidth: 0),
-                padding: EdgeInsets.all(5),
+                padding: EdgeInsets.all(8),
+                      child: UIHelper.titleTextStyle(
+                          'pay'.tr().toString(),
+                          c.white,
+                          13,
+                          true,true),
 
                     )
                       ],
-                    ));
+                    )));
               },
               viewModelBuilder: () => StartUpViewModel()),
         ));
@@ -295,6 +446,12 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
         12,
         true,
         true);
+  }
+
+  String getDemandTotal() {
+    String s="";
+
+    return s;
   }
 
 

@@ -16,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Utils/utils.dart';
 import '../Tax_Collection/taxCollection_details.dart';
+import '../Tax_Collection/taxCollection_details_with_Add.dart';
 import '../Tax_Collection/taxCollection_view.dart';
 import 'Download_receipt.dart';
 import 'Splash.dart';
@@ -124,7 +125,7 @@ class _HomeState extends State<Home> {
       },
       {
         'service_id': 1,
-        'service_name': 'quickPay',
+        'service_name': 'payToOthers',
         'img_path': imagePath.quick_pay1
       },
       {
@@ -137,14 +138,19 @@ class _HomeState extends State<Home> {
         'service_name': 'know_about_your_village',
         'img_path': imagePath.village
       },
+      {
+        'service_id': 4,
+        'service_name': 'village_development_works',
+        'img_path': imagePath.village_development
+      },
     ];
     servicesList.clear();
     servicesList.addAll(s_list);
 
     setState(() {
       prefs.getString("lang") != null &&
-              prefs.getString("lang") != "" &&
-              prefs.getString("lang") == "en"
+          prefs.getString("lang") != "" &&
+          prefs.getString("lang") == "en"
           ? context.setLocale(Locale('en', 'US'))
           : context.setLocale(Locale('ta', 'IN'));
     });
@@ -252,101 +258,117 @@ class _HomeState extends State<Home> {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  Column(
+                  Stack(
                     children: [
-                    Container(
-                    height: MediaQuery.of(context).size.height / 5,
-                    margin: EdgeInsets.only(left: 15),
-                    child: ScrollConfiguration(
-                        behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
-                          PointerDeviceKind.touch,
-                          PointerDeviceKind.mouse,
-                        },),
-                        child: ListView.builder(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                          shrinkWrap: true,// new
-                      controller: _controller,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: taxTypeList == null ? 0 : taxTypeList.length,
-                      itemBuilder: (context, i) {
-                        return InkWell(
-                          onTap: () {
-                            setState(() {
-                              index_val = i;
-                              Navigator.push(
+                      Container(
+                        height: MediaQuery.of(context).size.height / 5,
+                        margin: EdgeInsets.only(left: 15),
+                        child: ScrollConfiguration(
+                            behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
+                              PointerDeviceKind.touch,
+                              PointerDeviceKind.mouse,
+                            },),
+                            child: ListView.builder(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              shrinkWrap: true,// new
+                              controller: _controller,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: taxTypeList == null ? 0 : taxTypeList.length,
+                              itemBuilder: (context, i) {
+                                return InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      index_val = i;
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (_) =>
+                                                  TaxCollectionDetailsWithAdd(
+                                                      selectedTaxTypeData:
+                                                      taxTypeList[i])));
+                                      /*  Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (_) =>
                                           TaxCollectionDetailsView(
                                               selectedTaxTypeData:
-                                              taxTypeList[i])));
-                            });
-                          },
-                          child: Container(
-                            padding: EdgeInsets.fromLTRB(2, 20, 2, 0),
-                            // decoration: i == index_val ?UIHelper.circleWithColorWithShadow(360,c.colorAccentverylight,c.colorPrimaryDark):UIHelper.circleWithColorWithShadow(360,c.white,c.white),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  decoration: i == index_val
-                                      ? UIHelper.circleWithColorWithShadow(
-                                      360,
-                                      c.colorAccentverylight,
-                                      c.colorPrimaryDark)
-                                      : UIHelper.circleWithColorWithShadow(
-                                      360, c.white, c.white),
-                                  alignment: Alignment.center,
-                                  margin: EdgeInsets.only(top: 0),
-                                  padding: EdgeInsets.all(10),
-                                  child: Image.asset(
-                                    taxTypeList[i][key_img_path],
-                                    height:
-                                    (MediaQuery.of(context).size.height /
-                                        4) /
-                                        4,
-                                    width:
-                                    (MediaQuery.of(context).size.height /
-                                        4) /
-                                        4,
+                                              taxTypeList[i])));*/
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.fromLTRB(2, 20, 2, 0),
+                                    // decoration: i == index_val ?UIHelper.circleWithColorWithShadow(360,c.colorAccentverylight,c.colorPrimaryDark):UIHelper.circleWithColorWithShadow(360,c.white,c.white),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          decoration: i == index_val
+                                              ? UIHelper.circleWithColorWithShadow(
+                                              360,
+                                              c.colorAccentverylight,
+                                              c.colorPrimaryDark)
+                                              : UIHelper.circleWithColorWithShadow(
+                                              360, c.white, c.white),
+                                          alignment: Alignment.center,
+                                          margin: EdgeInsets.only(top: 0),
+                                          padding: EdgeInsets.all(10),
+                                          child: Image.asset(
+                                            taxTypeList[i][key_img_path],
+                                            height:
+                                            (MediaQuery.of(context).size.height /
+                                                4) /
+                                                4,
+                                            width:
+                                            (MediaQuery.of(context).size.height /
+                                                4) /
+                                                4,
+                                          ),
+                                        ),
+                                        Container(
+                                          alignment: Alignment.center,
+                                          margin: EdgeInsets.all(10),
+                                          child: Text(
+                                            prefs.getString('lang') == 'en'
+                                                ? taxTypeList[i][key_taxtypedesc_en]
+                                                : taxTypeList[i][key_taxtypedesc_ta],
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                height: 1.5,
+                                                color: c.grey_9),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  alignment: Alignment.center,
-                                  margin: EdgeInsets.all(10),
-                                  child: Text(
-                                    prefs.getString('lang') == 'en'
-                                        ? taxTypeList[i][key_taxtypedesc_en]
-                                        : taxTypeList[i][key_taxtypedesc_ta],
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        height: 1.5,
-                                        color: c.grey_9),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    )),),
-                    Visibility(
-                      visible: flag,
-                        child: Container(
-                          transform: Matrix4.translationValues(0, -20, 0),
-                      alignment: Alignment.bottomRight,
-                      color: c.full_transparent,
-                      margin: EdgeInsets.only(top: 0,right: 10),
-                      child: Image.asset(
-                        imagePath.right_arrow,
-                        height: 25,
-                        color: c.grey_9,
-                      ),
-                    ))
+                                );
+                              },
+                            )),),
+                      Positioned(
+                        left: 0,
+                          right: 0,
+                          bottom: 1,
+                          top: 0,
+                          child: Visibility(
+                          visible: flag,
+                          child: InkWell(
+                            onTap: (){
+                              _controller.animateTo(500,
+                                  duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+                            },
+                            child: Container(
+                              alignment: Alignment.bottomRight,
+                              color: c.full_transparent,
+                              margin: EdgeInsets.only(top: 0,right: 10),
+                              child: Image.asset(
+                                imagePath.right_arrow,
+                                height: 25,
+                                color: c.grey_9,
+                              ),
+                            ),)))
 
-                  ],)
+                    ],)
                   ,
                   Container(
                     padding: EdgeInsets.only(left: 20, right: 20),
@@ -368,7 +390,7 @@ class _HomeState extends State<Home> {
                         crossAxisCount: 2,
                         children: List.generate(
                           servicesList == null ? 0 : servicesList.length,
-                          (int index) {
+                              (int index) {
                             return AnimationConfiguration.staggeredGrid(
                               position: index,
                               duration: const Duration(milliseconds: 375),
@@ -380,6 +402,12 @@ class _HomeState extends State<Home> {
                                       setState(() {
                                         selected_index = index;
                                         if (selected_index == 0) {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      TaxCollectionDetailsView()));
+
                                         } else if (selected_index == 1) {
                                           Navigator.push(
                                               context,
@@ -402,23 +430,23 @@ class _HomeState extends State<Home> {
                                       });
                                     },
                                     child: Container(
-                                      height: (Screen.height(context) / 2) - 10,
+                                      height: (Screen.height(context) / 2) -10,
                                       width: (Screen.height(context) / 2) - 10,
                                       alignment: Alignment.center,
                                       margin: EdgeInsets.all(10),
                                       decoration: index == selected_index
                                           ? UIHelper
-                                              .roundedBorderWithColorWithShadow(
-                                                  5,
-                                                  c.colorAccentverylight,
-                                                  c.colorPrimaryDark,
-                                                  borderWidth: 0)
+                                          .roundedBorderWithColorWithShadow(
+                                          5,
+                                          c.colorAccentverylight,
+                                          c.colorPrimaryDark,
+                                          borderWidth: 0)
                                           : UIHelper
-                                              .roundedBorderWithColorWithShadow(
-                                                  5,
-                                                  c.need_improvement2,
-                                                  c.need_improvement2,
-                                                  borderWidth: 0),
+                                          .roundedBorderWithColorWithShadow(
+                                          5,
+                                          c.need_improvement2,
+                                          c.need_improvement2,
+                                          borderWidth: 0),
                                       child: Column(
                                         children: [
                                           Container(
@@ -426,19 +454,19 @@ class _HomeState extends State<Home> {
                                               servicesList[index][key_img_path],
                                             ),
                                             height: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
+                                                .size
+                                                .width *
                                                 0.2,
                                             margin: EdgeInsets.only(
-                                                left: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    20,
-                                                right: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    20,
-                                                top: 10),
+                                              left: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                                  20,
+                                              right: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                                  20,
+                                            ),
                                             padding: EdgeInsets.all(5),
                                             width: MediaQuery.of(context)
                                                 .size
@@ -474,9 +502,9 @@ class _HomeState extends State<Home> {
                                                 5, 10, 5, 10),
                                             child: Text(
                                               getServiceName(servicesList[index]
-                                                  [key_service_name]),
+                                              [key_service_name]),
                                               style: TextStyle(
-                                                  fontSize: 12,
+                                                  fontSize: 11,
                                                   height: 1.5,
                                                   color: index == selected_index
                                                       ? c.white
@@ -513,32 +541,32 @@ class _HomeState extends State<Home> {
 
   Future<bool> showExitPopup() async {
     return await showDialog(
-          //show confirm dialogue
-          //the return value will be from "Yes" or "No" options
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('exit_app'.tr().toString()),
-            content: Text('do_you_want_to_exit_an_app'.tr().toString()),
-            actions: [
-              ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                //return false when click on "NO"
-                child: Text('no'.tr().toString()),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (Platform.isAndroid) {
-                    SystemNavigator.pop();
-                  } else if (Platform.isIOS) {
-                    exit(0);
-                  }
-                },
-                //return true when click on "Yes"
-                child: Text('yes'.tr().toString()),
-              ),
-            ],
+      //show confirm dialogue
+      //the return value will be from "Yes" or "No" options
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('exit_app'.tr().toString()),
+        content: Text('do_you_want_to_exit_an_app'.tr().toString()),
+        actions: [
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            //return false when click on "NO"
+            child: Text('no'.tr().toString()),
           ),
-        ) ??
+          ElevatedButton(
+            onPressed: () {
+              if (Platform.isAndroid) {
+                SystemNavigator.pop();
+              } else if (Platform.isIOS) {
+                exit(0);
+              }
+            },
+            //return true when click on "Yes"
+            child: Text('yes'.tr().toString()),
+          ),
+        ],
+      ),
+    ) ??
         false; //if showDialouge had returned null, then return false
   }
 
