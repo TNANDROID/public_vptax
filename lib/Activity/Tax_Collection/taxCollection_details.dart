@@ -5,26 +5,29 @@ import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Model/startup_model.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
+import '../../Resources/StringsKey.dart' as s;
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:stacked/stacked.dart';
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 
 class TaxCollectionDetailsView extends StatefulWidget {
-  final selectedTaxTypeData;
-  TaxCollectionDetailsView({Key? key, required this.selectedTaxTypeData})
-      : super(key: key);
+  TaxCollectionDetailsView({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _TaxCollectionDetailsViewState createState() =>
       _TaxCollectionDetailsViewState();
 }
 
-class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> with SingleTickerProviderStateMixin {
+class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
   PreferenceService preferencesService = locator<PreferenceService>();
   String selectedLang = "";
+  String selectTaxtype = "";
   List isShowFlag = [];
   double main_totalAmount = 0.00;
   int main_count = 0;
@@ -177,6 +180,41 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
     },
   ];
 
+  final List<Map<String, dynamic>> taxTypeList = [
+    {
+      'taxtypeid': 1,
+      'taxtypedesc_en': 'House Tax',
+      'taxtypedesc_ta': 'வீட்டு வரி',
+      'img_path': imagePath.house
+    },
+    {
+      'taxtypeid': 2,
+      'taxtypedesc_en': 'Water Tax',
+      'taxtypedesc_ta': 'குடிநீர் கட்டணங்கள்',
+      'img_path': imagePath.water
+    },
+    {
+      'taxtypeid': 3,
+      'taxtypedesc_en': 'Professional Tax',
+      'taxtypedesc_ta': 'தொழில் வரி',
+      'img_path': imagePath.professional1
+    },
+    {
+      'taxtypeid': 4,
+      'taxtypedesc_en': 'Non Tax',
+      'taxtypedesc_ta': 'இதர வரவினங்கள்',
+      'img_path': imagePath.nontax1
+    },
+    {
+      'taxtypeid': 5,
+      'taxtypedesc_en': 'Trade Licence',
+      'taxtypedesc_ta': 'வர்த்தக உரிமம்',
+      'img_path': imagePath.property
+    },
+  ];
+
+  var selectedTaxTypeData;
+
   void initState() {
     super.initState();
     _controller = AnimationController(
@@ -187,6 +225,10 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
     // Create a curved animation with Curves.bounceOut
     _animation = CurvedAnimation(parent: _controller, curve: Curves.bounceOut);
 
+    selectedTaxTypeData = Map<String, dynamic>.from(taxTypeList[0]);
+
+    selectTaxtype = taxTypeList[0]['taxtypeid'].toString();
+    selectedTaxTypeData = taxTypeList[0];
     // Add a listener to rebuild the widget when the animation value changes
     _animation.addListener(() {
       setState(() {});
@@ -196,19 +238,24 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
     _controller.forward();
     initialize();
   }
-  void repeatOnce()  {
-     _controller.reset();
-     _controller.forward();
+
+  void repeatOnce() {
+    _controller.reset();
+    _controller.forward();
   }
+
   Future<void> initialize() async {
     selectedLang = await preferencesService.getUserInfo("lang");
+
     setState(() {});
   }
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
+
   Widget headerCardUIWidget(int mainIndex) {
     return Column(
       children: [
@@ -292,7 +339,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                 UIHelper.roundedBorderWithColorWithShadow(
                                     5, c.white, c.grey_2),
                             child: Image.asset(
-                              widget.selectedTaxTypeData["img_path"],
+                              selectedTaxTypeData["img_path"].toString(),
                               fit: BoxFit.contain,
                               height: 35,
                               width: 35,
@@ -337,7 +384,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
   }
 
   Widget taxWiseReturnDataWidget(int mainIndex) {
-    return widget.selectedTaxTypeData["taxtypeid"] == 1
+    return selectedTaxTypeData["taxtypeid"] == 1
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -356,7 +403,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                   true),
             ],
           )
-        : widget.selectedTaxTypeData["taxtypeid"] == 2
+        : selectedTaxTypeData["taxtypeid"] == 2
             ? UIHelper.titleTextStyle(
                 "Water Connection Number : " +
                     mainList[mainIndex]['assesment_no'],
@@ -364,14 +411,14 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                 12,
                 true,
                 true)
-            : widget.selectedTaxTypeData["taxtypeid"] == 3
+            : selectedTaxTypeData["taxtypeid"] == 3
                 ? UIHelper.titleTextStyle(
                     "Assesment Number : " + mainList[mainIndex]['assesment_no'],
                     c.white,
                     12,
                     true,
                     true)
-                : widget.selectedTaxTypeData["taxtypeid"] == 4
+                : selectedTaxTypeData["taxtypeid"] == 4
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -449,8 +496,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                     padding: EdgeInsets.all(8.0),
                                     child: Center(
                                         child: UIHelper.titleTextStyle(
-                                            widget.selectedTaxTypeData[
-                                                        "taxtypeid"] ==
+                                            selectedTaxTypeData["taxtypeid"] ==
                                                     2
                                                 ? taxData[rowIndex]['month']
                                                 : taxData[rowIndex]['year'],
@@ -549,8 +595,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                 )),
             UIHelper.verticalSpaceSmall,
             Visibility(
-                visible: swmData.length > 0 &&
-                    widget.selectedTaxTypeData["taxtypeid"] == 1,
+                visible:
+                    swmData.length > 0 && selectedTaxTypeData["taxtypeid"] == 1,
                 child: Column(
                   children: [
                     UIHelper.titleTextStyle("swmUserCharges".tr().toString(),
@@ -630,8 +676,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                                             false;
                                                         mainList[mainIndex]
                                                                 ['swm_total'] =
-                                                            mainList[mainIndex]
-                                                                    ['swm_total'] -
+                                                            mainList[mainIndex][
+                                                                    'swm_total'] -
                                                                 swmData[i]
                                                                     ['Amount'];
                                                       }
@@ -748,8 +794,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                 padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
                 child: UIHelper.titleTextStyle(
                     selectedLang == "en"
-                        ? widget.selectedTaxTypeData["taxtypedesc_en"]
-                        : widget.selectedTaxTypeData["taxtypedesc_ta"],
+                        ? selectedTaxTypeData["taxtypedesc_en"]
+                        : selectedTaxTypeData["taxtypedesc_ta"],
                     c.grey_8,
                     12,
                     true,
@@ -757,38 +803,42 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
         Align(
             alignment: Alignment.centerRight,
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => TaxPayDetailsView(mainList: mainList,selectedTaxTypeData:widget.selectedTaxTypeData,),
+                  builder: (context) => TaxPayDetailsView(
+                    mainList: mainList,
+                    selectedTaxTypeData: selectedTaxTypeData,
+                  ),
                 ));
               },
               child: Container(
-                margin: EdgeInsets.only(top: 10, right: 30, bottom: 10),
-                decoration: UIHelper.GradientContainer(
-                    5, 5, 5, 5, [c.grey_7, c.grey_7]),
-                padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
-                child: UIHelper.titleTextStyle(
-                    "added_to_pay".tr().toString(), c.white, 12, true, true)),)),
+                  margin: EdgeInsets.only(top: 10, right: 30, bottom: 10),
+                  decoration: UIHelper.GradientContainer(
+                      5, 5, 5, 5, [c.grey_7, c.grey_7]),
+                  padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
+                  child: UIHelper.titleTextStyle(
+                      "added_to_pay".tr().toString(), c.white, 12, true, true)),
+            )),
         Align(
             alignment: Alignment.topRight,
             child: Transform.scale(
                 scale: _animation.value,
                 child: Container(
-              child: Container(
-                  transform: Matrix4.translationValues(
-                    0,
-                    -5,
-                    0,
-                  ),
-                  margin: EdgeInsets.only(top: 0, right: 10, bottom: 10),
-                  decoration: UIHelper.circleWithColorWithShadow(
-                      360,
-                      c.account_status_green_color,
-                      c.account_status_green_color),
-                  padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
-                  child: UIHelper.titleTextStyle(
-                      (main_count).toString(), c.white, 12, true, true)),
-            )))
+                  child: Container(
+                      transform: Matrix4.translationValues(
+                        0,
+                        -5,
+                        0,
+                      ),
+                      margin: EdgeInsets.only(top: 0, right: 10, bottom: 10),
+                      decoration: UIHelper.circleWithColorWithShadow(
+                          360,
+                          c.account_status_green_color,
+                          c.account_status_green_color),
+                      padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
+                      child: UIHelper.titleTextStyle(
+                          (main_count).toString(), c.white, 12, true, true)),
+                )))
       ],
     );
   }
@@ -862,6 +912,39 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     UIHelper.verticalSpaceSmall,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
+                      child: DropdownButton(
+                        elevation: 0,
+                        isExpanded: true,
+                        value: selectTaxtype,
+                        icon: const Padding(
+                            padding: EdgeInsets.all(15),
+                            child: Icon(
+                              Icons.arrow_downward_rounded,
+                              size: 15,
+                            )),
+                        style: TextStyle(
+                          color: c.black,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        items: taxTypeList
+                            .map((item) => DropdownMenuItem<String>(
+                                  value: item['taxtypeid'].toString(),
+                                  child: Text(item['taxtypedesc_en']),
+                                ))
+                            .toList(),
+                        onChanged: (newValue) {
+                          setState(() {
+                            selectTaxtype = newValue.toString();
+                            handleClick(selectTaxtype);
+                          });
+                        },
+                      ),
+                    ),
+                    UIHelper.verticalSpaceSmall,
                     addToPayWidget(),
                     UIHelper.verticalSpaceSmall,
                     Expanded(
@@ -884,5 +967,35 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
               },
               viewModelBuilder: () => StartUpViewModel()),
         ));
+  }
+
+  void handleClick(String value) async {
+    switch (value) {
+      case '1':
+        setState(() {
+          selectedTaxTypeData = taxTypeList[0];
+        });
+        break;
+      case '2':
+        setState(() {
+          selectedTaxTypeData = taxTypeList[1];
+        });
+        break;
+      case '3':
+        setState(() {
+          selectedTaxTypeData = taxTypeList[2];
+        });
+        break;
+      case '4':
+        setState(() {
+          selectedTaxTypeData = taxTypeList[3];
+        });
+        break;
+      case '5':
+        setState(() {
+          selectedTaxTypeData = taxTypeList[4];
+        });
+        break;
+    }
   }
 }
