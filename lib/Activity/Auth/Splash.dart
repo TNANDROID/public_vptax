@@ -265,6 +265,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
       topright: 20,
       btmleft: 20,
       btmright: 20,
+      elevation: 3,
       width: Screen.width(context) / 2.5,
       height: 45,
       child: TextButton.icon(
@@ -277,8 +278,8 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
             if (await utils.isOnline()) {
               await apiCalls();
               Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => TaxCollectionView(),
-            ));
+                builder: (context) => TaxCollectionView(),
+              ));
             } else {
               utils.showAlert(
                 context,
@@ -286,7 +287,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
                 "noInternet".tr().toString(),
               );
             }
-           /* utils.showAlert(context, ContentType.warning, "message",
+            /* utils.showAlert(context, ContentType.warning, "message",
                 flag: 'openAppSetting');*/
           }
         },

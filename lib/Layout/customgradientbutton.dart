@@ -30,12 +30,20 @@ class CustomGradientButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(btnPadding ?? 10),
+    return Material(
+      elevation: elevation ?? 5,
+      color: c.full_transparent,
+      borderRadius: BorderRadius.only(
+        topRight: Radius.circular(topright ?? 15),
+        topLeft: Radius.circular(topleft ?? 15),
+        bottomLeft: Radius.circular(btmleft ?? 15),
+        bottomRight: Radius.circular(btmright ?? 15),
+      ),
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.all(0),
+          shadowColor: Colors.red,
+          padding: EdgeInsets.all(btnPadding ?? 0),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(topright ?? 15),
@@ -44,7 +52,6 @@ class CustomGradientButton extends StatelessWidget {
               bottomRight: Radius.circular(btmright ?? 15),
             ),
           ),
-          elevation: elevation ?? 5,
           primary: Colors.white, // Remove the background color
           onPrimary: Colors.white, // Remove the ink splash color
         ),
