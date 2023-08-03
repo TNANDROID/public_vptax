@@ -15,6 +15,7 @@ class CustomGradientButton extends StatelessWidget {
   final Widget? child;
 
   const CustomGradientButton({
+    super.key,
     this.gradientColors,
     required this.width,
     required this.height,
@@ -52,8 +53,8 @@ class CustomGradientButton extends StatelessWidget {
               bottomRight: Radius.circular(btmright ?? 15),
             ),
           ),
-          primary: Colors.white, // Remove the background color
-          onPrimary: Colors.white, // Remove the ink splash color
+          backgroundColor: Colors.white, // Remove the background color
+          foregroundColor: Colors.white, // Remove the ink splash color
         ),
         child: Ink(
             width: width,
@@ -62,7 +63,7 @@ class CustomGradientButton extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                stops: [0.2, 0.8],
+                stops: const [0.2, 0.8],
                 colors:
                     gradientColors ?? [c.colorAccentlight, c.colorPrimaryDark],
               ),
