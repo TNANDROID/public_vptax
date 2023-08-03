@@ -4,6 +4,8 @@ import 'dart:ui';
 Color colorPrimary = Color(0xFFff8a66);
 Color colorPrimaryDark = Color(0xFFff7371);
 Color colorAccentlight = Color(0xFFff8f60);
+Color card1 = Color(0xFFff8f60);
+Color card2 = Color(0xFFFFFFFF);
 Color colorAccentverylight = Color(0xfff89a42);
 Color red = Color(0xFFB71C1C);
 Color failureRed = Color(0xffc72c41);
@@ -35,6 +37,7 @@ Color primary_text_color2 = Color(0xFF1e9bff);
 Color text_color = Color(0xFF1E4175);
 Color bg = Color(0xFFF5F5F5);
 Color full_transparent = Color(0xFF00FF0000);
+Color grey_4 = Color(0xFFdddbda);
 
 //*********Un Used Variables**************/
 

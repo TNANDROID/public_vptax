@@ -305,7 +305,14 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                           child: SingleChildScrollView(
                               child: Column(children: [
                     UIHelper.verticalSpaceSmall,
-                    addToPayWidget(),
+                    Container(
+                      color: c.card1,
+                      child: Container(
+                          decoration: UIHelper.GradientContainer(
+                            0,0,50,0,[ c.white, c.white],
+                          ),
+                          child: addToPayWidget()),
+                    ),
                     Container(
                         child: ListView.builder(
                           shrinkWrap: true,
@@ -314,8 +321,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                             itemBuilder: (context, mainIndex) {
                               return Column(
                                 children: [
-                                  headerCardUIWidget(mainIndex),
-                                  UIHelper.verticalSpaceMedium,
+                                  headerCardUIWidgetnew(mainIndex),
+                                  // UIHelper.verticalSpaceMedium,
                                 ],
                               );
                             }))
@@ -405,7 +412,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                           child: UIHelper.tinyLinewidget(borderColor: c.white),
                         ),
                         UIHelper.verticalSpaceSmall,
-                        taxWiseReturnDataWidget(mainIndex),
+                        taxWiseReturnDataWidget(mainIndex,c.white),
                       ],
                     ),
                   ),
@@ -465,8 +472,272 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
       ],
     );
   }
+  Widget headerCardUIWidgetnew(int mainIndex) {
+    return Container(
+      color: mainIndex ==(mainList.length-1)?c.white:mainIndex%2==0? c.card2:c.card1,
+      padding: EdgeInsets.only(bottom:/*mainIndex ==(mainList.length-1)?10:0*/10 ),
+      child: Container(
+          width: Screen.width(context),
+          padding: EdgeInsets.all(15),
+          decoration: UIHelper.GradientContainer(
+            0,0,50,0, mainIndex%2==0?[ c.card1, c.card1]:[ c.card2, c.card2],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                Container(
+                    width: 50,
+                    padding: EdgeInsets.all(5),
+                    decoration:
+                    UIHelper.roundedBorderWithColorWithShadow(
+                        5, c.need_improvement2, c.need_improvement2),
+                    child: Image.asset(
+                      selectedTaxTypeData["img_path"].toString(),
+                      fit: BoxFit.contain,
+                      height: 35,
+                      width: 35,
+                    )),
+                    UIHelper.horizontalSpaceSmall,
+                Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                    UIHelper.titleTextStyle(
+                      mainList[mainIndex]['name'],
+                        mainIndex%2==0? c.white:c.card1,
+                      12,
+                      true,
+                      false),
+                      UIHelper.verticalSpaceSmall,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.location_on,
+                            color:  mainIndex%2==0? c.white:c.card1,
+                            size: 15,
+                          ),
+                          UIHelper.horizontalSpaceTiny,
+                          Container(
+                            width: Screen.width(context)/2,
+                            child: Flexible(
+                                child: UIHelper.titleTextStyle(
+                                    mainList[mainIndex]['door_no'] +
+                                        ", " +
+                                        mainList[mainIndex]['street'] +
+                                        ", " +
+                                        mainList[mainIndex]['village'] +
+                                        ",\n" +
+                                        mainList[mainIndex]['block'] +
+                                        ", " +
+                                        mainList[mainIndex]['district'],
+                                    mainIndex%2==0? c.white:c.card1,
+                                    11,
+                                    false,
+                                    false)),
+                          ),
+                          UIHelper.horizontalSpaceSmall,
+                        ],
+                      ),
+                      UIHelper.verticalSpaceSmall,
+                ],),)
 
-  Widget taxWiseReturnDataWidget(int mainIndex) {
+              ]),
+              Container(
+                alignment: Alignment.center,
+                width: MediaQuery.of(context).size.width /2,
+                padding: EdgeInsets.all(5),
+                decoration:
+                UIHelper.roundedBorderWithColorWithShadow(
+                    5, c.need_improvement, c.need_improvement),
+                child: InkWell(
+                  onTap: (){
+                    setState(() {
+                      if (isShowFlag.contains(mainIndex)) {
+                        isShowFlag.remove(mainIndex);
+                      } else {
+                        isShowFlag.add(mainIndex);
+                      }
+                    });
+
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        child: UIHelper.titleTextStyle(
+                            'demand_details',
+                            c.white,
+                            10,
+                            true,
+                            true),
+                      ),
+                      Icon(
+                        isShowFlag.contains(mainIndex)
+                            ? Icons.arrow_circle_up_rounded
+                            : Icons.arrow_circle_down_rounded,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ],),
+                ),
+              ),
+              Visibility(
+                  visible: isShowFlag.contains(mainIndex),
+                  child: propertyTaxCollectionWidget(mainIndex))
+            ],
+          )),
+    );
+  }
+  Widget headerCardUIWidgetnew2(int mainIndex) {
+    return Container(
+        width: Screen.width(context),
+        margin: EdgeInsets.only(left: 15, right: 15),
+        // padding: EdgeInsets.all(15),
+        decoration: UIHelper.roundedBorderWithColorWithShadow(
+            5, c.white, c.white,
+            borderWidth: 2,borderColor: c.colorAccentlight),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Container(
+              padding: EdgeInsets.all(15),
+              decoration: UIHelper.GradientContainer(
+                  0,0,5,5,[ c.colorPrimary, c.colorAccentlight],
+                ),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                        width: 50,
+                        padding: EdgeInsets.all(5),
+                        decoration:
+                        UIHelper.roundedBorderWithColorWithShadow(
+                            5, c.need_improvement2, c.need_improvement2),
+                        child: Image.asset(
+                          selectedTaxTypeData["img_path"].toString(),
+                          fit: BoxFit.contain,
+                          height: 35,
+                          width: 35,
+                        )),
+                    UIHelper.horizontalSpaceSmall,
+                    Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          UIHelper.titleTextStyle(
+                              mainList[mainIndex]['name'],
+                              c.white,
+                              12,
+                              true,
+                              false),
+                          UIHelper.verticalSpaceSmall,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.location_on,
+                                color: c.white,
+                                size: 15,
+                              ),
+                              UIHelper.horizontalSpaceTiny,
+                              Container(
+                                width: Screen.width(context)/2,
+                                child: Flexible(
+                                    child: UIHelper.titleTextStyle(
+                                        mainList[mainIndex]['door_no'] +
+                                            ", " +
+                                            mainList[mainIndex]['street'] +
+                                            ", " +
+                                            mainList[mainIndex]['village'] +
+                                            ",\n" +
+                                            mainList[mainIndex]['block'] +
+                                            ", " +
+                                            mainList[mainIndex]['district'],
+                                        c.white,
+                                        11,
+                                        true,
+                                        false)),
+                              ),
+                              UIHelper.horizontalSpaceSmall,
+                            ],
+                          ),
+                          UIHelper.verticalSpaceSmall,
+                        ],),)
+
+                  ]),
+            ),
+            /*SizedBox(
+              width: Screen.width(context),
+              child: UIHelper.tinyLinewidget(borderColor: c.grey_8),
+            ),*/
+            Container(
+                padding: EdgeInsets.all(15),
+                alignment: Alignment.centerLeft,
+                child: taxWiseReturnDataWidget(mainIndex,c.grey_8)),
+            Container(
+              alignment: Alignment.center,
+              width: MediaQuery.of(context).size.width /2,
+              margin: EdgeInsets.only(right: 15,bottom: 15),
+              padding: EdgeInsets.all(5),
+              decoration:
+              UIHelper.roundedBorderWithColorWithShadow(
+                  5, c.need_improvement, c.need_improvement),
+              child: InkWell(
+                onTap: (){
+                  setState(() {
+                    if (isShowFlag.contains(mainIndex)) {
+                      isShowFlag.remove(mainIndex);
+                    } else {
+                      isShowFlag.add(mainIndex);
+                    }
+                  });
+
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: UIHelper.titleTextStyle(
+                          'demand_details',
+                          c.white,
+                          10,
+                          true,
+                          true),
+                    ),
+                    Icon(
+                      isShowFlag.contains(mainIndex)
+                          ? Icons.arrow_circle_up_rounded
+                          : Icons.arrow_circle_down_rounded,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ],),
+              ),
+            ),
+            Visibility(
+                visible: isShowFlag.contains(mainIndex),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8,0,8,8),
+                  child: propertyTaxCollectionWidget(mainIndex),
+                ))
+          ],
+        ));
+  }
+  Widget taxWiseReturnDataWidget(int mainIndex, Color clr) {
     return selectedTaxTypeData["taxtypeid"] == 1
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -474,13 +745,13 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
               UIHelper.titleTextStyle(
                   "Building Licence Number : " +
                       mainList[mainIndex]['building_licence_number'],
-                  c.white,
+                  clr,
                   12,
                   true,
                   true),
               UIHelper.titleTextStyle(
                   "Assesment Number : " + mainList[mainIndex]['assesment_no'],
-                  c.white,
+                  clr,
                   12,
                   true,
                   true),
@@ -490,14 +761,14 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
             ? UIHelper.titleTextStyle(
                 "Water Connection Number : " +
                     mainList[mainIndex]['assesment_no'],
-                c.white,
+        clr,
                 12,
                 true,
                 true)
             : selectedTaxTypeData["taxtypeid"] == 3
                 ? UIHelper.titleTextStyle(
                     "Assesment Number : " + mainList[mainIndex]['assesment_no'],
-                    c.white,
+        clr,
                     12,
                     true,
                     true)
@@ -507,13 +778,13 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                         children: [
                           UIHelper.titleTextStyle(
                               "Lease From Date : " + "05-03-2015",
-                              c.white,
+                              clr,
                               12,
                               true,
                               true),
                           UIHelper.titleTextStyle(
                               "Lease To Date : " + "05-03-2018",
-                              c.white,
+                              clr,
                               12,
                               true,
                               true),
@@ -521,7 +792,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                       )
                     : UIHelper.titleTextStyle(
                         "Traders Code : " + mainList[mainIndex]['assesment_no'],
-                        c.white,
+        clr,
                         12,
                         true,
                         true);
@@ -534,10 +805,10 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
     int dataWiseHeight = taxData.length * 30;
     int swmHeight = swmData.length * 30;
     return Container(
-        margin: EdgeInsets.only(top: 10),
-        decoration: UIHelper.roundedBorderWithColorWithShadow(
-            3, c.white, c.white,
-            borderWidth: 0),
+        margin: EdgeInsets.only(top: 15),
+        decoration: UIHelper.GradientContainer(
+            3,3,50,3,  mainIndex%2==0?[c.white, c.white]:[c.need_improvement1, c.need_improvement1],
+            ),
         padding: EdgeInsets.all(5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -619,14 +890,17 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                                 i < taxData.length;
                                                 i++) {
                                               if (i >= rowIndex) {
-                                                taxData[i]['flag'] = false;
-                                                print("Tot>>"+mainList[mainIndex]['total'].toString());
-                                                mainList[mainIndex]['total'] = mainList[mainIndex]['total'] - taxData[i]['Amount'];
+                                                if(taxData[i]['flag'] == true){
+                                                  taxData[i]['flag'] = false;
+                                                  print("Tot>>"+mainList[mainIndex]['total'].toString());
+                                                  mainList[mainIndex]['total'] = mainList[mainIndex]['total'] - taxData[i]['Amount'];
 
-                                                print("Tot>>"+taxData[i]['Amount'].toString());
-                                                print("Tot"+mainList[mainIndex]['total'].toString());
-                                                mainList[mainIndex]['tax_pay'] =getTotal(mainList[mainIndex]['total'], mainList[mainIndex]['tax_advance']);
-                                              }
+                                                  print("Tot>>"+taxData[i]['Amount'].toString());
+                                                  print("Tot"+mainList[mainIndex]['total'].toString());
+                                                  mainList[mainIndex]['tax_pay'] =getTotal(mainList[mainIndex]['total'], mainList[mainIndex]['tax_advance']);
+
+                                                }
+                                                   }
                                             }
                                           } else {
                                             taxData[rowIndex]['flag'] = true;
@@ -732,9 +1006,9 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                               child: UIHelper.titleTextStyle(
                                                   swmData[rowIndex]['Amount']
                                                       .toString(),
-                                                  c.grey_8,
+                                                  c.black,
                                                   12,
-                                                  true,
+                                                  false,
                                                   true))),
                                     ),
                                     Expanded(
@@ -831,41 +1105,6 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                     demandCalculationWidgetForSWM(mainIndex),
                   ],
                 )),
-
-            // UIHelper.verticalSpaceSmall,
-/*            Row(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Container(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        "amount_to_pay".tr().toString(),
-                        style: TextStyle(
-                            color: c.grey_10,
-                            fontSize: 10,
-                            decoration: TextDecoration.none,
-                            fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.right,
-                      )),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                      decoration: UIHelper.GradientContainer(
-                          5, 5, 5, 5, [c.grey, c.grey]),
-                      padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
-                      margin: EdgeInsets.all(10),
-                      child: UIHelper.titleTextStyle(
-                          "\u{20B9}" + (mainList[mainIndex]['total']+mainList[mainIndex]['swm_total']).toString(),
-                          c.grey_9,
-                          14,
-                          true,
-                          true)),
-                ),
-              ],
-            ),*/
-
             UIHelper.verticalSpaceSmall,
           ],
         ));
@@ -876,11 +1115,11 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-      UIHelper.titleTextStyle('demand'.tr().toString()+" : "+mainList[mainIndex]['total'].toString(), c.grey_8, 10, true, false),
-    UIHelper.titleTextStyle('advance'.tr().toString()+" : "+mainList[mainIndex]['tax_advance'].toString(), c.grey_8, 10, true, false),
-    ],),
+      UIHelper.titleTextStyle('demand'.tr().toString()+" : "+"\u{20B9} "+mainList[mainIndex]['total'].toString(), c.grey_8, 10, true, false),
+    UIHelper.titleTextStyle('advance'.tr().toString()+" : "+"\u{20B9} "+mainList[mainIndex]['tax_advance'].toString(), c.grey_8, 10, true, false),
+        ],),
         UIHelper.verticalSpaceSmall,
-        UIHelper.titleTextStyle('payable'.tr().toString()+" : "+mainList[mainIndex]['tax_pay'].toString(), c.grey_9, 11, true, false),
+        UIHelper.titleTextStyle('payable'.tr().toString()+" : "+"\u{20B9} "+mainList[mainIndex]['tax_pay'].toString(), c.grey_8, 11, true, false),
         UIHelper.verticalSpaceTiny,
       ],),
     );
@@ -891,11 +1130,11 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-      UIHelper.titleTextStyle('demand'.tr().toString()+" : "+mainList[mainIndex]['swm_total'].toString(), c.grey_8, 10, true, false),
-    UIHelper.titleTextStyle('advance'.tr().toString()+" : "+mainList[mainIndex]['swm_advance'].toString(), c.grey_8, 10, true, false),
+      UIHelper.titleTextStyle('demand'.tr().toString()+" : "+"\u{20B9} "+mainList[mainIndex]['swm_total'].toString(), c.grey_8, 10, true, false),
+    UIHelper.titleTextStyle('advance'.tr().toString()+" : "+"\u{20B9} "+mainList[mainIndex]['swm_advance'].toString(), c.grey_8, 10, true, false),
     ],),
         UIHelper.verticalSpaceSmall,
-        UIHelper.titleTextStyle('payable'.tr().toString()+" : "+mainList[mainIndex]['swm_pay'].toString(), c.grey_9, 11, true, false),
+        UIHelper.titleTextStyle('payable'.tr().toString()+" : "+"\u{20B9} "+mainList[mainIndex]['swm_pay'].toString(), c.grey_8, 11, true, false),
         UIHelper.verticalSpaceTiny,
       ],),
     );
@@ -1038,7 +1277,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: UIHelper.GradientContainer(
-          15, 15, 0, 0, [c.colorPrimaryDark, c.colorAccentlight]),
+          15, 15, 0, 0, [c.colorAccentlight, c.colorAccentlight]),
       child:  Column(
       children: [
         Align(
