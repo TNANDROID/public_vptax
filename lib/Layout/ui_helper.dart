@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:public_vptax/Layout/customclip.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 
-
 class UIHelper {
   // Vertically Space Provider
   static const Widget verticalSpaceTiny = SizedBox(height: 4.0);
@@ -38,9 +37,15 @@ class UIHelper {
       style: TextStyle(
           color: clr,
           fontSize: fntsize,
-          decoration:  title=="swmUserCharges".tr().toString()? TextDecoration.underline:TextDecoration.none,
+          decoration: title == "swmUserCharges".tr().toString()
+              ? TextDecoration.underline
+              : TextDecoration.none,
           fontWeight: isBold ? FontWeight.bold : FontWeight.normal),
-      textAlign: isCenterAliignment ? TextAlign.center : title.contains("\u{20B9}")?TextAlign.right:TextAlign.left,
+      textAlign: isCenterAliignment
+          ? TextAlign.center
+          : title.contains("\u{20B9}")
+              ? TextAlign.right
+              : TextAlign.left,
     );
   }
 
@@ -125,21 +130,27 @@ class UIHelper {
       double btmleft, double btmright, List<Color> c1,
       {Color borderColor = Colors.transparent, double intwid = 0}) {
     return BoxDecoration(
-      gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          stops: [
-            0.4,
-            0.6,
-          ],
-          colors: c1),
-      border: Border.all(color: borderColor, width: intwid),
-      borderRadius: BorderRadius.only(
-          topRight: Radius.circular(topright),
-          topLeft: Radius.circular(topleft),
-          bottomLeft: Radius.circular(btmleft),
-          bottomRight: Radius.circular(btmright)),
-    );
+        gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            stops: [
+              0.4,
+              0.6,
+            ],
+            colors: c1),
+        border: Border.all(color: borderColor, width: intwid),
+        borderRadius: BorderRadius.only(
+            topRight: Radius.circular(topright),
+            topLeft: Radius.circular(topleft),
+            bottomLeft: Radius.circular(btmleft),
+            bottomRight: Radius.circular(btmright)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black26,
+            offset: Offset(0, 1),
+            blurRadius: 2.0,
+          )
+        ]);
   }
 
 //Neumorphic Container Style Provider
@@ -176,6 +187,20 @@ class UIHelper {
             color: c.need_improvement,
           ),
           child: contentWidget),
+    );
+  }
+
+//Container Style Provider with shadow
+  static BoxDecoration leftBorderContainer(
+      Color leftBorderclr, Color bottomBorderclr) {
+    return BoxDecoration(
+      border: Border(
+        left: BorderSide(
+          color: leftBorderclr, // Choose your desired border color here
+          width: 5.0, // Choose your desired border width here
+        ),
+        bottom: BorderSide(color: bottomBorderclr, width: 2),
+      ),
     );
   }
 
