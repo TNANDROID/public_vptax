@@ -320,9 +320,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                               );
                             }))
                     ],)),),
-                      Positioned(
-                        bottom: 1,
-                        child: payWidget(),)
+                      payWidget()
 
 
                     ],
@@ -622,11 +620,12 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                                 i++) {
                                               if (i >= rowIndex) {
                                                 taxData[i]['flag'] = false;
-                                                mainList[mainIndex]['total'] =
-                                                    mainList[mainIndex]
-                                                            ['total'] -
-                                                        taxData[i]['Amount'];
-                                                mainList[mainIndex]['tax_pay'] =getTotal(mainList[mainIndex]['total'].abs(), mainList[mainIndex]['tax_advance'].abs());
+                                                print("Tot>>"+mainList[mainIndex]['total'].toString());
+                                                mainList[mainIndex]['total'] = mainList[mainIndex]['total'] - taxData[i]['Amount'];
+
+                                                print("Tot>>"+taxData[i]['Amount'].toString());
+                                                print("Tot"+mainList[mainIndex]['total'].toString());
+                                                mainList[mainIndex]['tax_pay'] =getTotal(mainList[mainIndex]['total'], mainList[mainIndex]['tax_advance']);
                                               }
                                             }
                                           } else {
@@ -634,7 +633,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                             mainList[mainIndex]['total'] =
                                                 mainList[mainIndex]['total'] +
                                                     taxData[rowIndex]['Amount'];
-                                            mainList[mainIndex]['tax_pay'] =getTotal(mainList[mainIndex]['total'].abs(), mainList[mainIndex]['tax_advance'].abs());
+                                            mainList[mainIndex]['tax_pay'] =getTotal(mainList[mainIndex]['total'], mainList[mainIndex]['tax_advance']);
 
                                           }
                                         }
@@ -648,7 +647,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                               i++) {
                                             main_totalAmount =
                                                 main_totalAmount +
-                                                    mainList[i]['tax_pay'].abs()+mainList[i]['swm_pay'].abs();
+                                                    mainList[i]['tax_pay']+mainList[i]['swm_pay'];
                                             List taxData =
                                                 mainList[i]['taxData'];
                                             List swmData =
@@ -685,6 +684,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                     swmData.length > 0 && selectedTaxTypeData["taxtypeid"] == 1,
                 child: Column(
                   children: [
+                    UIHelper.verticalSpaceSmall,
                     UIHelper.titleTextStyle("swmUserCharges".tr().toString(),
                         c.grey_9, 11, false, true),
                     UIHelper.verticalSpaceSmall,
@@ -766,7 +766,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                                                     'swm_total'] -
                                                                 swmData[i]
                                                                     ['Amount'];
-                                                        mainList[mainIndex]['swm_pay'] =getTotal(mainList[mainIndex]['swm_total'].abs(), mainList[mainIndex]['swm_advance'].abs());
+                                                        mainList[mainIndex]['swm_pay'] =getTotal(mainList[mainIndex]['swm_total'], mainList[mainIndex]['swm_advance']);
 
                                                       }
                                                     }
@@ -779,7 +779,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                                                 ['swm_total'] +
                                                             swmData[rowIndex]
                                                                 ['Amount'];
-                                                    mainList[mainIndex]['swm_pay'] =getTotal(mainList[mainIndex]['swm_total'].abs(), mainList[mainIndex]['swm_advance'].abs());
+                                                    mainList[mainIndex]['swm_pay'] =getTotal(mainList[mainIndex]['swm_total'], mainList[mainIndex]['swm_advance']);
 
                                                   }
                                                 }
@@ -793,7 +793,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                                       i++) {
                                                     main_totalAmount =
                                                         main_totalAmount +
-                                                            mainList[i]['tax_pay'].abs()+mainList[i]['swm_pay'].abs();
+                                                            mainList[i]['tax_pay']+mainList[i]['swm_pay'];
                                                     List taxData =
                                                         mainList[i]['taxData'];
                                                     List swmData =
@@ -876,11 +876,11 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-      UIHelper.titleTextStyle('demand'.tr().toString()+" : "+mainList[mainIndex]['total'].abs().toString(), c.grey_8, 10, true, false),
-    UIHelper.titleTextStyle('advance'.tr().toString()+" : "+mainList[mainIndex]['tax_advance'].abs().toString(), c.grey_8, 10, true, false),
+      UIHelper.titleTextStyle('demand'.tr().toString()+" : "+mainList[mainIndex]['total'].toString(), c.grey_8, 10, true, false),
+    UIHelper.titleTextStyle('advance'.tr().toString()+" : "+mainList[mainIndex]['tax_advance'].toString(), c.grey_8, 10, true, false),
     ],),
         UIHelper.verticalSpaceSmall,
-        UIHelper.titleTextStyle('payable'.tr().toString()+" : "+mainList[mainIndex]['tax_pay'].abs().toString(), c.grey_9, 11, true, false),
+        UIHelper.titleTextStyle('payable'.tr().toString()+" : "+mainList[mainIndex]['tax_pay'].toString(), c.grey_9, 11, true, false),
         UIHelper.verticalSpaceTiny,
       ],),
     );
@@ -891,11 +891,11 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-      UIHelper.titleTextStyle('demand'.tr().toString()+" : "+mainList[mainIndex]['swm_total'].abs().toString(), c.grey_8, 10, true, false),
-    UIHelper.titleTextStyle('advance'.tr().toString()+" : "+mainList[mainIndex]['swm_advance'].abs().toString(), c.grey_8, 10, true, false),
+      UIHelper.titleTextStyle('demand'.tr().toString()+" : "+mainList[mainIndex]['swm_total'].toString(), c.grey_8, 10, true, false),
+    UIHelper.titleTextStyle('advance'.tr().toString()+" : "+mainList[mainIndex]['swm_advance'].toString(), c.grey_8, 10, true, false),
     ],),
         UIHelper.verticalSpaceSmall,
-        UIHelper.titleTextStyle('payable'.tr().toString()+" : "+mainList[mainIndex]['swm_pay'].abs().toString(), c.grey_9, 11, true, false),
+        UIHelper.titleTextStyle('payable'.tr().toString()+" : "+mainList[mainIndex]['swm_pay'].toString(), c.grey_9, 11, true, false),
         UIHelper.verticalSpaceTiny,
       ],),
     );

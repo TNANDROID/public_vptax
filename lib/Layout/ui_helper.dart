@@ -38,7 +38,7 @@ class UIHelper {
       style: TextStyle(
           color: clr,
           fontSize: fntsize,
-          decoration: TextDecoration.none,
+          decoration:  title=="swmUserCharges".tr().toString()? TextDecoration.underline:TextDecoration.none,
           fontWeight: isBold ? FontWeight.bold : FontWeight.normal),
       textAlign: isCenterAliignment ? TextAlign.center : title.contains("\u{20B9}")?TextAlign.right:TextAlign.left,
     );
