@@ -1,22 +1,21 @@
-import 'dart:ffi';
+// ignore_for_file: must_be_immutable, use_key_in_widget_constructors, library_private_types_in_public_api, prefer_interpolation_to_compose_strings, prefer_const_constructors, sized_box_for_whitespace
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
-
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
+import 'package:responsive_grid_list/responsive_grid_list.dart';
 import 'package:stacked/stacked.dart';
-import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
-
 import '../../Layout/ui_helper.dart';
 import '../../Model/startup_model.dart';
 
 class TaxPayDetailsView extends StatefulWidget {
-  final mainList;
-  final selectedTaxTypeData;
-  TaxPayDetailsView({Key? key, this.mainList, this.selectedTaxTypeData});
+  List mainList;
+  dynamic selectedTaxTypeData;
+  TaxPayDetailsView(
+      {Key? key, required this.mainList, this.selectedTaxTypeData});
 
   @override
   _TaxPayDetailsViewState createState() => _TaxPayDetailsViewState();
@@ -30,12 +29,14 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
 
   String selectedLang = "";
   List mainDataList = [];
+  List isShowFlag = [];
 
+  @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 400),
     );
 
     // Create a curved animation with Curves.bounceOut
@@ -73,13 +74,15 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
     super.dispose();
   }
 
-  Widget demandCalculationWidget(String title, String value) {
+  Widget demandCalculationWidget(String title, String value, bool isBoold) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        Expanded(
+            child: UIHelper.titleTextStyle(
+                title.tr().toString() + " : ", c.grey_8, 10, isBoold, false)),
         UIHelper.titleTextStyle(
-            title.tr().toString() + " : ", c.grey_8, 10, true, false),
-        UIHelper.titleTextStyle("\u{20B9} " + value, c.grey_9, 11, true, false),
+            "\u{20B9} " + value, c.grey_9, 11, isBoold, false),
       ],
     );
   }
@@ -100,13 +103,14 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
                 Align(
                   alignment: AlignmentDirectional.center,
                   child: Container(
-                    transform: Matrix4.translationValues(-30.0, 0.0, 0.0),
-                    alignment: Alignment.center,
-                    child: Text(
-                      'tax_details'.tr().toString(),
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ),
+                      transform: Matrix4.translationValues(-30.0, 0.0, 0.0),
+                      alignment: Alignment.center,
+                      child: UIHelper.titleTextStyle(
+                          'tax_details'.tr().toString(),
+                          c.white,
+                          15,
+                          true,
+                          false)),
                 ),
               ],
             ),
@@ -146,338 +150,188 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
                                 }
                               }
 
-                              return Container(
-                                margin: EdgeInsets.all(10),
-                                decoration:
-                                    UIHelper.roundedBorderWithColorWithShadow(
-                                        10,
-                                        index % 2 == 0
-                                            ? c.white
-                                            : c.need_improvement2,
-                                        index % 2 == 0
-                                            ? c.white
-                                            : c.need_improvement2,
-                                        borderWidth: 1,
-                                        borderColor: index % 2 == 0
-                                            ? c.need_improvement2
-                                            : c.grey_3),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                        width: Screen.width(context),
-                                        height: 40,
-                                        decoration:
-                                            UIHelper.roundedBorderWithColor(
-                                                10, 10, 0, 0, Colors.blue),
-                                        child: Center(
-                                          child: UIHelper.titleTextStyle(
-                                              selectedLang == "en"
-                                                  ? widget.selectedTaxTypeData[
-                                                      "taxtypedesc_en"]
-                                                  : widget.selectedTaxTypeData[
-                                                      "taxtypedesc_ta"],
-                                              c.white,
-                                              14,
-                                              true,
-                                              true),
-                                        )),
-                                    Row(
+                              return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      if (isShowFlag.contains(index)) {
+                                        isShowFlag.remove(index);
+                                      } else {
+                                        isShowFlag.add(index);
+                                      }
+                                    });
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.all(10),
+                                    decoration: UIHelper
+                                        .roundedBorderWithColorWithShadow(
+                                            10,
+                                            index % 2 == 0
+                                                ? c.white
+                                                : c.need_improvement2,
+                                            index % 2 == 0
+                                                ? c.white
+                                                : c.need_improvement2,
+                                            borderWidth: 1,
+                                            borderColor: index % 2 == 0
+                                                ? c.need_improvement2
+                                                : c.grey_3),
+                                    child: Column(
                                       children: [
+                                        Container(
+                                            width: Screen.width(context),
+                                            height: 40,
+                                            decoration:
+                                                UIHelper.roundedBorderWithColor(
+                                                    10, 10, 0, 0, Colors.blue),
+                                            child: Center(
+                                              child: UIHelper.titleTextStyle(
+                                                  selectedLang == "en"
+                                                      ? widget.selectedTaxTypeData[
+                                                          "taxtypedesc_en"]
+                                                      : widget.selectedTaxTypeData[
+                                                          "taxtypedesc_ta"],
+                                                  c.white,
+                                                  14,
+                                                  true,
+                                                  true),
+                                            )),
                                         taxWiseReturnDataWidget(index),
                                         Visibility(
                                             visible: mainDataList[index]
                                                     ['total'] >
                                                 0,
-                                            child: Container(
-                                                padding: EdgeInsets.only(
-                                                    top: 10,
-                                                    bottom: 10,
-                                                    left: 10,
-                                                    right: 10),
-                                                child: Column(
-                                                  children: [
-                                                    Container(
-                                                        width: Screen.width(
-                                                                context) /
-                                                            2,
-                                                        height: selectedTaxonly
-                                                                        .length *
-                                                                    40 >=
-                                                                200
-                                                            ? 203
-                                                            : selectedTaxonly
-                                                                        .length *
-                                                                    45 +
-                                                                3,
-                                                        child: ListView.builder(
-                                                          // physics:
-                                                          //     NeverScrollableScrollPhysics(),
-                                                          itemCount:
+                                            child: Column(children: [
+                                              Container(
+                                                  height: selectedTaxonly
+                                                              .length <
+                                                          3
+                                                      ? 50
+                                                      : selectedTaxonly.length >
+                                                                  3 ||
                                                               selectedTaxonly
-                                                                  .length,
-                                                          itemBuilder: (context,
-                                                              rowIndex) {
-                                                            return Column(
-                                                                children: [
-                                                                  ClipRRect(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              5.0),
-                                                                      child: Container(
-                                                                          decoration: UIHelper.leftBorderContainer(c.green_new, index % 2 == 0 ? c.grey_3 : c.grey_4),
-                                                                          height: 40,
-                                                                          child: Row(
-                                                                            children: [
-                                                                              Expanded(child: Container(child: Center(child: UIHelper.titleTextStyle(selectedTaxonly[rowIndex]['fin_year'] + "\n" + selectedTaxonly[rowIndex]['year'], c.grey_8, 10, false, true)))),
-                                                                              Expanded(
-                                                                                child: Container(padding: EdgeInsets.all(8.0), child: Center(child: UIHelper.titleTextStyle("\u{20B9} " + selectedTaxonly[rowIndex]['Amount'].toString(), c.black, 12, false, false))),
-                                                                              ),
-                                                                            ],
-                                                                          ))),
-                                                                  UIHelper
-                                                                      .verticalSpaceTiny
-                                                                ]);
-                                                          },
-                                                        )),
-                                                  ],
-                                                )))
-                                      ],
-                                    ),
-                                    Visibility(
-                                        visible:
-                                            mainDataList[index]['total'] > 0,
-                                        child: Container(
-                                            padding: EdgeInsets.fromLTRB(
-                                                20, 0, 20, 20),
-                                            child: Column(
-                                              children: [
-                                                demandCalculationWidget(
-                                                    'demand_selected',
-                                                    mainDataList[index]['total']
-                                                        .toString()),
-                                                UIHelper.verticalSpaceSmall,
-                                                demandCalculationWidget(
-                                                    'advance_amount',
-                                                    mainDataList[index]
-                                                            ['tax_advance']
-                                                        .toString()),
-                                                UIHelper.verticalSpaceSmall,
-                                                demandCalculationWidget(
-                                                    'total_amount_to_pay',
-                                                    mainDataList[index]
-                                                            ['tax_pay']
-                                                        .toString()),
-                                              ],
-                                            ))),
-                                    Visibility(
-                                        visible: mainDataList[index]
-                                                ['swm_total'] >
-                                            0,
-                                        child: Container(
-                                            padding: EdgeInsets.only(
-                                                top: 15,
-                                                bottom: 10,
-                                                left: 10,
-                                                right: 10),
-                                            child: Column(
-                                              children: [
-                                                UIHelper.titleTextStyle(
-                                                    'swm_charges'
-                                                        .tr()
-                                                        .toString(),
-                                                    c.grey_8,
-                                                    10,
-                                                    true,
-                                                    true),
-                                                UIHelper.verticalSpaceSmall,
-                                                Container(
-                                                    margin:
-                                                        EdgeInsets.only(top: 5),
-                                                    height:
-                                                        selectedSWMonly.length *
-                                                                30 +
-                                                            0.02,
-                                                    child: ListView.builder(
-                                                      physics:
-                                                          NeverScrollableScrollPhysics(),
-                                                      itemCount: selectedSWMonly
-                                                          .length,
-                                                      itemBuilder:
-                                                          (context, rowIndex) {
-                                                        return Container(
-                                                            height: 30,
-                                                            child: Row(
-                                                              children: [
-                                                                Expanded(
-                                                                    child: Container(
-                                                                        padding:
-                                                                            EdgeInsets.all(
-                                                                                8.0),
+                                                                      .length <
+                                                                  5
+                                                          ? 100
+                                                          : 150,
+                                                  child: ResponsiveGridList(
+                                                      listViewBuilderOptions:
+                                                          ListViewBuilderOptions(
+                                                              physics:
+                                                                  NeverScrollableScrollPhysics()),
+                                                      horizontalGridMargin: 20,
+                                                      verticalGridMargin: 0,
+                                                      minItemWidth:
+                                                          Screen.width(
+                                                                  context) /
+                                                              3,
+                                                      children: List.generate(
+                                                        selectedTaxonly.length,
+                                                        (index) => ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5.0),
+                                                            child: Container(
+                                                                decoration: UIHelper
+                                                                    .leftBorderContainer(
+                                                                        c.green_new,
+                                                                        c.grey_4),
+                                                                height: 40,
+                                                                child: Row(
+                                                                  children: [
+                                                                    Expanded(
                                                                         child: Center(
                                                                             child: UIHelper.titleTextStyle(
-                                                                                selectedSWMonly[rowIndex]['fin_year'],
+                                                                                selectedTaxonly[index]['fin_year'] + "\n" + selectedTaxonly[index]['year'],
                                                                                 c.grey_8,
-                                                                                12,
+                                                                                10,
                                                                                 false,
-                                                                                true)))),
-                                                                Expanded(
-                                                                  child: Container(
-                                                                      padding:
-                                                                          EdgeInsets.all(
+                                                                                true))),
+                                                                    Expanded(
+                                                                      child: Container(
+                                                                          padding: EdgeInsets.all(
                                                                               8.0),
-                                                                      child: Center(
-                                                                          child: UIHelper.titleTextStyle(
-                                                                              "\u{20B9} " + selectedSWMonly[rowIndex]['Amount'].toString(),
-                                                                              c.black,
-                                                                              13,
-                                                                              false,
-                                                                              false))),
-                                                                ),
+                                                                          child:
+                                                                              Center(child: UIHelper.titleTextStyle("\u{20B9} " + selectedTaxonly[index]['Amount'].toString(), c.black, 12, false, false))),
+                                                                    ),
+                                                                  ],
+                                                                ))),
+                                                      ))),
+                                              UIHelper.verticalSpaceSmall,
+                                              // isShowFlag.contains(index)
+                                              //     ?
+                                              Container(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      20, 0, 20, 20),
+                                                  child: Column(
+                                                    children: [
+                                                      demandCalculationWidget(
+                                                          'demand_selected',
+                                                          mainDataList[index]
+                                                                  ['total']
+                                                              .toString(),
+                                                          false),
+                                                      UIHelper
+                                                          .verticalSpaceSmall,
+                                                      demandCalculationWidget(
+                                                          'advance_amount',
+                                                          mainDataList[index][
+                                                                  'tax_advance']
+                                                              .toString(),
+                                                          false),
+                                                      UIHelper
+                                                          .verticalSpaceSmall,
+                                                      mainDataList[index][
+                                                                  'swm_total'] >
+                                                              0
+                                                          ? Column(
+                                                              children: [
+                                                                demandCalculationWidget(
+                                                                    'swm_charges',
+                                                                    mainDataList[index]
+                                                                            [
+                                                                            'swm_total']
+                                                                        .toString(),
+                                                                    false),
+                                                                UIHelper
+                                                                    .verticalSpaceSmall,
+                                                                demandCalculationWidget(
+                                                                    'swm_advance_charges',
+                                                                    mainDataList[index]
+                                                                            [
+                                                                            'swm_advance']
+                                                                        .toString(),
+                                                                    false),
+                                                                UIHelper
+                                                                    .verticalSpaceSmall,
                                                               ],
-                                                            ));
-                                                      },
-                                                    )),
-                                                UIHelper.tinyLinewidget(),
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                      flex: 4,
-                                                      child: Container(
-                                                          alignment: Alignment
-                                                              .centerRight,
-                                                          child: Text(
-                                                            "demand_selected"
-                                                                .tr()
-                                                                .toString(),
-                                                            style: TextStyle(
-                                                                color:
-                                                                    c.grey_10,
-                                                                fontSize: 11,
-                                                                decoration:
-                                                                    TextDecoration
-                                                                        .none,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .normal),
-                                                            textAlign:
-                                                                TextAlign.right,
-                                                          )),
-                                                    ),
-                                                    Expanded(
-                                                      flex: 2,
-                                                      child: Container(
-                                                          margin:
-                                                              EdgeInsets.all(5),
-                                                          child: UIHelper.titleTextStyle(
-                                                              "\u{20B9} " +
-                                                                  mainDataList[
-                                                                              index]
-                                                                          [
-                                                                          'swm_total']
-                                                                      .toString(),
-                                                              c.grey_9,
-                                                              12,
-                                                              true,
-                                                              false)),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                      flex: 4,
-                                                      child: Container(
-                                                          alignment: Alignment
-                                                              .centerRight,
-                                                          child: Text(
-                                                            "advance_amount"
-                                                                .tr()
-                                                                .toString(),
-                                                            style: TextStyle(
-                                                                color:
-                                                                    c.grey_10,
-                                                                fontSize: 11,
-                                                                decoration:
-                                                                    TextDecoration
-                                                                        .none,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .normal),
-                                                            textAlign:
-                                                                TextAlign.right,
-                                                          )),
-                                                    ),
-                                                    Expanded(
-                                                      flex: 2,
-                                                      child: Container(
-                                                          margin:
-                                                              EdgeInsets.all(5),
-                                                          child: UIHelper.titleTextStyle(
-                                                              "\u{20B9} " +
-                                                                  mainDataList[
-                                                                              index]
-                                                                          [
-                                                                          'swm_advance']
-                                                                      .toString(),
-                                                              c.grey_9,
-                                                              12,
-                                                              true,
-                                                              false)),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                      flex: 4,
-                                                      child: Container(
-                                                          alignment: Alignment
-                                                              .centerRight,
-                                                          child: Text(
-                                                            "amount_to_pay"
-                                                                .tr()
-                                                                .toString(),
-                                                            style: TextStyle(
-                                                                color:
-                                                                    c.grey_10,
-                                                                fontSize: 11,
-                                                                decoration:
-                                                                    TextDecoration
-                                                                        .none,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .normal),
-                                                            textAlign:
-                                                                TextAlign.right,
-                                                          )),
-                                                    ),
-                                                    Expanded(
-                                                      flex: 2,
-                                                      child: Container(
-                                                          margin:
-                                                              EdgeInsets.all(5),
-                                                          child: UIHelper.titleTextStyle(
-                                                              "\u{20B9} " +
-                                                                  getTotal(
-                                                                          mainDataList[index]
-                                                                              [
-                                                                              'swm_total'],
-                                                                          mainDataList[index]
-                                                                              [
-                                                                              'swm_advance'])
-                                                                      .toString(),
-                                                              c.grey_9,
-                                                              12,
-                                                              true,
-                                                              false)),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ))),
-                                  ],
-                                ),
-                              );
+                                                            )
+                                                          : SizedBox(),
+                                                      demandCalculationWidget(
+                                                          'total_amount_to_pay',
+                                                          mainDataList[index]
+                                                                  ['tax_pay']
+                                                              .toString(),
+                                                          true),
+                                                    ],
+                                                  ))
+                                              // : Container(
+                                              //     alignment:
+                                              //         Alignment.topRight,
+                                              //     margin:
+                                              //         EdgeInsets.fromLTRB(
+                                              //             10, 0, 10, 0),
+                                              //     child: Icon(
+                                              //       Icons
+                                              //           .expand_more_outlined,
+                                              //       color: c.grey_7,
+                                              //       size: 20,
+                                              //     ),
+                                              //   )
+                                            ])),
+                                      ],
+                                    ),
+                                  ));
                             },
                           ),
                         )),
@@ -548,61 +402,65 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
   }
 
   Widget taxWiseReturnDataWidget(int mainIndex) {
-    return Expanded(
-        child: Column(
-      children: [
-        Container(
-            padding: EdgeInsets.all(5),
-            decoration:
-                UIHelper.roundedBorderWithColorWithShadow(5, c.white, c.white),
-            child: Image.asset(
-              widget.selectedTaxTypeData["img_path"].toString(),
-              fit: BoxFit.contain,
-              height: 50,
-              width: 50,
-            )),
-        UIHelper.verticalSpaceSmall,
-        widget.selectedTaxTypeData["taxtypeid"] == 1
-            ? UIHelper.titleTextStyle(
-                "Building Licence Number :\n" +
-                    mainDataList[mainIndex]['building_licence_number'],
-                c.grey_9,
-                12,
-                true,
-                true)
-            : widget.selectedTaxTypeData["taxtypeid"] == 2
+    return Container(
+        padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+        transform: Matrix4.translationValues(0.0, -20.0, 0.0),
+        child: Row(
+          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Container(
+                padding: EdgeInsets.all(5),
+                decoration: UIHelper.roundedBorderWithColorWithShadow(
+                    5, c.white, c.white),
+                child: Image.asset(
+                  widget.selectedTaxTypeData["img_path"].toString(),
+                  fit: BoxFit.contain,
+                  height: 40,
+                  width: 40,
+                )),
+            UIHelper.horizontalSpaceSmall,
+            widget.selectedTaxTypeData["taxtypeid"] == 1
                 ? UIHelper.titleTextStyle(
-                    "Water Connection Number :\n" +
-                        mainDataList[mainIndex]['assesment_no'],
+                    "Building Licence Number : " +
+                        mainDataList[mainIndex]['building_licence_number'],
                     c.grey_9,
                     12,
                     true,
                     true)
-                : widget.selectedTaxTypeData["taxtypeid"] == 3
+                : widget.selectedTaxTypeData["taxtypeid"] == 2
                     ? UIHelper.titleTextStyle(
-                        "Assesment Number :\n" +
+                        "Water Connection Number : " +
                             mainDataList[mainIndex]['assesment_no'],
                         c.grey_9,
                         12,
                         true,
                         true)
-                    : widget.selectedTaxTypeData["taxtypeid"] == 4
+                    : widget.selectedTaxTypeData["taxtypeid"] == 3
                         ? UIHelper.titleTextStyle(
-                            "Lease Number :\n" +
+                            "Assesment Number : " +
                                 mainDataList[mainIndex]['assesment_no'],
                             c.grey_9,
                             12,
                             true,
                             true)
-                        : UIHelper.titleTextStyle(
-                            "Traders Code :\n" +
-                                mainDataList[mainIndex]['assesment_no'],
-                            c.grey_9,
-                            12,
-                            true,
-                            true)
-      ],
-    ));
+                        : widget.selectedTaxTypeData["taxtypeid"] == 4
+                            ? UIHelper.titleTextStyle(
+                                "Lease Number : " +
+                                    mainDataList[mainIndex]['assesment_no'],
+                                c.grey_9,
+                                12,
+                                true,
+                                true)
+                            : UIHelper.titleTextStyle(
+                                "Traders Code : " +
+                                    mainDataList[mainIndex]['assesment_no'],
+                                c.grey_9,
+                                12,
+                                true,
+                                true)
+          ],
+        ));
   }
 
   double getTotal(double d1, double d2) {

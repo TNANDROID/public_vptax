@@ -225,7 +225,6 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         const Home(isLogin: "islogin"))),
-                            print("Sign in Tapped ")
                           },
                           child: Text(
                             'signUP'.tr().toString(),

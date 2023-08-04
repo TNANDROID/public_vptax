@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceService {
@@ -15,7 +17,6 @@ class PreferenceService {
   Future<String> getUserInfo(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String getStr = prefs.getString(key) ?? '';
-    print("getStr-----" + getStr);
     if (getStr != '') {
       return getStr;
     }
