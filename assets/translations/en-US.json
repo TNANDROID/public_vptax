@@ -98,6 +98,7 @@
   "payable": "Payable",
   "select_demand": "Select demand to pay",
   "new": "To file a new ",
-  "new2": ""
-
+  "new2": "",
+  "userPassKey" : "userPassKey",
+  "select_all_field": "Please fill all the details"
 }

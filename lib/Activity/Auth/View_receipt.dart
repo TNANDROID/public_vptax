@@ -1,17 +1,20 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:http/io_client.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
+import 'package:public_vptax/Resources/StringsKey.dart' as s;
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/utils.dart';
@@ -21,6 +24,7 @@ import 'package:stacked/stacked.dart';
 import '../../Layout/customgradientbutton.dart';
 import '../../Model/startup_model.dart';
 import '../../Resources/StringsKey.dart';
+import '../../Services/Apiservices.dart';
 import '../../Utils/ContentInfo.dart';
 
 class ViewReceipt extends StatefulWidget {
@@ -30,12 +34,11 @@ class ViewReceipt extends StatefulWidget {
 class _ViewReceiptState extends State<ViewReceipt> {
   @override
   Utils utils = Utils();
+  ApiServices apiServices = ApiServices();
   late StartUpViewModel model;
   late SharedPreferences prefs;
   var dbClient;
   List districtItems = [];
-  List blockItems = [];
-  List villageItems = [];
   String selectedDistrict = "";
   String selectedBlock = "";
   String selectedvillage = "";
@@ -44,24 +47,17 @@ class _ViewReceiptState extends State<ViewReceipt> {
   bool districtFlag=false;
   bool blockFlag=false;
   bool villageFlag=false;
-  bool districtError=false;
-  bool blockError=false;
-  bool villageError=false;
-  bool isLoadingD = false;
-  bool isLoadingB = false;
-  bool isLoadingV = false;
   bool listvisbility = false;
-  bool downloadflag=false;
-  bool isErrorVisible = true;
-  bool otpFlag = false;
   String finalOTP = '';
+  String userPassKey = "";
+  String userDecriptKey = "";
+  Uint8List? pdf;
   PreferenceService preferencesService = locator<PreferenceService>();
   final  TextEditingController assessmentController = TextEditingController();
   final  TextEditingController receiptController = TextEditingController();
   final  scrollController = ScrollController();
   TextEditingController mobileController = TextEditingController();
   OtpFieldController OTPcontroller = OtpFieldController();
-  final GlobalKey _listViewKey = GlobalKey();
   List<dynamic> taxType = [
     {"taxCode": "01", "taxname": 'propertyTax'.tr().toString()},
     {"taxCode": "02", "taxname": 'waterCharges'.tr().toString()},
@@ -166,23 +162,32 @@ class _ViewReceiptState extends State<ViewReceipt> {
           fontSize: 12, fontWeight: FontWeight.w400, color: c.grey_8),
       decoration: InputDecoration(
         contentPadding: EdgeInsets.only(left: 5),
-        constraints: BoxConstraints(
-            maxHeight: 35
+        suffixIcon: Icon(
+          Icons.arrow_drop_down,
+          color: c.grey_8,
         ),
-        hintText:inputHint,
-        hintStyle: TextStyle(fontSize: 11,),
+        constraints: BoxConstraints(maxHeight: 35),
+        hintText: inputHint,
+        hintStyle: TextStyle(
+          fontSize: 11,
+          color: c.red
+        ),
         filled: true,
         fillColor: c.need_improvement2,
         enabledBorder: OutlineInputBorder(
-          borderSide:BorderSide(color: c.need_improvement2, width: 10.0),
-          borderRadius:BorderRadius.circular(18),
+          borderSide: BorderSide(color: c.need_improvement2, width: 10.0),
+          borderRadius: BorderRadius.circular(18),
         ),
-        focusedBorder: UIHelper.getInputBorder(1, borderColor: c.dot_light_screen_lite),
+        focusedBorder:
+        UIHelper.getInputBorder(1, borderColor: c.dot_light_screen_lite),
         focusedErrorBorder: OutlineInputBorder(
           borderSide: BorderSide(width: 10.0),
-          borderRadius: BorderRadius.circular(20), // Increase the radius to adjust the height
+          borderRadius: BorderRadius.circular(
+              20), // Increase the radius to adjust the height
         ),
       ),
+      icon: Container(width: 0, height: 0),
+
       name: fieldName,
       initialValue: index == 0
           ? selectedTaxType
@@ -196,22 +201,19 @@ class _ViewReceiptState extends State<ViewReceipt> {
           selectedDistrict = "";
           selectedBlock = "";
           selectedvillage = "";
-          model.selectedBlockList.clear();
-          model.selectedVillageList.clear();
         } else if (index == 1) {
           selectedBlock = "";
           selectedvillage = "";
-          model.selectedVillageList.clear();
         } else if (index == 2) {
           selectedvillage = "";
         }
         setState(() {});
       },
-      iconSize: 28,
+      // iconSize: 28,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(
-            errorText: "")
+            errorText:inputHint)
       ]),
       items: dropList.map((item) => DropdownMenuItem(
         value: item[keyCode],
@@ -227,34 +229,20 @@ class _ViewReceiptState extends State<ViewReceipt> {
       ))
           .toList(),
       onChanged: (value) async {
-        if (index == 0) {
-          selectedTaxType = value.toString();
-          selectedDistrict="";
-          selectedBlock="";
-          selectedvillage="";
-          listvisbility=false;
-          assessmentController.text="";
-          receiptController.text="";
-        } else if (index == 1) {
+        if(index==0)
+          {
+            selectedTaxType=value.toString();
+            selectedDistrict = "";
+            selectedBlock = "";
+            selectedvillage = "";
+          }
+       else if (index == 1) {
           selectedDistrict = value.toString();
-          selectedBlock="";
-          selectedvillage="";
-          listvisbility=false;
-          assessmentController.text="";
-          receiptController.text="";
-          // await model.loadUIBlock(selectedDistrict);
+
         } else if (index == 2) {
           selectedBlock = value.toString();
-          selectedvillage="";
-          listvisbility=false;
-          assessmentController.text="";
-          receiptController.text="";
-          // await model.loadUIVillage(selectedDistrict, selectedBlock);
         } else if (index == 3) {
           selectedvillage = value.toString();
-          listvisbility=false;
-          assessmentController.text="";
-          receiptController.text="";
         }
         setState(() {});
       },
@@ -276,31 +264,22 @@ class _ViewReceiptState extends State<ViewReceipt> {
                 ),
               ),
             ),
-            /*bottomSheet: Visibility(
-            visible:true,
-            child: Container(
-            child: Text('Hello World'),
-          ),),*/
             body: SafeArea(
               top: true,
               child: ViewModelBuilder<StartUpViewModel>.reactive(
                   onModelReady: (model) async {},
                   builder: (context, model, child) {
                     return Container(
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: dropdown(context, model),
-                            ),
-                          ],
-                        ));
+                        child:dropdowncard(context, model),);
                   },
                   viewModelBuilder: () => StartUpViewModel()),
             )));
   }
-  Widget dropdown(BuildContext context,StartUpViewModel model) {
+  Widget dropdowncard(BuildContext context,StartUpViewModel model) {
     return SingleChildScrollView(
-      child:  Column(
+      controller: scrollController,
+      scrollDirection: Axis.vertical,
+      child: Column(
           children: [
             Container(
               transform: Matrix4.translationValues(0.0,-50.0,0.0),
@@ -410,17 +389,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
                             Expanded(
                               flex: 2,
                               child:addInputDropdownField(3, 'select_VillagePanchayat'.tr().toString(),"villagePanchayat",model),
-                              /*child: Container(
-                              decoration:BoxDecoration(
-                                  color: c.grey_out,
-                                  border: Border.all(
-                                      width: villageError ? 1 : 0.1,
-                                      color: villageError ? c.red : c.grey_10),
-                                  borderRadius: BorderRadius.circular(10.0)),
-                             child: addInputDropdownField(
-                                  3, 'select_VillagePanchayat'.tr().toString(),
-                                  "villagePanchayat"),
-                            )*/
                             )
                           ],
                         ),
@@ -516,6 +484,9 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                           child: Padding(
                                             padding: EdgeInsets.only(top: 5,left: 3),
                                             child: TextFormField(
+                                              focusNode: FocusNode(
+                                                  canRequestFocus: false
+                                              ),
                                               controller: receiptController,
                                               inputFormatters: <TextInputFormatter>[
                                                 FilteringTextInputFormatter.digitsOnly,
@@ -532,15 +503,14 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                         ))
                                   ],
                                 ),
-
                               ])),])),
             Container(
                 transform: Matrix4.translationValues(5.0,-150.0,10.0),
                 child:InkWell(
                   onTap: ()
                   {
-                    scrollController.animateTo(-500,
-                        duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+                    /*scrollController.animateTo(0,
+                        duration: Duration(milliseconds: 500), curve: Curves.easeInOut);*/
                   },
                   child: TextButton(
                     child:Padding(
@@ -554,7 +524,13 @@ class _ViewReceiptState extends State<ViewReceipt> {
                         backgroundColor: c.colorPrimary
                     ),
                     onPressed: () {
-                      _handleSubmitButtonPressed();
+                      setState(() {
+                        Validate();
+                        scrollController.animateTo(400,
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.linearToEaseOut,
+                        );
+                      });
                     },
                   ),
                 )
@@ -567,15 +543,12 @@ class _ViewReceiptState extends State<ViewReceipt> {
   Widget listview()
   {
     return  Visibility(
-      visible:listvisbility,
+        visible:listvisbility,
       child: Container(
           transform: Matrix4.translationValues(-5.0,-80.0,10.0),
           padding: EdgeInsets.only(left: 10,right: 10),
           child: AnimationLimiter(
             child: ListView.builder(
-              key: _listViewKey,
-              controller: scrollController,
-              scrollDirection: Axis.vertical,
               physics: const AlwaysScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount:1,
@@ -709,7 +682,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                             InkWell(
                                               onTap: ()
                                               {
-                                                downloadflag=true;
+                                                _settingModalBottomSheet(context);
                                                 print("download_tamil".tr().toString()+"\n"+"tamil_1".tr().toString()+"\n");
                                               },
                                               child: Padding(padding: EdgeInsets.only(left: 25),
@@ -770,7 +743,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
             if((assessmentController.text!=""||receiptController.text!="")&&(assessmentController.text!=null||receiptController.text!=null))
             {
               listvisbility=true;
-              listview();
 
             }
             else
@@ -796,10 +768,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
       utils.showAlert(context, ContentType.warning, "select_taxtype".tr().toString(),
       );
     }
-  }
-  void _handleSubmitButtonPressed() {
-    Validate();
-    _listViewKey.currentContext?.findRenderObject()?.showOnScreen(duration: Duration(milliseconds: 300),curve: Curves.easeOut);
   }
   void _settingModalBottomSheet(context) {
     showModalBottomSheet(
@@ -855,6 +823,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                           if (await utils.isOnline()) {
                             Navigator.pop(context);
                             utils.showAlert(context, ContentType.success, "Receipt Downloaded Successfully");
+                            login(context);
                           } else {
                             utils.showAlert(
                               context,
@@ -885,4 +854,155 @@ class _ViewReceiptState extends State<ViewReceipt> {
         }
     );
   }
+  Future<dynamic> login(BuildContext context) async {
+    utils.showProgress(context, 1);
+    String random_char = utils.generateRandomString(15);
+    String ss = String.fromCharCodes(
+        Runes('\u0024'));
+    String username="9750895078";
+    String userpassword="Test123#"+ss;
+    var request = {
+      s.key_service_id: s.service_key_login,
+      s.key_user_login_key: random_char,
+      s.key_user_name: username.trim(),
+      s.key_user_pwd: utils.getSha256(random_char, userpassword.trim())
+    };
+    var response = await apiServices.loginServiceFunction(request);
+    // http.Response response = await http.post(url.login, body: request);
+    print("login_request>>" + request.toString());
+    if (response.statusCode == 200) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON
+      String data = response.body;
+      print("login_response>>" + data);
+      var decodedData = json.decode(data);
+      // var decodedData= await json.decode(json.encode(response.body));
+      var STATUS = decodedData[s.key_status];
+      var RESPONSE = decodedData[s.key_response];
+      var KEY;
+      var user_data;
+      String decryptedKey;
+      String userDataDecrypt;
+      if (STATUS.toString() == s.key_ok &&
+          RESPONSE.toString() == "LOGIN_SUCCESS") {
+        KEY = decodedData[s.key_key];
+        user_data = decodedData[s.key_user_data];
+
+        userPassKey = utils.textToMd5(userpassword);
+        decryptedKey = utils.decryption(KEY, userPassKey);
+        userDecriptKey = decryptedKey;
+        print("userDecriptKey: " + userDecriptKey);
+
+        userDataDecrypt = utils.decryption(user_data, userPassKey);
+        var userData = jsonDecode(userDataDecrypt);
+
+        preferencesService.setUserInfo(s.key_name, userData[s.key_name]);
+        preferencesService.setUserInfo(s.key_user_name, username.trim());
+        preferencesService.setUserInfo(s.key_user_pwd, userpassword.trim());
+        preferencesService.setUserInfo("userPassKey" ,decryptedKey);
+        get_PDF();
+      }
+      return decodedData;
+    } else {
+      utils.hideProgress(context);
+      // If the server did not return a 201 CREATED response,
+      // then throw an exception.
+      throw Exception('Failed');
+    }
+  }
+  Future<void> get_PDF() async {
+    utils.showProgress(context, 1);
+
+    Map jsonRequest = {
+      s.key_service_id: "get_pdf",
+      "work_id":"7815241" ,
+      "inspection_id": "162890",
+    };
+    Map encrypted_request = {
+      s.key_user_name: "9595959595",
+      s.key_data_content: jsonRequest,
+    };
+    print("getPDF_request_encrpt>>" + encrypted_request.toString());
+    var response = await apiServices.mainServiceFunction(encrypted_request);
+
+
+    utils.hideProgress(context);
+
+    String data = response.body;
+    var userData = jsonDecode(data);
+    var status = userData[s.key_status];
+    var response_value = userData[s.key_response];
+
+    if (status == s.key_ok && response_value == s.key_ok) {
+      var pdftoString = userData[s.key_json_data];
+      pdf = const Base64Codec().decode(pdftoString['pdf_string']);
+    }
+  }
+  // Future<void> getpdf() async {
+  //   String? key = key_user_passKey;
+  //   Map request = {
+  //     s.key_service_id: "get_pdf",
+  //     "work_id": "7815241",
+  //     "inspection_id": "162890"
+  //   };
+  //   Map jsonrequest = {
+  //     s.key_user_name: "9595959595",
+  //     s.key_data_content: request
+  //   };
+  //   String jsonString = jsonEncode(jsonrequest);
+  //
+  //   String headerSignature = utils.generateHmacSha256(jsonString, key!, true);
+  //
+  //   String header_token = utils.jwt_Encode(key, "9595959595"!, headerSignature);
+  //
+  //   HttpClient _client = HttpClient(context: await Utils().globalContext);
+  //   _client.badCertificateCallback =
+  //       (X509Certificate cert, String host, int port) => false;
+  //
+  //
+  //   Map<String, String> header = {
+  //     "Content-Type": "application/json",
+  //     "Authorization": "Bearer $header_token"
+  //   };
+  //
+  //   var response = await apiServices.mainServiceFunction(jsonrequest);
+  //   print("getPDF_request_encrpt>>" + jsonrequest.toString());
+  //
+  //   utils.hideProgress(context);
+  //
+  //
+  //   String data = response.body;
+  //
+  //   print("getPDF_response>>" + data);
+  //
+  //   String? authorizationHeader = response.headers['authorization'];
+  //
+  //   String? token = authorizationHeader?.split(' ')[1];
+  //
+  //   print("getPDF Authorization -  $token");
+  //
+  //   String responceSignature = utils.jwt_Decode(key, token!);
+  //
+  //   String responceData = utils.generateHmacSha256(data, key, false);
+  //
+  //   print("getPDF responceSignature -  $responceSignature");
+  //
+  //   print("getPDF responceData -  $responceData");
+  //
+  //   if (responceSignature == responceData) {
+  //     print("getPDF responceSignature - Token Verified");
+  //     var userData = jsonDecode(data);
+  //
+  //     var status = userData[s.key_status];
+  //     var response_value = userData[s.key_response];
+  //     print(response_value.statusCode);
+  //     if(response_value.statuscode==200)
+  //       {
+  //         if (status == s.key_ok && response_value == s.key_ok) {
+  //           var pdftoString = userData[s.key_json_data];
+  //           pdf = const Base64Codec().decode(pdftoString['pdf_string']);
+  //         }
+  //       }
+  //   }
+  // }
 }

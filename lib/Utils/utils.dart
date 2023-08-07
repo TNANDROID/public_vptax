@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:crypto/crypto.dart';
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui' as ui;
+import '../Model/startup_model.dart';
 import '../Resources/StringsKey.dart';
 import 'ContentInfo.dart';
 
@@ -612,4 +614,91 @@ class Utils {
   bool isNumberValid(value) {
     return RegExp(r'^[6789]\d{9}$').hasMatch(value);
   }
+  String generateHmacSha256(String message, String S_key, bool flag) {
+    String hashData = "";
+    var key = utf8.encode(S_key);
+    var jsonData = utf8.encode(message);
+
+    var hmacSha256 = Hmac(sha256, key);
+    var digest = hmacSha256.convert(jsonData);
+
+    hashData = digest.toString();
+
+    if (flag) {
+      String encodedhashData = base64.encode(utf8.encode(hashData));
+      return encodedhashData;
+    }
+
+    return hashData;
+  }
+  String jwt_Encode(String secretKey, String userName, String encodedhashData) {
+    String token = "";
+
+    DateTime currentTime = DateTime.now();
+
+    DateTime expirationTime = currentTime.add(const Duration(seconds: 20));
+
+    String exp = (expirationTime.millisecondsSinceEpoch / 1000).toString();
+
+    Map payload = {
+      "exp": exp,
+      "username": userName,
+      "signature": encodedhashData,
+    };
+
+    final jwt = JWT(payload, issuer: "tnrd.tn.gov.in");
+
+    token = jwt.sign(SecretKey(secretKey));
+
+    print('Signed token: Bearer $token\n');
+
+    return token;
+  }
+
+  String jwt_Decode(String secretKey, String jwtToken) {
+    String signature = "";
+
+    try {
+      // Verify a token
+      final jwt = JWT.verify(jwtToken, SecretKey(secretKey));
+
+      Map<String, dynamic> headerJWT = jwt.payload;
+
+      String head_sign = headerJWT['signature'];
+
+      List<int> bytes = base64.decode(head_sign);
+
+      signature = utf8.decode(bytes);
+    } on Exception catch (e) {
+      print(e);
+    }
+
+    return signature;
+  }
+  Future<void> apiCalls(BuildContext context) async {
+
+    if (await isOnline()) {
+      Utils().showProgress(context, 1);
+      try{
+        await StartUpViewModel().getOpenServiceList("District");
+        await StartUpViewModel().getOpenServiceList("Block");
+        await StartUpViewModel().getOpenServiceList("Village");
+        throw('000');
+      }
+      catch(error){
+        print('error (${error.toString()}) has been caught');
+        Utils().hideProgress(context);
+      }
+
+      Utils().hideProgress(context);
+    } else {
+      showAlert(
+        context,
+        ContentType.fail,
+        "noInternet".tr().toString(),
+      );
+    }
+
+  }
+
 }

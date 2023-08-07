@@ -71,4 +71,16 @@ class StartUpViewModel extends BaseViewModel {
     }
     setBusy(false);
   }
+  /*Future getMainService() async {
+    setBusy(true);
+    dynamic requestData = {};
+    dynamic  jsonrequest={};
+    requestData={key_service_id:"get_pdf","work_id":"7815241","inspection_id":"162890"};
+    print("service_request>>"+requestData.toString());
+    jsonrequest={key_user_name:"9595959595",key_data_content:requestData.toString()};
+    print("jsonservice_request>>"+jsonrequest.toString());
+    var response = await apiServices.mainServiceFunction(jsonrequest);
+    print("response>>"+response.toString());
+    setBusy(false);
+  }*/
 }
