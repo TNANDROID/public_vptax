@@ -10,7 +10,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -232,10 +231,10 @@ class Utils {
   Future<void> showLoading(BuildContext context, String message) async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button!
+      barrierDismissible: true, // user must tap button!
       builder: (BuildContext context) {
         return WillPopScope(
-          onWillPop: () async => false,
+          onWillPop: () async => true,
           child: Center(
             child: SizedBox(
               height: 100,
@@ -245,16 +244,16 @@ class Utils {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SpinKitFadingCircle(
-                        color: c.primary_text_color2,
-                        duration: const Duration(seconds: 1, milliseconds: 500),
-                        size: 50,
+                      Center(
+                        child: Image.asset(
+                          imagePath.spinner,
+                          height: 70,
+                        ),
                       ),
                       const SizedBox(
                         height: 15,
                       ),
-                      UIHelper.titleTextStyle(
-                          message, c.primary_text_color2, 12, true, false)
+                      UIHelper.titleTextStyle(message, c.card1, 12, true, false)
                     ],
                   ),
                 ],
@@ -279,7 +278,8 @@ class Utils {
   Future<void> showAlert(
       BuildContext context, ContentType contentType, String message,
       {String? title,
-      String? flag,
+      String? btnflag,
+      String? btnmsgflag,
       double? titleFontSize,
       double? messageFontSize}) async {
     return showDialog<void>(
@@ -408,17 +408,17 @@ class Utils {
                     child: Row(children: [
                       Visibility(
                         visible:
-                            contentType == ContentType.warning ? true : false,
+                            btnflag == '1' || btnflag == '2' ? true : false,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 5, horizontal: 10),
                           child: ElevatedButton(
                             onPressed: () {
-                              flag = flag ?? '';
-                              if (flag == "ok") {
-                                print("object");
+                              btnmsgflag = btnmsgflag ?? '';
+                              if (btnmsgflag == "ok") {
+                                Navigator.of(context).pop();
                               } else {
-                                performAction(flag ?? '');
+                                performAction(btnmsgflag ?? '');
                               }
                             },
                             style: ButtonStyle(
@@ -441,28 +441,32 @@ class Utils {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 5, horizontal: 10),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            print("object");
-                          },
-                          style: ButtonStyle(
-                            elevation: MaterialStateProperty.all(5.0),
-                            backgroundColor: MaterialStateProperty.all(c.white),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    20.0), // Set the desired border radius here
+                      Visibility(
+                        visible: btnflag == '2' ? true : false,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 10),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            style: ButtonStyle(
+                              elevation: MaterialStateProperty.all(5.0),
+                              backgroundColor:
+                                  MaterialStateProperty.all(c.white),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      20.0), // Set the desired border radius here
+                                ),
                               ),
                             ),
-                          ),
-                          child: Text(
-                            'Cancel',
-                            style: TextStyle(
-                                color: contentInfo.color, fontSize: 11),
+                            child: Text(
+                              'Cancel',
+                              style: TextStyle(
+                                  color: contentInfo.color, fontSize: 11),
+                            ),
                           ),
                         ),
                       ),
@@ -614,6 +618,7 @@ class Utils {
   bool isNumberValid(value) {
     return RegExp(r'^[6789]\d{9}$').hasMatch(value);
   }
+
   String generateHmacSha256(String message, String S_key, bool flag) {
     String hashData = "";
     var key = utf8.encode(S_key);
@@ -631,6 +636,7 @@ class Utils {
 
     return hashData;
   }
+
   String jwt_Encode(String secretKey, String userName, String encodedhashData) {
     String token = "";
 
@@ -642,7 +648,6 @@ class Utils {
 
     Map payload = {
       "exp": exp,
-      "username": userName,
       "signature": encodedhashData,
     };
 
@@ -675,17 +680,20 @@ class Utils {
 
     return signature;
   }
-  Future<void> apiCalls(BuildContext context) async {
 
+  Future<void> apiCalls(BuildContext context) async {
     if (await isOnline()) {
       Utils().showProgress(context, 1);
-      try{
+      try {
         await StartUpViewModel().getOpenServiceList("District");
         await StartUpViewModel().getOpenServiceList("Block");
         await StartUpViewModel().getOpenServiceList("Village");
-        throw('000');
-      }
-      catch(error){
+        await StartUpViewModel().getMainServiceList("TaxType");
+        await StartUpViewModel().getMainServiceList("FinYear");
+        await StartUpViewModel().getMainServiceList("PaymentTypeList",
+            dcode: "1", bcode: "1", pvcode: "1");
+        throw ('000');
+      } catch (error) {
         print('error (${error.toString()}) has been caught');
         Utils().hideProgress(context);
       }
@@ -698,7 +706,5 @@ class Utils {
         "noInternet".tr().toString(),
       );
     }
-
   }
-
 }
