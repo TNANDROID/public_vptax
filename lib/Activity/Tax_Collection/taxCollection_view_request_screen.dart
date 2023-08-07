@@ -576,10 +576,10 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
 
         }
       }else{
-        Utils().showAlert(context,ContentType.warning,'select_all_field'.tr().toString());
+        Utils().showAlert(context,ContentType.warning,'select_all_field'.tr().toString(),btnCount: "1");
       }
     }else{
-      Utils().showAlert(context,ContentType.warning,'select_taxtype'.tr().toString());
+      Utils().showAlert(context,ContentType.warning,'select_taxtype'.tr().toString(),btnCount: "1");
     }
 
   }

@@ -162,7 +162,7 @@ class Utils {
                                               BorderRadius.circular(15),
                                         ))),
                                     onPressed: () {
-                                      performAction('wifi');
+                                      performAction('wifi',context);
                                       Navigator.pop(context, false);
                                     },
                                     child: UIHelper.titleTextStyle(
@@ -278,8 +278,8 @@ class Utils {
   Future<void> showAlert(
       BuildContext context, ContentType contentType, String message,
       {String? title,
-      String? btnflag,
-      String? btnmsgflag,
+      String? btnCount,
+      String? btnmsg,
       double? titleFontSize,
       double? messageFontSize}) async {
     return showDialog<void>(
@@ -408,18 +408,13 @@ class Utils {
                     child: Row(children: [
                       Visibility(
                         visible:
-                            btnflag == '1' || btnflag == '2' ? true : false,
+                            btnCount == '1' || btnCount == '2' ? true : false,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 5, horizontal: 10),
                           child: ElevatedButton(
                             onPressed: () {
-                              btnmsgflag = btnmsgflag ?? '';
-                              if (btnmsgflag == "ok") {
-                                Navigator.of(context).pop();
-                              } else {
-                                performAction(btnmsgflag ?? '');
-                              }
+                              performAction(btnmsg ?? '',context);
                             },
                             style: ButtonStyle(
                               elevation: MaterialStateProperty.all(5.0),
@@ -442,7 +437,7 @@ class Utils {
                         ),
                       ),
                       Visibility(
-                        visible: btnflag == '2' ? true : false,
+                        visible: btnCount == '2' ? true : false,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 5, horizontal: 10),
@@ -481,9 +476,11 @@ class Utils {
     );
   }
 
-  performAction(String type) async {
+  performAction(String type, BuildContext context) async {
     const MethodChannel channel = MethodChannel('open_settings');
     switch (type) {
+      case 'ok':
+        Navigator.of(context).pop();
       case 'appSetting':
         openAppSettings();
 
@@ -692,7 +689,7 @@ class Utils {
         await StartUpViewModel().getMainServiceList("FinYear");
         await StartUpViewModel().getMainServiceList("PaymentTypeList",
             dcode: "1", bcode: "1", pvcode: "1");
-        throw ('000');
+        // throw ('000');
       } catch (error) {
         print('error (${error.toString()}) has been caught');
         Utils().hideProgress(context);
