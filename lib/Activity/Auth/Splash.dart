@@ -15,7 +15,7 @@ import '../../Resources/StringsKey.dart' as s;
 import '../../Services/Preferenceservices.dart';
 import '../../Services/locator.dart';
 import '../../Utils/ContentInfo.dart';
-import '../Tax_Collection/taxCollection_view.dart';
+import '../Tax_Collection/taxCollection_view_request_screen.dart';
 import 'Home.dart';
 
 class Splash extends StatefulWidget {

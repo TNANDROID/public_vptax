@@ -14,9 +14,11 @@ import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../Services/Preferenceservices.dart';
+import '../../Services/locator.dart';
 import '../../Utils/utils.dart';
 import '../Tax_Collection/taxCollection_details.dart';
-import '../Tax_Collection/taxCollection_view.dart';
+import '../Tax_Collection/taxCollection_view_request_screen.dart';
 import 'Download_receipt.dart';
 import 'Splash.dart';
 
@@ -35,6 +37,7 @@ class _HomeState extends State<Home> {
   int index_val = -1;
   int selected_index = -1;
   final _controller = ScrollController();
+  PreferenceService preferencesService = locator<PreferenceService>();
   bool flag=true;
 
   @override
@@ -64,57 +67,6 @@ class _HomeState extends State<Home> {
     prefs = await SharedPreferences.getInstance();
     index_val = -1;
     selected_index = -1;
-    List list = [
-      {
-        'taxtypeid': 1,
-        'taxtypedesc_en': 'House Tax',
-        'taxtypedesc_ta': 'வீட்டு வரி'
-      },
-      {
-        'taxtypeid': 2,
-        'taxtypedesc_en': 'Water Tax',
-        'taxtypedesc_ta': 'குடிநீர் கட்டணங்கள்'
-      },
-      {
-        'taxtypeid': 3,
-        'taxtypedesc_en': 'Professional Tax',
-        'taxtypedesc_ta': 'தொழில் வரி'
-      },
-      {
-        'taxtypeid': 4,
-        'taxtypedesc_en': 'Non Tax',
-        'taxtypedesc_ta': 'இதர வரவினங்கள்'
-      },
-      {
-        'taxtypeid': 5,
-        'taxtypedesc_en': 'Trade Licence',
-        'taxtypedesc_ta': 'வர்த்தக உரிமம்'
-      },
-    ];
-    taxTypeList.clear();
-    for (var item in list) {
-      switch (item['taxtypeid']) {
-        case 1:
-          item['img_path'] = imagePath.house;
-          break;
-        case 2:
-          item['img_path'] = imagePath.water;
-          break;
-        case 3:
-          item['img_path'] = imagePath.professional1;
-          break;
-        case 4:
-          item['img_path'] = imagePath.nontax1;
-          break;
-        case 5:
-          item['img_path'] = imagePath.trade;
-          break;
-        default:
-          item['img_path'] = imagePath.property;
-      }
-    }
-    taxTypeList.addAll(list);
-    print("tax>>" + taxTypeList.toString());
 
     List s_list = [
       {
@@ -145,6 +97,11 @@ class _HomeState extends State<Home> {
     ];
     servicesList.clear();
     servicesList.addAll(s_list);
+
+    await Utils().apiCalls(context);
+    taxTypeList.clear();
+    taxTypeList=preferencesService.taxTypeList;
+    print("tax>>" + taxTypeList.toString());
     setState(() {
       prefs.getString("lang") != null &&
           prefs.getString("lang") != "" &&
@@ -152,7 +109,6 @@ class _HomeState extends State<Home> {
           ? context.setLocale(Locale('en', 'US'))
           : context.setLocale(Locale('ta', 'IN'));
     });
-    await Utils().apiCalls(context);
   }
 
   @override

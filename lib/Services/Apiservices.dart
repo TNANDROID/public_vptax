@@ -23,7 +23,19 @@ class ApiServices {
   // String endPointURL = "http://10.163.19.137:8090/tnrd/project/webservices_forms";
 
  // live
-  String endPointURL = "https://tnrd.tn.gov.in/project/webservices_forms";
+ //  String endPointURL = "https://tnrd.tn.gov.in/project/webservices_forms";
+
+ // local
+  String mainURL = "http://10.163.19.158/vptax/project/webservices/vptax_services_online.php";
+  String masterURL = "http://10.163.19.158/tnrd/project/webservices_forms/master_services/master_services_v_1_6.php";
+  String openURL = "http://10.163.19.158/tnrd/project/webservices_forms/open_services/open_services.php";
+  String loginURL = "http://10.163.19.158/tnrd/project/webservices_forms/login_service/login_services.php";
+
+ /*// live
+  String mainURL = "https://vptax.tnrd.tn.gov.in/vptax/project/webservices/vptax_services_online.php";
+  String masterURL = "https://tnrd.tn.gov.in/project/webservices_forms/master_services/master_services_v_1_6.php";
+  String openURL = "https://tnrd.tn.gov.in/project/webservices_forms/open_services/open_services.php";
+  String loginURL = "https://tnrd.tn.gov.in/project/webservices_forms/login_service/login_services.php";*/
 
 
   ioclientCertificate() async {
@@ -44,7 +56,7 @@ class ApiServices {
     _client.badCertificateCallback =
         (X509Certificate cert, String host, int port) => false;
     var response = await _ioClient.post(
-        Uri.parse('$endPointURL/login_service/login_services.php'),
+        Uri.parse(loginURL),
         body: jsonRequest);
 
     return response;
@@ -65,7 +77,7 @@ class ApiServices {
           .toString()
     };
     var response = await _ioClient.post(
-        Uri.parse('$endPointURL/master_services/master_services_v_1_6.php'),
+        Uri.parse(masterURL),
         body: json.encode(encrpted_request));
 
     if (response.statusCode == 200) {
@@ -95,13 +107,7 @@ class ApiServices {
   /**********************************************/
 
   Future mainServiceFunction(dynamic jsonRequest) async {
-    String userName = "9595959595";
-    String key =preferencesService.getUserInfo(s.key_user_passKey).toString();
-    print("KEY_VALUE>>>>"+key);
-    String jsonString = jsonEncode(jsonRequest);
-    String headerSignature = utils.generateHmacSha256(jsonString, key!, true);
 
-    String header_token = utils.jwt_Encode(key, userName!, headerSignature);
     HttpClient _client = HttpClient(context: await Utils().globalContext);
     _client.badCertificateCallback =
         (X509Certificate cert, String host, int port) => false;
@@ -110,35 +116,36 @@ class ApiServices {
 
     Map<String, String> header = {
       "Content-Type": "application/json",
-      "Authorization": "Bearer $header_token"
     };
     print("Header>>>>>>"+header.toString());
     var response = await _ioClient.post(
-        Uri.parse('$endPointURL/work_inspection/inspection_services_v_1_9_jwt.php'),
+        Uri.parse(mainURL),
         body: json.encode(jsonRequest),headers: header);
 
-    print("Status_code>>>>>>"+response.statusCode.toString());
-    String data = response.body;
+    print("response>>>>>>"+response.toString());
+    List<dynamic> res_jsonArray = [];
+    if (response.statusCode == 200) {
+      var data = response.body;
+      var jsonData = jsonDecode(data);
+      var mainData = jsonData[key_main_data];
+      var status = mainData[key_status];
+      print("response>>>>>>"+mainData.toString());
 
-    print("getPDF_response>>" + data);
-    String? authorizationHeader = response.headers['authorization'];
-    print("authorizationHeader>>" + response.headers['authorization'].toString());
-    String? token = authorizationHeader?.split(' ')[1];
+      var response_value = mainData[key_response];
+      if (status == key_success && response_value == key_success) {
+        res_jsonArray = mainData[key_data];
+        print("response1>>>>>>"+res_jsonArray.toString());
 
-    print("getPDF Authorization -  $token");
+        if (res_jsonArray.isNotEmpty) {
+          print("response2>>>>>>"+res_jsonArray.toString());
 
-    String responceSignature = utils.jwt_Decode(key, token!);
-
-    String responceData = utils.generateHmacSha256(data, key, false);
-
-    print("getPDF responceSignature -  $responceSignature");
-
-    print("getPDF responceData -  $responceData");
-
-    if (responceSignature == responceData) {
-      print("getPDF responceSignature - Token Verified");
-      return response;
+          return res_jsonArray;
+        }
+      }
     }
+    print("response>>>>>>"+res_jsonArray.toString());
+
+    return res_jsonArray;
   }
   /**********************************************/
   /*********Open Service API Call********/
@@ -148,7 +155,7 @@ class ApiServices {
     IOClient _ioClient = await ioclientCertificate();
 
     var response = await _ioClient.post(
-        Uri.parse('$endPointURL/open_services/open_services.php'),
+        Uri.parse(openURL),
         body: json.encode(jsonRequest));
     if (response.statusCode == 200) {
       var data = response.body;

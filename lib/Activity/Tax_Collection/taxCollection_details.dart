@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:public_vptax/Activity/Tax_Collection/tax_pay_details.dart';
+import 'package:public_vptax/Activity/Tax_Collection/added_tax_pay_details.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Model/startup_model.dart';
@@ -15,6 +15,8 @@ import 'package:public_vptax/Services/locator.dart';
 import 'package:stacked/stacked.dart';
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 
+import '../../Resources/StringsKey.dart';
+
 class TaxCollectionDetailsView extends StatefulWidget {
   final selectedTaxTypeData;
   final isHome;
@@ -26,9 +28,12 @@ class TaxCollectionDetailsView extends StatefulWidget {
 }
 
 class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin  {
   late AnimationController _controller;
+  late AnimationController _controller2;
   late Animation<double> _animation;
+  late Animation<Offset> _offsetFloat;
+
   PreferenceService preferencesService = locator<PreferenceService>();
   String selectedLang = "";
   String selectTaxtype = "";
@@ -190,38 +195,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
     },
   ];
 
-  final List<Map<String, dynamic>> taxTypeList = [
-    {
-      'taxtypeid': 1,
-      'taxtypedesc_en': 'House Tax',
-      'taxtypedesc_ta': 'வீட்டு வரி',
-      'img_path': imagePath.house
-    },
-    {
-      'taxtypeid': 2,
-      'taxtypedesc_en': 'Water Tax',
-      'taxtypedesc_ta': 'குடிநீர் கட்டணங்கள்',
-      'img_path': imagePath.water
-    },
-    {
-      'taxtypeid': 3,
-      'taxtypedesc_en': 'Professional Tax',
-      'taxtypedesc_ta': 'தொழில் வரி',
-      'img_path': imagePath.professional1
-    },
-    {
-      'taxtypeid': 4,
-      'taxtypedesc_en': 'Non Tax',
-      'taxtypedesc_ta': 'இதர வரவினங்கள்',
-      'img_path': imagePath.nontax1
-    },
-    {
-      'taxtypeid': 5,
-      'taxtypedesc_en': 'Trade Licence',
-      'taxtypedesc_ta': 'வர்த்தக உரிமம்',
-      'img_path': imagePath.trade
-    },
-  ];
+  List taxTypeList = [];
 
   var selectedTaxTypeData;
 
@@ -235,6 +209,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
     // Create a curved animation with Curves.bounceOut
     _animation = CurvedAnimation(parent: _controller, curve: Curves.bounceOut);
 
+    taxTypeList= preferencesService.taxTypeList;
     if(widget.isHome){
       selectedTaxTypeData = taxTypeList[0];
     }else{
@@ -1057,11 +1032,11 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
             errorText: "")
       ]),
       items: taxTypeList.map((item) => DropdownMenuItem(
-        value: item['taxtypeid'].toString(),
+        value: item[key_taxtypeid].toString(),
         child: Text(
           selectedLang == "en"
-              ? item["taxtypedesc_en"].toString()
-              : item["taxtypedesc_ta"].toString(),
+              ? item[key_taxtypedesc_en].toString()
+              : item[key_taxtypedesc_ta].toString(),
           style: TextStyle(
               fontSize: 11.0,
               fontWeight: FontWeight.w400,

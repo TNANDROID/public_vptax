@@ -34,35 +34,11 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
   String selectedDistrict = "";
   String selectedBlock = "";
   String selectedVillage = "";
+  String selectedFinYear = "";
   int selectedTaxType = 0;
+  var selectedTaxTypeData;
   int selectedEntryType = 0;
-  List taxlist = [
-    {
-      'taxtypeid': 1,
-      'taxtypedesc_en': 'House Tax',
-      'taxtypedesc_ta': 'வீட்டு வரி'
-    },
-    {
-      'taxtypeid': 2,
-      'taxtypedesc_en': 'Water Tax',
-      'taxtypedesc_ta': 'குடிநீர் கட்டணங்கள்'
-    },
-    {
-      'taxtypeid': 3,
-      'taxtypedesc_en': 'Professional Tax',
-      'taxtypedesc_ta': 'தொழில் வரி'
-    },
-    {
-      'taxtypeid': 4,
-      'taxtypedesc_en': 'Non Tax',
-      'taxtypedesc_ta': 'இதர வரவினங்கள்'
-    },
-    {
-      'taxtypeid': 5,
-      'taxtypedesc_en': 'Trade Licence',
-      'taxtypedesc_ta': 'வர்த்தக உரிமம்'
-    },
-  ];
+  List taxlist = [];
 
   void initState() {
     super.initState();
@@ -71,28 +47,8 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
 
   Future<void> initialize() async {
     selectedLang = await preferencesService.getUserInfo("lang");
-
-    for (var item in taxlist) {
-      switch (item['taxtypeid']) {
-        case 1:
-          item['img_path'] = imagePath.house;
-          break;
-        case 2:
-          item['img_path'] = imagePath.water;
-          break;
-        case 3:
-          item['img_path'] = imagePath.professional1;
-          break;
-        case 4:
-          item['img_path'] = imagePath.nontax1;
-          break;
-        case 5:
-          item['img_path'] = imagePath.trade;
-          break;
-        default:
-          item['img_path'] = imagePath.property;
-      }
-    }
+    taxlist.clear();
+    taxlist = preferencesService.taxTypeList;
     setState(() {});
   }
 
@@ -121,20 +77,29 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
         contentPadding: EdgeInsets.symmetric(
             vertical: 8, horizontal: 12), // Optional: Adjust padding
       ),
-      validator: fieldType == key_mobileNumber
-          ? FormBuilderValidators.compose([
-              FormBuilderValidators.required(
-                  errorText: hintText + " " + 'isEmpty'.tr().toString()),
-              FormBuilderValidators.minLength(10,
-                  errorText: hintText + " " + 'isInvalid'.tr().toString()),
-              FormBuilderValidators.maxLength(10,
-                  errorText: hintText + " " + 'isInvalid'.tr().toString()),
-              FormBuilderValidators.numeric(),
-            ])
-          : FormBuilderValidators.compose([
-              FormBuilderValidators.required(
-                  errorText: hintText + " " + 'isEmpty'.tr().toString()),
-            ]),
+        validator: fieldType == key_mobileNumber
+            ? ((value) {
+          if (value == "" || value == null) {
+            return hintText + " " + 'isEmpty'.tr().toString();
+          }
+          if (!Utils().isNumberValid(value)) {
+            return hintText + " " + 'isInvalid'.tr().toString();
+          }
+          return null;
+        })
+        // FormBuilderValidators.compose([
+        //     FormBuilderValidators.required(
+        //         errorText: hintText + " " + 'isEmpty'.tr().toString()),
+        //     FormBuilderValidators.minLength(10,
+        //         errorText: hintText + " " + 'isInvalid'.tr().toString()),
+        //     FormBuilderValidators.maxLength(10,
+        //         errorText: hintText + " " + 'isInvalid'.tr().toString()),
+        //     FormBuilderValidators.numeric(),
+        //   ])
+            : FormBuilderValidators.compose([
+          FormBuilderValidators.required(
+              errorText: hintText + " " + 'isEmpty'.tr().toString()),
+        ]),
       inputFormatters: fieldType == key_mobileNumber
           ? [
               FilteringTextInputFormatter.digitsOnly,
@@ -170,6 +135,11 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
       keyCode = key_pvcode;
       titleText = key_pvname;
       titleTextTamil = key_pvname_ta;
+    } else if (index == 4) {
+      dropList = preferencesService.finYearList;
+      keyCode = key_fin_year;
+      titleText = key_fin_year;
+      titleTextTamil = key_fin_year;
     } else {
       print("End.....");
     }
@@ -209,6 +179,8 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
           model.selectedVillageList.clear();
         } else if (index == 3) {
           selectedVillage = "";
+        } else if (index == 4) {
+          selectedFinYear = "";
         } else {
           print("End of the Statement......");
         }
@@ -243,6 +215,8 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
           await model.loadUIVillage(selectedDistrict, selectedBlock);
         } else if (index == 3) {
           selectedVillage = value.toString();
+        } else if (index == 4) {
+          selectedFinYear = value.toString();
         } else {
           print("End of the Statement......");
         }
@@ -254,7 +228,8 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
   Widget radioButtonWidget(int index, String title) {
     return GestureDetector(
         onTap: () {
-          selectedEntryType = index;
+          selectedTaxType > 0?selectedEntryType = index:Utils().showAlert(context, ContentType.warning, 'select_taxtype'.tr().toString());
+
           setState(() {});
         },
         child: ClipPath(
@@ -288,11 +263,11 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
   Widget radioButtonListWidget() {
     return Column(
       children: [
-        radioButtonWidget(1, 'mobileNumber'.tr().toString()),
+        radioButtonWidget(1, 'via_mobileNumber'.tr().toString()),
         UIHelper.verticalSpaceSmall,
-        radioButtonWidget(2, 'computerRegisterNumber'.tr().toString()),
+        radioButtonWidget(2, 'via_e_taxNumber'.tr().toString()),
         UIHelper.verticalSpaceSmall,
-        radioButtonWidget(3, 'tryAnotherWay'.tr().toString()),
+        radioButtonWidget(3, 'via_assessNumber'.tr().toString()),
       ],
     );
   }
@@ -455,6 +430,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
     return GestureDetector(
         onTap: () {
           selectedTaxType = index;
+          selectedTaxTypeData=taxlist[index-1];
           setState(() {});
         },
         child: Container(
@@ -480,7 +456,9 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
             UIHelper.horizontalSpaceSmall,
             Flexible(
                 child: UIHelper.titleTextStyle(
-                    data['taxtypedesc_ta'], c.grey_9, 10, true, true)),
+                    selectedLang == "en"
+                        ? data[key_taxtypedesc_en]
+                        : data[key_taxtypedesc_ta], c.grey_9, 10, true, true)),
           ],),
         )
 
@@ -592,15 +570,16 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (_) => TaxCollectionDetailsView(
+                  builder: (_) => TaxCollectionDetailsView(selectedTaxTypeData:
+                  selectedTaxTypeData,isHome: false
                   )));
 
         }
       }else{
-        Utils().showAlert(context,ContentType.warning,'select_taxtype'.tr().toString());
+        Utils().showAlert(context,ContentType.warning,'select_all_field'.tr().toString());
       }
     }else{
-      Utils().showAlert(context,ContentType.warning,'select_all_field'.tr().toString());
+      Utils().showAlert(context,ContentType.warning,'select_taxtype'.tr().toString());
     }
 
   }

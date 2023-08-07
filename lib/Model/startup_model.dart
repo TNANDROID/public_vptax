@@ -7,6 +7,8 @@ import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/utils.dart';
 import 'package:stacked/stacked.dart';
+import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
+
 
 class StartUpViewModel extends BaseViewModel {
   PreferenceService preferencesService = locator<PreferenceService>();
@@ -18,13 +20,9 @@ class StartUpViewModel extends BaseViewModel {
   List<dynamic> villageList = [];
   List<dynamic> selectedBlockList = [];
   List<dynamic> selectedVillageList = [];
-  List<dynamic> taxType = [
-    {"taxCode": "01", "taxname": "Property Tax"},
-    {"taxCode": "02", "taxname": "Water Charges"},
-    {"taxCode": "03", "taxname": "Professional Tax"},
-    {"taxCode": "04", "taxname": "Non Tax"},
-    {"taxCode": "05", "taxname": "TradeLicence"},
-  ];
+  List<dynamic> finYearList = [];
+  List<dynamic> taxTypeList = [];
+  List<dynamic> PaymentTypeList = [];
 
 
   Future<void> loadUIBlock(String value) async {
@@ -51,11 +49,11 @@ class StartUpViewModel extends BaseViewModel {
     setBusy(true);
     dynamic requestData = {};
     if (type == "District") {
-      requestData = {key_service_id: "district_list_all"};
+      requestData = {key_service_id: service_key_district_list_all};
     } else if (type == "Block") {
-      requestData = {key_service_id: "block_list_all"};
+      requestData = {key_service_id: service_key_block_list_all};
     } else {
-      requestData = {key_service_id: "village_list_all"};
+      requestData = {key_service_id: service_key_village_list_all};
     }
     var response = await apiServices.openServiceFunction(requestData);
     print("response>>"+response.toString());
@@ -71,16 +69,54 @@ class StartUpViewModel extends BaseViewModel {
     }
     setBusy(false);
   }
-  /*Future getMainService() async {
+  Future getMainServiceList(String type,{String dcode = "1",String bcode= "1",String pvcode= "1"}) async {
     setBusy(true);
     dynamic requestData = {};
-    dynamic  jsonrequest={};
-    requestData={key_service_id:"get_pdf","work_id":"7815241","inspection_id":"162890"};
-    print("service_request>>"+requestData.toString());
-    jsonrequest={key_user_name:"9595959595",key_data_content:requestData.toString()};
-    print("jsonservice_request>>"+jsonrequest.toString());
-    var response = await apiServices.mainServiceFunction(jsonrequest);
-    print("response>>"+response.toString());
+    if (type == "TaxType") {
+      dynamic request = {key_service_id: service_key_TaxTypeList};
+      requestData = {key_data_content:request};
+    } else if (type == "FinYear") {
+      dynamic request = {key_service_id: service_key_FinYearList};
+      requestData = {key_data_content: request};
+    }else if (type == "PaymentTypeList") {
+      dynamic request = {key_service_id: service_key_PaymentTypeList,key_dcode:dcode, key_bcode:bcode, key_pvcode:pvcode};
+      requestData = {key_data_content: request};
+    }
+    print("requestData>>"+requestData.toString());
+
+    var response = await apiServices.mainServiceFunction(requestData);
+    if (type == "TaxType") {
+      taxTypeList = response;
+      for (var item in taxTypeList) {
+        switch (item['taxtypeid']) {
+          case 1:
+            item['img_path'] = imagePath.house;
+            break;
+          case 2:
+            item['img_path'] = imagePath.water;
+            break;
+          case 4:
+            item['img_path'] = imagePath.professional1;
+            break;
+          case 5:
+            item['img_path'] = imagePath.nontax1;
+            break;
+          case 6:
+            item['img_path'] = imagePath.trade;
+            break;
+          default:
+            item['img_path'] = imagePath.property;
+        }
+      }
+
+      preferencesService.taxTypeList = taxTypeList.toList();
+    } else if (type == "FinYear") {
+      finYearList = response;
+      preferencesService.finYearList = finYearList.toList();
+    }else if (type == "PaymentTypeList") {
+      PaymentTypeList = response;
+      preferencesService.PaymentTypeList = PaymentTypeList.toList();
+    }
     setBusy(false);
-  }*/
+  }
 }

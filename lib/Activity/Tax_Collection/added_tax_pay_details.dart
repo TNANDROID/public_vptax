@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
+import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
@@ -187,9 +188,9 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
                                               child: UIHelper.titleTextStyle(
                                                   selectedLang == "en"
                                                       ? widget.selectedTaxTypeData[
-                                                          "taxtypedesc_en"]
+                                                          key_taxtypedesc_en]
                                                       : widget.selectedTaxTypeData[
-                                                          "taxtypedesc_ta"],
+                                                          key_taxtypedesc_ta],
                                                   c.white,
                                                   14,
                                                   true,
