@@ -1,5 +1,3 @@
-// ignore_for_file: file_names, library_private_types_in_public_api, unrelated_type_equality_checks, use_build_context_synchronously
-
 import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -53,7 +51,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
         .animate(CurvedAnimation(
             parent: _rightToLeftAnimController, curve: Curves.easeInOut));
 
-    // Top-to-bottom slide animation
+// Top-to-bottom slide animation
     _topAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
@@ -78,14 +76,6 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
         : langItems[1][s.key_langCode];
 
     setState(() {});
-  }
-
-  Future<void> apiCalls() async {
-    Utils().showProgress(context, 1);
-    await StartUpViewModel().getOpenServiceList("District");
-    await StartUpViewModel().getOpenServiceList("Block");
-    await StartUpViewModel().getOpenServiceList("Village");
-    Utils().hideProgress(context);
   }
 
   void handleClick(String value) async {
@@ -124,7 +114,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              //  ****************** Choose Language Conatiner with fixed Height ****************** //
+//  ****************** Choose Language Conatiner with fixed Height ****************** //
 
               Container(
                 width: Screen.width(context),
@@ -165,7 +155,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
                 ),
               ),
 
-              //  ****************** App Name  ****************** //
+//  ****************** App Name  ****************** //
 
               SlideTransition(
                 position: _topAnimation,
@@ -190,7 +180,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
               ),
               UIHelper.verticalSpaceMedium,
 
-              //  ****************** Qucik Action Buttons  ****************** //
+//  ****************** Qucik Action Buttons  ****************** //
 
               SlideTransition(
                 position: _rightToLeftAnimation,
@@ -225,6 +215,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         const Home(isLogin: "islogin"))),
+                            print("Sign in Tapped ")
                           },
                           child: Text(
                             'signUP'.tr().toString(),
@@ -240,7 +231,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
                 ),
               ),
 
-              //  ****************** Image Container ****************** //
+//  ****************** Image Container ****************** //
 
               Align(
                 alignment: Alignment.bottomCenter,
@@ -256,7 +247,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
     );
   }
 
-  //  ****************** Qucik Action Buttons Common Wdget  ****************** //
+//  ****************** Qucik Action Buttons Common Wdget  ****************** //
 
   Widget actionButton(int flag, String btnText, String imgPath) {
     return CustomGradientButton(
@@ -275,7 +266,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
             ));
           } else if (flag == 2) {
             if (await utils.isOnline()) {
-              await apiCalls();
+              await Utils().apiCalls(context);
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => TaxCollectionView(),
               ));
@@ -286,7 +277,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
                 "noInternet".tr().toString(),
               );
             }
-            /* utils.showAlert(context, ContentType.warning, "message",
+/* utils.showAlert(context, ContentType.warning, "message",
                 flag: 'openAppSetting');*/
           }
         },

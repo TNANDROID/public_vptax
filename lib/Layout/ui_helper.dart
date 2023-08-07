@@ -147,8 +147,8 @@ class UIHelper {
         boxShadow: [
           BoxShadow(
             color: Colors.black26,
-            offset: Offset(0, 1),
-            blurRadius: 2.0,
+            offset: Offset(0, 2),
+            blurRadius: 3.0,
           )
         ]);
   }

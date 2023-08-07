@@ -145,7 +145,6 @@ class _HomeState extends State<Home> {
     ];
     servicesList.clear();
     servicesList.addAll(s_list);
-
     setState(() {
       prefs.getString("lang") != null &&
           prefs.getString("lang") != "" &&
@@ -153,6 +152,7 @@ class _HomeState extends State<Home> {
           ? context.setLocale(Locale('en', 'US'))
           : context.setLocale(Locale('ta', 'IN'));
     });
+    await Utils().apiCalls(context);
   }
 
   @override

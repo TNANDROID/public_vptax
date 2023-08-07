@@ -1,5 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:public_vptax/Activity/Tax_Collection/tax_pay_details.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
@@ -33,15 +35,15 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
   List isShowFlag = [];
   double main_totalAmount = 0.00;
   int main_count = 0;
-
+  ScrollController controller_scroll = ScrollController();
   List mainList = [
     {
       "name": "SaravanaKumar",
       "door_no": "54/A",
-      "street": "North street",
-      "village": "Vadamalappur",
-      "block": "Nathampannai",
-      "district": "PUDUKKOTTAI",
+      "street": "North streetstreet street",
+      "village": "Vadamalappur Vadamalappur",
+      "block": "Nathampannai Nathampannai",
+      "district": "PUDUKKOTTAI PUDUKKOTTAI",
       "building_licence_number": "1534",
       "assesment_no": "54",
       "tax_advance": 550.00,
@@ -217,7 +219,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
       'taxtypeid': 5,
       'taxtypedesc_en': 'Trade Licence',
       'taxtypedesc_ta': 'வர்த்தக உரிமம்',
-      'img_path': imagePath.property
+      'img_path': imagePath.trade
     },
   ];
 
@@ -296,37 +298,32 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
         body: ViewModelBuilder<StartUpViewModel>.reactive(
             builder: (context, model, child) {
               return Container(
-                color: c.white,
+                  color: c.need_improvement2,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Expanded(
-                          child: SingleChildScrollView(
-                              child: Column(children: [
-                    UIHelper.verticalSpaceSmall,
-                    Container(
-                      color: c.card1,
-                      child: Container(
-                          decoration: UIHelper.GradientContainer(
-                            0,0,50,0,[ c.white, c.white],
-                          ),
-                          child: addToPayWidget()),
-                    ),
-                    Container(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: mainList.length,
-                            itemBuilder: (context, mainIndex) {
-                              return Column(
-                                children: [
-                                  headerCardUIWidgetnew(mainIndex),
-                                  // UIHelper.verticalSpaceMedium,
-                                ],
-                              );
-                            }))
-                    ],)),),
+                        child: SingleChildScrollView(
+                            controller: controller_scroll,
+                            scrollDirection: Axis.vertical,
+                            child: Column(children: [
+                              UIHelper.verticalSpaceSmall,
+                              addToPayWidget(),
+                              Container(
+                                  child: ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      itemCount: mainList.length,
+                                      itemBuilder: (context, mainIndex) {
+                                        return Column(
+                                          children: [
+                                            headerCardUIWidget(mainIndex),
+                                            UIHelper.verticalSpaceMedium,
+                                          ],
+                                        );
+                                      }))
+                            ],)),),
                       payWidget()
 
 
@@ -337,183 +334,63 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
   }
 
   Widget headerCardUIWidget(int mainIndex) {
-    return Column(
+    return Stack(
       children: [
         Container(
+          margin: EdgeInsets.only(left: 15, right: 15),
+          height: 80,
+          width: 80,
+          decoration: UIHelper.roundedBorderWithColorWithShadow(
+              5, c.colorPrimary, c.colorPrimary,
+              borderWidth: 0),
+        ),
+        Container(
             width: Screen.width(context),
-            margin: EdgeInsets.only(left: 15, right: 15),
-            padding: EdgeInsets.all(15),
+            margin: EdgeInsets.only(left: 20,top: 5, right: 15),
+            padding: EdgeInsets.fromLTRB(15,15,10,15),
             decoration: UIHelper.roundedBorderWithColorWithShadow(
-                5, c.need_improvement1, c.need_improvement1,
+                5, c.white, c.white,
                 borderWidth: 0),
-            child: Column(children: [
-              InkWell(
-                onTap: (){
-                  setState(() {
-                                            if (isShowFlag.contains(mainIndex)) {
-                                              isShowFlag.remove(mainIndex);
-                                            } else {
-                                              isShowFlag.add(mainIndex);
-                                            }
-                                          });
-
-                },
-                child: Stack(
-                children: [
-                  UIHelper.unEvenContainer(
-                    15,
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: UIHelper.titleTextStyle(
-                                  mainList[mainIndex]['name'],
-                                  c.white,
-                                  14,
-                                  true,
-                                  false),
-                            ),
-                          ],
-                        ),
-                        UIHelper.verticalSpaceSmall,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Icon(
-                              Icons.location_on,
-                              color: c.white,
-                              size: 20,
-                            ),
-                            UIHelper.horizontalSpaceSmall,
-                            Expanded(
-                                child: UIHelper.titleTextStyle(
-                                    mainList[mainIndex]['door_no'] +
-                                        ", " +
-                                        mainList[mainIndex]['street'] +
-                                        ", " +
-                                        mainList[mainIndex]['village'] +
-                                        ",\n" +
-                                        mainList[mainIndex]['block'] +
-                                        ", " +
-                                        mainList[mainIndex]['district'],
-                                    c.white,
-                                    12,
-                                    true,
-                                    false)),
-                          ],
-                        ),
-                        UIHelper.verticalSpaceSmall,
-                        SizedBox(
-                          width: Screen.width(context) / 2,
-                          child: UIHelper.tinyLinewidget(borderColor: c.white),
-                        ),
-                        UIHelper.verticalSpaceSmall,
-                        taxWiseReturnDataWidget(mainIndex,c.white),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    top:
-                    5, // Adjust this value to control the distance from the bottom
-                    right: 1,
-                    child:
-                    // ClipRRect(
-                    //   borderRadius: BorderRadius.circular(50.0),
-                    //   child:
-                    Container(
-                        padding: EdgeInsets.all(5),
-                        decoration:
-                        UIHelper.roundedBorderWithColorWithShadow(
-                            5, c.white, c.grey_2),
-                        child: Image.asset(
-                          selectedTaxTypeData["img_path"].toString(),
-                          fit: BoxFit.contain,
-                          height: 35,
-                          width: 35,
-                        )),
-                    //),
-                  ),
-                  Positioned(
-                      bottom:
-                      5, // Adjust this value to control the distance from the bottom
-                      right: 1,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            if (isShowFlag.contains(mainIndex)) {
-                              isShowFlag.remove(mainIndex);
-                            } else {
-                              isShowFlag.add(mainIndex);
-                            }
-                          });
-                        },
-                        child: Container(
-                          alignment: Alignment.topLeft,
-                          margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          child: Icon(
-                            isShowFlag.contains(mainIndex)
-                                ? Icons.arrow_circle_up_rounded
-                                : Icons.arrow_circle_down_rounded,
-                            color: Colors.blue,
-                            size: 30,
-                          ),
-                        ),
-                      )),
-                ],
-              ),),
-              Visibility(
-                  visible: isShowFlag.contains(mainIndex),
-                  child: propertyTaxCollectionWidget(mainIndex)),
-            ])),
-      ],
-    );
-  }
-  Widget headerCardUIWidgetnew(int mainIndex) {
-    return Container(
-      color: mainIndex ==(mainList.length-1)?c.white:mainIndex%2==0? c.card2:c.card1,
-      padding: EdgeInsets.only(bottom:/*mainIndex ==(mainList.length-1)?10:0*/10 ),
-      child: Container(
-          width: Screen.width(context),
-          padding: EdgeInsets.all(15),
-          decoration: UIHelper.GradientContainer(
-            0,0,50,0, mainIndex%2==0?[ c.card1, c.card1]:[ c.card2, c.card2],
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
                 Container(
-                    width: 50,
-                    padding: EdgeInsets.all(5),
-                    decoration:
-                    UIHelper.roundedBorderWithColorWithShadow(
-                        5, c.need_improvement2, c.need_improvement2),
-                    child: Image.asset(
-                      selectedTaxTypeData["img_path"].toString(),
-                      fit: BoxFit.contain,
-                      height: 35,
-                      width: 35,
-                    )),
-                    UIHelper.horizontalSpaceSmall,
-                Container(
+                  width: Screen.width(context),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                    UIHelper.titleTextStyle(
-                      mainList[mainIndex]['name'],
-                        mainIndex%2==0? c.white:c.card1,
-                      12,
-                      true,
-                      false),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Image.asset(
+                            imagePath.user,
+                            color: c.grey_8,
+                            height: 15,
+                            width: 15,
+                          ),
+                          UIHelper.horizontalSpaceTiny,
+                          Container(
+                            width: Screen.width(context)/2,
+                            child: Flex(
+                              direction: Axis.horizontal,
+                              children: [
+                                Flexible(
+                                    child:                         UIHelper.titleTextStyle(
+                                        mainList[mainIndex]['name'],
+                                        c.grey_9,
+                                        12,
+                                        true,
+                                        false))
+                              ],
+
+                            ),
+                          ),
+                          UIHelper.horizontalSpaceSmall,
+                        ],
+                      ),
                       UIHelper.verticalSpaceSmall,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -521,281 +398,162 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                         children: [
                           Icon(
                             Icons.location_on,
-                            color:  mainIndex%2==0? c.white:c.card1,
+                            color: c.grey_8,
                             size: 15,
                           ),
                           UIHelper.horizontalSpaceTiny,
                           Container(
-                            width: Screen.width(context)/2,
-                            child: Flexible(
-                                child: UIHelper.titleTextStyle(
+                            width: MediaQuery.of(context).size.width*0.75,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                UIHelper.titleTextStyle(
                                     mainList[mainIndex]['door_no'] +
                                         ", " +
-                                        mainList[mainIndex]['street'] +
-                                        ", " +
-                                        mainList[mainIndex]['village'] +
-                                        ",\n" +
-                                        mainList[mainIndex]['block'] +
-                                        ", " +
-                                        mainList[mainIndex]['district'],
-                                    mainIndex%2==0? c.white:c.card1,
+                                        mainList[mainIndex]['street'],
+                                    c.grey_8,
                                     11,
                                     false,
-                                    false)),
+                                    false),
+                                UIHelper.titleTextStyle(
+                                    mainList[mainIndex]['village'] +
+                                        ", " +
+                                        mainList[mainIndex]['block'] ,
+                                    c.grey_8,
+                                    11,
+                                    false,
+                                    false),
+                                UIHelper.titleTextStyle(
+                                    mainList[mainIndex]['district'],
+                                    c.grey_8,
+                                    11,
+                                    false,
+                                    false)
+
+                              ],),
                           ),
                           UIHelper.horizontalSpaceSmall,
                         ],
                       ),
                       UIHelper.verticalSpaceSmall,
-                ],),)
+                    ],),),
+                UIHelper.verticalSpaceTiny,
+                Container(
+                    alignment: Alignment.centerLeft,
+                    child: taxWiseReturnDataWidget(mainIndex,c.grey_8)),
+                UIHelper.verticalSpaceTiny,
+                Container(
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width /2,
+                  padding: EdgeInsets.all(5),
+                  decoration:
+                  UIHelper.roundedBorderWithColorWithShadow(
+                      5, c.colorPrimary, c.colorAccentlight),
+                  child: InkWell(
+                    onTap: (){
+                      setState(() {
+                        if (isShowFlag.contains(mainIndex)) {
+                          isShowFlag.remove(mainIndex);
+                        } else {
+                          isShowFlag.add(mainIndex);
+                        }
+                      });
+                      double scrollOffset = mainIndex * 500; // Replace ITEM_HEIGHT with the height of each item
 
-              ]),
-              Container(
-                alignment: Alignment.center,
-                width: MediaQuery.of(context).size.width /2,
-                padding: EdgeInsets.all(5),
-                decoration:
-                UIHelper.roundedBorderWithColorWithShadow(
-                    5, c.need_improvement, c.need_improvement),
-                child: InkWell(
-                  onTap: (){
-                    setState(() {
-                      if (isShowFlag.contains(mainIndex)) {
-                        isShowFlag.remove(mainIndex);
-                      } else {
-                        isShowFlag.add(mainIndex);
-                      }
-                    });
+                      // Scroll to the top of the current item
+                      controller_scroll.animateTo(scrollOffset, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
 
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Flexible(
-                        child: UIHelper.titleTextStyle(
-                            'demand_details',
-                            c.white,
-                            10,
-                            true,
-                            true),
-                      ),
-                      Icon(
-                        isShowFlag.contains(mainIndex)
-                            ? Icons.arrow_circle_up_rounded
-                            : Icons.arrow_circle_down_rounded,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                    ],),
-                ),
-              ),
-              Visibility(
-                  visible: isShowFlag.contains(mainIndex),
-                  child: propertyTaxCollectionWidget(mainIndex))
-            ],
-          )),
-    );
-  }
-  Widget headerCardUIWidgetnew2(int mainIndex) {
-    return Container(
-        width: Screen.width(context),
-        margin: EdgeInsets.only(left: 15, right: 15),
-        // padding: EdgeInsets.all(15),
-        decoration: UIHelper.roundedBorderWithColorWithShadow(
-            5, c.white, c.white,
-            borderWidth: 2,borderColor: c.colorAccentlight),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Container(
-              padding: EdgeInsets.all(15),
-              decoration: UIHelper.GradientContainer(
-                  0,0,5,5,[ c.colorPrimary, c.colorAccentlight],
-                ),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        width: 50,
-                        padding: EdgeInsets.all(5),
-                        decoration:
-                        UIHelper.roundedBorderWithColorWithShadow(
-                            5, c.need_improvement2, c.need_improvement2),
-                        child: Image.asset(
-                          selectedTaxTypeData["img_path"].toString(),
-                          fit: BoxFit.contain,
-                          height: 35,
-                          width: 35,
-                        )),
-                    UIHelper.horizontalSpaceSmall,
-                    Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          UIHelper.titleTextStyle(
-                              mainList[mainIndex]['name'],
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          child: UIHelper.titleTextStyle(
+                              'demand_details',
                               c.white,
-                              12,
+                              10,
                               true,
-                              false),
-                          UIHelper.verticalSpaceSmall,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Icon(
-                                Icons.location_on,
-                                color: c.white,
-                                size: 15,
-                              ),
-                              UIHelper.horizontalSpaceTiny,
-                              Container(
-                                width: Screen.width(context)/2,
-                                child: Flexible(
-                                    child: UIHelper.titleTextStyle(
-                                        mainList[mainIndex]['door_no'] +
-                                            ", " +
-                                            mainList[mainIndex]['street'] +
-                                            ", " +
-                                            mainList[mainIndex]['village'] +
-                                            ",\n" +
-                                            mainList[mainIndex]['block'] +
-                                            ", " +
-                                            mainList[mainIndex]['district'],
-                                        c.white,
-                                        11,
-                                        true,
-                                        false)),
-                              ),
-                              UIHelper.horizontalSpaceSmall,
-                            ],
-                          ),
-                          UIHelper.verticalSpaceSmall,
-                        ],),)
-
-                  ]),
-            ),
-            /*SizedBox(
-              width: Screen.width(context),
-              child: UIHelper.tinyLinewidget(borderColor: c.grey_8),
-            ),*/
-            Container(
-                padding: EdgeInsets.all(15),
-                alignment: Alignment.centerLeft,
-                child: taxWiseReturnDataWidget(mainIndex,c.grey_8)),
-            Container(
-              alignment: Alignment.center,
-              width: MediaQuery.of(context).size.width /2,
-              margin: EdgeInsets.only(right: 15,bottom: 15),
-              padding: EdgeInsets.all(5),
-              decoration:
-              UIHelper.roundedBorderWithColorWithShadow(
-                  5, c.need_improvement, c.need_improvement),
-              child: InkWell(
-                onTap: (){
-                  setState(() {
-                    if (isShowFlag.contains(mainIndex)) {
-                      isShowFlag.remove(mainIndex);
-                    } else {
-                      isShowFlag.add(mainIndex);
-                    }
-                  });
-
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      child: UIHelper.titleTextStyle(
-                          'demand_details',
-                          c.white,
-                          10,
-                          true,
-                          true),
-                    ),
-                    Icon(
-                      isShowFlag.contains(mainIndex)
-                          ? Icons.arrow_circle_up_rounded
-                          : Icons.arrow_circle_down_rounded,
-                      color: Colors.white,
-                      size: 20,
-                    ),
-                  ],),
-              ),
-            ),
-            Visibility(
-                visible: isShowFlag.contains(mainIndex),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(8,0,8,8),
-                  child: propertyTaxCollectionWidget(mainIndex),
-                ))
-          ],
-        ));
+                              true),
+                        )
+                        ,
+                        Icon(
+                          isShowFlag.contains(mainIndex)
+                              ? Icons.arrow_circle_up_rounded
+                              : Icons.arrow_circle_down_rounded,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ],),
+                  ),
+                ),
+                Visibility(
+                    visible: isShowFlag.contains(mainIndex),
+                    child: propertyTaxCollectionWidget(mainIndex))
+              ],
+            ))
+      ],);
   }
   Widget taxWiseReturnDataWidget(int mainIndex, Color clr) {
     return selectedTaxTypeData["taxtypeid"] == 1
         ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              UIHelper.titleTextStyle(
-                  "Building Licence Number : " +
-                      mainList[mainIndex]['building_licence_number'],
-                  clr,
-                  12,
-                  true,
-                  true),
-              UIHelper.titleTextStyle(
-                  "Assesment Number : " + mainList[mainIndex]['assesment_no'],
-                  clr,
-                  12,
-                  true,
-                  true),
-            ],
-          )
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        UIHelper.titleTextStyle(
+            "Building Licence Number : " +
+                mainList[mainIndex]['building_licence_number'],
+            clr,
+            12,
+            false,
+            true),
+        UIHelper.titleTextStyle(
+            "Assesment Number : " + mainList[mainIndex]['assesment_no'],
+            clr,
+            12,
+            false,
+            true),
+      ],
+    )
         : selectedTaxTypeData["taxtypeid"] == 2
-            ? UIHelper.titleTextStyle(
-                "Water Connection Number : " +
-                    mainList[mainIndex]['assesment_no'],
+        ? UIHelper.titleTextStyle(
+        "Water Connection Number : " +
+            mainList[mainIndex]['assesment_no'],
         clr,
-                12,
-                true,
-                true)
-            : selectedTaxTypeData["taxtypeid"] == 3
-                ? UIHelper.titleTextStyle(
-                    "Assesment Number : " + mainList[mainIndex]['assesment_no'],
+        12,
+        false,
+        true)
+        : selectedTaxTypeData["taxtypeid"] == 3
+        ? UIHelper.titleTextStyle(
+        "Assesment Number : " + mainList[mainIndex]['assesment_no'],
         clr,
-                    12,
-                    true,
-                    true)
-                : selectedTaxTypeData["taxtypeid"] == 4
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          UIHelper.titleTextStyle(
-                              "Lease From Date : " + "05-03-2015",
-                              clr,
-                              12,
-                              true,
-                              true),
-                          UIHelper.titleTextStyle(
-                              "Lease To Date : " + "05-03-2018",
-                              clr,
-                              12,
-                              true,
-                              true),
-                        ],
-                      )
-                    : UIHelper.titleTextStyle(
-                        "Traders Code : " + mainList[mainIndex]['assesment_no'],
+        12,
+        false,
+        true)
+        : selectedTaxTypeData["taxtypeid"] == 4
+        ? Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        UIHelper.titleTextStyle(
+            "Lease From Date : " + "05-03-2015",
+            clr,
+            12,
+            false,
+            true),
+        UIHelper.titleTextStyle(
+            "Lease To Date : " + "05-03-2018",
+            clr,
+            12,
+            false,
+            true),
+      ],
+    )
+        : UIHelper.titleTextStyle(
+        "Traders Code : " + mainList[mainIndex]['assesment_no'],
         clr,
-                        12,
-                        true,
-                        true);
+        12,
+        false,
+        true);
   }
 
   Widget propertyTaxCollectionWidget(int mainIndex) {
@@ -806,15 +564,15 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
     int swmHeight = swmData.length * 30;
     return Container(
         margin: EdgeInsets.only(top: 15),
-        decoration: UIHelper.GradientContainer(
-            3,3,50,3,  mainIndex%2==0?[c.white, c.white]:[c.need_improvement1, c.need_improvement1],
-            ),
-        padding: EdgeInsets.all(5),
+        decoration: UIHelper.roundedBorderWithColor(
+            3,3,3,3, c.need_improvement2,
+            borderWidth: 1,borderColor: c.grey_6),
+        padding: EdgeInsets.all(0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-                margin: EdgeInsets.only(top: 5),
+                padding: EdgeInsets.only(top: 0),
                 height: dataWiseHeight + 0.02,
                 child: ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
@@ -851,7 +609,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                     child: Center(
                                         child: UIHelper.titleTextStyle(
                                             selectedTaxTypeData["taxtypeid"] ==
-                                                    2
+                                                2
                                                 ? taxData[rowIndex]['month']
                                                 : taxData[rowIndex]['year'],
                                             c.grey_8,
@@ -866,8 +624,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                       child: UIHelper.titleTextStyle(
                                           taxData[rowIndex]['Amount']
                                               .toString(),
-                                          c.black,
-                                          13,
+                                          c.grey_8,
+                                          12,
                                           false,
                                           true))),
                             ),
@@ -878,7 +636,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                   child: Center(
                                     child: Checkbox(
                                       side:
-                                          BorderSide(width: 1, color: c.grey_6),
+                                      BorderSide(width: 1, color: c.grey_6),
                                       value: taxData[rowIndex]['flag'],
                                       onChanged: (v) {
                                         if (rowIndex == 0 ||
@@ -887,8 +645,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                           if (taxData[rowIndex]['flag'] ==
                                               true) {
                                             for (int i = 0;
-                                                i < taxData.length;
-                                                i++) {
+                                            i < taxData.length;
+                                            i++) {
                                               if (i >= rowIndex) {
                                                 if(taxData[i]['flag'] == true){
                                                   taxData[i]['flag'] = false;
@@ -900,7 +658,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                                   mainList[mainIndex]['tax_pay'] =getTotal(mainList[mainIndex]['total'], mainList[mainIndex]['tax_advance']);
 
                                                 }
-                                                   }
+                                              }
                                             }
                                           } else {
                                             taxData[rowIndex]['flag'] = true;
@@ -917,25 +675,25 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                           main_totalAmount = 0.00;
 
                                           for (int i = 0;
-                                              i < mainList.length;
-                                              i++) {
+                                          i < mainList.length;
+                                          i++) {
                                             main_totalAmount =
                                                 main_totalAmount +
                                                     mainList[i]['tax_pay']+mainList[i]['swm_pay'];
                                             List taxData =
-                                                mainList[i]['taxData'];
+                                            mainList[i]['taxData'];
                                             List swmData =
-                                                mainList[i]['swmData'];
+                                            mainList[i]['swmData'];
                                             for (int i = 0;
-                                                i < taxData.length;
-                                                i++) {
+                                            i < taxData.length;
+                                            i++) {
                                               if (taxData[i]['flag'] == true) {
                                                 main_count = main_count + 1;
                                               }
                                             }
                                             for (int i = 0;
-                                                i < swmData.length;
-                                                i++) {
+                                            i < swmData.length;
+                                            i++) {
                                               if (swmData[i]['flag'] == true) {
                                                 main_count = main_count + 1;
                                               }
@@ -955,7 +713,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
             demandCalculationWidget(mainIndex),
             Visibility(
                 visible:
-                    swmData.length > 0 && selectedTaxTypeData["taxtypeid"] == 1,
+                swmData.length > 0 && selectedTaxTypeData["taxtypeid"] == 1,
                 child: Column(
                   children: [
                     UIHelper.verticalSpaceSmall,
@@ -993,7 +751,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                             child: Center(
                                                 child: UIHelper.titleTextStyle(
                                                     swmData[rowIndex]
-                                                        ['fin_year'],
+                                                    ['fin_year'],
                                                     c.grey_8,
                                                     12,
                                                     false,
@@ -1006,7 +764,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                               child: UIHelper.titleTextStyle(
                                                   swmData[rowIndex]['Amount']
                                                       .toString(),
-                                                  c.black,
+                                                  c.grey_8,
                                                   12,
                                                   false,
                                                   true))),
@@ -1023,36 +781,36 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                               onChanged: (v) {
                                                 if (rowIndex == 0 ||
                                                     swmData[rowIndex - 1]
-                                                            ['flag'] ==
+                                                    ['flag'] ==
                                                         true) {
                                                   if (swmData[rowIndex]
-                                                          ['flag'] ==
+                                                  ['flag'] ==
                                                       true) {
                                                     for (int i = 0;
-                                                        i < swmData.length;
-                                                        i++) {
+                                                    i < swmData.length;
+                                                    i++) {
                                                       if (i >= rowIndex) {
                                                         swmData[i]['flag'] =
-                                                            false;
+                                                        false;
                                                         mainList[mainIndex]
-                                                                ['swm_total'] =
+                                                        ['swm_total'] =
                                                             mainList[mainIndex][
-                                                                    'swm_total'] -
+                                                            'swm_total'] -
                                                                 swmData[i]
-                                                                    ['Amount'];
+                                                                ['Amount'];
                                                         mainList[mainIndex]['swm_pay'] =getTotal(mainList[mainIndex]['swm_total'], mainList[mainIndex]['swm_advance']);
 
                                                       }
                                                     }
                                                   } else {
                                                     swmData[rowIndex]['flag'] =
-                                                        true;
+                                                    true;
                                                     mainList[mainIndex]
-                                                            ['swm_total'] =
+                                                    ['swm_total'] =
                                                         mainList[mainIndex]
-                                                                ['swm_total'] +
+                                                        ['swm_total'] +
                                                             swmData[rowIndex]
-                                                                ['Amount'];
+                                                            ['Amount'];
                                                     mainList[mainIndex]['swm_pay'] =getTotal(mainList[mainIndex]['swm_total'], mainList[mainIndex]['swm_advance']);
 
                                                   }
@@ -1063,18 +821,18 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                                   main_totalAmount = 0.00;
 
                                                   for (int i = 0;
-                                                      i < mainList.length;
-                                                      i++) {
+                                                  i < mainList.length;
+                                                  i++) {
                                                     main_totalAmount =
                                                         main_totalAmount +
                                                             mainList[i]['tax_pay']+mainList[i]['swm_pay'];
                                                     List taxData =
-                                                        mainList[i]['taxData'];
+                                                    mainList[i]['taxData'];
                                                     List swmData =
-                                                        mainList[i]['swmData'];
+                                                    mainList[i]['swmData'];
                                                     for (int i = 0;
-                                                        i < taxData.length;
-                                                        i++) {
+                                                    i < taxData.length;
+                                                    i++) {
                                                       if (taxData[i]['flag'] ==
                                                           true) {
                                                         main_count =
@@ -1082,8 +840,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                                       }
                                                     }
                                                     for (int i = 0;
-                                                        i < swmData.length;
-                                                        i++) {
+                                                    i < swmData.length;
+                                                    i++) {
                                                       if (swmData[i]['flag'] ==
                                                           true) {
                                                         main_count =
@@ -1112,164 +870,212 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
   Widget demandCalculationWidget(int mainIndex){
     return Container(
       child: Column(children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-      UIHelper.titleTextStyle('demand'.tr().toString()+" : "+"\u{20B9} "+mainList[mainIndex]['total'].toString(), c.grey_8, 10, true, false),
-    UIHelper.titleTextStyle('advance'.tr().toString()+" : "+"\u{20B9} "+mainList[mainIndex]['tax_advance'].toString(), c.grey_8, 10, true, false),
-        ],),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            UIHelper.titleTextStyle('demand'.tr().toString()+" : "+"\u{20B9} "+mainList[mainIndex]['total'].toString(), c.black, 11, false, false),
+            UIHelper.titleTextStyle('advance'.tr().toString()+" : "+"\u{20B9} "+mainList[mainIndex]['tax_advance'].toString(), c.black, 11, false, false),
+          ],),
         UIHelper.verticalSpaceSmall,
-        UIHelper.titleTextStyle('payable'.tr().toString()+" : "+"\u{20B9} "+mainList[mainIndex]['tax_pay'].toString(), c.grey_8, 11, true, false),
-        UIHelper.verticalSpaceTiny,
+        /* UIHelper.titleTextStyle('payable'.tr().toString()+" : "+"\u{20B9} "+mainList[mainIndex]['tax_pay'].toString(), c.grey_8, 11, true, false),
+        UIHelper.verticalSpaceTiny,*/
       ],),
     );
   }
   Widget demandCalculationWidgetForSWM(int mainIndex){
     return Container(
       child: Column(children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-      UIHelper.titleTextStyle('demand'.tr().toString()+" : "+"\u{20B9} "+mainList[mainIndex]['swm_total'].toString(), c.grey_8, 10, true, false),
-    UIHelper.titleTextStyle('advance'.tr().toString()+" : "+"\u{20B9} "+mainList[mainIndex]['swm_advance'].toString(), c.grey_8, 10, true, false),
-    ],),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            UIHelper.titleTextStyle('demand'.tr().toString()+" : "+"\u{20B9} "+mainList[mainIndex]['swm_total'].toString(), c.black, 11, false, false),
+            UIHelper.titleTextStyle('advance'.tr().toString()+" : "+"\u{20B9} "+mainList[mainIndex]['swm_advance'].toString(), c.black, 11, false, false),
+          ],),
         UIHelper.verticalSpaceSmall,
-        UIHelper.titleTextStyle('payable'.tr().toString()+" : "+"\u{20B9} "+mainList[mainIndex]['swm_pay'].toString(), c.grey_8, 11, true, false),
-        UIHelper.verticalSpaceTiny,
+        /*UIHelper.titleTextStyle('payable'.tr().toString()+" : "+"\u{20B9} "+mainList[mainIndex]['swm_pay'].toString(), c.grey_8, 11, true, false),
+        UIHelper.verticalSpaceTiny,*/
       ],),
     );
   }
   Widget addToPayWidget() {
-    return Stack(
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-      Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        margin:
-        EdgeInsets.only(left: Screen.width(context) * 0.08, bottom: 10),
-        child: DropdownButtonHideUnderline(child:IgnorePointer(
-          ignoring: widget.isHome?false:true,
-          child:  DropdownButton(
-          elevation: 0,
-          isExpanded: false,
-          value: selectTaxtype,
-          iconSize:0.0 ,
-          icon: widget.isHome?Padding(
-              padding: EdgeInsets.all(10),
-              child: Icon(
-                Icons.arrow_drop_down_circle,
-                size: 15,
-                color: c.grey_9,
-              )):null,
-          style: TextStyle(
-            color: c.black,
-            fontSize: 11,
-            fontWeight: FontWeight.bold,
+        Expanded(
+          flex: 1,
+          child: Container(
+            margin: EdgeInsets.only(top: 10, bottom: 15,left: 15),
+            decoration:
+            UIHelper.roundedBorderWithColorWithShadow(
+                5, c.white, c.white),
+            child: Row(children: [
+              Container(
+                  width: 35,
+                  height: 35,
+                  padding: EdgeInsets.all(5),
+                  decoration:
+                  UIHelper.roundedBorderWithColor(
+                      5,5,5,5, c.colorPrimary),
+                  child: Image.asset(
+                    selectedTaxTypeData["img_path"].toString(),
+                    fit: BoxFit.contain,
+                    height: 15,
+                    width: 15,
+                  )),
+              UIHelper.horizontalSpaceSmall,
+              Container(
+                  width: 110,
+                  margin: EdgeInsets.only(left: 5),
+                  child: addInputDropdownField()),
+            ],),
           ),
-          items: taxTypeList
-              .map((item) => DropdownMenuItem<String>(
-            value: item['taxtypeid'].toString(),
-            child: Text(
-                preferencesService.getUserInfo('lang') == 'en'
-                    ? item["taxtypedesc_en"]
-                    : item["taxtypedesc_ta"]),
-          ))
-              .toList(),
-          onChanged: (newValue) {
-            setState(() {
-              selectTaxtype = newValue.toString();
-              handleClick(selectTaxtype);
-            });
-          },
-        ),),),
-      ),
-    ),
+        ),
         Visibility(
           visible: !widget.isHome,
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: Container(
-              width: MediaQuery.of(context).size.width/2,
-              margin: EdgeInsets.only(top: 10, right: 15, bottom: 15),
-              decoration: UIHelper.GradientContainer(5, 5, 5, 5, [
-                c.grey_8,
-                c.grey_8
-              ]),
-              padding: EdgeInsets.fromLTRB(5, 8, 0, 8),
-              child: Row( // Wrap with Row to add the plus icon
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.add, // Use the icon you prefer (e.g., Icons.add, Icons.add_circle, etc.)
-                    color: c.white,
-                    size: 15,
-                  ),
-                  SizedBox(width: 3), // Add a small space between the icon and the text
-              Flexible(
-                child:UIHelper.titleTextStyle(
-                    "new".tr().toString() + (selectedLang == "en"
-                        ? selectedTaxTypeData["taxtypedesc_en"]
-                        : selectedTaxTypeData["taxtypedesc_ta"] )+"new2".tr().toString(),
-                    c.white,
-                    10,
-                    true,
-                    true,
-                  )),
-                ],
-              ),
-            )
-        ),
-        ),
-        Visibility(
-            visible: widget.isHome,
-            child:Align(
-            alignment: Alignment.centerRight,
-            child: InkWell(
-              onTap: (){bool flag=false;
-              for (int i = 0; i < mainList.length; i++) {
-                if(mainList[i]['total'] > 0 || mainList[i]['swm_total'] > 0){
-                  flag=true;
-                }
-              }
-              flag?
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => TaxPayDetailsView(
-                  mainList: mainList,
-                  selectedTaxTypeData: selectedTaxTypeData,
-                ),
-              )):Utils().showAlert(context, ContentType.warning, 'message');
-              },
-              child: Container(
-                  margin: EdgeInsets.only(top: 10, right: 30, bottom: 10),
-                  decoration: UIHelper.GradientContainer(
-                      5, 5, 5, 5, [c.grey_7, c.grey_7]),
-                  padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
-                  child: UIHelper.titleTextStyle(
-                      "added_to_pay".tr().toString(), c.white, 12, true, true)),
-            ))),
-        Visibility(
-            visible: widget.isHome,
-            child:Align(
-            alignment: Alignment.topRight,
-            child: Transform.scale(
-                scale: _animation.value,
+          child:Expanded(
+            flex: 1,
+            child:
+            Align(
+                alignment: Alignment.centerRight,
                 child: Container(
-                  child: Container(
-                      transform: Matrix4.translationValues(
-                        0,
-                        -5,
-                        0,
+                  width: MediaQuery.of(context).size.width/2.5,
+                  margin: EdgeInsets.only(top: 10, bottom: 15,right: 15),
+                  decoration: UIHelper.GradientContainer(5, 5, 5, 5, [
+                    c.grey_8,
+                    c.grey_8
+                  ]),
+                  padding: EdgeInsets.fromLTRB(5, 8, 0, 8),
+                  child: Row( // Wrap with Row to add the plus icon
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.add, // Use the icon you prefer (e.g., Icons.add, Icons.add_circle, etc.)
+                        color: c.white,
+                        size: 15,
                       ),
-                      margin: EdgeInsets.only(top: 0, right: 10, bottom: 10),
-                      decoration: UIHelper.circleWithColorWithShadow(
-                          360,
-                          c.account_status_green_color,
-                          c.account_status_green_color),
-                      padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
-                      child: UIHelper.titleTextStyle(
-                          (main_count).toString(), c.white, 12, true, true)),
-                ))))
+                      SizedBox(width: 3),
+                      Flexible(
+                          child:UIHelper.titleTextStyle(
+                            "new".tr().toString() + (selectedLang == "en"
+                                ? selectedTaxTypeData["taxtypedesc_en"]
+                                : selectedTaxTypeData["taxtypedesc_ta"] )+"new2".tr().toString(),
+                            c.white,
+                            10,
+                            true,
+                            true,
+                          ))// Add a small space between the icon and the text
+                      ,
+                    ],
+                  ),
+                )
+            ),
+          ),
+        ),
+        Visibility(
+          visible: widget.isHome,
+          child:Expanded(
+              flex: 1,
+              child:  Stack(
+                children: [
+                  Align(
+                      alignment: Alignment.centerRight,
+                      child: InkWell(
+                        onTap: (){bool flag=false;
+                        for (int i = 0; i < mainList.length; i++) {
+                          if(mainList[i]['total'] > 0 || mainList[i]['swm_total'] > 0){
+                            flag=true;
+                          }
+                        }
+                        flag?
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => TaxPayDetailsView(
+                            mainList: mainList,
+                            selectedTaxTypeData: selectedTaxTypeData,
+                          ),
+                        )):Utils().showAlert(context, ContentType.warning, 'message');
+                        },
+                        child: Container(
+                            margin: EdgeInsets.only(top: 15, right: 30, bottom: 15),
+                            decoration: UIHelper.GradientContainer(
+                                5, 5, 5, 5, [c.grey_7, c.grey_7]),
+                            padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
+                            child: UIHelper.titleTextStyle(
+                                "added_to_pay".tr().toString(), c.white, 12, true, true)),
+                      )),
+                  Positioned(
+                      top: 1,
+                      right: 1,
+                      child: Transform.scale(
+                          scale: _animation.value,
+                          child: Container(
+                            margin: EdgeInsets.only(right: 15),
+                            child: Container(
+                                decoration: UIHelper.circleWithColorWithShadow(
+                                    360,
+                                    c.account_status_green_color,
+                                    c.account_status_green_color),
+                                padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
+                                child: UIHelper.titleTextStyle(
+                                    (main_count).toString(), c.white, 12, true, true)),
+                          )))
+                ],
+              )),
+        ),
+
       ],
+    );
+  }
+  Widget addInputDropdownField() {
+
+    return FormBuilderDropdown(
+      style: TextStyle(
+          fontSize: 12, fontWeight: FontWeight.w400, color: c.grey_8),
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.only(left: 0),
+        constraints: BoxConstraints(
+            maxHeight: 35
+        ),
+        hintText:'select_taxtype'.tr().toString(),
+        hintStyle: TextStyle(fontSize: 11,),
+        filled: true,
+        fillColor: c.full_transparent,
+        enabledBorder: OutlineInputBorder(
+          borderSide:BorderSide(color: c.full_transparent, width: 0.0),
+          borderRadius:BorderRadius.circular(0),
+        ),
+        focusedBorder: UIHelper.getInputBorder(0, borderColor: c.full_transparent),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(width: 0.0),
+          borderRadius: BorderRadius.circular(0), // Increase the radius to adjust the height
+        ),
+      ),
+      initialValue: selectTaxtype,
+      iconSize: 28,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: FormBuilderValidators.compose([
+        FormBuilderValidators.required(
+            errorText: "")
+      ]),
+      items: taxTypeList.map((item) => DropdownMenuItem(
+        value: item['taxtypeid'].toString(),
+        child: Text(
+          selectedLang == "en"
+              ? item["taxtypedesc_en"].toString()
+              : item["taxtypedesc_ta"].toString(),
+          style: TextStyle(
+              fontSize: 11.0,
+              fontWeight: FontWeight.w400,
+              color: c.black),
+        ),
+      ))
+          .toList(),
+      onChanged: (value) async {
+        setState(() {
+          selectTaxtype = value.toString();
+          handleClick(selectTaxtype);
+        });
+
+      }, name: 'TaxType',
     );
   }
 
@@ -1277,97 +1083,49 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: UIHelper.GradientContainer(
-          15, 15, 0, 0, [c.colorAccentlight, c.colorAccentlight]),
+          15, 15, 0, 0, [c.colorPrimary, c.colorAccentlight]),
       child:  Column(
-      children: [
-        Align(
-            alignment: Alignment.centerLeft,
-            child: Container(
-                margin: EdgeInsets.only(top: 10, left: 20,right: 20),
-                padding: EdgeInsets.all(5),
-                child: UIHelper.titleTextStyle(
-                    'total_amount_to_pay'.tr().toString()+" : ""\u{20B9}" + main_totalAmount.toString(),
-                    c.white,
-                    12,
-                    true,
-                    true))),
-        Align(
-            alignment: Alignment.centerRight,
-            child:InkWell(
-                onTap: (){bool flag=false;
-                for (int i = 0; i < mainList.length; i++) {
-                  if(mainList[i]['total'] > 0 || mainList[i]['swm_total'] > 0){
-                    flag=true;
+        children: [
+          Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                  margin: EdgeInsets.only(top: 10, left: 20,right: 20),
+                  padding: EdgeInsets.all(5),
+                  child: UIHelper.titleTextStyle(
+                      'total_amount_to_pay'.tr().toString()+" : ""\u{20B9}" + main_totalAmount.toString(),
+                      c.white,
+                      12,
+                      true,
+                      true))),
+          Align(
+              alignment: Alignment.centerRight,
+              child:InkWell(
+                  onTap: (){bool flag=false;
+                  for (int i = 0; i < mainList.length; i++) {
+                    if(mainList[i]['total'] > 0 || mainList[i]['swm_total'] > 0){
+                      flag=true;
+                    }
                   }
-                }
-                flag?
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => TaxPayDetailsView(
-                    mainList: mainList,
-                    selectedTaxTypeData: selectedTaxTypeData,
-                  ),
-                )):Utils().showAlert(context, ContentType.warning, 'message');
-                },
-                child: Container(
-                    margin: EdgeInsets.only(top: 5, right: 30, bottom: 10),
-                    decoration: UIHelper.GradientContainer(5, 5, 5, 5, [
-                      c.account_status_green_color,
-                      c.account_status_green_color
-                    ]),
-                    padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
-                    child: UIHelper.titleTextStyle(
-                        "pay".tr().toString(), c.white, 12, true, true)))),
-      ],
-    ),);
+                  flag?
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => TaxPayDetailsView(
+                      mainList: mainList,
+                      selectedTaxTypeData: selectedTaxTypeData,
+                    ),
+                  )):Utils().showAlert(context, ContentType.warning, 'message');
+                  },
+                  child: Container(
+                      margin: EdgeInsets.only(top: 5, right: 30, bottom: 10),
+                      decoration: UIHelper.GradientContainer(5, 5, 5, 5, [
+                        c.account_status_green_color,
+                        c.account_status_green_color
+                      ]),
+                      padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
+                      child: UIHelper.titleTextStyle(
+                          "pay".tr().toString(), c.white, 12, true, true)))),
+        ],
+      ),);
   }
-/*
-  Widget payWidget() {
-    return Stack(
-      children: [
-        Align(
-            alignment: Alignment.centerLeft,
-            child: Container(
-                margin: EdgeInsets.only(top: 10, left: 30, bottom: 10),
-                decoration: UIHelper.GradientContainer(
-                    5, 5, 5, 5, [c.grey_7, c.grey_7]),
-                padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
-                child: UIHelper.titleTextStyle(
-                    "\u{20B9}" + main_totalAmount.toString(),
-                    c.white,
-                    12,
-                    true,
-                    true))),
-        Align(
-            alignment: Alignment.centerRight,
-            child:InkWell(
-              onTap: (){bool flag=false;
-              for (int i = 0; i < mainList.length; i++) {
-                if(mainList[i]['total'] > 0 || mainList[i]['swm_total'] > 0){
-                  flag=true;
-                }
-              }
-              flag?
-                Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => TaxPayDetailsView(
-                  mainList: mainList,
-                  selectedTaxTypeData: selectedTaxTypeData,
-                ),
-              )):Utils().showAlert(context, ContentType.warning, 'message');
-              },
-                child: Container(
-                margin: EdgeInsets.only(top: 10, right: 30, bottom: 10),
-                decoration: UIHelper.GradientContainer(5, 5, 5, 5, [
-                  c.account_status_green_color,
-                  c.account_status_green_color
-                ]),
-                padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
-                child: UIHelper.titleTextStyle(
-                    "pay".tr().toString(), c.white, 12, true, true)))),
-      ],
-    );
-  }
-*/
-
 
   void handleClick(String value) async {
     switch (value) {

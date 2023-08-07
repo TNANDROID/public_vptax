@@ -13,8 +13,10 @@ import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
+import 'package:public_vptax/Utils/utils.dart';
 import 'package:stacked/stacked.dart';
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
+import '../../Utils/ContentInfo.dart';
 
 class TaxCollectionView extends StatefulWidget {
   TaxCollectionView({Key? key}) : super(key: key);
@@ -25,14 +27,15 @@ class TaxCollectionView extends StatefulWidget {
 
 class _TaxCollectionViewState extends State<TaxCollectionView> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
+  final GlobalKey<FormBuilderState> form_key = GlobalKey<FormBuilderState>();
   PreferenceService preferencesService = locator<PreferenceService>();
-
+  TextEditingController mobileController = TextEditingController();
   String selectedLang = "";
   String selectedDistrict = "";
   String selectedBlock = "";
   String selectedVillage = "";
-  int selectedTaxType = 1;
-  int selectedEntryType = 1;
+  int selectedTaxType = 0;
+  int selectedEntryType = 0;
   List taxlist = [
     {
       'taxtypeid': 1,
@@ -96,6 +99,8 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
   Widget addInputFormControl(
       String nameField, String hintText, String fieldType) {
     return FormBuilderTextField(
+      key: form_key,
+      controller: mobileController,
       style: TextStyle(
           fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_9),
       name: nameField,
@@ -105,13 +110,14 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
       decoration: InputDecoration(
         labelText: hintText,
         labelStyle: TextStyle(
-            fontSize: 12.0, fontWeight: FontWeight.w800, color: c.grey_7),
+            fontSize: 11.0, fontWeight: FontWeight.w600, color: c.grey_7),
         filled: true,
         fillColor: Colors.white,
         enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
         focusedBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
         focusedErrorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
         errorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
+        errorStyle: TextStyle(fontSize: 10),
         contentPadding: EdgeInsets.symmetric(
             vertical: 8, horizontal: 12), // Optional: Adjust padding
       ),
@@ -169,17 +175,18 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
     }
     return FormBuilderDropdown(
       style: TextStyle(
-          fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_8),
+          fontSize: 12.0, fontWeight: FontWeight.w600, color: c.grey_10),
       decoration: InputDecoration(
         labelText: inputHint,
         labelStyle: TextStyle(
-            fontSize: 12.0, fontWeight: FontWeight.w800, color: c.grey_9),
+            fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_7),
         filled: true,
         fillColor: Colors.white,
         enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
         focusedBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
         focusedErrorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
         errorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
+        errorStyle: TextStyle(fontSize: 10),
         contentPadding: EdgeInsets.symmetric(
             vertical: 8, horizontal: 12), // Optional: Adjust padding
       ),
@@ -221,7 +228,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                       ? item[titleText].toString()
                       : item[titleTextTamil].toString(),
                   style: TextStyle(
-                      fontSize: 12.0,
+                      fontSize: 11.0,
                       fontWeight: FontWeight.w400,
                       color: c.grey_9),
                 ),
@@ -258,7 +265,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                     width: Screen.width(context),
                     padding: EdgeInsets.all(7),
                     color: selectedEntryType == index
-                        ? c.blueAccent
+                        ? c.need_improvement
                         : c.bg,
                     child: Row(
                       children: [
@@ -273,7 +280,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                         UIHelper.horizontalSpaceSmall,
                         Expanded(
                             child: UIHelper.titleTextStyle(
-                                title, c.grey_9, 12, true, false)),
+                                title, c.grey_9, 12, false, false)),
                       ],
                     )))));
   }
@@ -414,23 +421,12 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                         alignment: Alignment.center,
                         child: GestureDetector(
                           onTap: () async {
-                            if (_formKey.currentState!.saveAndValidate()) {
-                              Map<String, dynamic> postParams =
-                                  Map.from(_formKey.currentState!.value);
-                              postParams
-                                  .removeWhere((key, value) => value == null);
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => TaxCollectionDetailsView(
-                                      )));
-
-                            }
+                            validate();
                           },
                           child: Container(
                             decoration: UIHelper.GradientContainer(10, 10, 10,
                                 10, [c.colorPrimary, c.colorPrimaryDark]),
-                            padding: EdgeInsets.all(7),
+                            padding: EdgeInsets.fromLTRB(15,8,15,8),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -438,7 +434,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                                 UIHelper.titleTextStyle(
                                     'submit'.tr().toString(),
                                     c.white,
-                                    15,
+                                    13,
                                     true,
                                     false),
                               ],
@@ -461,31 +457,34 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
           selectedTaxType = index;
           setState(() {});
         },
-        child: Row(
-          mainAxisAlignment:MainAxisAlignment.center,
-          children: [
-          Image.asset(
-            imgURL,
-            fit: BoxFit.contain,
-            height: 25,
-            width: 25,
-          ),
-          UIHelper.horizontalSpaceSmall,
-          Container(
-              width: Screen.width(context) / val,
-              padding: EdgeInsets.all(10),
-              decoration: UIHelper.roundedBorderWithColorWithShadow(
-                10,
-                selectedTaxType == index ? c.blueAccent : c.white,
-                selectedTaxType == index ? c.blueAccent : c.white,
-                borderColor: selectedTaxType == index ? c.sky_blue : c.white,
-                borderWidth: selectedTaxType == index ?1:0
-              ),
+        child: Container(
+          width: Screen.width(context) / val,
+          margin: EdgeInsets.all(5),
+          decoration:
+          UIHelper.roundedBorderWithColorWithShadow(
+              5, selectedTaxType==index ?c.need_improvement:c.white, selectedTaxType==index ?c.need_improvement:c.white),
+          child: Row(children: [
+            Container(
+                width: 35,
+                height: 35,
+                padding: EdgeInsets.all(5),
+                decoration:
+                UIHelper.roundedBorderWithColor(
+                    5,5,5,5, selectedTaxType==index ?c.white:c.need_improvement2),
+                child: Image.asset(
+                  imgURL.toString(),
+                  fit: BoxFit.contain,
+                  height: 15,
+                  width: 15,
+                )),
+            UIHelper.horizontalSpaceSmall,
+            Flexible(
+                child: UIHelper.titleTextStyle(
+                    data['taxtypedesc_ta'], c.grey_9, 10, true, true)),
+          ],),
+        )
 
-              //UIHelper.roundedBorderWithColor(40, 0, 0, 40, c.white),
-              child: UIHelper.titleTextStyle(
-                  data['taxtypedesc_ta'], c.grey_9, 10, true, true))
-        ],));
+     );
   }
 
   Widget taxWidgetGridView() {
@@ -493,20 +492,20 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          taxWidgetGridData(imagePath.house, taxlist[0], 1,3.5),
-          taxWidgetGridData(imagePath.water, taxlist[1], 2,3.5)
+          taxWidgetGridData(imagePath.house, taxlist[0], 1,2.5),
+          taxWidgetGridData(imagePath.water, taxlist[1], 2,2.5)
         ],
       ),
       UIHelper.verticalSpaceSmall,
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          taxWidgetGridData(imagePath.professional1, taxlist[2], 3,3.5),
-          taxWidgetGridData(imagePath.nontax1, taxlist[3], 4,3.5)
+          taxWidgetGridData(imagePath.professional1, taxlist[2], 3,2.5),
+          taxWidgetGridData(imagePath.nontax1, taxlist[3], 4,2.5)
         ],
       ),
       UIHelper.verticalSpaceSmall,
-      taxWidgetGridData(imagePath.trade, taxlist[4], 5,3)
+      taxWidgetGridData(imagePath.trade, taxlist[4], 5,2)
     ]);
   }
 
@@ -580,5 +579,29 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
               },
               viewModelBuilder: () => StartUpViewModel()),
         ));
+  }
+
+  void validate() {
+    if(selectedTaxType >0){
+      if(selectedEntryType >0){
+        if (_formKey.currentState!.saveAndValidate()) {
+          Map<String, dynamic> postParams =
+          Map.from(_formKey.currentState!.value);
+          postParams
+              .removeWhere((key, value) => value == null);
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => TaxCollectionDetailsView(
+                  )));
+
+        }
+      }else{
+        Utils().showAlert(context,ContentType.warning,'select_taxtype'.tr().toString());
+      }
+    }else{
+      Utils().showAlert(context,ContentType.warning,'select_all_field'.tr().toString());
+    }
+
   }
 }
