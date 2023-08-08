@@ -72,139 +72,8 @@ class Utils {
     return packageInfo.version;
   }
 
-  // Future<void> gotoLoginPageFromSplash(BuildContext context) async {
-  //   Timer(
-  //       const Duration(seconds: 2),
-  //       () => Navigator.pushReplacement(
-  //           context, MaterialPageRoute(builder: (context) => Login())));
-  // }
-
-//  void gotoHomePage(BuildContext context) {
-//     Navigator.pushReplacement(
-//         context, MaterialPageRoute(builder: (context) => Home()));
-//   }
-
   Future<void> hideSoftKeyBoard(BuildContext context) async {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
-  }
-
-  Future<void> showalertforOffline(BuildContext context, String msg,
-      String username, String password) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return WillPopScope(
-          onWillPop: () async => false,
-          child: Center(
-            child: Container(
-              height: 320,
-              margin: const EdgeInsets.all(50),
-              decoration: BoxDecoration(
-                  color: c.white,
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0.0, 1.0), //(x,y)
-                      blurRadius: 5.0,
-                    ),
-                  ]),
-              child: Column(
-                children: [
-                  Container(
-                    height: 100,
-                    decoration: BoxDecoration(
-                        color: c.yellow_new,
-                        borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(15),
-                            topRight: Radius.circular(15))),
-                    child: Center(
-                      child: Image.asset(
-                        imagePath.warning,
-                        height: 60,
-                        width: 60,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                        color: c.white,
-                        borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(15),
-                            bottomRight: Radius.circular(15))),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          UIHelper.titleTextStyle(
-                              'Warning', c.text_color, 18, true, false),
-                          UIHelper.verticalSpaceSmall,
-                          UIHelper.titleTextStyle(
-                              msg, c.black, 15, true, false),
-                          UIHelper.verticalSpaceMedium,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Visibility(
-                                visible: true,
-                                child: ElevatedButton(
-                                    style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all<Color>(
-                                                c.green_new),
-                                        shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ))),
-                                    onPressed: () {
-                                      performAction('wifi',context);
-                                      Navigator.pop(context, false);
-                                    },
-                                    child: UIHelper.titleTextStyle(
-                                        "Settings", c.white, 13, true, false)),
-                              ),
-                              Visibility(
-                                visible: true,
-                                child: ElevatedButton(
-                                    style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all<Color>(
-                                                c.primary_text_color2),
-                                        shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ))),
-                                    onPressed: () {
-                                      Navigator.pop(context, false);
-                                      offlineMode(username, password, context);
-                                    },
-                                    child: UIHelper.titleTextStyle(
-                                        "Continue With Off-Line",
-                                        c.white,
-                                        13,
-                                        true,
-                                        false)),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
   }
 
   void showToast(BuildContext context, String msg) {
@@ -231,10 +100,10 @@ class Utils {
   Future<void> showLoading(BuildContext context, String message) async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: true, // user must tap button!
+      barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return WillPopScope(
-          onWillPop: () async => true,
+          onWillPop: () async => false,
           child: Center(
             child: SizedBox(
               height: 100,
@@ -414,7 +283,7 @@ class Utils {
                               vertical: 5, horizontal: 10),
                           child: ElevatedButton(
                             onPressed: () {
-                              performAction(btnmsg ?? '',context);
+                              performAction(btnmsg ?? '', context);
                             },
                             style: ButtonStyle(
                               elevation: MaterialStateProperty.all(5.0),
@@ -481,6 +350,7 @@ class Utils {
     switch (type) {
       case 'ok':
         Navigator.of(context).pop();
+
       case 'appSetting':
         openAppSettings();
 
@@ -497,22 +367,7 @@ class Utils {
         await channel.invokeMethod('openSettings', 'wifi');
 
       default:
-        return true;
-    }
-  }
-
-  Future<void> offlineMode(
-      String username, String password, BuildContext context) async {
-    String userName = await preferencesService.getUserInfo(key_user_name);
-    String passWord = await preferencesService.getUserInfo(key_user_pwd);
-    if (username == userName && password == passWord) {
-      //  gotoHomePage(context);
-    } else {
-      showAlert(
-        context,
-        ContentType.fail,
-        "noInternet".tr().toString(),
-      );
+        Navigator.of(context).pop();
     }
   }
 
