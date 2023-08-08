@@ -532,6 +532,7 @@ class _HomeState extends State<Home> {
   }
 
   void logout() {
+    preferencesService.cleanAllPreferences();
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => Splash()),

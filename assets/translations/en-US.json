@@ -103,5 +103,8 @@
   "via_mobileNumber" : "To view the tax details linked to the phone number",
   "via_e_taxNumber" : "To view the tax details by entering E-tax number",
   "via_assessNumber" : "To view the tax details by entering assessment number",
+  "do_you_want_to_exit_an_app" : "Do you want to exit an app?",
+  "exit_app" : "Exit",
+  "no_record" : "No Record",
   "select_all_field": "Please fill all the details"
 }

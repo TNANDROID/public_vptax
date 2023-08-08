@@ -13,10 +13,9 @@ import '../../Layout/ui_helper.dart';
 import '../../Model/startup_model.dart';
 
 class TaxPayDetailsView extends StatefulWidget {
-  List mainList;
-  dynamic selectedTaxTypeData;
+
   TaxPayDetailsView(
-      {Key? key, required this.mainList, this.selectedTaxTypeData});
+      {Key? key});
 
   @override
   _TaxPayDetailsViewState createState() => _TaxPayDetailsViewState();
@@ -30,6 +29,7 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
 
   String selectedLang = "";
   List mainDataList = [];
+  List taxTypeList = [];
   List isShowFlag = [];
 
   @override
@@ -60,12 +60,8 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
 
   Future<void> initialize() async {
     selectedLang = await preferencesService.getUserInfo("lang");
-    for (int i = 0; i < widget.mainList.length; i++) {
-      if (widget.mainList[i]['total'] > 0 ||
-          widget.mainList[i]['swm_total'] > 0) {
-        mainDataList.add(widget.mainList[i]);
-      }
-    }
+    taxTypeList=preferencesService.taxTypeList;
+    mainDataList=preferencesService.addedTaxPayList;
     setState(() {});
   }
 
@@ -186,11 +182,7 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
                                                     10, 10, 0, 0, Colors.blue),
                                             child: Center(
                                               child: UIHelper.titleTextStyle(
-                                                  selectedLang == "en"
-                                                      ? widget.selectedTaxTypeData[
-                                                          key_taxtypedesc_en]
-                                                      : widget.selectedTaxTypeData[
-                                                          key_taxtypedesc_ta],
+                                                getTaxName(index),
                                                   c.white,
                                                   14,
                                                   true,
@@ -415,13 +407,13 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
                 decoration: UIHelper.roundedBorderWithColorWithShadow(
                     5, c.white, c.white),
                 child: Image.asset(
-                  widget.selectedTaxTypeData["img_path"].toString(),
+                  getTaxImage(mainIndex),
                   fit: BoxFit.contain,
                   height: 40,
                   width: 40,
                 )),
             UIHelper.horizontalSpaceSmall,
-            widget.selectedTaxTypeData["taxtypeid"] == 1
+            mainDataList[mainIndex][key_taxtypeid] == 1
                 ? UIHelper.titleTextStyle(
                     "Building Licence Number : " +
                         mainDataList[mainIndex]['building_licence_number'],
@@ -429,7 +421,7 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
                     12,
                     true,
                     true)
-                : widget.selectedTaxTypeData["taxtypeid"] == 2
+                : mainDataList[mainIndex][key_taxtypeid] == 2
                     ? UIHelper.titleTextStyle(
                         "Water Connection Number : " +
                             mainDataList[mainIndex]['assesment_no'],
@@ -437,7 +429,7 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
                         12,
                         true,
                         true)
-                    : widget.selectedTaxTypeData["taxtypeid"] == 3
+                    : mainDataList[mainIndex][key_taxtypeid] == 4
                         ? UIHelper.titleTextStyle(
                             "Assesment Number : " +
                                 mainDataList[mainIndex]['assesment_no'],
@@ -445,7 +437,7 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
                             12,
                             true,
                             true)
-                        : widget.selectedTaxTypeData["taxtypeid"] == 4
+                        : mainDataList[mainIndex][key_taxtypeid] == 5
                             ? UIHelper.titleTextStyle(
                                 "Lease Number : " +
                                     mainDataList[mainIndex]['assesment_no'],
@@ -478,5 +470,18 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
       s = s + mainDataList[i]['tax_pay'] + mainDataList[i]['swm_pay'];
     }
     return s;
+  }
+
+  String getTaxName(int index) {
+    final item = taxTypeList.firstWhere((e) => e[key_taxtypeid] ==mainDataList[index][key_taxtypeid].toString());
+    return selectedLang == "en"
+        ? item[
+    key_taxtypedesc_en]
+        : item[
+    key_taxtypedesc_ta];
+  }
+  String getTaxImage(int index) {
+    final item = taxTypeList.firstWhere((e) => e[key_taxtypeid] ==mainDataList[index][key_taxtypeid].toString());
+    return  item[key_img_path].toString();
   }
 }

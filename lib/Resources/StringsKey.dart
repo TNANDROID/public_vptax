@@ -58,6 +58,9 @@ String key_appcode = "appcode";
 String key_language_name = "language_name";
 String key_main_data = "data";
 String key_data = "DATA";
+String key_assesment_no = "assesment_no";
+String key_amount = "Amount";
+String key_flag = "flag";
 
 // ************************** Service Key Strings ************************** //
 
