@@ -476,7 +476,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                             width: Screen.width(context) / 2,
                             child: Flex(
                               direction: Axis.horizontal,
-                              children: [Flexible(child: UIHelper.titleTextStyle(mainList[mainIndex][key_name], c.grey_9, 12, true, false))],
+                              children: [Flexible(child: UIHelper.titleTextStyle(mainList[mainIndex][key_name]?? '', c.grey_9, 12, true, false))],
                             ),
                           ),
                           UIHelper.horizontalSpaceSmall,
@@ -500,13 +500,13 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 UIHelper.titleTextStyle(
-                                    mainList[mainIndex][key_door_no] + ", " + selectedLang == 'en' ? mainList[mainIndex][key_street_name_en] : mainList[mainIndex][key_street_name_ta],
+                                    mainList[mainIndex][key_door_no]?? ''+ ", " + selectedLang == 'en' ? mainList[mainIndex][key_street_name_en]?? '' : mainList[mainIndex][key_street_name_ta]?? '',
                                     c.grey_8,
                                     11,
                                     false,
                                     false),
-                                UIHelper.titleTextStyle(mainList[mainIndex][key_localbody_name] + ", " + mainList[mainIndex][key_bname], c.grey_8, 11, false, false),
-                                UIHelper.titleTextStyle(mainList[mainIndex][key_district_name], c.grey_8, 11, false, false)
+                                UIHelper.titleTextStyle(mainList[mainIndex][key_localbody_name]?? '' + ", " + mainList[mainIndex][key_bname]?? '', c.grey_8, 11, false, false),
+                                UIHelper.titleTextStyle(mainList[mainIndex][key_district_name]?? '', c.grey_8, 11, false, false)
                               ],
                             ),
                           ),
@@ -574,17 +574,17 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              UIHelper.titleTextStyle("Building Licence Number : " + mainList[mainIndex]['building_licence_number'], clr, 12, false, true),
-              UIHelper.titleTextStyle("Assesment Number : " + mainList[mainIndex][key_assessment_no], clr, 12, false, true),
+              UIHelper.titleTextStyle("Building Licence Number : " + mainList[mainIndex][key_building_licence_no].toString()?? "", clr, 12, false, true),
+              UIHelper.titleTextStyle("Assesment Number : " + mainList[mainIndex][key_assessment_no].toString()?? "", clr, 12, false, true),
             ],
           )
         : selectedTaxTypeData[key_taxtypeid] == 2
-            ? UIHelper.titleTextStyle("Water Connection Number : " + mainList[mainIndex][key_assessment_no], clr, 12, false, true)
+            ? UIHelper.titleTextStyle("Water Connection Number : " + mainList[mainIndex][key_assessment_no].toString()?? "", clr, 12, false, true)
             : selectedTaxTypeData[key_taxtypeid] == 4
-                ? UIHelper.titleTextStyle("Assesment Number : " + mainList[mainIndex][key_assessment_no], clr, 12, false, true)
+                ? UIHelper.titleTextStyle("Assesment Number : " + mainList[mainIndex][key_assessment_no].toString()?? "", clr, 12, false, true)
                 : selectedTaxTypeData[key_taxtypeid] == 5
-                    ? UIHelper.titleTextStyle("Lease Number : " + mainList[mainIndex][key_assessment_no], clr, 12, false, true)
-                    : UIHelper.titleTextStyle("Traders Code : " + mainList[mainIndex][key_assessment_no], clr, 12, false, true);
+                    ? UIHelper.titleTextStyle("Lease Number : " + mainList[mainIndex][key_assessment_no].toString()?? "", clr, 12, false, true)
+                    : UIHelper.titleTextStyle("Traders Code : " + mainList[mainIndex][key_assessment_no].toString()?? "", clr, 12, false, true);
   }
 
   Widget propertyTaxCollectionWidget(int mainIndex) {
@@ -592,7 +592,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
     List taxData = [];
     List swmData = [];
     for (int i = 0; i < demandList.length; i++) {
-      if (demandList[i][key_taxtypeid] == selectedTaxTypeData[key_taxtypeid].toString()) {
+      if (demandList[i][key_taxtypeid].toString() == selectedTaxTypeData[key_taxtypeid].toString()) {
         taxData.add(demandList[i]);
       } else {
         swmData.add(demandList[i]);

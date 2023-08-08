@@ -594,12 +594,6 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
       }
 
     await StartUpViewModel().getMainServiceList("TaxCollectionDetails",requestDataValue:request,context: context);
-                Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => TaxCollectionDetailsView(selectedTaxTypeData:
-                  selectedTaxTypeData,isHome: false,dcode: selectedDistrict,bcode: selectedBlock,pvcode: selectedVillage,mobile: etTextController,selectedEntryType: selectedEntryType,
-                  )));
 
       // throw ('000');
     } catch (error) {
@@ -608,6 +602,12 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
     }
 
     Utils().hideProgress(context);
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (_) => TaxCollectionDetailsView(selectedTaxTypeData:
+            selectedTaxTypeData,isHome: false,dcode: selectedDistrict,bcode: selectedBlock,pvcode: selectedVillage,mobile: etTextController,selectedEntryType: selectedEntryType,
+            )));
     } else {
     Utils().showAlert(
     context,

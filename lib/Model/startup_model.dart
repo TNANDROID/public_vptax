@@ -164,19 +164,17 @@ class StartUpViewModel extends BaseViewModel {
       taxCollectionDetailsList = res_jsonArray[0][key_ASSESSMENT_DETAILS];
       print("response_TaxCollectionDetails2>>>>>>"+taxCollectionDetailsList.toString());
 
-      for (int i = 0; i < taxCollectionDetailsList.length; i++) {
-        List<dynamic> map1 = taxCollectionDetailsList[i];
-        List<dynamic> map2 = [{key_tax_total: 0.00, key_swm_total: 0.00, key_tax_pay: 0.00, key_swm_pay: 0.00}];
-        /*taxCollectionDetailsList[i][key_tax_total]=0.00;
-        taxCollectionDetailsList[i][key_swm_total]=0.00;
-        taxCollectionDetailsList[i][key_tax_pay]=0.00;
-        taxCollectionDetailsList[i][key_swm_pay]=0.00;*/
-        map1.addAll(map2);
-        taxCollectionDetailsList[i]=map1;
-        for (int j = 0; j < taxCollectionDetailsList[i][key_DEMAND_DETAILS].length; j++) {
-          taxCollectionDetailsList[i][key_DEMAND_DETAILS][j][key_flag]=false;
-        }
-      }
+      taxCollectionDetailsList.forEach((item) {
+        item[key_tax_total] = 0.00;
+        item[key_swm_total] = 0.00;
+        item[key_tax_pay] = 0.00;
+        item[key_swm_pay] = 0.00;
+        item[key_DEMAND_DETAILS].forEach((item2) {
+          item2[key_flag] = false;
+          // Additional calculations or logic can be added here if needed
+        });
+        // Additional calculations or logic can be added here if needed
+      });
       print("response_TaxCollectionDetails3>>>>>>"+taxCollectionDetailsList.toString());
 
       preferencesService.taxCollectionDetailsList = taxCollectionDetailsList.toList();
