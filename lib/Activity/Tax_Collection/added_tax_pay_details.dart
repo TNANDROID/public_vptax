@@ -136,13 +136,13 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
                               List selectedTaxonly = [];
                               List selectedSWMonly = [];
                               for (var item in mainDataList[index]['taxData']) {
-                                if (item['flag'] == true) {
+                                if (item[key_flag] == true) {
                                   selectedTaxonly.add(item);
                                 }
                               }
 
                               for (var item in mainDataList[index]['swmData']) {
-                                if (item['flag'] == true) {
+                                if (item[key_flag] == true) {
                                   selectedSWMonly.add(item);
                                 }
                               }
@@ -191,7 +191,7 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
                                         taxWiseReturnDataWidget(index),
                                         Visibility(
                                             visible: mainDataList[index]
-                                                    ['total'] >
+                                                    [key_tax_total] >
                                                 0,
                                             child: Column(children: [
                                               Container(
@@ -245,7 +245,7 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
                                                                           padding: EdgeInsets.all(
                                                                               8.0),
                                                                           child:
-                                                                              Center(child: UIHelper.titleTextStyle("\u{20B9} " + selectedTaxonly[index]['Amount'].toString(), c.black, 12, false, false))),
+                                                                              Center(child: UIHelper.titleTextStyle("\u{20B9} " + selectedTaxonly[index][key_demand].toString(), c.black, 12, false, false))),
                                                                     ),
                                                                   ],
                                                                 ))),
@@ -261,7 +261,7 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
                                                       demandCalculationWidget(
                                                           'demand_selected',
                                                           mainDataList[index]
-                                                                  ['total']
+                                                                  [key_tax_total]
                                                               .toString(),
                                                           false),
                                                       UIHelper
@@ -303,7 +303,7 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
                                                       demandCalculationWidget(
                                                           'total_amount_to_pay',
                                                           mainDataList[index]
-                                                                  ['tax_pay']
+                                                                  [key_tax_pay]
                                                               .toString(),
                                                           true),
                                                     ],
@@ -424,7 +424,7 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
                 : mainDataList[mainIndex][key_taxtypeid] == 2
                     ? UIHelper.titleTextStyle(
                         "Water Connection Number : " +
-                            mainDataList[mainIndex]['assesment_no'],
+                            mainDataList[mainIndex][key_assessment_no],
                         c.grey_9,
                         12,
                         true,
@@ -432,7 +432,7 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
                     : mainDataList[mainIndex][key_taxtypeid] == 4
                         ? UIHelper.titleTextStyle(
                             "Assesment Number : " +
-                                mainDataList[mainIndex]['assesment_no'],
+                                mainDataList[mainIndex][key_assessment_no],
                             c.grey_9,
                             12,
                             true,
@@ -440,14 +440,14 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
                         : mainDataList[mainIndex][key_taxtypeid] == 5
                             ? UIHelper.titleTextStyle(
                                 "Lease Number : " +
-                                    mainDataList[mainIndex]['assesment_no'],
+                                    mainDataList[mainIndex][key_assessment_no],
                                 c.grey_9,
                                 12,
                                 true,
                                 true)
                             : UIHelper.titleTextStyle(
                                 "Traders Code : " +
-                                    mainDataList[mainIndex]['assesment_no'],
+                                    mainDataList[mainIndex][key_assessment_no],
                                 c.grey_9,
                                 12,
                                 true,
@@ -467,7 +467,7 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
   double getTotalAmoutToPay() {
     double s = 0.00;
     for (int i = 0; i < mainDataList.length; i++) {
-      s = s + mainDataList[i]['tax_pay'] + mainDataList[i]['swm_pay'];
+      s = s + mainDataList[i][key_tax_pay] + mainDataList[i][key_swm_pay];
     }
     return s;
   }

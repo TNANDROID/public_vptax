@@ -71,6 +71,9 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
   }
 
   Future<void> initialize() async {
+    preferencesService.getUserInfo("lang") == "en"
+        ? preferencesService.setUserInfo("lang", "en")
+        : preferencesService.setUserInfo("lang", "ta");
     selectedLanguage = await preferencesService.getUserInfo("lang") == "en"
         ? langItems[0][s.key_langCode]
         : langItems[1][s.key_langCode];

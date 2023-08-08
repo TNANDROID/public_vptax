@@ -685,10 +685,10 @@ class Utils {
         await StartUpViewModel().getOpenServiceList("District");
         await StartUpViewModel().getOpenServiceList("Block");
         await StartUpViewModel().getOpenServiceList("Village");
-        await StartUpViewModel().getMainServiceList("TaxType");
-        await StartUpViewModel().getMainServiceList("FinYear");
+        await StartUpViewModel().getMainServiceList("TaxType",context: context);
+        await StartUpViewModel().getMainServiceList("FinYear",context: context);
         await StartUpViewModel().getMainServiceList("PaymentTypeList",
-            dcode: "1", bcode: "1", pvcode: "1");
+            dcode: "1", bcode: "1", pvcode: "1",context: context);
         // throw ('000');
       } catch (error) {
         print('error (${error.toString()}) has been caught');

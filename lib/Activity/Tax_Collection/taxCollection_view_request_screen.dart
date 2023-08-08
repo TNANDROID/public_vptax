@@ -28,6 +28,7 @@ class TaxCollectionView extends StatefulWidget {
 class _TaxCollectionViewState extends State<TaxCollectionView> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
   PreferenceService preferencesService = locator<PreferenceService>();
+  TextEditingController etTextController=TextEditingController();
   String selectedLang = "";
   String selectedDistrict = "";
   String selectedBlock = "";
@@ -56,6 +57,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
       style: TextStyle(
           fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_9),
       name: nameField,
+      controller: etTextController,
       autocorrect: false,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       onChanged: (value) {},
@@ -565,29 +567,62 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
         ));
   }
 
-  void validate() {
-    if (selectedTaxType > 0) {
-      if (selectedEntryType > 0) {
+  Future<void> validate() async {
+    if(selectedTaxType >0){
+      if(selectedEntryType >0){
         if (_formKey.currentState!.saveAndValidate()) {
           Map<String, dynamic> postParams =
-              Map.from(_formKey.currentState!.value);
-          postParams.removeWhere((key, value) => value == null);
-          Navigator.pushReplacement(
+          Map.from(_formKey.currentState!.value);
+          postParams
+              .removeWhere((key, value) => value == null);
+          if (await Utils().isOnline()) {
+    Utils().showProgress(context, 1);
+    try {
+      dynamic request ={};
+      if(selectedEntryType==1){
+        request = {key_service_id: service_key_DemandSelectionList,key_mode_type:1,
+          key_taxtypeid:selectedTaxTypeData[key_taxtypeid].toString(), key_mobile_number:etTextController.text,key_language_name:selectedLang};
+      }else if(selectedEntryType==2){
+        request = {key_service_id: service_key_DemandSelectionList,key_mode_type:2,
+          key_taxtypeid:selectedTaxTypeData[key_taxtypeid].toString(), key_assessment_id:etTextController.text,key_language_name:selectedLang};
+
+      }else if(selectedEntryType==3){
+        request = {key_service_id: service_key_DemandSelectionList,key_mode_type:3,
+          key_taxtypeid:selectedTaxTypeData[key_taxtypeid].toString(), key_assessment_no:etTextController.text,
+          key_dcode:selectedDistrict,key_bcode:selectedBlock,key_pvcode:selectedVillage,key_language_name:selectedLang};
+
+      }
+
+    await StartUpViewModel().getMainServiceList("TaxCollectionDetails",requestDataValue:request,context: context);
+                Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (_) => TaxCollectionDetailsView(
-                      selectedTaxTypeData: selectedTaxTypeData,
-                      isHome: false)));
-        }
-      } else {
-        Utils().showAlert(
-            context, ContentType.warning, 'select_all_field'.tr().toString(),
-            btnCount: "1");
-      }
-    } else {
-      Utils().showAlert(
-          context, ContentType.warning, 'select_taxtype'.tr().toString(),
-          btnCount: "1");
+                  builder: (_) => TaxCollectionDetailsView(selectedTaxTypeData:
+                  selectedTaxTypeData,isHome: false,dcode: selectedDistrict,bcode: selectedBlock,pvcode: selectedVillage,mobile: etTextController,selectedEntryType: selectedEntryType,
+                  )));
+
+      // throw ('000');
+    } catch (error) {
+    print('error (${error.toString()}) has been caught');
+    Utils().hideProgress(context);
     }
+
+    Utils().hideProgress(context);
+    } else {
+    Utils().showAlert(
+    context,
+    ContentType.fail,
+    "noInternet".tr().toString(),
+    );
+    }
+
+        }
+      }else{
+        Utils().showAlert(context,ContentType.warning,'select_all_field'.tr().toString(),btnCount: "1",btnmsg: "ok");
+      }
+    }else{
+      Utils().showAlert(context,ContentType.warning,'select_taxtype'.tr().toString(),btnCount: "1",btnmsg: "ok");
+    }
+
   }
 }

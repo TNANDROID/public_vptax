@@ -123,29 +123,14 @@ class ApiServices {
         body: json.encode(jsonRequest),headers: header);
 
     print("response>>>>>>"+response.toString());
-    List<dynamic> res_jsonArray = [];
+    var mainData;
     if (response.statusCode == 200) {
       var data = response.body;
       var jsonData = jsonDecode(data);
-      var mainData = jsonData[key_main_data];
-      var status = mainData[key_status];
+      mainData = jsonData[key_main_data];
       print("response>>>>>>"+mainData.toString());
-
-      var response_value = mainData[key_response];
-      if (status == key_success && response_value == key_success) {
-        res_jsonArray = mainData[key_data];
-        print("response1>>>>>>"+res_jsonArray.toString());
-
-        if (res_jsonArray.isNotEmpty) {
-          print("response2>>>>>>"+res_jsonArray.toString());
-
-          return res_jsonArray;
-        }
-      }
-    }
-    print("response>>>>>>"+res_jsonArray.toString());
-
-    return res_jsonArray;
+    return mainData;
+  }
   }
   /**********************************************/
   /*********Open Service API Call********/
@@ -173,4 +158,5 @@ class ApiServices {
     }
     return [];
   }
+
 }

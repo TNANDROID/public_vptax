@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Services/Apiservices.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
+import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:public_vptax/Utils/utils.dart';
 import 'package:stacked/stacked.dart';
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
@@ -23,6 +25,7 @@ class StartUpViewModel extends BaseViewModel {
   List<dynamic> finYearList = [];
   List<dynamic> taxTypeList = [];
   List<dynamic> PaymentTypeList = [];
+  List<dynamic> taxCollectionDetailsList = [];
 
 
   Future<void> loadUIBlock(String value) async {
@@ -69,7 +72,7 @@ class StartUpViewModel extends BaseViewModel {
     }
     setBusy(false);
   }
-  Future getMainServiceList(String type,{String dcode = "1",String bcode= "1",String pvcode= "1"}) async {
+  Future getMainServiceList(String type,{String dcode = "1",String bcode= "1",String pvcode= "1", dynamic requestDataValue,required BuildContext context}) async {
     setBusy(true);
     dynamic requestData = {};
     if (type == "TaxType") {
@@ -81,12 +84,24 @@ class StartUpViewModel extends BaseViewModel {
     }else if (type == "PaymentTypeList") {
       dynamic request = {key_service_id: service_key_PaymentTypeList,key_dcode:dcode, key_bcode:bcode, key_pvcode:pvcode};
       requestData = {key_data_content: request};
+    }else if (type == "TaxCollectionDetails") {
+      requestData = {key_data_content: requestDataValue};
     }
     print("requestData>>"+requestData.toString());
 
     var response = await apiServices.mainServiceFunction(requestData);
+
     if (type == "TaxType") {
-      taxTypeList = response;
+      var status = response[key_status];
+      var response_value = response[key_response];
+      List res_jsonArray = [];
+      if (status == key_success && response_value == key_success) {
+        res_jsonArray = response[key_data];
+        print("response_TaxType>>>>>>"+res_jsonArray.toString());
+      }else{
+        Utils().showAlert(context, ContentType.warning, response_value.toString());
+      }
+      taxTypeList = res_jsonArray;
       for (var item in taxTypeList) {
         switch (item['taxtypeid']) {
           case 1:
@@ -110,12 +125,61 @@ class StartUpViewModel extends BaseViewModel {
       }
 
       preferencesService.taxTypeList = taxTypeList.toList();
-    } else if (type == "FinYear") {
-      finYearList = response;
+    }
+    else if (type == "FinYear") {
+      var status = response[key_status];
+      var response_value = response[key_response];
+      List res_jsonArray = [];
+      if (status == key_success && response_value == key_success) {
+        res_jsonArray = response[key_data];
+        print("response_FinYear>>>>>>"+res_jsonArray.toString());
+      }else{
+        Utils().showAlert(context, ContentType.warning, response_value.toString());
+      }
+      finYearList = res_jsonArray;
       preferencesService.finYearList = finYearList.toList();
-    }else if (type == "PaymentTypeList") {
-      PaymentTypeList = response;
+    }
+    else if (type == "PaymentTypeList") {
+      var status = response[key_status];
+      var response_value = response[key_response];
+      List res_jsonArray = [];
+      if (status == key_success && response_value == key_success) {
+        res_jsonArray = response[key_data];
+        print("response_PaymentTypeList>>>>>>"+res_jsonArray.toString());
+      }else{
+        Utils().showAlert(context, ContentType.warning, response_value.toString());
+      }
+      PaymentTypeList = res_jsonArray;
       preferencesService.PaymentTypeList = PaymentTypeList.toList();
+    }else if (type == "TaxCollectionDetails") {
+      var status = response[key_status];
+      var response_value = response[key_response];
+      List res_jsonArray = [];
+      if (status == key_success && response_value == key_success) {
+        res_jsonArray = response[key_data_set];
+        print("response_TaxCollectionDetails1>>>>>>"+res_jsonArray.toString());
+      }else{
+        Utils().showAlert(context, ContentType.warning, response_value.toString());
+      }
+      taxCollectionDetailsList = res_jsonArray[0][key_ASSESSMENT_DETAILS];
+      print("response_TaxCollectionDetails2>>>>>>"+taxCollectionDetailsList.toString());
+
+      for (int i = 0; i < taxCollectionDetailsList.length; i++) {
+        List<dynamic> map1 = taxCollectionDetailsList[i];
+        List<dynamic> map2 = [{key_tax_total: 0.00, key_swm_total: 0.00, key_tax_pay: 0.00, key_swm_pay: 0.00}];
+        /*taxCollectionDetailsList[i][key_tax_total]=0.00;
+        taxCollectionDetailsList[i][key_swm_total]=0.00;
+        taxCollectionDetailsList[i][key_tax_pay]=0.00;
+        taxCollectionDetailsList[i][key_swm_pay]=0.00;*/
+        map1.addAll(map2);
+        taxCollectionDetailsList[i]=map1;
+        for (int j = 0; j < taxCollectionDetailsList[i][key_DEMAND_DETAILS].length; j++) {
+          taxCollectionDetailsList[i][key_DEMAND_DETAILS][j][key_flag]=false;
+        }
+      }
+      print("response_TaxCollectionDetails3>>>>>>"+taxCollectionDetailsList.toString());
+
+      preferencesService.taxCollectionDetailsList = taxCollectionDetailsList.toList();
     }
     setBusy(false);
   }
