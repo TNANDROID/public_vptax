@@ -77,9 +77,26 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
     Future.delayed(
       const Duration(seconds: 2, milliseconds: 350),
       () {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => Home(isLogin: false),
-        ));
+        Navigator.of(context).push(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => Home(isLogin: false),
+            transitionDuration: const Duration(seconds: 2),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              // Slide transition
+              const begin = Offset(1.0, 0.0); // Start position
+              const end = Offset.zero; // End position
+              const curve = Curves.easeInOut; // Transition curve
+
+              var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              var offsetAnimation = animation.drive(tween);
+
+              return SlideTransition(
+                position: offsetAnimation,
+                child: child,
+              );
+            },
+          ),
+        );
       },
     );
   }
