@@ -1,4 +1,4 @@
-import 'dart:async';
+// ignore_for_file: use_build_context_synchronously, file_names, unused_field
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -10,9 +10,7 @@ import 'package:public_vptax/Resources/ImagePath.dart' as imagepath;
 import 'package:public_vptax/Utils/utils.dart';
 
 import '../../Layout/screen_size.dart';
-import '../../Model/startup_model.dart';
 import '../../Resources/StringsKey.dart' as s;
-import '../../Resources/StringsKey.dart';
 import '../../Services/Preferenceservices.dart';
 import '../../Services/locator.dart';
 import '../../Utils/ContentInfo.dart';
@@ -44,15 +42,23 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    _rightToLeftAnimController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    // *************************** Future Functionality  *************************** //
 
-    _rightToLeftAnimation = Tween<Offset>(
-            begin: const Offset(1.0, 0.0), end: const Offset(0.0, 0.0))
-        .animate(CurvedAnimation(
-            parent: _rightToLeftAnimController, curve: Curves.easeInOut));
+    // _rightToLeftAnimController =
+    //     AnimationController(vsync: this, duration: const Duration(seconds: 2));
 
-// Top-to-bottom slide animation
+    // _rightToLeftAnimation = Tween<Offset>(
+    //         begin: const Offset(1.0, 0.0), end: const Offset(0.0, 0.0))
+    //     .animate(CurvedAnimation(
+    //         parent: _rightToLeftAnimController, curve: Curves.easeInOut));
+
+    // _rightToLeftAnimController.forward();
+
+    // initialize();
+
+    // *************************** Future Functionality  *************************** //
+
+    // Top-to-bottom slide animation
     _topAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
@@ -67,41 +73,52 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
     ));
 
     _topAnimationController.forward();
-    _rightToLeftAnimController.forward();
-    initialize();
+
+    Future.delayed(
+      const Duration(seconds: 2, milliseconds: 350),
+      () {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => Home(isLogin: false),
+        ));
+      },
+    );
   }
 
-  Future<void> initialize() async {
-    preferencesService.getUserInfo("lang") == "en"
-        ? preferencesService.setUserInfo("lang", "en")
-        : preferencesService.setUserInfo("lang", "ta");
-    selectedLanguage = await preferencesService.getUserInfo("lang") == "en"
-        ? langItems[0][s.key_langCode]
-        : langItems[1][s.key_langCode];
+  // *************************** Future Functionality  *************************** //
 
-    setState(() {});
-  }
+  // Future<void> initialize() async {
+  //   preferencesService.getUserInfo("lang") == "en"
+  //       ? preferencesService.setUserInfo("lang", "en")
+  //       : preferencesService.setUserInfo("lang", "ta");
+  //   selectedLanguage = await preferencesService.getUserInfo("lang") == "en"
+  //       ? langItems[0][s.key_langCode]
+  //       : langItems[1][s.key_langCode];
 
-  void handleClick(String value) async {
-    switch (value) {
-      case '2':
-        setState(() {
-          preferencesService.setUserInfo("lang", "ta");
-          context.setLocale(const Locale('ta', 'IN'));
-        });
-        break;
-      case '1':
-        setState(() {
-          preferencesService.setUserInfo("lang", "en");
-          context.setLocale(const Locale('en', 'US'));
-        });
-        break;
-    }
-  }
+  //   setState(() {});
+  // }
+
+  // void handleClick(String value) async {
+  //   switch (value) {
+  //     case '2':
+  //       setState(() {
+  //         preferencesService.setUserInfo("lang", "ta");
+  //         context.setLocale(const Locale('ta', 'IN'));
+  //       });
+  //       break;
+  //     case '1':
+  //       setState(() {
+  //         preferencesService.setUserInfo("lang", "en");
+  //         context.setLocale(const Locale('en', 'US'));
+  //       });
+  //       break;
+  //   }
+  // }
+
+  // *************************** Future Functionality  *************************** //
 
   @override
   void dispose() {
-    _rightToLeftAnimController.dispose();
+    // _rightToLeftAnimController.dispose();
     _topAnimationController.dispose();
     super.dispose();
   }
@@ -118,48 +135,51 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-//  ****************** Choose Language Conatiner with fixed Height ****************** //
+              //  ****************** Choose Language Conatiner with fixed Height ****************** //
 
-              Container(
-                width: Screen.width(context),
-                height: Screen.height(context) / 6,
-                padding: const EdgeInsets.all(15),
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton(
-                      elevation: 0,
-                      isExpanded: false,
-                      value: selectedLanguage,
-                      icon: const Padding(
-                          padding: EdgeInsets.all(15),
-                          child: Icon(
-                            Icons.arrow_downward_rounded,
-                            size: 15,
-                          )),
-                      style: TextStyle(
-                        color: c.black,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
+              Visibility(
+                visible: false,
+                child: Container(
+                  width: Screen.width(context),
+                  height: Screen.height(context) / 6,
+                  padding: const EdgeInsets.all(15),
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton(
+                        elevation: 0,
+                        isExpanded: false,
+                        value: selectedLanguage,
+                        icon: const Padding(
+                            padding: EdgeInsets.all(15),
+                            child: Icon(
+                              Icons.arrow_downward_rounded,
+                              size: 15,
+                            )),
+                        style: TextStyle(
+                          color: c.black,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        items: langItems
+                            .map((item) => DropdownMenuItem<String>(
+                                  value: item[s.key_langCode],
+                                  child: Text(item[s.key_language]),
+                                ))
+                            .toList(),
+                        onChanged: (newValue) {
+                          setState(() {
+                            selectedLanguage = newValue.toString();
+                            // handleClick(selectedLanguage!);
+                          });
+                        },
                       ),
-                      items: langItems
-                          .map((item) => DropdownMenuItem<String>(
-                                value: item[s.key_langCode],
-                                child: Text(item[s.key_language]),
-                              ))
-                          .toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          selectedLanguage = newValue.toString();
-                          handleClick(selectedLanguage!);
-                        });
-                      },
                     ),
                   ),
                 ),
               ),
 
-//  ****************** App Name  ****************** //
+              //  ****************** App Name  ****************** //
 
               SlideTransition(
                 position: _topAnimation,
@@ -184,58 +204,60 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
               ),
               UIHelper.verticalSpaceMedium,
 
-//  ****************** Qucik Action Buttons  ****************** //
+              // *************************** Future Functionality  *************************** //
 
-              SlideTransition(
-                position: _rightToLeftAnimation,
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        actionButton(
-                            1, 'signIN'.tr().toString(), imagepath.login),
-                        UIHelper.horizontalSpaceMedium,
-                        actionButton(2, 'quickPay'.tr().toString(),
-                            imagepath.quick_pay1),
-                      ],
-                    ),
-                    UIHelper.verticalSpaceMedium,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'signupText'.tr().toString(),
-                          style: TextStyle(
-                            color: c.text_color,
-                            fontSize: 16,
-                          ),
-                        ),
-                        UIHelper.horizontalSpaceSmall,
-                        InkWell(
-                          onTap: () => {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                         Home(isLogin: "islogin",))),
-                            print("Sign in Tapped ")
-                          },
-                          child: Text(
-                            'signUP'.tr().toString(),
-                            style: TextStyle(
-                              color: c.sky_blue,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+              //  ****************** Qucik Action Buttons  ****************** //
 
-//  ****************** Image Container ****************** //
+              // SlideTransition(
+              //   position: _rightToLeftAnimation,
+              //   child: Column(
+              //     children: [
+              //       Row(
+              //         mainAxisAlignment: MainAxisAlignment.center,
+              //         children: [
+              //           actionButton(1, 'signIN'.tr().toString(), imagepath.login),
+              //           UIHelper.horizontalSpaceMedium,
+              //           actionButton(2, 'quickPay'.tr().toString(), imagepath.quick_pay1),
+              //         ],
+              //       ),
+              //       UIHelper.verticalSpaceMedium,
+              //       Row(
+              //         mainAxisAlignment: MainAxisAlignment.center,
+              //         children: [
+              //           Text(
+              //             'signupText'.tr().toString(),
+              //             style: TextStyle(
+              //               color: c.text_color,
+              //               fontSize: 16,
+              //             ),
+              //           ),
+              //           UIHelper.horizontalSpaceSmall,
+              //           InkWell(
+              //             onTap: () => {
+              //               Navigator.push(
+              //                   context,
+              //                   MaterialPageRoute(
+              //                       builder: (context) => Home(
+              //                             isLogin: "islogin",
+              //                           ))),
+              //             },
+              //             child: Text(
+              //               'signUP'.tr().toString(),
+              //               style: TextStyle(
+              //                 color: c.sky_blue,
+              //                 fontSize: 16,
+              //               ),
+              //             ),
+              //           ),
+              //         ],
+              //       ),
+              //     ],
+              //   ),
+              // ),
+
+              // *************************** Future Functionality  *************************** //
+
+              //  ****************** Image Container ****************** //
 
               Align(
                 alignment: Alignment.bottomCenter,
@@ -252,6 +274,8 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
   }
 
 //  ****************** Qucik Action Buttons Common Wdget  ****************** //
+
+// *************************** Future Functionality  *************************** //
 
   Widget actionButton(int flag, String btnText, String imgPath) {
     return CustomGradientButton(
@@ -271,14 +295,15 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
           } else if (flag == 2) {
             if (await utils.isOnline()) {
               await Utils().apiCalls(context);
-              preferencesService.taxTypeList.length > 0?
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => TaxCollectionView(),
-              )):  utils.showAlert(
-                context,
-                ContentType.fail,
-                "fail".tr().toString(),
-              );
+              preferencesService.taxTypeList.isNotEmpty
+                  ? Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => TaxCollectionView(),
+                    ))
+                  : utils.showAlert(
+                      context,
+                      ContentType.fail,
+                      "fail".tr().toString(),
+                    );
             } else {
               utils.showAlert(
                 context,
@@ -312,4 +337,6 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
       ),
     );
   }
+
+  // *************************** Future Functionality  *************************** //
 }
