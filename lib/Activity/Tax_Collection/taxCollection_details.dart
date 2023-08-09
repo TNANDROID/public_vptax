@@ -24,8 +24,9 @@ class TaxCollectionDetailsView extends StatefulWidget {
   final bcode;
   final pvcode;
   final mobile;
+  final isTaxDropDown;
   final selectedEntryType;
-  TaxCollectionDetailsView({Key? key, this.selectedTaxTypeData, this.isHome, this.dcode, this.bcode, this.pvcode, this.mobile, this.selectedEntryType});
+  TaxCollectionDetailsView({Key? key, this.selectedTaxTypeData, this.isHome, this.dcode, this.bcode, this.pvcode, this.mobile, this.isTaxDropDown, this.selectedEntryType});
 
   @override
   _TaxCollectionDetailsViewState createState() => _TaxCollectionDetailsViewState();
@@ -41,6 +42,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
   //Strings
   String selectedLang = "";
   String selectTaxtype = "";
+  String temp_assessment_id = "";
+  String mobile_widget = "";
 
   //List
   List isShowFlag = [];
@@ -67,16 +70,6 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
     // Create a curved animation with Curves.bounceOut
     _animation = CurvedAnimation(parent: _controller, curve: Curves.bounceOut);
 
-    taxTypeList = preferencesService.taxTypeList;
-    if (widget.isHome) {
-      selectedTaxTypeData = taxTypeList[0];
-    } else {
-      selectedTaxTypeData = widget.selectedTaxTypeData;
-    }
-
-    selectTaxtype = selectedTaxTypeData['taxtypeid'].toString();
-    filterDataList();
-
     // Add a listener to rebuild the widget when the animation value changes
     _animation.addListener(() {
       setState(() {});
@@ -92,9 +85,34 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
     _controller.forward();
   }
 
+  void getCount() {
+    main_count = 0;
+    if (preferencesService.addedTaxPayList.isNotEmpty) {
+      for (var prefSelectData in preferencesService.addedTaxPayList) {
+        for (var prefSelectedTaxData in prefSelectData[s.key_DEMAND_DETAILS]) {
+          if (prefSelectedTaxData[s.key_flag] == true) {
+            main_count++;
+          }
+        }
+        // for (var prefSelectedTaxData in prefSelectData['swmData']) {
+        //   if (prefSelectedTaxData[s.key_flag] == true) {
+        //     main_count++;
+        //   }
+        // }
+      }
+    }
+  }
+
   Future<void> initialize() async {
     selectedLang = await preferencesService.getUserInfo("lang");
-
+    mobile_widget = await preferencesService.getUserInfo("mobile_number");
+    taxTypeList = preferencesService.taxTypeList;
+    selectedTaxTypeData = widget.selectedTaxTypeData;
+    selectTaxtype = selectedTaxTypeData['taxtypeid'].toString();
+    if (widget.isHome) {
+      await getTaxDetails();
+    }
+    filterDataList();
     setState(() {});
   }
 
@@ -148,18 +166,25 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                               children: [
                                 UIHelper.verticalSpaceSmall,
                                 addToPayWidget(),
-                                ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemCount: mainList.length,
-                                    itemBuilder: (context, mainIndex) {
-                                      return Column(
-                                        children: [
-                                          headerCardUIWidget(mainIndex),
-                                          UIHelper.verticalSpaceMedium,
-                                        ],
-                                      );
-                                    })
+                                Visibility(
+                                  visible: mainList.isNotEmpty,
+                                  child: ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      itemCount: mainList.length,
+                                      itemBuilder: (context, mainIndex) {
+                                        return Column(
+                                          children: [
+                                            headerCardUIWidget(mainIndex),
+                                            UIHelper.verticalSpaceMedium,
+                                          ],
+                                        );
+                                      }),
+                                ),
+                                Visibility(
+                                  visible: mainList.isEmpty,
+                                  child: Container(margin: EdgeInsets.only(top: 100, right: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true)),
+                                )
                               ],
                             )),
                       ),
@@ -387,7 +412,11 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                       side: BorderSide(width: 1, color: c.grey_6),
                                       value: taxData[rowIndex][s.key_flag],
                                       onChanged: (v) {
-                                        if (rowIndex == 0 || taxData[rowIndex - 1][s.key_flag] == true) {
+                                        if (temp_assessment_id.isEmpty) {
+                                          temp_assessment_id = mainList[mainIndex][s.key_assessment_id].toString();
+                                        }
+
+                                        if (temp_assessment_id == mainList[mainIndex][s.key_assessment_id].toString()) {
                                           if (taxData[rowIndex][s.key_flag] == true) {
                                             for (int i = 0; i < taxData.length; i++) {
                                               if (i >= rowIndex) {
@@ -401,6 +430,9 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                                   mainList[mainIndex][s.key_tax_pay] =
                                                       getTotal(mainList[mainIndex][s.key_tax_total], double.parse(mainList[mainIndex][s.key_property_available_advance].toString()));
                                                 }
+                                                if (taxData[0][s.key_flag] == false) {
+                                                  temp_assessment_id = '';
+                                                }
                                               }
                                             }
                                           } else {
@@ -411,41 +443,24 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                             mainList[mainIndex][s.key_tax_pay] =
                                                 getTotal(mainList[mainIndex][s.key_tax_total], double.parse(mainList[mainIndex][s.key_property_available_advance].toString()));
                                           }
+                                        } else {
+                                          Utils().showAlert(context, ContentType.fail, 'message');
                                         }
 
                                         setState(() {
                                           main_count = 0;
                                           main_totalAmount = 0.00;
-                                          if (preferencesService.addedTaxPayList.isNotEmpty) {
-                                            final item = preferencesService.addedTaxPayList
-                                                .firstWhere((e) => e[s.key_taxtypeid] == selectedTaxTypeData[s.key_taxtypeid].toString(), orElse: () => print('No matching element.'));
-                                            preferencesService.addedTaxPayList.remove(item);
-                                          }
+
                                           for (int i = 0; i < mainList.length; i++) {
                                             main_totalAmount = main_totalAmount + mainList[i][s.key_tax_pay] + mainList[i][s.key_swm_pay];
-
-                                            if (mainList[i][s.key_tax_total] > 0 || mainList[i][s.key_swm_total] > 0) {
-                                              preferencesService.addedTaxPayList.add(mainList[i]);
-                                            }
                                           }
-                                          if (preferencesService.addedTaxPayList.isNotEmpty) {
-                                            for (int m = 0; m < preferencesService.addedTaxPayList.length; m++) {
-                                              print(' list>><< ${preferencesService.addedTaxPayList[m]}');
-                                              for (int j = 0; j < preferencesService.addedTaxPayList[m][s.key_DEMAND_DETAILS].length; j++) {
-                                                if (preferencesService.addedTaxPayList[m][s.key_DEMAND_DETAILS][j][s.key_flag] == true) {
-                                                  main_count = main_count + 1;
-                                                }
-                                              }
-                                              /*
-                                              So far SWM details Not availabe in Responce
-                                              for (int j = 0; j < preferencesService.addedTaxPayList[m]['swmData'].length; j++) {
-                                                if (preferencesService.addedTaxPayList[m]['swmData'][j][s.key_flag] == true) {
-                                                  main_count = main_count + 1;
-                                                }
-                                              }
-                                              */
-                                            }
+                                          preferencesService.addedTaxPayList.removeWhere((element) =>
+                                              element['taxtypeid'].toString() == mainList[mainIndex]['taxtypeid'].toString() &&
+                                              element['assesment_no'].toString() == mainList[mainIndex]['assesment_no'].toString());
+                                          if (mainList[mainIndex][s.key_tax_total] > 0 || mainList[mainIndex][s.key_swm_total] > 0) {
+                                            preferencesService.addedTaxPayList.add(mainList[mainIndex]);
                                           }
+                                          getCount();
                                           repeatOnce();
                                         });
                                       },
@@ -517,31 +532,16 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                                 setState(() {
                                                   main_count = 0;
                                                   main_totalAmount = 0.00;
-                                                  if (preferencesService.addedTaxPayList.isNotEmpty) {
-                                                    final item = preferencesService.addedTaxPayList
-                                                        .firstWhere((e) => e[s.key_taxtypeid] == selectedTaxTypeData[s.key_taxtypeid].toString(), orElse: () => print('No matching element.'));
-                                                    preferencesService.addedTaxPayList.remove(item);
-                                                  }
                                                   for (int i = 0; i < mainList.length; i++) {
                                                     main_totalAmount = main_totalAmount + mainList[i][s.key_tax_pay] + mainList[i][s.key_swm_pay];
-                                                    if (mainList[i][s.key_tax_total] > 0 || mainList[i][s.key_swm_total] > 0) {
-                                                      preferencesService.addedTaxPayList.add(mainList[i]);
-                                                    }
                                                   }
-                                                  if (preferencesService.addedTaxPayList.isNotEmpty) {
-                                                    for (int m = 0; m < preferencesService.addedTaxPayList.length; m++) {
-                                                      for (int j = 0; j < preferencesService.addedTaxPayList[m]['taxData'].length; j++) {
-                                                        if (preferencesService.addedTaxPayList[m]['taxData'][j][s.key_flag] == true) {
-                                                          main_count = main_count + 1;
-                                                        }
-                                                      }
-                                                      for (int j = 0; j < preferencesService.addedTaxPayList[m]['swmData'].length; j++) {
-                                                        if (preferencesService.addedTaxPayList[m]['swmData'][j][s.key_flag] == true) {
-                                                          main_count = main_count + 1;
-                                                        }
-                                                      }
-                                                    }
+                                                  preferencesService.addedTaxPayList.removeWhere((element) =>
+                                                      element['taxtypeid'].toString() == mainList[mainIndex]['taxtypeid'].toString() &&
+                                                      element['assesment_no'].toString() == mainList[mainIndex]['assesment_no'].toString());
+                                                  if (mainList[mainIndex][s.key_tax_total] > 0 || mainList[mainIndex][s.key_swm_total] > 0) {
+                                                    preferencesService.addedTaxPayList.add(mainList[mainIndex]);
                                                   }
+                                                  getCount();
                                                   repeatOnce();
                                                 });
                                               },
@@ -701,7 +701,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
 
   Widget addInputDropdownField() {
     return FormBuilderDropdown(
-      enabled: widget.isHome ? true : false,
+      enabled: widget.isTaxDropDown ? true : false,
       style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: c.grey_8),
       decoration: InputDecoration(
         contentPadding: EdgeInsets.only(left: 0),
@@ -723,7 +723,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
         ),
       ),
       initialValue: selectedTaxTypeData,
-      iconSize: widget.isHome ? 28 : 0,
+      iconSize: widget.isTaxDropDown ? 28 : 0,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: FormBuilderValidators.compose([FormBuilderValidators.required(errorText: "")]),
       items: taxTypeList
@@ -848,7 +848,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
             s.key_service_id: s.service_key_DemandSelectionList,
             s.key_mode_type: 1,
             s.key_taxtypeid: selectedTaxTypeData[s.key_taxtypeid].toString(),
-            s.key_mobile_number: widget.mobile.text,
+            s.key_mobile_number: mobile_widget,
             s.key_language_name: selectedLang
           };
         }
