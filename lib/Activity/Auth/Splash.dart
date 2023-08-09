@@ -12,6 +12,7 @@ import 'package:public_vptax/Utils/utils.dart';
 import '../../Layout/screen_size.dart';
 import '../../Model/startup_model.dart';
 import '../../Resources/StringsKey.dart' as s;
+import '../../Resources/StringsKey.dart';
 import '../../Services/Preferenceservices.dart';
 import '../../Services/locator.dart';
 import '../../Utils/ContentInfo.dart';
@@ -217,7 +218,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const Home(isLogin: "islogin"))),
+                                         Home(isLogin: "islogin",))),
                             print("Sign in Tapped ")
                           },
                           child: Text(
@@ -270,9 +271,14 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
           } else if (flag == 2) {
             if (await utils.isOnline()) {
               await Utils().apiCalls(context);
+              preferencesService.taxTypeList.length > 0?
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => TaxCollectionView(),
-              ));
+              )):  utils.showAlert(
+                context,
+                ContentType.fail,
+                "fail".tr().toString(),
+              );
             } else {
               utils.showAlert(
                 context,

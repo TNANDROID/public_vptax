@@ -158,26 +158,29 @@ class StartUpViewModel extends BaseViewModel {
       if (status == key_success && response_value == key_success) {
         res_jsonArray = response[key_data_set];
         print("response_TaxCollectionDetails1>>>>>>"+res_jsonArray.toString());
+        for(int i = 0; i < res_jsonArray.length; i++) {
+
+          res_jsonArray[i][key_ASSESSMENT_DETAILS].forEach((item) {
+            item[key_tax_total] = 0.00;
+            item[key_swm_total] = 0.00;
+            item[key_tax_pay] = 0.00;
+            item[key_swm_pay] = 0.00;
+            item[key_DEMAND_DETAILS].forEach((item2) {
+              item2[key_flag] = false;
+              // Additional calculations or logic can be added here if needed
+            });
+            // Additional calculations or logic can be added here if needed
+          });
+          taxCollectionDetailsList.add(res_jsonArray[i][key_ASSESSMENT_DETAILS]);
+        }
+
+        print("response_TaxCollectionDetails2>>>>>>"+taxCollectionDetailsList.toString());
+
+        preferencesService.taxCollectionDetailsList = taxCollectionDetailsList.toList();
       }else{
+        preferencesService.taxCollectionDetailsList = [];
         Utils().showAlert(context, ContentType.warning, response_value.toString());
       }
-      taxCollectionDetailsList = res_jsonArray[0][key_ASSESSMENT_DETAILS];
-      print("response_TaxCollectionDetails2>>>>>>"+taxCollectionDetailsList.toString());
-
-      taxCollectionDetailsList.forEach((item) {
-        item[key_tax_total] = 0.00;
-        item[key_swm_total] = 0.00;
-        item[key_tax_pay] = 0.00;
-        item[key_swm_pay] = 0.00;
-        item[key_DEMAND_DETAILS].forEach((item2) {
-          item2[key_flag] = false;
-          // Additional calculations or logic can be added here if needed
-        });
-        // Additional calculations or logic can be added here if needed
-      });
-      print("response_TaxCollectionDetails3>>>>>>"+taxCollectionDetailsList.toString());
-
-      preferencesService.taxCollectionDetailsList = taxCollectionDetailsList.toList();
     }
     setBusy(false);
   }

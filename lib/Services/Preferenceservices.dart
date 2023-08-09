@@ -21,7 +21,7 @@ class PreferenceService {
 // Get User Info
   Future<String> getUserInfo(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String getStr = prefs.getString(key) ?? '';
+    String getStr = await prefs.getString(key) ?? '';
     if (getStr != '') {
       return getStr;
     }

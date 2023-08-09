@@ -23,7 +23,7 @@ import 'Download_receipt.dart';
 import 'Splash.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key, required isLogin});
+   Home({super.key, required isLogin});
 
   @override
   State<Home> createState() => _HomeState();
@@ -240,7 +240,7 @@ class _HomeState extends State<Home> {
                                               builder: (_) =>
                                                   TaxCollectionDetailsView(
                                                       selectedTaxTypeData:
-                                                      taxTypeList[i],isHome: false,)));
+                                                      taxTypeList[i],isTaxDropDown: false,isHome: true,mobile: preferencesService.getUserInfo(key_mobile_number).toString(),selectedEntryType: 1,)));
 
                                     });
                                   },
@@ -350,7 +350,7 @@ class _HomeState extends State<Home> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (_) =>
-                                                      TaxCollectionDetailsView(isHome: true,)));
+                                                      TaxCollectionDetailsView(selectedTaxTypeData: taxTypeList[0],isTaxDropDown: true,isHome: true,mobile: preferencesService.getUserInfo(key_mobile_number),selectedEntryType: 1,)));
 
                                         } else if (selected_index == 1) {
                                           Navigator.push(

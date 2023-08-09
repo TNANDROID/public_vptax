@@ -74,7 +74,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
         errorStyle: TextStyle(fontSize: 10),
         contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12), // Optional: Adjust padding
       ),
-      validator: fieldType == key_mobileNumber
+      validator: fieldType == key_mobile_number
           ? ((value) {
               if (value == "" || value == null) {
                 return "$hintText ${'isEmpty'.tr()}";
@@ -87,13 +87,13 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
           : FormBuilderValidators.compose([
               FormBuilderValidators.required(errorText: "$hintText ${'isEmpty'.tr()}"),
             ]),
-      inputFormatters: fieldType == key_mobileNumber
+      inputFormatters: fieldType == key_mobile_number
           ? [
               FilteringTextInputFormatter.digitsOnly,
               LengthLimitingTextInputFormatter(10),
             ]
           : [],
-      keyboardType: fieldType == key_mobileNumber || fieldType == key_number ? TextInputType.number : TextInputType.text,
+      keyboardType: fieldType == key_mobile_number || fieldType == key_number ? TextInputType.number : TextInputType.text,
     );
   }
 
@@ -256,7 +256,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                     selectedEntryType == 1
                         ? Column(
                             children: [
-                              addInputFormControl('mobile', 'mobileNumber'.tr().toString(), key_mobileNumber),
+                              addInputFormControl('mobile', 'mobileNumber'.tr().toString(), key_mobile_number),
                               UIHelper.verticalSpaceSmall,
                             ],
                           )
@@ -487,11 +487,12 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
             }
 
             Utils().hideProgress(context);
-            Navigator.pushReplacement(
+            Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (_) => TaxCollectionDetailsView(
                           selectedTaxTypeData: selectedTaxTypeData,
+                      isTaxDropDown: selectedEntryType==1?true:false,
                           isHome: false,
                           dcode: selectedDistrict,
                           bcode: selectedBlock,

@@ -19,7 +19,9 @@ import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/utils.dart';
 
+import '../../Resources/StringsKey.dart';
 import '../../Utils/ContentInfo.dart';
+import 'Home.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -106,7 +108,8 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
         );
       }
     } else {
-      await goToLogin();
+      preferencesService.setUserInfo(key_mobile_number, mobileController.text);
+      await verifyOTP();
     }
     setState(() {});
   }
@@ -324,7 +327,7 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
 
                             CustomGradientButton(
                               onPressed: () async {
-                                mobileController.text = '9445621154';
+                                mobileController.text = '9875235654';
                                 if (await utils.isOnline()) {
                                   await validate();
                                 } else {
@@ -364,35 +367,15 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
 
   // *************************************** API CALL  *************************************** //
 
-  Future<void> goToLogin() async {
-    String ss = String.fromCharCodes(Runes('\u0024'));
-
-    String random = utils.generateRandomString(15);
-
-    Map request = {
-      s.key_service_id: s.service_key_login,
-      s.key_user_login_key: random,
-      s.key_user_name: 'vpadm7233@gmail.com',
-      s.key_user_pwd: random,
-      s.key_imei_number: '860535062210228',
-      s.key_serial_number: '9222050471',
-      s.key_os_version: "10",
-      s.key_appcode: "VP",
-    };
-    print('request: ${request}');
-    var loginResponceList = await apiServices.loginServiceFunction(request);
-
-    if (loginResponceList.statusCode == 200) {
-      var data = loginResponceList.body;
-      var loginResponce = jsonDecode(data);
-      String status = loginResponce[s.key_status];
-      print('status: ${status}');
-      String responce = loginResponce[s.key_response];
-      print('loginResponce: $responce');
-      String mess = loginResponce[s.key_message];
-      print('mess: $mess');
-      String erro = loginResponce['ERROR_ID'].toString();
-      print('erro: $erro');
-    }
+  Future<void> verifyOTP() async {
+    String mobile= preferencesService.getUserInfo(key_mobile_number).toString();
+    String lan= preferencesService.getUserInfo("lang").toString();
+    print("mobile>>" + mobile);
+    print("lan>>" + mobile);
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+             Home(isLogin: "islogin")));
   }
 }
