@@ -448,37 +448,24 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
           if (await Utils().isOnline()) {
             Utils().showProgress(context, 1);
             try {
-              dynamic request = {};
-              if (selectedEntryType == 1) {
-                request = {
-                  key_service_id: service_key_DemandSelectionList,
-                  key_mode_type: 1,
-                  key_taxtypeid: selectedTaxTypeData[key_taxtypeid].toString(),
-                  key_mobile_number: etTextController.text,
-                  key_language_name: selectedLang
-                };
-              } else if (selectedEntryType == 2) {
-                request = {
-                  key_service_id: service_key_DemandSelectionList,
-                  key_mode_type: 2,
-                  key_taxtypeid: selectedTaxTypeData[key_taxtypeid].toString(),
-                  key_assessment_id: etTextController.text,
-                  key_language_name: selectedLang
-                };
-              } else if (selectedEntryType == 3) {
-                request = {
-                  key_service_id: service_key_DemandSelectionList,
-                  key_mode_type: 3,
-                  key_taxtypeid: selectedTaxTypeData[key_taxtypeid].toString(),
+              dynamic request = {
+                key_service_id: service_key_DemandSelectionList,
+                key_mode_type: selectedEntryType,
+                key_taxtypeid: selectedTaxTypeData[key_taxtypeid].toString(),
+                key_language_name: selectedLang,
+                if (selectedEntryType == 1)
+                  key_mobile_number: etTextController.text
+                else if (selectedEntryType == 2)
+                  key_assessment_id: etTextController.text
+                else
                   key_assessment_no: etTextController.text,
-                  key_dcode: selectedDistrict,
-                  key_bcode: selectedBlock,
-                  key_pvcode: selectedVillage,
-                  key_language_name: selectedLang
-                };
-              }
+                key_dcode: selectedDistrict,
+                key_bcode: selectedBlock,
+                key_pvcode: selectedVillage
+              };
 
-              await StartUpViewModel().getMainServiceList("TaxCollectionDetails", requestDataValue: request, context: context);
+
+              await StartUpViewModel().getMainServiceList("TaxCollectionDetails", requestDataValue: request, context: context,taxType: selectedTaxTypeData[key_taxtypeid].toString(),lang: selectedLang);
 
               // throw ('000');
             } catch (error) {

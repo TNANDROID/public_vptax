@@ -66,7 +66,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
       vsync: this,
       duration: Duration(milliseconds: 400),
     );
-
+    selectedTaxTypeData = widget.selectedTaxTypeData;
     // Create a curved animation with Curves.bounceOut
     _animation = CurvedAnimation(parent: _controller, curve: Curves.bounceOut);
 
@@ -107,7 +107,6 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
     selectedLang = await preferencesService.getUserInfo("lang");
     mobile_widget = await preferencesService.getUserInfo("mobile_number");
     taxTypeList = preferencesService.taxTypeList;
-    selectedTaxTypeData = widget.selectedTaxTypeData;
     selectTaxtype = selectedTaxTypeData['taxtypeid'].toString();
     if (widget.isHome) {
       await getTaxDetails();
@@ -258,15 +257,17 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 UIHelper.titleTextStyle(
-                                    mainList[mainIndex][s.key_door_no] ?? '' + ", " + selectedLang == 'en'
-                                        ? mainList[mainIndex][s.key_street_name_en] ?? ''
-                                        : mainList[mainIndex][s.key_street_name_ta] ?? '',
+                                  getDoorAndStreetName(mainIndex,selectedTaxTypeData['taxtypeid'].toString()),
                                     c.grey_8,
                                     11,
                                     false,
                                     false),
-                                UIHelper.titleTextStyle(mainList[mainIndex][s.key_localbody_name] ?? '' + ", " + mainList[mainIndex][s.key_bname] ?? '', c.grey_8, 11, false, false),
-                                UIHelper.titleTextStyle(mainList[mainIndex][s.key_district_name] ?? '', c.grey_8, 11, false, false)
+                                UIHelper.titleTextStyle(
+                                    getVillageAndBlockName(mainIndex,selectedTaxTypeData['taxtypeid'].toString()),
+                                    c.grey_8, 11, false, false),
+                                UIHelper.titleTextStyle(
+                                    mainList[mainIndex][s.key_district_name] ?? '',
+                                    c.grey_8, 11, false, false)
                               ],
                             ),
                           ),
@@ -794,7 +795,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
 
     mainList.clear();
     for (var sampletaxData in sampleDataList) {
-      if (sampletaxData[s.key_taxtypeid] == selectedTaxTypeData[s.key_taxtypeid].toString()) {
+      if (sampletaxData[s.key_taxtypeid].toString() == selectedTaxTypeData[s.key_taxtypeid].toString()) {
         if (preferencesService.addedTaxPayList.isNotEmpty) {
           for (var addtaxData in preferencesService.addedTaxPayList) {
             if (addtaxData[s.key_dcode] == sampletaxData[s.key_dcode] &&
@@ -853,7 +854,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
           };
         }
 
-        await StartUpViewModel().getMainServiceList("TaxCollectionDetails", requestDataValue: request, context: context);
+        await StartUpViewModel().getMainServiceList("TaxCollectionDetails", requestDataValue: request, context: context,taxType: selectedTaxTypeData[s.key_taxtypeid].toString(),lang: selectedLang);
 
         // throw ('000');
       } catch (error) {
@@ -869,5 +870,65 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
         "noInternet".tr().toString(),
       );
     }
+  }
+
+  String getDoorAndStreetName(int mainIndex, String taxTypeId) {
+    String street="";
+    switch (taxTypeId) {
+      case '1':
+        street=mainList[mainIndex][s.key_door_no] ?? '' + ", " + selectedLang == 'en'
+            ? mainList[mainIndex][s.key_street_name_en] ?? ''
+            : mainList[mainIndex][s.key_street_name_ta] ?? '';
+        break;
+      case '2':
+        street=selectedLang == 'en'
+            ? mainList[mainIndex]["street_name"] ?? ''
+            : mainList[mainIndex]["street_name"] ?? '';
+        break;
+      case '4':
+        street=mainList[mainIndex]['doorno'] ?? '' + ", " +selectedLang == 'en'
+            ? mainList[mainIndex]["street_name_t"] ?? ''
+            : mainList[mainIndex]["street_name_t"] ?? '';
+        break;
+      case '5':
+        street=mainList[mainIndex]['doorno'] ?? '' + ", " +selectedLang == 'en'
+            ? mainList[mainIndex]["street_name"] ?? ''
+            : mainList[mainIndex]["street_name"] ?? '';
+        break;
+      case '6':
+        street=mainList[mainIndex][s.key_localbody_name] ?? '' + ", " + mainList[mainIndex][s.key_bname] ?? '';
+        break;
+    }
+    return street;
+  }
+  String getVillageAndBlockName(int mainIndex, String taxTypeId) {
+    // (mainList[mainIndex][s.key_localbody_name] ?? '' + ", " + mainList[mainIndex][s.key_bname] ?? '')
+    String street="";
+    switch (taxTypeId) {
+      case '1':
+        street=mainList[mainIndex][s.key_localbody_name] ?? '' + ", " + selectedLang == 'en'
+            ? mainList[mainIndex][s.key_street_name_en] ?? ''
+            : mainList[mainIndex][s.key_street_name_ta] ?? '';
+        break;
+      case '2':
+        street=selectedLang == 'en'
+            ? mainList[mainIndex]["street_name"] ?? ''
+            : mainList[mainIndex]["street_name"] ?? '';
+        break;
+      case '4':
+        street=mainList[mainIndex]['doorno'] ?? '' + ", " +selectedLang == 'en'
+            ? mainList[mainIndex]["street_name_t"] ?? ''
+            : mainList[mainIndex]["street_name_t"] ?? '';
+        break;
+      case '5':
+        street=mainList[mainIndex]['doorno'] ?? '' + ", " +selectedLang == 'en'
+            ? mainList[mainIndex]["street_name"] ?? ''
+            : mainList[mainIndex]["street_name"] ?? '';
+        break;
+      case '6':
+        street=mainList[mainIndex][s.key_localbody_name] ?? '' + ", " + mainList[mainIndex][s.key_bname] ?? '';
+        break;
+    }
+    return street;
   }
 }

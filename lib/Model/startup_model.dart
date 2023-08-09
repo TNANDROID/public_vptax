@@ -72,7 +72,7 @@ class StartUpViewModel extends BaseViewModel {
     }
     setBusy(false);
   }
-  Future getMainServiceList(String type,{String dcode = "1",String bcode= "1",String pvcode= "1", dynamic requestDataValue,required BuildContext context}) async {
+  Future getMainServiceList(String type,{String dcode = "1",String bcode= "1",String pvcode= "1",String taxType= "1",String lang= "en", dynamic requestDataValue,required BuildContext context}) async {
     setBusy(true);
     dynamic requestData = {};
     if (type == "TaxType") {
@@ -171,12 +171,14 @@ class StartUpViewModel extends BaseViewModel {
             });
             // Additional calculations or logic can be added here if needed
           });
-          taxCollectionDetailsList.add(res_jsonArray[i][key_ASSESSMENT_DETAILS]);
+          for (var sampletaxData in res_jsonArray[i][key_ASSESSMENT_DETAILS]) {
+            taxCollectionDetailsList.add(sampletaxData);
+          }
         }
 
         print("response_TaxCollectionDetails2>>>>>>"+taxCollectionDetailsList.toString());
 
-        preferencesService.taxCollectionDetailsList = taxCollectionDetailsList.toList();
+        preferencesService.taxCollectionDetailsList = taxCollectionDetailsList;
       }else{
         preferencesService.taxCollectionDetailsList = [];
         Utils().showAlert(context, ContentType.warning, response_value.toString());
