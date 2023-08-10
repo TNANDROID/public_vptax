@@ -11,6 +11,7 @@ import 'package:public_vptax/Utils/utils.dart';
 
 import '../../Layout/screen_size.dart';
 import '../../Resources/StringsKey.dart' as s;
+import '../../Resources/StringsKey.dart';
 import '../../Services/Preferenceservices.dart';
 import '../../Services/locator.dart';
 import '../../Utils/ContentInfo.dart';
@@ -59,9 +60,9 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
     // *************************** Future Functionality  *************************** //
 
     // Top-to-bottom slide animation
-    _topAnimationController = AnimationController(
+    /*_topAnimationController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 1),
     );
 
     _topAnimation = Tween<Offset>(
@@ -72,8 +73,8 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
       curve: Curves.easeInOut,
     ));
 
-    _topAnimationController.forward();
-
+    _topAnimationController.forward();*/
+    preferencesService.setUserInfo(key_isLogin,'no');
     Future.delayed(
       const Duration(seconds: 2, milliseconds: 350),
       () {
@@ -133,12 +134,14 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
 
   // *************************** Future Functionality  *************************** //
 
+/*
   @override
   void dispose() {
     // _rightToLeftAnimController.dispose();
     _topAnimationController.dispose();
     super.dispose();
   }
+*/
 
   @override
   Widget build(BuildContext context) {
@@ -198,19 +201,21 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
 
               //  ****************** App Name  ****************** //
 
-              SlideTransition(
+             /* SlideTransition(
                 position: _topAnimation,
-                child: Column(children: [
+                child: */
+                Column(children: [
+                  UIHelper.verticalSpaceSmall,
                   Image.asset(
-                    imagepath.logo,
-                    fit: BoxFit.cover,
-                    height: 100,
-                    width: 100,
+                    imagepath.tamilnadu_logo,
+                    height: 80,
+                    width: 80,
                   ),
+                  UIHelper.verticalSpaceSmall,
                   Text(
-                    'appName'.tr().toString(),
+                    'gov_tamilnadu'.tr().toString(),
                     style: TextStyle(
-                      fontSize: 32.0,
+                      fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                       color: c.text_color,
                       fontStyle: FontStyle.normal,
@@ -218,7 +223,28 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
                     ),
                   ),
                 ]),
-              ),
+              // ),
+              UIHelper.verticalSpaceSmall,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                Image.asset(
+                  imagepath.logo,
+                  fit: BoxFit.cover,
+                  height: 70,
+                  width: 70,
+                ),
+                Text(
+                  'appName'.tr().toString(),
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.bold,
+                    color: c.text_color,
+                    fontStyle: FontStyle.normal,
+                    decorationStyle: TextDecorationStyle.wavy,
+                  ),
+                ),
+              ]),
               UIHelper.verticalSpaceMedium,
 
               // *************************** Future Functionality  *************************** //
@@ -314,7 +340,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
               await Utils().apiCalls(context);
               preferencesService.taxTypeList.isNotEmpty
                   ? Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => TaxCollectionView(),
+                      builder: (context) => TaxCollectionView(flag: "2",),
                     ))
                   : utils.showAlert(
                       context,

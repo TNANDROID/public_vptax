@@ -58,6 +58,8 @@ class StartUpViewModel extends BaseViewModel {
     } else {
       requestData = {key_service_id: service_key_village_list_all};
     }
+    print("requestData>>"+jsonEncode(requestData));
+
     var response = await apiServices.openServiceFunction(requestData);
     print("response>>"+response.toString());
     if (type == "District") {
@@ -75,6 +77,7 @@ class StartUpViewModel extends BaseViewModel {
   Future getMainServiceList(String type,{String dcode = "1",String bcode= "1",String pvcode= "1",String taxType= "1",String lang= "en", dynamic requestDataValue,required BuildContext context}) async {
     setBusy(true);
     dynamic requestData = {};
+    var response;
     if (type == "TaxType") {
       dynamic request = {key_service_id: service_key_TaxTypeList};
       requestData = {key_data_content:request};
@@ -88,8 +91,24 @@ class StartUpViewModel extends BaseViewModel {
       requestData = {key_data_content: requestDataValue};
     }
     print("requestData>>"+requestData.toString());
+    if (await Utils().isOnline()) {
+      try {
+        Utils().showProgress(context, 1);
+         response = await apiServices.mainServiceFunction(requestData);
+        Utils().hideProgress(context);
+      } catch (error) {
+        print('error (${error.toString()}) has been caught');
+        Utils().hideProgress(context);
+      }
+      }else {
+      Utils().showAlert(
+        context,
+        ContentType.fail,
+        "noInternet".tr().toString(),
+      );
+    }
 
-    var response = await apiServices.mainServiceFunction(requestData);
+
 
     if (type == "TaxType") {
       var status = response[key_status];

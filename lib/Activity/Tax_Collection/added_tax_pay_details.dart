@@ -135,17 +135,17 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
                             itemBuilder: (context, index) {
                               List selectedTaxonly = [];
                               List selectedSWMonly = [];
-                              for (var item in mainDataList[index]['taxData']) {
+                              for (var item in mainDataList[index][key_DEMAND_DETAILS]) {
                                 if (item[key_flag] == true) {
                                   selectedTaxonly.add(item);
                                 }
                               }
 
-                              for (var item in mainDataList[index]['swmData']) {
+                              /*for (var item in mainDataList[index]['swmData']) {
                                 if (item[key_flag] == true) {
                                   selectedSWMonly.add(item);
                                 }
-                              }
+                              }*/
 
                               return GestureDetector(
                                   onTap: () {
@@ -235,7 +235,8 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
                                                                     Expanded(
                                                                         child: Center(
                                                                             child: UIHelper.titleTextStyle(
-                                                                                selectedTaxonly[index]['fin_year'] + "\n" + selectedTaxonly[index]['year'],
+                                                                                'Dummy Text ',
+                                                                                // selectedTaxonly[index]['fin_year'] + "\n" + selectedTaxonly[index]['year'],
                                                                                 c.grey_8,
                                                                                 10,
                                                                                 false,
@@ -245,7 +246,7 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
                                                                           padding: EdgeInsets.all(
                                                                               8.0),
                                                                           child:
-                                                                              Center(child: UIHelper.titleTextStyle("\u{20B9} " + selectedTaxonly[index][key_demand].toString(), c.black, 12, false, false))),
+                                                                              Center(child: UIHelper.titleTextStyle("\u{20B9} " + getDemad(selectedTaxonly[index],mainDataList[index][key_taxtypeid].toString()), c.black, 12, false, false))),
                                                                     ),
                                                                   ],
                                                                 ))),
@@ -447,7 +448,7 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
                                 true)
                             : UIHelper.titleTextStyle(
                                 "Traders Code : " +
-                                    mainDataList[mainIndex][key_assessment_no],
+                                    mainDataList[mainIndex][key_assessment_no].toString(),
                                 c.grey_9,
                                 12,
                                 true,
@@ -473,15 +474,39 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView>
   }
 
   String getTaxName(int index) {
-    final item = taxTypeList.firstWhere((e) => e[key_taxtypeid] ==mainDataList[index][key_taxtypeid].toString());
+    List selectedTaxitem = taxTypeList.where((element) => element[key_taxtypeid].toString() ==mainDataList[index][key_taxtypeid].toString()).toList();
     return selectedLang == "en"
-        ? item[
+        ? selectedTaxitem[0][
     key_taxtypedesc_en]
-        : item[
+        : selectedTaxitem[0][
     key_taxtypedesc_ta];
   }
   String getTaxImage(int index) {
-    final item = taxTypeList.firstWhere((e) => e[key_taxtypeid] ==mainDataList[index][key_taxtypeid].toString());
-    return  item[key_img_path].toString();
+    List selectedTaxitem = taxTypeList.where((element) => element[key_taxtypeid].toString() ==mainDataList[index][key_taxtypeid].toString()).toList();
+    return  selectedTaxitem[0][key_img_path].toString();
   }
+  String getDemad(taxData, String taxTypeId) {
+    String amount="";
+    switch (taxTypeId) {
+      case '1':
+        amount=taxData['demand'].toString();
+        break;
+      case '2':
+        amount=taxData['watercharges'].toString();
+        break;
+      case '4':
+        amount=taxData['profession_tax'].toString();
+        break;
+      case '5':
+        amount=taxData['nontax_amount'].toString();
+        break;
+      case '6':
+        amount=taxData['traders_rate'].toString();
+        break;
+    }
+
+    // taxData[rowIndex][s.key_demand].toString();
+    return amount;
+  }
+
 }
