@@ -107,6 +107,7 @@
   "do_you_want_to_exit_an_app" : "Do you want to exit an app?",
   "exit_app" : "Exit",
   "no_record" : "No Record",
+  "no_demand" : "No Demand",
   "building_licence_number" : "Building Licence Number",
   "assesment_number" : "Assesment Number",
   "water_connection_number" : "Water Connection Number",
@@ -119,5 +120,7 @@
   "traders_code" : "Traders Code",
   "yes" : "Yes",
   "no" : "No",
+  "pay_previous" : "Please pay the previous selected tax amount",
+  "pay_pending_year" : "You can't able to pay with pending year",
   "select_all_field": "Please fill all the details"
 }

@@ -26,13 +26,24 @@ class TaxCollectionDetailsView extends StatefulWidget {
   final mobile;
   final isTaxDropDown;
   final selectedEntryType;
-  TaxCollectionDetailsView({Key? key, this.selectedTaxTypeData, this.isHome, this.dcode, this.bcode, this.pvcode, this.mobile, this.isTaxDropDown, this.selectedEntryType});
+  TaxCollectionDetailsView(
+      {Key? key,
+      this.selectedTaxTypeData,
+      this.isHome,
+      this.dcode,
+      this.bcode,
+      this.pvcode,
+      this.mobile,
+      this.isTaxDropDown,
+      this.selectedEntryType});
 
   @override
-  _TaxCollectionDetailsViewState createState() => _TaxCollectionDetailsViewState();
+  _TaxCollectionDetailsViewState createState() =>
+      _TaxCollectionDetailsViewState();
 }
 
-class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> with TickerProviderStateMixin {
+class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
+    with TickerProviderStateMixin {
   //Animation
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -106,7 +117,9 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
   Future<void> initialize() async {
     selectedLang = await preferencesService.getUserInfo("lang");
     print("asdasd $selectedLang");
-    mobile_widget = await preferencesService.getUserInfo(s.key_isLogin) == "yes"?await preferencesService.getUserInfo("mobile_number"):widget.mobile;
+    mobile_widget = await preferencesService.getUserInfo(s.key_isLogin) == "yes"
+        ? await preferencesService.getUserInfo("mobile_number")
+        : widget.mobile;
     taxTypeList = preferencesService.taxTypeList;
     selectTaxtype = selectedTaxTypeData['taxtypeid'].toString();
     if (widget.isHome) {
@@ -183,7 +196,15 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                 ),
                                 Visibility(
                                   visible: mainList.isEmpty,
-                                  child: Container(margin: EdgeInsets.only(top: 100, right: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true)),
+                                  child: Container(
+                                      margin:
+                                          EdgeInsets.only(top: 100, right: 30),
+                                      child: UIHelper.titleTextStyle(
+                                          "no_record".tr().toString(),
+                                          c.grey_9,
+                                          12,
+                                          true,
+                                          true)),
                                 )
                               ],
                             )),
@@ -202,13 +223,17 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
           margin: EdgeInsets.only(left: 15, right: 15),
           height: 80,
           width: 80,
-          decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.colorPrimary, c.colorPrimary, borderWidth: 0),
+          decoration: UIHelper.roundedBorderWithColorWithShadow(
+              5, c.colorPrimary, c.colorPrimary,
+              borderWidth: 0),
         ),
         Container(
             width: Screen.width(context),
             margin: EdgeInsets.only(left: 20, top: 5, right: 15),
             padding: EdgeInsets.fromLTRB(15, 15, 10, 15),
-            decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.white, c.white, borderWidth: 0),
+            decoration: UIHelper.roundedBorderWithColorWithShadow(
+                5, c.white, c.white,
+                borderWidth: 0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -234,7 +259,15 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                             width: Screen.width(context) / 2,
                             child: Flex(
                               direction: Axis.horizontal,
-                              children: [Flexible(child: UIHelper.titleTextStyle(mainList[mainIndex][s.key_name] ?? '', c.grey_9, 12, true, false))],
+                              children: [
+                                Flexible(
+                                    child: UIHelper.titleTextStyle(
+                                        mainList[mainIndex][s.key_name] ?? '',
+                                        c.grey_9,
+                                        12,
+                                        true,
+                                        false))
+                              ],
                             ),
                           ),
                           UIHelper.horizontalSpaceSmall,
@@ -257,17 +290,30 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 UIHelper.titleTextStyle(
-                                  getDoorAndStreetName(mainIndex,selectedTaxTypeData['taxtypeid'].toString()),
+                                    getDoorAndStreetName(
+                                        mainIndex,
+                                        selectedTaxTypeData['taxtypeid']
+                                            .toString()),
                                     c.grey_8,
                                     11,
                                     false,
                                     false),
                                 UIHelper.titleTextStyle(
-                                    getvillageAndBlockName(mainIndex,selectedTaxTypeData['taxtypeid'].toString()),
-                                    c.grey_8, 11, false, false),
+                                    getvillageAndBlockName(
+                                        mainIndex,
+                                        selectedTaxTypeData['taxtypeid']
+                                            .toString()),
+                                    c.grey_8,
+                                    11,
+                                    false,
+                                    false),
                                 UIHelper.titleTextStyle(
-                                    mainList[mainIndex][s.key_district_name] ?? '',
-                                    c.grey_8, 11, false, false)
+                                    mainList[mainIndex][s.key_district_name] ??
+                                        '',
+                                    c.grey_8,
+                                    11,
+                                    false,
+                                    false)
                               ],
                             ),
                           ),
@@ -279,13 +325,16 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                   ),
                 ),
                 UIHelper.verticalSpaceTiny,
-                Container(alignment: Alignment.centerLeft, child: taxWiseReturnDataWidget(mainIndex, c.grey_8)),
+                Container(
+                    alignment: Alignment.centerLeft,
+                    child: taxWiseReturnDataWidget(mainIndex, c.grey_8)),
                 UIHelper.verticalSpaceTiny,
                 Container(
                   alignment: Alignment.center,
                   width: MediaQuery.of(context).size.width / 2,
                   padding: EdgeInsets.all(5),
-                  decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.colorPrimary, c.colorAccentlight),
+                  decoration: UIHelper.roundedBorderWithColorWithShadow(
+                      5, c.colorPrimary, c.colorAccentlight),
                   child: InkWell(
                     onTap: () {
                       setState(() {
@@ -295,20 +344,26 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                           isShowFlag.add(mainIndex);
                         }
                       });
-                      double scrollOffset = mainIndex * 500; // Replace ITEM_HEIGHT with the height of each item
+                      double scrollOffset = mainIndex *
+                          500; // Replace ITEM_HEIGHT with the height of each item
 
                       // Scroll to the top of the current item
-                      controller_scroll.animateTo(scrollOffset, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+                      controller_scroll.animateTo(scrollOffset,
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.easeInOut);
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Flexible(
-                          child: UIHelper.titleTextStyle('demand_details', c.white, 10, true, true),
+                          child: UIHelper.titleTextStyle(
+                              'demand_details', c.white, 10, true, true),
                         ),
                         Icon(
-                          isShowFlag.contains(mainIndex) ? Icons.arrow_circle_up_rounded : Icons.arrow_circle_down_rounded,
+                          isShowFlag.contains(mainIndex)
+                              ? Icons.arrow_circle_up_rounded
+                              : Icons.arrow_circle_down_rounded,
                           color: Colors.white,
                           size: 20,
                         ),
@@ -335,33 +390,125 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              UIHelper.titleTextStyle(('building_licence_number'.tr().toString()+" : "+(mainList[mainIndex][s.key_building_licence_no].toString()?? "")), clr, 12, false, true),
-              UIHelper.titleTextStyle(('assesment_number'.tr().toString()+" : "+(mainList[mainIndex][s.key_assessment_no].toString()?? "")), clr, 12, false, true),
+              UIHelper.titleTextStyle(
+                  ('building_licence_number'.tr().toString() +
+                      " : " +
+                      (mainList[mainIndex][s.key_building_licence_no]
+                              .toString() ??
+                          "")),
+                  clr,
+                  12,
+                  false,
+                  true),
+              UIHelper.titleTextStyle(
+                  ('assesment_number'.tr().toString() +
+                      " : " +
+                      (mainList[mainIndex][s.key_assessment_no].toString() ??
+                          "")),
+                  clr,
+                  12,
+                  false,
+                  true),
             ],
           )
         : selectedTaxTypeData[s.key_taxtypeid] == 2
-            ? UIHelper.titleTextStyle(('water_connection_number'.tr().toString()+" : "+(mainList[mainIndex][s.key_assessment_no].toString()?? "")), clr, 12, false, true)
+            ? UIHelper.titleTextStyle(
+                ('water_connection_number'.tr().toString() +
+                    " : " +
+                    (mainList[mainIndex][s.key_assessment_no].toString() ??
+                        "")),
+                clr,
+                12,
+                false,
+                true)
             : selectedTaxTypeData[s.key_taxtypeid] == 4
                 ? Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        UIHelper.titleTextStyle(('fin_year'.tr().toString()+" : "+(mainList[mainIndex]['financialyear'].toString()?? "")), clr, 12, false, true),
-        UIHelper.titleTextStyle(('assesment_number'.tr().toString()+" : "+(mainList[mainIndex][s.key_assessment_no].toString()?? "")), clr, 12, false, true),
-      ],
-    )
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      UIHelper.titleTextStyle(
+                          ('fin_year'.tr().toString() +
+                              " : " +
+                              (mainList[mainIndex]['financialyear']
+                                      .toString() ??
+                                  "")),
+                          clr,
+                          12,
+                          false,
+                          true),
+                      UIHelper.titleTextStyle(
+                          ('assesment_number'.tr().toString() +
+                              " : " +
+                              (mainList[mainIndex][s.key_assessment_no]
+                                      .toString() ??
+                                  "")),
+                          clr,
+                          12,
+                          false,
+                          true),
+                    ],
+                  )
                 : selectedTaxTypeData[s.key_taxtypeid] == 5
                     ? Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        UIHelper.titleTextStyle(('lease_number'.tr().toString()+" : "+(mainList[mainIndex][s.key_assessment_no].toString()?? "")) , clr, 12, false, true),
-        UIHelper.verticalSpaceTiny,
-        UIHelper.titleTextStyle(('lease_state'.tr().toString()+" : "+(mainList[mainIndex]['lease_statename'].toString()?? "")) , clr, 12, false, true),
-        UIHelper.verticalSpaceTiny,
-        UIHelper.titleTextStyle(('lease_district'.tr().toString()+" : "+(mainList[mainIndex]['lease_districtname'].toString()?? "")) , clr, 12, false, true),
-        UIHelper.verticalSpaceTiny,
-        UIHelper.titleTextStyle(('lease_duration'.tr().toString()+" : "+(mainList[mainIndex]['from_date'].toString()?? "")+" - "+(mainList[mainIndex]['to_date'].toString()?? "")) , clr, 12, false, true),
-      ],
-    ): UIHelper.titleTextStyle(('traders_code'.tr().toString()+" : "+(mainList[mainIndex][s.key_assessment_no].toString()?? "")), clr, 12, false, true);
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          UIHelper.titleTextStyle(
+                              ('lease_number'.tr().toString() +
+                                  " : " +
+                                  (mainList[mainIndex][s.key_assessment_no]
+                                          .toString() ??
+                                      "")),
+                              clr,
+                              12,
+                              false,
+                              true),
+                          UIHelper.verticalSpaceTiny,
+                          UIHelper.titleTextStyle(
+                              ('lease_state'.tr().toString() +
+                                  " : " +
+                                  (mainList[mainIndex]['lease_statename']
+                                          .toString() ??
+                                      "")),
+                              clr,
+                              12,
+                              false,
+                              true),
+                          UIHelper.verticalSpaceTiny,
+                          UIHelper.titleTextStyle(
+                              ('lease_district'.tr().toString() +
+                                  " : " +
+                                  (mainList[mainIndex]['lease_districtname']
+                                          .toString() ??
+                                      "")),
+                              clr,
+                              12,
+                              false,
+                              true),
+                          UIHelper.verticalSpaceTiny,
+                          UIHelper.titleTextStyle(
+                              ('lease_duration'.tr().toString() +
+                                  " : " +
+                                  (mainList[mainIndex]['from_date']
+                                          .toString() ??
+                                      "") +
+                                  " - " +
+                                  (mainList[mainIndex]['to_date'].toString() ??
+                                      "")),
+                              clr,
+                              12,
+                              false,
+                              true),
+                        ],
+                      )
+                    : UIHelper.titleTextStyle(
+                        ('traders_code'.tr().toString() +
+                            " : " +
+                            (mainList[mainIndex][s.key_assessment_no]
+                                    .toString() ??
+                                "")),
+                        clr,
+                        12,
+                        false,
+                        true);
   }
 
   Widget propertyTaxCollectionWidget(int mainIndex) {
@@ -369,8 +516,9 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
     List taxData = [];
     List swmData = [];
     for (int i = 0; i < demandList.length; i++) {
-      if (selectedTaxTypeData[s.key_taxtypeid].toString()=="1") {
-        if (demandList[i][s.key_taxtypeid].toString() == selectedTaxTypeData[s.key_taxtypeid].toString()) {
+      if (selectedTaxTypeData[s.key_taxtypeid].toString() == "1") {
+        if (demandList[i][s.key_taxtypeid].toString() ==
+            selectedTaxTypeData[s.key_taxtypeid].toString()) {
           taxData.add(demandList[i]);
         } else {
           swmData.add(demandList[i]);
@@ -384,12 +532,16 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
     int swmHeight = swmData.length * 30;
     return Container(
         margin: EdgeInsets.only(top: 15),
-        decoration: UIHelper.roundedBorderWithColor(3, 3, 3, 3, c.need_improvement2, borderWidth: 1, borderColor: c.grey_6),
+        decoration: UIHelper.roundedBorderWithColor(
+            3, 3, 3, 3, c.need_improvement2,
+            borderWidth: 1, borderColor: c.grey_6),
         padding: EdgeInsets.all(0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
+            Visibility(
+              visible: taxData.isNotEmpty,
+                child: Container(
                 padding: EdgeInsets.only(top: 0),
                 height: dataWiseHeight + 0.02,
                 child: ListView.builder(
@@ -403,25 +555,55 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                           children: [
                             Expanded(
                               flex: 1,
-                              child: Container(padding: EdgeInsets.all(8.0), child: Center(child: UIHelper.titleTextStyle("$siNo", c.grey_8, 12, false, true))),
+                              child: Container(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Center(
+                                      child: UIHelper.titleTextStyle(
+                                          "$siNo", c.grey_8, 12, false, true))),
                             ),
-                            Expanded(
-                                flex: 3, child: Container(padding: EdgeInsets.all(8.0), child: Center(child: UIHelper.titleTextStyle(selectedTaxTypeData[s.key_taxtypeid] == 4?taxData[rowIndex]['financialyear']:taxData[rowIndex][s.key_fin_year], c.grey_8, 12, false, true)))),
                             Expanded(
                                 flex: 3,
                                 child: Container(
                                     padding: EdgeInsets.all(8.0),
                                     child: Center(
                                         child: UIHelper.titleTextStyle(
-                                            taxData[rowIndex][s.key_installment_group_name],
+                                            selectedTaxTypeData[
+                                            s.key_taxtypeid] ==
+                                                4
+                                                ? taxData[rowIndex]
+                                            ['financialyear']
+                                                : taxData[rowIndex]
+                                            [s.key_fin_year],
+                                            c.grey_8,
+                                            12,
+                                            false,
+                                            true)))),
+                            Expanded(
+                                flex: 3,
+                                child: Container(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Center(
+                                        child: UIHelper.titleTextStyle(
+                                            taxData[rowIndex]
+                                            [s.key_installment_group_name],
                                             c.grey_8,
                                             12,
                                             false,
                                             true)))),
                             Expanded(
                               flex: 2,
-                              child: Container(padding: EdgeInsets.all(8.0), child: Center(child: UIHelper.titleTextStyle(
-                                  getDemad(taxData[rowIndex],selectedTaxTypeData['taxtypeid'].toString()), c.grey_8, 12, false, true))),
+                              child: Container(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Center(
+                                      child: UIHelper.titleTextStyle(
+                                          getDemad(
+                                              taxData[rowIndex],
+                                              selectedTaxTypeData['taxtypeid']
+                                                  .toString()),
+                                          c.grey_8,
+                                          12,
+                                          false,
+                                          true))),
                             ),
                             Expanded(
                               flex: 1,
@@ -429,58 +611,142 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                   padding: EdgeInsets.all(8.0),
                                   child: Center(
                                     child: Checkbox(
-                                      side: BorderSide(width: 1, color: c.grey_6),
+                                      side:
+                                      BorderSide(width: 1, color: c.grey_6),
                                       value: taxData[rowIndex][s.key_flag],
                                       onChanged: (v) {
                                         if (temp_assessment_id.isEmpty) {
-                                          temp_assessment_id = mainList[mainIndex][s.key_assessment_id].toString();
+                                          temp_assessment_id =
+                                              mainList[mainIndex]
+                                              [s.key_assessment_id]
+                                                  .toString();
                                         }
 
-                                        if (temp_assessment_id == mainList[mainIndex][s.key_assessment_id].toString()) {
-                                          if (rowIndex == 0 || taxData[rowIndex - 1][s.key_flag] == true) {
-                                          if (taxData[rowIndex][s.key_flag] == true) {
-                                            for (int i = 0; i < taxData.length; i++) {
-                                              if (i >= rowIndex) {
-                                                if (taxData[i][s.key_flag] == true) {
-                                                  taxData[i][s.key_flag] = false;
-                                                  print("Tot>>${mainList[mainIndex][s.key_tax_total]}");
-                                                  mainList[mainIndex][s.key_tax_total] = mainList[mainIndex][s.key_tax_total] - double.parse(getDemad(taxData[i], selectedTaxTypeData['taxtypeid'].toString()));
+                                        if (temp_assessment_id ==
+                                            mainList[mainIndex]
+                                            [s.key_assessment_id]
+                                                .toString()) {
+                                          if (rowIndex == 0 ||
+                                              taxData[rowIndex - 1]
+                                              [s.key_flag] ==
+                                                  true) {
+                                            if (taxData[rowIndex][s.key_flag] ==
+                                                true) {
+                                              for (int i = 0;
+                                              i < taxData.length;
+                                              i++) {
+                                                if (i >= rowIndex) {
+                                                  if (taxData[i][s.key_flag] ==
+                                                      true) {
+                                                    taxData[i][s.key_flag] =
+                                                    false;
+                                                    print(
+                                                        "Tot>>${mainList[mainIndex][s.key_tax_total]}");
+                                                    mainList[mainIndex][s
+                                                        .key_tax_total] = mainList[
+                                                    mainIndex]
+                                                    [s.key_tax_total] -
+                                                        double.parse(getDemad(
+                                                            taxData[i],
+                                                            selectedTaxTypeData[
+                                                            'taxtypeid']
+                                                                .toString()));
 
-                                                  print("Tot>>${getDemad(taxData[i], selectedTaxTypeData['taxtypeid'].toString())}");
-                                                  print("Tot${mainList[mainIndex][s.key_tax_total]}");
-                                                  mainList[mainIndex][s.key_tax_pay] =
-                                                      getTotal(mainList[mainIndex][s.key_tax_total], double.parse(getTaxAdvance(mainList[mainIndex],selectedTaxTypeData['taxtypeid'].toString())));
-                                                }
-                                                if (taxData[0][s.key_flag] == false) {
-                                                  temp_assessment_id = '';
+                                                    print(
+                                                        "Tot>>${getDemad(taxData[i], selectedTaxTypeData['taxtypeid'].toString())}");
+                                                    print(
+                                                        "Tot${mainList[mainIndex][s.key_tax_total]}");
+                                                    mainList[mainIndex][
+                                                    s
+                                                        .key_tax_pay] = getTotal(
+                                                        mainList[mainIndex]
+                                                        [s.key_tax_total],
+                                                        double.parse(getTaxAdvance(
+                                                            mainList[mainIndex],
+                                                            selectedTaxTypeData[
+                                                            'taxtypeid']
+                                                                .toString())));
+                                                  }
+                                                  if (taxData[0][s.key_flag] ==
+                                                      false) {
+                                                    temp_assessment_id = '';
+                                                  }
                                                 }
                                               }
+                                            } else {
+                                              taxData[rowIndex][s.key_flag] =
+                                              true;
+                                              print(
+                                                  'key_tax_total: ${mainList[mainIndex][s.key_tax_total].runtimeType}');
+                                              print(
+                                                  'key_demand: ${getTaxAdvance(mainList[mainIndex], selectedTaxTypeData['taxtypeid'].toString()).runtimeType}');
+                                              mainList[mainIndex]
+                                              [s.key_tax_total] =
+                                                  mainList[mainIndex]
+                                                  [s.key_tax_total] +
+                                                      double.parse(getDemad(
+                                                          taxData[rowIndex],
+                                                          selectedTaxTypeData[
+                                                          'taxtypeid']
+                                                              .toString()));
+                                              mainList[mainIndex][
+                                              s
+                                                  .key_tax_pay] = getTotal(
+                                                  mainList[mainIndex]
+                                                  [s.key_tax_total],
+                                                  double.parse(getTaxAdvance(
+                                                      mainList[mainIndex],
+                                                      selectedTaxTypeData[
+                                                      'taxtypeid']
+                                                          .toString())));
                                             }
                                           } else {
-                                            taxData[rowIndex][s.key_flag] = true;
-                                            print('key_tax_total: ${mainList[mainIndex][s.key_tax_total].runtimeType}');
-                                            print('key_demand: ${getTaxAdvance(mainList[mainIndex],selectedTaxTypeData['taxtypeid'].toString()).runtimeType}');
-                                            mainList[mainIndex][s.key_tax_total] = mainList[mainIndex][s.key_tax_total] + double.parse(getDemad(taxData[rowIndex], selectedTaxTypeData['taxtypeid'].toString()));
-                                            mainList[mainIndex][s.key_tax_pay] =
-                                                getTotal(mainList[mainIndex][s.key_tax_total], double.parse(getTaxAdvance(mainList[mainIndex],selectedTaxTypeData['taxtypeid'].toString())));
-                                          }
+                                            Utils().showAlert(
+                                                context,
+                                                ContentType.fail,
+                                                'pay_pending_year'
+                                                    .tr()
+                                                    .toString());
                                           }
                                         } else {
-                                          Utils().showAlert(context, ContentType.fail, 'message');
+                                          Utils().showAlert(
+                                              context,
+                                              ContentType.fail,
+                                              'pay_previous'.tr().toString());
                                         }
 
                                         setState(() {
                                           main_count = 0;
                                           main_totalAmount = 0.00;
 
-                                          for (int i = 0; i < mainList.length; i++) {
-                                            main_totalAmount = main_totalAmount + mainList[i][s.key_tax_pay] + mainList[i][s.key_swm_pay];
+                                          for (int i = 0;
+                                          i < mainList.length;
+                                          i++) {
+                                            main_totalAmount =
+                                                main_totalAmount +
+                                                    mainList[i][s.key_tax_pay] +
+                                                    mainList[i][s.key_swm_pay];
                                           }
-                                          preferencesService.addedTaxPayList.removeWhere((element) =>
-                                              element['taxtypeid'].toString() == mainList[mainIndex]['taxtypeid'].toString() &&
-                                              element['assesment_no'].toString() == mainList[mainIndex]['assesment_no'].toString());
-                                          if (mainList[mainIndex][s.key_tax_total] > 0 || mainList[mainIndex][s.key_swm_total] > 0) {
-                                            preferencesService.addedTaxPayList.add(mainList[mainIndex]);
+                                          preferencesService.addedTaxPayList
+                                              .removeWhere((element) =>
+                                          element['taxtypeid']
+                                              .toString() ==
+                                              mainList[mainIndex]
+                                              ['taxtypeid']
+                                                  .toString() &&
+                                              element['assesment_no']
+                                                  .toString() ==
+                                                  mainList[mainIndex]
+                                                  ['assesment_no']
+                                                      .toString());
+                                          if (mainList[mainIndex]
+                                          [s.key_tax_total] >
+                                              0 ||
+                                              mainList[mainIndex]
+                                              [s.key_swm_total] >
+                                                  0) {
+                                            preferencesService.addedTaxPayList
+                                                .add(mainList[mainIndex]);
                                           }
                                           getCount();
                                           repeatOnce();
@@ -492,15 +758,30 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                           ],
                         ));
                   },
-                )),
+                ))),
+            Visibility(
+              visible: taxData.isEmpty,
+              child: Container(
+                alignment: Alignment.center,
+              padding: EdgeInsets.all(10),
+              child: UIHelper.titleTextStyle(
+                  'no_demand'.tr().toString(),
+                  c.black,
+                  11,
+                  false,
+                  false),
+            ),
+            ),
             UIHelper.verticalSpaceSmall,
             demandCalculationWidget(mainIndex),
             Visibility(
-                visible: swmData.isNotEmpty && selectedTaxTypeData[s.key_taxtypeid] == 1,
+                visible: swmData.isNotEmpty &&
+                    selectedTaxTypeData[s.key_taxtypeid] == 1,
                 child: Column(
                   children: [
                     UIHelper.verticalSpaceSmall,
-                    UIHelper.titleTextStyle("swmUserCharges".tr().toString(), c.grey_9, 11, false, true),
+                    UIHelper.titleTextStyle("swmUserCharges".tr().toString(),
+                        c.grey_9, 11, false, true),
                     UIHelper.verticalSpaceSmall,
                     Container(
                         margin: EdgeInsets.only(top: 5),
@@ -516,15 +797,43 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                   children: [
                                     Expanded(
                                       flex: 1,
-                                      child: Container(padding: EdgeInsets.all(8.0), child: Center(child: UIHelper.titleTextStyle("$siNo", c.grey_8, 12, false, true))),
+                                      child: Container(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Center(
+                                              child: UIHelper.titleTextStyle(
+                                                  "$siNo",
+                                                  c.grey_8,
+                                                  12,
+                                                  false,
+                                                  true))),
                                     ),
                                     Expanded(
                                         flex: 3,
-                                        child: Container(padding: EdgeInsets.all(8.0), child: Center(child: UIHelper.titleTextStyle(swmData[rowIndex]['fin_year'], c.grey_8, 12, false, true)))),
+                                        child: Container(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: Center(
+                                                child: UIHelper.titleTextStyle(
+                                                    swmData[rowIndex]
+                                                        ['fin_year'],
+                                                    c.grey_8,
+                                                    12,
+                                                    false,
+                                                    true)))),
                                     Expanded(
                                       flex: 2,
-                                      child:
-                                          Container(padding: EdgeInsets.all(8.0), child: Center(child: UIHelper.titleTextStyle(getDemad(swmData[rowIndex], selectedTaxTypeData['taxtypeid'].toString()), c.grey_8, 12, false, true))),
+                                      child: Container(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Center(
+                                              child: UIHelper.titleTextStyle(
+                                                  getDemad(
+                                                      swmData[rowIndex],
+                                                      selectedTaxTypeData[
+                                                              'taxtypeid']
+                                                          .toString()),
+                                                  c.grey_8,
+                                                  12,
+                                                  false,
+                                                  true))),
                                     ),
                                     Expanded(
                                       flex: 1,
@@ -532,36 +841,133 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                           padding: EdgeInsets.all(8.0),
                                           child: Center(
                                             child: Checkbox(
-                                              side: BorderSide(width: 1, color: c.grey_6),
-                                              value: swmData[rowIndex][s.key_flag],
+                                              side: BorderSide(
+                                                  width: 1, color: c.grey_6),
+                                              value: swmData[rowIndex]
+                                                  [s.key_flag],
                                               onChanged: (v) {
-                                                if (rowIndex == 0 || swmData[rowIndex - 1][s.key_flag] == true) {
-                                                  if (swmData[rowIndex][s.key_flag] == true) {
-                                                    for (int i = 0; i < swmData.length; i++) {
-                                                      if (i >= rowIndex) {
-                                                        swmData[i][s.key_flag] = false;
-                                                        mainList[mainIndex][s.key_swm_total] = mainList[mainIndex][s.key_swm_total] - double.parse(getDemad(swmData[i], selectedTaxTypeData['taxtypeid'].toString()));
-                                                        mainList[mainIndex][s.key_swm_pay] = getTotal(mainList[mainIndex][s.key_swm_total], mainList[mainIndex][s.key_swm_available_advance]);
+                                                if (temp_assessment_id
+                                                    .isEmpty) {
+                                                  temp_assessment_id = mainList[
+                                                              mainIndex]
+                                                          [s.key_assessment_id]
+                                                      .toString();
+                                                }
+
+                                                if (temp_assessment_id ==
+                                                    mainList[mainIndex][
+                                                            s.key_assessment_id]
+                                                        .toString()) {
+                                                  if (rowIndex == 0 ||
+                                                      swmData[rowIndex - 1]
+                                                              [s.key_flag] ==
+                                                          true) {
+                                                    if (swmData[rowIndex]
+                                                            [s.key_flag] ==
+                                                        true) {
+                                                      for (int i = 0;
+                                                          i < swmData.length;
+                                                          i++) {
+                                                        if (i >= rowIndex) {
+                                                          swmData[i]
+                                                                  [s.key_flag] =
+                                                              false;
+                                                          mainList[mainIndex][s
+                                                              .key_swm_total] = mainList[
+                                                                      mainIndex]
+                                                                  [s
+                                                                      .key_swm_total] -
+                                                              double.parse(getDemad(
+                                                                  swmData[i],
+                                                                  selectedTaxTypeData[
+                                                                          'taxtypeid']
+                                                                      .toString()));
+                                                          mainList[mainIndex][
+                                                              s
+                                                                  .key_swm_pay] = getTotal(
+                                                              mainList[mainIndex][s
+                                                                  .key_swm_total],
+                                                              mainList[
+                                                                      mainIndex]
+                                                                  [
+                                                                  s.key_swm_available_advance]);
+                                                        }
                                                       }
+                                                    } else {
+                                                      swmData[rowIndex]
+                                                          [s.key_flag] = true;
+                                                      mainList[mainIndex][s
+                                                          .key_swm_total] = mainList[
+                                                                  mainIndex][
+                                                              s.key_swm_total] +
+                                                          double.parse(getDemad(
+                                                              swmData[rowIndex],
+                                                              selectedTaxTypeData[
+                                                                      'taxtypeid']
+                                                                  .toString()));
+                                                      mainList[mainIndex][
+                                                          s
+                                                              .key_swm_pay] = getTotal(
+                                                          mainList[mainIndex]
+                                                              [s.key_swm_total],
+                                                          mainList[mainIndex][s
+                                                              .key_swm_available_advance]);
                                                     }
                                                   } else {
-                                                    swmData[rowIndex][s.key_flag] = true;
-                                                    mainList[mainIndex][s.key_swm_total] = mainList[mainIndex][s.key_swm_total] + double.parse(getDemad(swmData[rowIndex], selectedTaxTypeData['taxtypeid'].toString()));
-                                                    mainList[mainIndex][s.key_swm_pay] = getTotal(mainList[mainIndex][s.key_swm_total], mainList[mainIndex][s.key_swm_available_advance]);
+                                                    Utils().showAlert(
+                                                        context,
+                                                        ContentType.fail,
+                                                        'pay_pending_year'
+                                                            .tr()
+                                                            .toString());
                                                   }
+                                                } else {
+                                                  Utils().showAlert(
+                                                      context,
+                                                      ContentType.fail,
+                                                      'pay_previous'
+                                                          .tr()
+                                                          .toString());
                                                 }
 
                                                 setState(() {
                                                   main_count = 0;
                                                   main_totalAmount = 0.00;
-                                                  for (int i = 0; i < mainList.length; i++) {
-                                                    main_totalAmount = main_totalAmount + mainList[i][s.key_tax_pay] + mainList[i][s.key_swm_pay];
+                                                  for (int i = 0;
+                                                      i < mainList.length;
+                                                      i++) {
+                                                    main_totalAmount =
+                                                        main_totalAmount +
+                                                            mainList[i][
+                                                                s.key_tax_pay] +
+                                                            mainList[i]
+                                                                [s.key_swm_pay];
                                                   }
-                                                  preferencesService.addedTaxPayList.removeWhere((element) =>
-                                                      element['taxtypeid'].toString() == mainList[mainIndex]['taxtypeid'].toString() &&
-                                                      element['assesment_no'].toString() == mainList[mainIndex]['assesment_no'].toString());
-                                                  if (mainList[mainIndex][s.key_tax_total] > 0 || mainList[mainIndex][s.key_swm_total] > 0) {
-                                                    preferencesService.addedTaxPayList.add(mainList[mainIndex]);
+                                                  preferencesService
+                                                      .addedTaxPayList
+                                                      .removeWhere((element) =>
+                                                          element['taxtypeid']
+                                                                  .toString() ==
+                                                              mainList[mainIndex]
+                                                                      [
+                                                                      'taxtypeid']
+                                                                  .toString() &&
+                                                          element['assesment_no']
+                                                                  .toString() ==
+                                                              mainList[mainIndex]
+                                                                      [
+                                                                      'assesment_no']
+                                                                  .toString());
+                                                  if (mainList[mainIndex][
+                                                              s.key_tax_total] >
+                                                          0 ||
+                                                      mainList[mainIndex][
+                                                              s.key_swm_total] >
+                                                          0) {
+                                                    preferencesService
+                                                        .addedTaxPayList
+                                                        .add(mainList[
+                                                            mainIndex]);
                                                   }
                                                   getCount();
                                                   repeatOnce();
@@ -589,8 +995,18 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            UIHelper.titleTextStyle("${'demand'.tr()} : \u{20B9} ${mainList[mainIndex][s.key_tax_total]}", c.black, 11, false, false),
-            UIHelper.titleTextStyle("${'advance'.tr()} : \u{20B9} ${getTaxAdvance(mainList[mainIndex],selectedTaxTypeData['taxtypeid'].toString())}", c.black, 11, false, false),
+            UIHelper.titleTextStyle(
+                "${'demand'.tr()} : \u{20B9} ${mainList[mainIndex][s.key_tax_total]}",
+                c.black,
+                11,
+                false,
+                false),
+            UIHelper.titleTextStyle(
+                "${'advance'.tr()} : \u{20B9} ${getTaxAdvance(mainList[mainIndex], selectedTaxTypeData['taxtypeid'].toString())}",
+                c.black,
+                11,
+                false,
+                false),
           ],
         ),
         UIHelper.verticalSpaceSmall,
@@ -606,8 +1022,18 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            UIHelper.titleTextStyle("${'demand'.tr()} : \u{20B9} ${mainList[mainIndex][s.key_swm_total]}", c.black, 11, false, false),
-            UIHelper.titleTextStyle("${'advance'.tr()} : \u{20B9} ${mainList[mainIndex][s.key_swm_available_advance]}", c.black, 11, false, false),
+            UIHelper.titleTextStyle(
+                "${'demand'.tr()} : \u{20B9} ${mainList[mainIndex][s.key_swm_total]}",
+                c.black,
+                11,
+                false,
+                false),
+            UIHelper.titleTextStyle(
+                "${'advance'.tr()} : \u{20B9} ${mainList[mainIndex][s.key_swm_available_advance]}",
+                c.black,
+                11,
+                false,
+                false),
           ],
         ),
         UIHelper.verticalSpaceSmall,
@@ -625,14 +1051,16 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
           flex: 1,
           child: Container(
             margin: EdgeInsets.only(top: 10, bottom: 15, left: 15),
-            decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.white, c.white),
+            decoration:
+                UIHelper.roundedBorderWithColorWithShadow(5, c.white, c.white),
             child: Row(
               children: [
                 Container(
                     width: 35,
                     height: 35,
                     padding: EdgeInsets.all(5),
-                    decoration: UIHelper.roundedBorderWithColor(5, 5, 5, 5, c.colorPrimary),
+                    decoration: UIHelper.roundedBorderWithColor(
+                        5, 5, 5, 5, c.colorPrimary),
                     child: Image.asset(
                       selectedTaxTypeData["img_path"].toString(),
                       fit: BoxFit.contain,
@@ -640,7 +1068,10 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                       width: 15,
                     )),
                 UIHelper.horizontalSpaceSmall,
-                Container(width: 110, margin: EdgeInsets.only(left: 5), child: addInputDropdownField()),
+                Container(
+                    width: 110,
+                    margin: EdgeInsets.only(left: 5),
+                    child: addInputDropdownField()),
               ],
             ),
           ),
@@ -654,21 +1085,27 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                 child: Container(
                   width: MediaQuery.of(context).size.width / 2.5,
                   margin: EdgeInsets.only(top: 10, bottom: 15, right: 15),
-                  decoration: UIHelper.GradientContainer(5, 5, 5, 5, [c.grey_8, c.grey_8]),
+                  decoration: UIHelper.GradientContainer(
+                      5, 5, 5, 5, [c.grey_8, c.grey_8]),
                   padding: EdgeInsets.fromLTRB(5, 8, 0, 8),
                   child: Row(
                     // Wrap with Row to add the plus icon
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.add, // Use the icon you prefer (e.g., Icons.add, Icons.add_circle, etc.)
+                        Icons
+                            .add, // Use the icon you prefer (e.g., Icons.add, Icons.add_circle, etc.)
                         color: c.white,
                         size: 15,
                       ),
                       SizedBox(width: 3),
                       Flexible(
                           child: UIHelper.titleTextStyle(
-                        "new".tr().toString() + (selectedLang == "en" ? selectedTaxTypeData["taxtypedesc_en"] : selectedTaxTypeData["taxtypedesc_ta"]) + "new2".tr().toString(),
+                        "new".tr().toString() +
+                            (selectedLang == "en"
+                                ? selectedTaxTypeData["taxtypedesc_en"]
+                                : selectedTaxTypeData["taxtypedesc_ta"]) +
+                            "new2".tr().toString(),
                         c.white,
                         10,
                         true,
@@ -694,13 +1131,21 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                               ? Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => TaxPayDetailsView(),
                                 ))
-                              : Utils().showAlert(context, ContentType.warning, 'no_record'.tr().toString());
+                              : Utils().showAlert(context, ContentType.warning,
+                                  'no_record'.tr().toString());
                         },
                         child: Container(
-                            margin: EdgeInsets.only(top: 15, right: 30, bottom: 15),
-                            decoration: UIHelper.GradientContainer(5, 5, 5, 5, [c.grey_7, c.grey_7]),
+                            margin:
+                                EdgeInsets.only(top: 15, right: 30, bottom: 15),
+                            decoration: UIHelper.GradientContainer(
+                                5, 5, 5, 5, [c.grey_7, c.grey_7]),
                             padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
-                            child: UIHelper.titleTextStyle("added_to_pay".tr().toString(), c.white, 12, true, true)),
+                            child: UIHelper.titleTextStyle(
+                                "added_to_pay".tr().toString(),
+                                c.white,
+                                12,
+                                true,
+                                true)),
                       )),
                   Positioned(
                       top: 1,
@@ -710,9 +1155,17 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                           child: Container(
                             margin: EdgeInsets.only(right: 15),
                             child: Container(
-                                decoration: UIHelper.circleWithColorWithShadow(360, c.account_status_green_color, c.account_status_green_color),
+                                decoration: UIHelper.circleWithColorWithShadow(
+                                    360,
+                                    c.account_status_green_color,
+                                    c.account_status_green_color),
                                 padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
-                                child: UIHelper.titleTextStyle((main_count).toString(), c.white, 12, true, true)),
+                                child: UIHelper.titleTextStyle(
+                                    (main_count).toString(),
+                                    c.white,
+                                    12,
+                                    true,
+                                    true)),
                           )))
                 ],
               )),
@@ -724,7 +1177,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
   Widget addInputDropdownField() {
     return FormBuilderDropdown(
       enabled: widget.isTaxDropDown ? true : false,
-      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: c.grey_8),
+      style:
+          TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: c.grey_8),
       decoration: InputDecoration(
         contentPadding: EdgeInsets.only(left: 0),
         constraints: BoxConstraints(maxHeight: 35),
@@ -738,22 +1192,30 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
           borderSide: BorderSide(color: c.full_transparent, width: 0.0),
           borderRadius: BorderRadius.circular(0),
         ),
-        focusedBorder: UIHelper.getInputBorder(0, borderColor: c.full_transparent),
+        focusedBorder:
+            UIHelper.getInputBorder(0, borderColor: c.full_transparent),
         focusedErrorBorder: OutlineInputBorder(
           borderSide: BorderSide(width: 0.0),
-          borderRadius: BorderRadius.circular(0), // Increase the radius to adjust the height
+          borderRadius: BorderRadius.circular(
+              0), // Increase the radius to adjust the height
         ),
       ),
       initialValue: selectedTaxTypeData,
       iconSize: widget.isTaxDropDown ? 28 : 0,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: FormBuilderValidators.compose([FormBuilderValidators.required(errorText: "")]),
+      validator: FormBuilderValidators.compose(
+          [FormBuilderValidators.required(errorText: "")]),
       items: taxTypeList
           .map((item) => DropdownMenuItem(
                 value: item,
                 child: Text(
-                  selectedLang == "en" ? item[s.key_taxtypedesc_en].toString() : item[s.key_taxtypedesc_ta].toString(),
-                  style: TextStyle(fontSize: 11.0, fontWeight: FontWeight.w400, color: c.black),
+                  selectedLang == "en"
+                      ? item[s.key_taxtypedesc_en].toString()
+                      : item[s.key_taxtypedesc_ta].toString(),
+                  style: TextStyle(
+                      fontSize: 11.0,
+                      fontWeight: FontWeight.w400,
+                      color: c.black),
                 ),
               ))
           .toList(),
@@ -772,7 +1234,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
   Widget payWidget() {
     return Container(
       width: MediaQuery.of(context).size.width,
-      decoration: UIHelper.GradientContainer(15, 15, 0, 0, [c.colorPrimary, c.colorAccentlight]),
+      decoration: UIHelper.GradientContainer(
+          15, 15, 0, 0, [c.colorPrimary, c.colorAccentlight]),
       child: Column(
         children: [
           Align(
@@ -780,7 +1243,12 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
               child: Container(
                   margin: EdgeInsets.only(top: 10, left: 20, right: 20),
                   padding: EdgeInsets.all(5),
-                  child: UIHelper.titleTextStyle("${'total_amount_to_pay'.tr()} : \u{20B9}$main_totalAmount", c.white, 12, true, true))),
+                  child: UIHelper.titleTextStyle(
+                      "${'total_amount_to_pay'.tr()} : \u{20B9}$main_totalAmount",
+                      c.white,
+                      12,
+                      true,
+                      true))),
           Align(
               alignment: Alignment.centerRight,
               child: InkWell(
@@ -789,13 +1257,18 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                         ? Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => TaxPayDetailsView(),
                           ))
-                        : Utils().showAlert(context, ContentType.warning, 'no_record'.tr().toString());
+                        : Utils().showAlert(context, ContentType.warning,
+                            'no_record'.tr().toString());
                   },
                   child: Container(
                       margin: EdgeInsets.only(top: 5, right: 30, bottom: 10),
-                      decoration: UIHelper.GradientContainer(5, 5, 5, 5, [c.account_status_green_color, c.account_status_green_color]),
+                      decoration: UIHelper.GradientContainer(5, 5, 5, 5, [
+                        c.account_status_green_color,
+                        c.account_status_green_color
+                      ]),
                       padding: EdgeInsets.fromLTRB(10, 5, 10, 8),
-                      child: UIHelper.titleTextStyle("pay".tr().toString(), c.white, 12, true, true)))),
+                      child: UIHelper.titleTextStyle(
+                          "pay".tr().toString(), c.white, 12, true, true)))),
         ],
       ),
     );
@@ -816,17 +1289,23 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
 
     mainList.clear();
     for (var sampletaxData in sampleDataList) {
-      if (sampletaxData[s.key_taxtypeid].toString() == selectedTaxTypeData[s.key_taxtypeid].toString()) {
+      if (sampletaxData[s.key_taxtypeid].toString() ==
+          selectedTaxTypeData[s.key_taxtypeid].toString()) {
         if (preferencesService.addedTaxPayList.isNotEmpty) {
           for (var addtaxData in preferencesService.addedTaxPayList) {
             if (addtaxData[s.key_dcode] == sampletaxData[s.key_dcode] &&
                 addtaxData[s.key_bcode] == sampletaxData[s.key_bcode] &&
                 addtaxData[s.key_pvcode] == sampletaxData[s.key_pvcode] &&
                 addtaxData[s.key_taxtypeid] == sampletaxData[s.key_taxtypeid] &&
-                addtaxData[s.key_assessment_no] == sampletaxData[s.key_assessment_no]) {
+                addtaxData[s.key_assessment_no] ==
+                    sampletaxData[s.key_assessment_no]) {
               for (var addtaxListData in addtaxData[s.key_DEMAND_DETAILS]) {
-                for (var sampleSelectedList in sampletaxData[s.key_DEMAND_DETAILS]) {
-                  if (addtaxListData[s.key_fin_year] == sampleSelectedList[s.key_fin_year] && addtaxListData[s.key_amount] == sampleSelectedList[s.key_amount]) {
+                for (var sampleSelectedList
+                    in sampletaxData[s.key_DEMAND_DETAILS]) {
+                  if (addtaxListData[s.key_fin_year] ==
+                          sampleSelectedList[s.key_fin_year] &&
+                      addtaxListData[s.key_amount] ==
+                          sampleSelectedList[s.key_amount]) {
                     sampleSelectedList[s.key_flag] = addtaxListData[s.key_flag];
                   }
                 }
@@ -847,8 +1326,14 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
     }
 
     for (int m = 0; m < preferencesService.addedTaxPayList.length; m++) {
-      for (int j = 0; j < preferencesService.addedTaxPayList[m][s.key_DEMAND_DETAILS].length; j++) {
-        if (preferencesService.addedTaxPayList[m][s.key_DEMAND_DETAILS][j][s.key_flag] == true) {
+      for (int j = 0;
+          j <
+              preferencesService
+                  .addedTaxPayList[m][s.key_DEMAND_DETAILS].length;
+          j++) {
+        if (preferencesService.addedTaxPayList[m][s.key_DEMAND_DETAILS][j]
+                [s.key_flag] ==
+            true) {
           main_count = main_count + 1;
         }
       }
@@ -873,7 +1358,11 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
         };
       }
 
-      await StartUpViewModel().getMainServiceList("TaxCollectionDetails", requestDataValue: request, context: context,taxType: selectedTaxTypeData[s.key_taxtypeid].toString(),lang: selectedLang);
+      await StartUpViewModel().getMainServiceList("TaxCollectionDetails",
+          requestDataValue: request,
+          context: context,
+          taxType: selectedTaxTypeData[s.key_taxtypeid].toString(),
+          lang: selectedLang);
 
       // throw ('000');
     } catch (error) {
@@ -883,37 +1372,46 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
 
   String getvillageAndBlockName(int mainIndex, String taxTypeId) {
     String street = "";
-    street=((mainList[mainIndex][s.key_localbody_name] ?? '') + ", " + (mainList[mainIndex][s.key_bname] ?? ''));
+    street = ((mainList[mainIndex][s.key_localbody_name] ?? '') +
+        ", " +
+        (mainList[mainIndex][s.key_bname] ?? ''));
     print(mainList[mainIndex][s.key_localbody_name]);
     print(mainList[mainIndex][s.key_bname]);
     print(street);
     return street;
   }
-    String getDoorAndStreetName(int mainIndex, String taxTypeId) {
-    String street="";
+
+  String getDoorAndStreetName(int mainIndex, String taxTypeId) {
+    String street = "";
     switch (taxTypeId) {
       case '1':
-        street=(mainList[mainIndex][s.key_door_no] ?? '') + ", " + selectedLang == 'en'
-            ? (mainList[mainIndex][s.key_street_name_en] ?? '')
-            : (mainList[mainIndex][s.key_street_name_ta] ?? '');
+        street =
+            (mainList[mainIndex][s.key_door_no] ?? '') + ", " + selectedLang ==
+                    'en'
+                ? (mainList[mainIndex][s.key_street_name_en] ?? '')
+                : (mainList[mainIndex][s.key_street_name_ta] ?? '');
         break;
       case '2':
-        street=selectedLang == 'en'
+        street = selectedLang == 'en'
             ? (mainList[mainIndex]["street_name"] ?? '')
             : (mainList[mainIndex]["street_name"] ?? '');
         break;
       case '4':
-        street=(mainList[mainIndex]['doorno'] ?? '') + ", " +selectedLang == 'en'
-            ? (mainList[mainIndex]["street_name_t"] ?? '')
-            : (mainList[mainIndex]["street_name_t"] ?? '');
+        street =
+            (mainList[mainIndex]['doorno'] ?? '') + ", " + selectedLang == 'en'
+                ? (mainList[mainIndex]["street_name_t"] ?? '')
+                : (mainList[mainIndex]["street_name_t"] ?? '');
         break;
       case '5':
-        street=(mainList[mainIndex]['doorno'] ?? '') + ", " +selectedLang == 'en'
-            ? (mainList[mainIndex]["street_name"] ?? '')
-            : (mainList[mainIndex]["street_name"] ?? '');
+        street =
+            (mainList[mainIndex]['doorno'] ?? '') + ", " + selectedLang == 'en'
+                ? (mainList[mainIndex]["street_name"] ?? '')
+                : (mainList[mainIndex]["street_name"] ?? '');
         break;
       case '6':
-        street=(mainList[mainIndex][s.key_localbody_name] ?? '') + ", " + (mainList[mainIndex][s.key_bname] ?? '');
+        street = (mainList[mainIndex][s.key_localbody_name] ?? '') +
+            ", " +
+            (mainList[mainIndex][s.key_bname] ?? '');
         break;
     }
     print(street);
@@ -921,45 +1419,46 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
   }
 
   String getDemad(taxData, String taxTypeId) {
-    String amount="";
+    String amount = "";
     switch (taxTypeId) {
       case '1':
-        amount=taxData['demand'].toString();
+        amount = taxData['demand'].toString();
         break;
       case '2':
-        amount=taxData['watercharges'].toString();
+        amount = taxData['watercharges'].toString();
         break;
       case '4':
-        amount=taxData['profession_tax'].toString();
+        amount = taxData['profession_tax'].toString();
         break;
       case '5':
-        amount=taxData['nontax_amount'].toString();
+        amount = taxData['nontax_amount'].toString();
         break;
       case '6':
-        amount=taxData['traders_rate'].toString();
+        amount = taxData['traders_rate'].toString();
         break;
     }
 
     // taxData[rowIndex][s.key_demand].toString();
     return amount;
   }
+
   String getTaxAdvance(taxData, String taxTypeId) {
-    String amount="";
+    String amount = "";
     switch (taxTypeId) {
       case '1':
-        amount=taxData['property_available_advance'].toString();
+        amount = taxData['property_available_advance'].toString();
         break;
       case '2':
-        amount=taxData['water_available_advance'].toString();
+        amount = taxData['water_available_advance'].toString();
         break;
       case '4':
-        amount=taxData['professional_available_advance'].toString();
+        amount = taxData['professional_available_advance'].toString();
         break;
       case '5':
-        amount=taxData['non_available_advance'].toString();
+        amount = taxData['non_available_advance'].toString();
         break;
       case '6':
-        amount=taxData['trade_available_advance'].toString();
+        amount = taxData['trade_available_advance'].toString();
         break;
     }
 
