@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:public_vptax/Activity/Auth/View_receipt.dart';
+import 'package:public_vptax/Activity/Tax_Collection/know_your_village.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
@@ -356,11 +357,7 @@ class _HomeState extends State<Home> {
                                         } else if (selected_index == 2) {
                                           Navigator.push(context, MaterialPageRoute(builder: (context) => ViewReceipt()));
                                         } else if (selected_index == 3) {
-                                          /*Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      DownloadReceipt()));*/
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => KYVDashboard()));
                                         }
                                       });
                                     },

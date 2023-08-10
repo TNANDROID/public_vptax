@@ -21,8 +21,7 @@ class UIHelper {
   static const Widget horizontalSpaceLarge = SizedBox(width: 40.0);
 
 // Input Box Style Provider
-  static OutlineInputBorder getInputBorder(double width,
-      {double radius = 15, Color borderColor = Colors.transparent}) {
+  static OutlineInputBorder getInputBorder(double width, {double radius = 15, Color borderColor = Colors.transparent}) {
     return OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(radius)),
       borderSide: BorderSide(color: borderColor, width: width),
@@ -30,16 +29,13 @@ class UIHelper {
   }
 
 // Text and Style Provider
-  static Widget titleTextStyle(String title, Color clr, double fntsize,
-      bool isBold, bool isCenterAliignment) {
+  static Widget titleTextStyle(String title, Color clr, double fntsize, bool isBold, bool isCenterAliignment) {
     return Text(
       title.tr().toString(),
       style: TextStyle(
           color: clr,
           fontSize: fntsize,
-          decoration: title == "swmUserCharges".tr().toString()
-              ? TextDecoration.underline
-              : TextDecoration.none,
+          decoration: title == "swmUserCharges".tr().toString() ? TextDecoration.underline : TextDecoration.none,
           fontWeight: isBold ? FontWeight.bold : FontWeight.normal),
       textAlign: isCenterAliignment
           ? TextAlign.center
@@ -50,22 +46,16 @@ class UIHelper {
   }
 
 //Container Style Provider with shadow
-  static BoxDecoration roundedBorderWithColor(double topleft, double topright,
-      double btmleft, double btmright, Color backgroundColor,
+  static BoxDecoration roundedBorderWithColor(double topleft, double topright, double btmleft, double btmright, Color backgroundColor,
       {Color borderColor = Colors.transparent, double borderWidth = 1}) {
     return BoxDecoration(
-      borderRadius: BorderRadius.only(
-          topRight: Radius.circular(topright),
-          topLeft: Radius.circular(topleft),
-          bottomLeft: Radius.circular(btmleft),
-          bottomRight: Radius.circular(btmright)),
+      borderRadius: BorderRadius.only(topRight: Radius.circular(topright), topLeft: Radius.circular(topleft), bottomLeft: Radius.circular(btmleft), bottomRight: Radius.circular(btmright)),
       border: Border.all(width: borderWidth, color: borderColor),
       color: backgroundColor,
     );
   }
 
-  static TextStyle textDecoration(double fontSize, Color fontColor,
-      {bool bold = false}) {
+  static TextStyle textDecoration(double fontSize, Color fontColor, {bool bold = false}) {
     return TextStyle(
       fontSize: fontSize,
       fontWeight: bold ? FontWeight.bold : FontWeight.normal,
@@ -77,9 +67,7 @@ class UIHelper {
   }
 
 //Container Style Provider with shadow
-  static BoxDecoration roundedBorderWithColorWithShadow(
-      double radius, Color backgroundColor, Color backgroundColor2,
-      {Color borderColor = Colors.transparent, double borderWidth = 1}) {
+  static BoxDecoration roundedBorderWithColorWithShadow(double radius, Color backgroundColor, Color backgroundColor2, {Color borderColor = Colors.transparent, double borderWidth = 1}) {
     return BoxDecoration(
         borderRadius: BorderRadius.circular(radius),
         border: Border.all(width: borderWidth, color: borderColor),
@@ -101,9 +89,7 @@ class UIHelper {
         ]);
   }
 
-  static BoxDecoration circleWithColorWithShadow(
-      double radius, Color backgroundColor, Color backgroundColor2,
-      {Color borderColor = Colors.transparent, double borderWidth = 1}) {
+  static BoxDecoration circleWithColorWithShadow(double radius, Color backgroundColor, Color backgroundColor2, {Color borderColor = Colors.transparent, double borderWidth = 1}) {
     return BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(width: borderWidth, color: borderColor),
@@ -126,24 +112,19 @@ class UIHelper {
   }
 
 //Gradient Container Style Provider
-  static BoxDecoration GradientContainer(double topleft, double topright,
-      double btmleft, double btmright, List<Color> c1,
-      {Color borderColor = Colors.transparent, double intwid = 0}) {
+  static BoxDecoration GradientContainer(double topleft, double topright, double btmleft, double btmright, List<Color> c1,
+      {Color borderColor = Colors.transparent, double intwid = 0, double stop1 = 0.4, double stop2 = 0.6}) {
     return BoxDecoration(
         gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             stops: [
-              0.4,
-              0.6,
+              stop1,
+              stop2,
             ],
             colors: c1),
         border: Border.all(color: borderColor, width: intwid),
-        borderRadius: BorderRadius.only(
-            topRight: Radius.circular(topright),
-            topLeft: Radius.circular(topleft),
-            bottomLeft: Radius.circular(btmleft),
-            bottomRight: Radius.circular(btmright)),
+        borderRadius: BorderRadius.only(topRight: Radius.circular(topright), topLeft: Radius.circular(topleft), bottomLeft: Radius.circular(btmleft), bottomRight: Radius.circular(btmright)),
         boxShadow: [
           BoxShadow(
             color: Colors.black26,
@@ -154,26 +135,22 @@ class UIHelper {
   }
 
 //Neumorphic Container Style Provider
-  static BoxDecoration NeumorphicContainer(double radius, Color clr,
-      {Color borderColor = Colors.transparent}) {
-    return BoxDecoration(
-        color: clr,
-        borderRadius: BorderRadius.circular(radius),
-        boxShadow: [
-          BoxShadow(
-            //  color: Color(0xFFBEBEBE),
-            color: Colors.black38,
-            offset: Offset(8, 8),
-            blurRadius: 30,
-            spreadRadius: 1,
-          ),
-          const BoxShadow(
-            color: Colors.white,
-            offset: Offset(-10, -10),
-            blurRadius: 30,
-            spreadRadius: 5,
-          ),
-        ]);
+  static BoxDecoration NeumorphicContainer(double radius, Color clr, {Color borderColor = Colors.transparent}) {
+    return BoxDecoration(color: clr, borderRadius: BorderRadius.circular(radius), boxShadow: [
+      BoxShadow(
+        //  color: Color(0xFFBEBEBE),
+        color: Colors.black38,
+        offset: Offset(8, 8),
+        blurRadius: 30,
+        spreadRadius: 1,
+      ),
+      const BoxShadow(
+        color: Colors.white,
+        offset: Offset(-10, -10),
+        blurRadius: 30,
+        spreadRadius: 5,
+      ),
+    ]);
   }
 
   //Uneven Container Widget Provider
@@ -191,8 +168,7 @@ class UIHelper {
   }
 
 //Container Style Provider with shadow
-  static BoxDecoration leftBorderContainer(
-      Color leftBorderclr, Color bottomBorderclr) {
+  static BoxDecoration leftBorderContainer(Color leftBorderclr, Color bottomBorderclr) {
     return BoxDecoration(
       border: Border(
         left: BorderSide(
