@@ -1,5 +1,6 @@
 {
   "appName": "Ooragam",
+  "gov_tamilnadu": "Government of TamilNadu",
   "signIN": "Sign In",
   "signUP": "Sign Up",
   "signupText": "Don't have an account ?",
@@ -106,5 +107,17 @@
   "do_you_want_to_exit_an_app" : "Do you want to exit an app?",
   "exit_app" : "Exit",
   "no_record" : "No Record",
+  "building_licence_number" : "Building Licence Number",
+  "assesment_number" : "Assesment Number",
+  "water_connection_number" : "Water Connection Number",
+  "lease_number" : "Lease Number",
+  "lease_from_date" : "Lease From Date",
+  "lease_to_date" : "Lease To Date",
+  "lease_duration" : "Lease Duration",
+  "lease_district" : "Lease District",
+  "lease_state" : "Lease State",
+  "traders_code" : "Traders Code",
+  "yes" : "Yes",
+  "no" : "No",
   "select_all_field": "Please fill all the details"
 }

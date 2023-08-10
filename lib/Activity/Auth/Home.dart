@@ -33,7 +33,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   Utils utils = Utils();
-  late SharedPreferences prefs;
   List taxTypeList = [];
   List servicesList = [];
   int index_val = -1;
@@ -41,7 +40,8 @@ class _HomeState extends State<Home> {
   final _controller = ScrollController();
   PreferenceService preferencesService = locator<PreferenceService>();
   bool flag = true;
-  String langText = '';
+  String langText = 'தமிழ்';
+  String islogin = 'no';
 
   @override
   void initState() {
@@ -65,13 +65,12 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> initialize() async {
-    prefs = await SharedPreferences.getInstance();
     index_val = -1;
     selected_index = -1;
-
+    langText = 'தமிழ்';
     List s_list = [
       {'service_id': 0, 'service_name': 'check_your_dues', 'img_path': imagePath.due4},
-      {'service_id': 1, 'service_name': 'payToOthers', 'img_path': imagePath.quick_pay1},
+      {'service_id': 1, 'service_name': 'quickPay', 'img_path': imagePath.quick_pay1},
       {'service_id': 2, 'service_name': 'view_receipt_details', 'img_path': imagePath.download_receipt},
       {'service_id': 3, 'service_name': 'know_about_your_village', 'img_path': imagePath.village},
       {'service_id': 4, 'service_name': 'village_development_works', 'img_path': imagePath.village_development},
@@ -82,9 +81,16 @@ class _HomeState extends State<Home> {
     await Utils().apiCalls(context);
     taxTypeList.clear();
     taxTypeList = preferencesService.taxTypeList;
+    islogin=await preferencesService.getUserInfo(key_isLogin);
+    print("islogin>>" + islogin.toString());
     print("tax>>" + taxTypeList.toString());
     setState(() {
-      prefs.getString("lang") != null && prefs.getString("lang") != "" && prefs.getString("lang") == "en" ? context.setLocale(Locale('en', 'US')) : context.setLocale(Locale('ta', 'IN'));
+      if(preferencesService.getUserInfo("lang") != null && preferencesService.getUserInfo("lang") != "" && preferencesService.getUserInfo("lang") == "en") {
+        context.setLocale(Locale('en', 'US'));
+      } else {
+        preferencesService.setUserInfo("lang", "ta");
+        context.setLocale(Locale('ta', 'IN'));
+      }
     });
   }
 
@@ -97,7 +103,8 @@ class _HomeState extends State<Home> {
           appBar: PreferredSize(
             preferredSize: AppBar().preferredSize,
             child: Container(
-                padding: EdgeInsets.only(top: 40, bottom: 10, right: 20),
+              padding: EdgeInsets.only(top: 20),
+              height: 70,
                 decoration: UIHelper.GradientContainer(0, 0, 30, 30, [c.colorAccentlight, c.colorPrimaryDark]),
                 child: Stack(
                   alignment: Alignment.center,
@@ -154,15 +161,47 @@ class _HomeState extends State<Home> {
                     ),
 
                     Positioned(
-                      right: 0,
-                      child: Text(
-                        'login'.tr().toString(),
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: c.white,
+                      right: 15,
+                      child: Visibility(
+                        visible: islogin=="no",
+                        child: InkWell(
+                          onTap: () async {
+                            await preferencesService.setUserInfo(key_isLogin,'yes');
+                            await preferencesService.setUserInfo(key_mobile_number,'9875235654');
+                            islogin="yes";
+                            print("islogin>>" + islogin.toString());
+                            print("login successful");
+                            setState(() {
+                            });
+                          },
+                          child: Text(
+                            'login'.tr().toString(),
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: c.white,
+                            ),
+                          ),
                         ),
                       ),
                     ),
+                    Positioned(
+                      right: 15,
+                      child: Visibility(
+                        visible: islogin=="yes",
+                        child: InkWell(
+                          onTap: (){
+                            logout();
+                          },
+                          child: Image.asset(
+                                    imagePath.logout,
+                                    color: c.white,
+                                    fit: BoxFit.contain,
+                                    height: 25,
+                                    width: 25,
+                                  ),
+                        ),
+                      ),
+                    )
 
                     // SizedBox(width: Screen.width(context) * 0.11)
 
@@ -242,19 +281,26 @@ class _HomeState extends State<Home> {
                               itemCount: taxTypeList == null ? 0 : taxTypeList.length,
                               itemBuilder: (context, i) {
                                 return InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      index_val = i;
+                                  onTap: () async{
+
+                                    index_val = i;
+                                    if( await preferencesService.getUserInfo(key_isLogin) == "yes") {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (_) => TaxCollectionDetailsView(
-                                                    selectedTaxTypeData: taxTypeList[i],
-                                                    isTaxDropDown: false,
-                                                    isHome: true,
-                                                    mobile: preferencesService.getUserInfo(key_mobile_number).toString(),
-                                                    selectedEntryType: 1,
-                                                  )));
+                                                selectedTaxTypeData: taxTypeList[i],
+                                                isTaxDropDown: false,
+                                                isHome: true,
+                                                mobile: preferencesService.getUserInfo(key_mobile_number).toString(),
+                                                selectedEntryType: 1,
+                                              )));
+                                    }else{
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(selectedTaxTypeData: taxTypeList[i],flag: "1",)));
+
+                                    }
+
+                                    setState(() {
                                     });
                                   },
                                   child: Container(
@@ -281,7 +327,7 @@ class _HomeState extends State<Home> {
                                           alignment: Alignment.center,
                                           margin: EdgeInsets.all(10),
                                           child: Text(
-                                            prefs.getString('lang') == 'en' ? taxTypeList[i][key_taxtypedesc_en] : taxTypeList[i][key_taxtypedesc_ta],
+                                            preferencesService.getUserInfo('lang') == 'en' ? taxTypeList[i][key_taxtypedesc_en] : taxTypeList[i][key_taxtypedesc_ta],
                                             style: TextStyle(fontSize: 12, height: 1.5, color: c.grey_9),
                                             textAlign: TextAlign.center,
                                           ),
@@ -337,22 +383,29 @@ class _HomeState extends State<Home> {
                               child: ScaleAnimation(
                                 child: FadeInAnimation(
                                   child: InkWell(
-                                    onTap: () {
-                                      setState(() {
+                                    onTap: () async {
                                         selected_index = index;
                                         if (selected_index == 0) {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (_) => TaxCollectionDetailsView(
-                                                        selectedTaxTypeData: taxTypeList[0],
-                                                        isTaxDropDown: true,
-                                                        isHome: true,
-                                                        mobile: preferencesService.getUserInfo(key_mobile_number),
-                                                        selectedEntryType: 1,
-                                                      )));
+    if( islogin == "yes") {
+      print(islogin);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (_) => TaxCollectionDetailsView(
+                selectedTaxTypeData: taxTypeList[0],
+                isTaxDropDown: true,
+                isHome: true,
+                mobile: preferencesService.getUserInfo(key_mobile_number),
+                selectedEntryType: 1,
+              )));
+    }else{
+      Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(flag: "2",)));
+
+
+    }
+
                                         } else if (selected_index == 1) {
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView()));
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(flag: "2",)));
                                         } else if (selected_index == 2) {
                                           Navigator.push(context, MaterialPageRoute(builder: (context) => ViewReceipt()));
                                         } else if (selected_index == 3) {
@@ -362,7 +415,9 @@ class _HomeState extends State<Home> {
                                                   builder: (context) =>
                                                       DownloadReceipt()));*/
                                         }
-                                      });
+                                     setState(() {
+
+                                     });
                                     },
                                     child: Container(
                                       height: (Screen.height(context) / 2) - 10,
@@ -452,13 +507,13 @@ class _HomeState extends State<Home> {
           //the return value will be from "Yes" or "No" options
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('exit_app'.tr().toString()),
-            content: Text('do_you_want_to_exit_an_app'.tr().toString()),
+            title: Text('exit_app'.tr().toString(),style: TextStyle(fontSize: 14),),
+            content: Text('do_you_want_to_exit_an_app'.tr().toString(),style: TextStyle(fontSize: 13),),
             actions: [
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(false),
                 //return false when click on "NO"
-                child: Text('no'.tr().toString()),
+                child: Text('no'.tr().toString(),style: TextStyle(fontSize: 12),),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -469,7 +524,7 @@ class _HomeState extends State<Home> {
                   }
                 },
                 //return true when click on "Yes"
-                child: Text('yes'.tr().toString()),
+                child: Text('yes'.tr().toString(),style: TextStyle(fontSize: 12),),
               ),
             ],
           ),
@@ -482,14 +537,14 @@ class _HomeState extends State<Home> {
       case 'தமிழ்':
         setState(() {
           langText = value;
-          prefs.setString("lang", "ta");
+          preferencesService.setUserInfo("lang", "ta");
           context.setLocale(Locale('ta', 'IN'));
         });
         break;
       case 'English':
         setState(() {
           langText = value;
-          prefs.setString("lang", "en");
+          preferencesService.setUserInfo("lang", "en");
           context.setLocale(Locale('en', 'US'));
         });
         break;
@@ -498,6 +553,11 @@ class _HomeState extends State<Home> {
 
   void logout() {
     preferencesService.cleanAllPreferences();
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Splash()), (route) => false);
+    if (Platform.isAndroid) {
+      SystemNavigator.pop();
+    } else if (Platform.isIOS) {
+      exit(0);
+    }
+    // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Splash()), (route) => false);
   }
 }

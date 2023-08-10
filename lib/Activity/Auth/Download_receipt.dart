@@ -21,7 +21,6 @@ class DownloadReceipt extends StatefulWidget {
 class _DownloadReceiptState extends State<DownloadReceipt> {
   @override
   Utils utils = Utils();
-  late SharedPreferences prefs;
   var dbClient;
   bool listvisbility = false;
   bool tamilvisibility=false;
@@ -33,16 +32,6 @@ class _DownloadReceiptState extends State<DownloadReceipt> {
   @override
   void initState() {
     super.initState();
-    initialize();
-  }
-  Future<void> initialize() async {
-    prefs = await SharedPreferences.getInstance();
-    setState(() {
-      prefs.getString("lang")!= null &&  prefs.getString("lang")!="" &&  prefs.getString("lang")=="en"?
-      context.setLocale(Locale('en', 'US')):
-      context.setLocale(Locale('ta', 'IN'));
-
-    });
   }
   Future<bool> _onWillPop() async {
     Navigator.of(context, rootNavigator: true).pop(context);

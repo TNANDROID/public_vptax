@@ -27,7 +27,7 @@ String key_bname = "bname";
 String key_bname_ta = "llbname";
 String key_pvcode = "pvcode";
 String key_pvname = "pvname";
-String key_pvname_ta = "pvname_ta";
+String key_pvname_ta = "llpvname";
 String key_name = "name";
 String key_gender = "gender";
 String key_level = "level";
@@ -102,6 +102,7 @@ String key_tax_total= "tax_total";
 String key_swm_total= "swm_total";
 String key_tax_pay= "tax_pay";
 String key_swm_pay= "swm_pay";
+String key_isLogin= "isLogin";
 
 
 

@@ -1,5 +1,6 @@
 {
   "appName": "ஊரகம்",
+  "gov_tamilnadu": "தமிழ்நாடு அரசு",
   "signIN": "உள்நுழைக",
   "signUP": "பதிவுசெய்",
   "signupText": "கணக்கு இல்லையா ?",
@@ -42,7 +43,7 @@
   "download_receipt": "ரசீதைப் பதிவிறக்கம் செய்ய",
   "select_taxtype": "வரி வகையைத் தேர்ந்தெடுக்கவும்",
   "propertyTax": "சொத்து வரி்",
-  "waterCharges": "தண்ணீர் கட்டணம்",
+  "waterCharges": "குடிநீர் கட்டணம்",
   "professionalTax": "தொழில்முறை வரி",
   "nonTax": "வரி அல்லாத",
   "tradeLicense": "வர்த்தக உரிமம்",
@@ -106,5 +107,17 @@
   "do_you_want_to_exit_an_app" : "பயன்பாட்டிலிருந்து வெளியேற விரும்புகிறீர்களா?",
   "exit_app" : "வெளியேறு",
   "no_record" : "தரவு இல்லை",
+  "building_licence_number" : "கட்டிட உரிம எண்",
+  "assesment_number" : "வரிவிதிப்பு எண்",
+  "water_connection_number" : "குடிநீர் இணைப்பு எண்",
+  "lease_number" : "குத்தகைதாரர் எண்",
+  "lease_from_date" : "குத்தகை தொடக்க நாள்",
+  "lease_to_date" : "குத்தகை முடிவு நாள்",
+  "lease_duration" : "குத்தகை காலம்",
+  "lease_district" : "குத்தகைதாரரின் மாவட்டம்",
+  "lease_state" : "குத்தகைதாரரின் மாநிலம்",
+  "traders_code" : "வர்த்தக குறியீடு",
+  "yes" : "ஆம்",
+  "no" : "இல்லை",
   "select_all_field": "அனைத்து விவரங்களையும் நிரப்பவும்"
 }
