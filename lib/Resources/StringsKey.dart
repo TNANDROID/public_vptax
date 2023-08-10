@@ -103,6 +103,7 @@ String key_swm_total= "swm_total";
 String key_tax_pay= "tax_pay";
 String key_swm_pay= "swm_pay";
 String key_isLogin= "isLogin";
+String key_isChecked= "isChecked";
 
 
 

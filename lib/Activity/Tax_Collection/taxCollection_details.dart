@@ -17,6 +17,8 @@ import 'package:public_vptax/Services/locator.dart';
 import 'package:stacked/stacked.dart';
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 
+import '../../Resources/StringsKey.dart';
+
 class TaxCollectionDetailsView extends StatefulWidget {
   final selectedTaxTypeData;
   final isHome;
@@ -53,7 +55,6 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
   //Strings
   String selectedLang = "";
   String selectTaxtype = "";
-  String temp_assessment_id = "";
   String mobile_widget = "";
 
   //List
@@ -605,6 +606,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                           false,
                                           true))),
                             ),
+                            rowIndex ==0 || taxData[rowIndex-1][s.key_flag]==true?
                             Expanded(
                               flex: 1,
                               child: Container(
@@ -614,18 +616,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                       side:
                                       BorderSide(width: 1, color: c.grey_6),
                                       value: taxData[rowIndex][s.key_flag],
-                                      onChanged: (v) {
-                                        if (temp_assessment_id.isEmpty) {
-                                          temp_assessment_id =
-                                              mainList[mainIndex]
-                                              [s.key_assessment_id]
-                                                  .toString();
-                                        }
-
-                                        if (temp_assessment_id ==
-                                            mainList[mainIndex]
-                                            [s.key_assessment_id]
-                                                .toString()) {
+                                      onChanged: (v) async {
+                                        if (!getFlagStatus(mainList[mainIndex][key_assessment_id].toString())) {
                                           if (rowIndex == 0 ||
                                               taxData[rowIndex - 1]
                                               [s.key_flag] ==
@@ -669,7 +661,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                                   }
                                                   if (taxData[0][s.key_flag] ==
                                                       false) {
-                                                    temp_assessment_id = '';
+                                                    preferencesService.setUserInfo(key_isChecked, "");
+
                                                   }
                                                 }
                                               }
@@ -718,7 +711,13 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                         setState(() {
                                           main_count = 0;
                                           main_totalAmount = 0.00;
-
+                                          preferencesService.addedTaxPayList
+                                              .removeWhere((element) =>
+                                          element['taxtypeid']
+                                              .toString() ==
+                                              selectedTaxTypeData
+                                              ['taxtypeid']
+                                                  .toString());
                                           for (int i = 0;
                                           i < mainList.length;
                                           i++) {
@@ -726,35 +725,26 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                                 main_totalAmount +
                                                     mainList[i][s.key_tax_pay] +
                                                     mainList[i][s.key_swm_pay];
+                                            if (mainList[mainIndex]
+                                            [s.key_tax_total] >
+                                                0 ||
+                                                mainList[mainIndex]
+                                                [s.key_swm_total] >
+                                                    0) {
+                                              preferencesService.addedTaxPayList
+                                                  .add(mainList[mainIndex]);
+                                            }
+
                                           }
-                                          preferencesService.addedTaxPayList
-                                              .removeWhere((element) =>
-                                          element['taxtypeid']
-                                              .toString() ==
-                                              mainList[mainIndex]
-                                              ['taxtypeid']
-                                                  .toString() &&
-                                              element['assesment_no']
-                                                  .toString() ==
-                                                  mainList[mainIndex]
-                                                  ['assesment_no']
-                                                      .toString());
-                                          if (mainList[mainIndex]
-                                          [s.key_tax_total] >
-                                              0 ||
-                                              mainList[mainIndex]
-                                              [s.key_swm_total] >
-                                                  0) {
-                                            preferencesService.addedTaxPayList
-                                                .add(mainList[mainIndex]);
-                                          }
+
                                           getCount();
                                           repeatOnce();
                                         });
                                       },
                                     ),
                                   )),
-                            ),
+                            ):
+                            Expanded(child: SizedBox(width: 5,)),
                           ],
                         ));
                   },
@@ -835,6 +825,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                                   false,
                                                   true))),
                                     ),
+                                    rowIndex ==0 || taxData[rowIndex-1][s.key_flag]==true?
                                     Expanded(
                                       flex: 1,
                                       child: Container(
@@ -846,18 +837,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                               value: swmData[rowIndex]
                                                   [s.key_flag],
                                               onChanged: (v) {
-                                                if (temp_assessment_id
-                                                    .isEmpty) {
-                                                  temp_assessment_id = mainList[
-                                                              mainIndex]
-                                                          [s.key_assessment_id]
-                                                      .toString();
-                                                }
-
-                                                if (temp_assessment_id ==
-                                                    mainList[mainIndex][
-                                                            s.key_assessment_id]
-                                                        .toString()) {
+                                                if (!getFlagStatus(mainList[mainIndex][key_assessment_id].toString())) {
                                                   if (rowIndex == 0 ||
                                                       swmData[rowIndex - 1]
                                                               [s.key_flag] ==
@@ -933,6 +913,15 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                                 setState(() {
                                                   main_count = 0;
                                                   main_totalAmount = 0.00;
+                                                  preferencesService
+                                                      .addedTaxPayList
+                                                      .removeWhere((element) =>
+                                                  element['taxtypeid']
+                                                      .toString() ==
+                                                      selectedTaxTypeData
+                                                      [
+                                                      'taxtypeid']
+                                                          .toString() );
                                                   for (int i = 0;
                                                       i < mainList.length;
                                                       i++) {
@@ -942,40 +931,28 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                                                 s.key_tax_pay] +
                                                             mainList[i]
                                                                 [s.key_swm_pay];
+                                                    if (mainList[mainIndex][
+                                                    s.key_tax_total] >
+                                                        0 ||
+                                                        mainList[mainIndex][
+                                                        s.key_swm_total] >
+                                                            0) {
+                                                      preferencesService
+                                                          .addedTaxPayList
+                                                          .add(mainList[
+                                                      mainIndex]);
+                                                    }
+
                                                   }
-                                                  preferencesService
-                                                      .addedTaxPayList
-                                                      .removeWhere((element) =>
-                                                          element['taxtypeid']
-                                                                  .toString() ==
-                                                              mainList[mainIndex]
-                                                                      [
-                                                                      'taxtypeid']
-                                                                  .toString() &&
-                                                          element['assesment_no']
-                                                                  .toString() ==
-                                                              mainList[mainIndex]
-                                                                      [
-                                                                      'assesment_no']
-                                                                  .toString());
-                                                  if (mainList[mainIndex][
-                                                              s.key_tax_total] >
-                                                          0 ||
-                                                      mainList[mainIndex][
-                                                              s.key_swm_total] >
-                                                          0) {
-                                                    preferencesService
-                                                        .addedTaxPayList
-                                                        .add(mainList[
-                                                            mainIndex]);
-                                                  }
+
                                                   getCount();
                                                   repeatOnce();
                                                 });
                                               },
                                             ),
                                           )),
-                                    ),
+                                    ):
+                                    Expanded(child: SizedBox(width: 5,)),
                                   ],
                                 ));
                           },
@@ -1297,6 +1274,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                 addtaxData[s.key_bcode] == sampletaxData[s.key_bcode] &&
                 addtaxData[s.key_pvcode] == sampletaxData[s.key_pvcode] &&
                 addtaxData[s.key_taxtypeid] == sampletaxData[s.key_taxtypeid] &&
+                addtaxData[s.key_assessment_id] == sampletaxData[s.key_assessment_id] &&
                 addtaxData[s.key_assessment_no] ==
                     sampletaxData[s.key_assessment_no]) {
               for (var addtaxListData in addtaxData[s.key_DEMAND_DETAILS]) {
@@ -1322,9 +1300,12 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
           }
         }
         mainList.add(sampletaxData);
+        print("mainList>>>>>>>"+mainList.toString());
       }
     }
+    getCount();
 
+/*
     for (int m = 0; m < preferencesService.addedTaxPayList.length; m++) {
       for (int j = 0;
           j <
@@ -1343,6 +1324,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
       //   }
       // }
     }
+*/
   }
 
   Future<void> getTaxDetails() async {
@@ -1464,5 +1446,25 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
 
     // taxData[rowIndex][s.key_demand].toString();
     return amount;
+  }
+
+  bool getFlagStatus(String assId) {
+    bool flag=false;
+    if (mainList.isNotEmpty) {
+      for (var data in mainList) {
+        if(data[key_assessment_id].toString()!=assId){
+          print("fa1>>>"+flag.toString());
+          for (var demanData in data[s.key_DEMAND_DETAILS]) {
+            if (demanData[s.key_flag] == true) {
+              flag=true;
+            }
+          }
+
+        }
+      }
+    }
+
+    print("fa>>>"+flag.toString());
+    return flag;
   }
 }

@@ -69,6 +69,7 @@ class _HomeState extends State<Home> {
     index_val = -1;
     selected_index = -1;
     langText = 'தமிழ்';
+    await Utils().apiCalls(context);
     List s_list = [
       {'service_id': 0, 'service_name': 'check_your_dues', 'img_path': imagePath.due4},
       {'service_id': 1, 'service_name': 'quickPay', 'img_path': imagePath.quick_pay1},
@@ -79,7 +80,6 @@ class _HomeState extends State<Home> {
     servicesList.clear();
     servicesList.addAll(s_list);
 
-    await Utils().apiCalls(context);
     taxTypeList.clear();
     taxTypeList = preferencesService.taxTypeList;
     islogin=await preferencesService.getUserInfo(key_isLogin);
@@ -227,264 +227,261 @@ class _HomeState extends State<Home> {
                   ],
                 )),
           ),
-          body: RefreshIndicator(
-            onRefresh: initialize,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(children: [
+          body: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(children: [
+                  Container(
+                    margin: EdgeInsets.all(20),
+                    child: Image.asset(
+                      imagePath.tamilnadu_logo,
+                      height: MediaQuery.of(context).size.height / 10,
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.only(top: 10, bottom: 10),
+                      decoration: UIHelper.GradientContainer(20, 0, 20, 0, [c.colorAccentlight, c.colorPrimaryDark]),
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        'appName'.tr().toString(),
+                        style: TextStyle(color: c.white, fontSize: 14, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ]),
+                Container(
+                  padding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'tax_types'.tr().toString(),
+                    style: TextStyle(color: c.grey_8, fontSize: 14, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Column(
+                  children: [
                     Container(
-                      margin: EdgeInsets.all(20),
-                      child: Image.asset(
-                        imagePath.tamilnadu_logo,
-                        height: MediaQuery.of(context).size.height / 10,
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        padding: EdgeInsets.only(top: 10, bottom: 10),
-                        decoration: UIHelper.GradientContainer(20, 0, 20, 0, [c.colorAccentlight, c.colorPrimaryDark]),
-                        child: Text(
-                          textAlign: TextAlign.center,
-                          'appName'.tr().toString(),
-                          style: TextStyle(color: c.white, fontSize: 14, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  ]),
-                  Container(
-                    padding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'tax_types'.tr().toString(),
-                      style: TextStyle(color: c.grey_8, fontSize: 14, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        height: MediaQuery.of(context).size.width * 0.3,
-                        margin: EdgeInsets.only(left: 15),
-                        child: ScrollConfiguration(
-                            behavior: ScrollConfiguration.of(context).copyWith(
-                              dragDevices: {
-                                PointerDeviceKind.touch,
-                                PointerDeviceKind.mouse,
-                              },
-                            ),
-                            child: ListView.builder(
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              shrinkWrap: true, // new
-                              controller: _controller,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: taxTypeList == null ? 0 : taxTypeList.length,
-                              itemBuilder: (context, i) {
-                                return InkWell(
-                                  onTap: () async{
-
-                                    index_val = i;
-                                    if( await preferencesService.getUserInfo(key_isLogin) == "yes") {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (_) => TaxCollectionDetailsView(
-                                                selectedTaxTypeData: taxTypeList[i],
-                                                isTaxDropDown: false,
-                                                isHome: true,
-                                                mobile: preferencesService.getUserInfo(key_mobile_number).toString(),
-                                                selectedEntryType: 1,
-                                              )));
-                                    }else{
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(selectedTaxTypeData: taxTypeList[i],flag: "1",)));
-
-                                    }
-
-                                    setState(() {
-                                    });
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-                                    // decoration: i == index_val ?UIHelper.circleWithColorWithShadow(360,c.colorAccentverylight,c.colorPrimaryDark):UIHelper.circleWithColorWithShadow(360,c.white,c.white),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          decoration: i == index_val
-                                              ? UIHelper.circleWithColorWithShadow(360, c.colorAccentverylight, c.colorPrimaryDark)
-                                              : UIHelper.circleWithColorWithShadow(360, c.white, c.white),
-                                          alignment: Alignment.center,
-                                          margin: EdgeInsets.only(top: 0),
-                                          padding: EdgeInsets.all(10),
-                                          child: Image.asset(
-                                            taxTypeList[i][key_img_path],
-                                            height: (MediaQuery.of(context).size.height / 4) / 4,
-                                            width: (MediaQuery.of(context).size.height / 4) / 4,
-                                          ),
-                                        ),
-                                        Container(
-                                          alignment: Alignment.center,
-                                          margin: EdgeInsets.all(10),
-                                          child: Text(
-                                            preferencesService.getUserInfo('lang') == 'en' ? taxTypeList[i][key_taxtypedesc_en] : taxTypeList[i][key_taxtypedesc_ta],
-                                            style: TextStyle(fontSize: 12, height: 1.5, color: c.grey_9),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            )),
-                      ),
-                      Visibility(
-                          visible: flag,
-                          child: InkWell(
-                            onTap: () {
-                              _controller.animateTo(500, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+                      height: MediaQuery.of(context).size.width * 0.3,
+                      margin: EdgeInsets.only(left: 15),
+                      child: ScrollConfiguration(
+                          behavior: ScrollConfiguration.of(context).copyWith(
+                            dragDevices: {
+                              PointerDeviceKind.touch,
+                              PointerDeviceKind.mouse,
                             },
-                            child: Container(
-                              alignment: Alignment.bottomRight,
-                              color: c.full_transparent,
-                              margin: EdgeInsets.only(top: 0, right: 10),
-                              child: Image.asset(
-                                imagePath.right_arrow,
-                                height: 25,
-                                color: c.grey_9,
-                              ),
-                            ),
-                          ))
-                    ],
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: 20, right: 20, top: 10),
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'services'.tr().toString(),
-                      style: TextStyle(color: c.grey_8, fontSize: 14, fontWeight: FontWeight.bold),
+                          ),
+                          child: ListView.builder(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            shrinkWrap: true, // new
+                            controller: _controller,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: taxTypeList == null ? 0 : taxTypeList.length,
+                            itemBuilder: (context, i) {
+                              return InkWell(
+                                onTap: () async{
+
+                                  index_val = i;
+                                  if( await preferencesService.getUserInfo(key_isLogin) == "yes") {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => TaxCollectionDetailsView(
+                                              selectedTaxTypeData: taxTypeList[i],
+                                              isTaxDropDown: false,
+                                              isHome: true,
+                                              mobile: preferencesService.getUserInfo(key_mobile_number).toString(),
+                                              selectedEntryType: 1,
+                                            )));
+                                  }else{
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(selectedTaxTypeData: taxTypeList[i],flag: "1",)));
+
+                                  }
+
+                                  setState(() {
+                                  });
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+                                  // decoration: i == index_val ?UIHelper.circleWithColorWithShadow(360,c.colorAccentverylight,c.colorPrimaryDark):UIHelper.circleWithColorWithShadow(360,c.white,c.white),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        decoration: i == index_val
+                                            ? UIHelper.circleWithColorWithShadow(360, c.colorAccentverylight, c.colorPrimaryDark)
+                                            : UIHelper.circleWithColorWithShadow(360, c.white, c.white),
+                                        alignment: Alignment.center,
+                                        margin: EdgeInsets.only(top: 0),
+                                        padding: EdgeInsets.all(10),
+                                        child: Image.asset(
+                                          taxTypeList[i][key_img_path],
+                                          height: (MediaQuery.of(context).size.height / 4) / 4,
+                                          width: (MediaQuery.of(context).size.height / 4) / 4,
+                                        ),
+                                      ),
+                                      Container(
+                                        alignment: Alignment.center,
+                                        margin: EdgeInsets.all(10),
+                                        child: Text(
+                                          preferencesService.getUserInfo('lang') == 'en' ? taxTypeList[i][key_taxtypedesc_en] : taxTypeList[i][key_taxtypedesc_ta],
+                                          style: TextStyle(fontSize: 12, height: 1.5, color: c.grey_9),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          )),
                     ),
+                    Visibility(
+                        visible: flag,
+                        child: InkWell(
+                          onTap: () {
+                            _controller.animateTo(500, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+                          },
+                          child: Container(
+                            alignment: Alignment.bottomRight,
+                            color: c.full_transparent,
+                            margin: EdgeInsets.only(top: 0, right: 10),
+                            child: Image.asset(
+                              imagePath.right_arrow,
+                              height: 25,
+                              color: c.grey_9,
+                            ),
+                          ),
+                        ))
+                  ],
+                ),
+                Container(
+                  padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'services'.tr().toString(),
+                    style: TextStyle(color: c.grey_8, fontSize: 14, fontWeight: FontWeight.bold),
                   ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                    child: AnimationLimiter(
-                      child: GridView.count(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        crossAxisCount: 2,
-                        children: List.generate(
-                          servicesList == null ? 0 : servicesList.length,
-                          (int index) {
-                            return AnimationConfiguration.staggeredGrid(
-                              position: index,
-                              duration: const Duration(milliseconds: 375),
-                              columnCount: 2,
-                              child: ScaleAnimation(
-                                child: FadeInAnimation(
-                                  child: InkWell(
-                                    onTap: () async {
-                                        selected_index = index;
-                                        if (selected_index == 0) {
+                ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  child: AnimationLimiter(
+                    child: GridView.count(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      crossAxisCount: 2,
+                      children: List.generate(
+                        servicesList == null ? 0 : servicesList.length,
+                        (int index) {
+                          return AnimationConfiguration.staggeredGrid(
+                            position: index,
+                            duration: const Duration(milliseconds: 375),
+                            columnCount: 2,
+                            child: ScaleAnimation(
+                              child: FadeInAnimation(
+                                child: InkWell(
+                                  onTap: () async {
+                                      selected_index = index;
+                                      if (selected_index == 0) {
     if( islogin == "yes") {
       print(islogin);
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (_) => TaxCollectionDetailsView(
-                selectedTaxTypeData: taxTypeList[0],
-                isTaxDropDown: true,
-                isHome: true,
-                mobile: preferencesService.getUserInfo(key_mobile_number),
-                selectedEntryType: 1,
-              )));
+            builder: (_) => TaxCollectionDetailsView(
+              selectedTaxTypeData: taxTypeList[0],
+              isTaxDropDown: true,
+              isHome: true,
+              mobile: preferencesService.getUserInfo(key_mobile_number),
+              selectedEntryType: 1,
+            )));
     }else{
       Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(flag: "2",)));
 
 
     }
 
-                                        } else if (selected_index == 1) {
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(flag: "2",)));
-                                        } else if (selected_index == 2) {
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => ViewReceipt()));
-                                        } else if (selected_index == 3) {
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => KYVDashboard()));
-                                        }
-                                     setState(() {
+                                      } else if (selected_index == 1) {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(flag: "2",)));
+                                      } else if (selected_index == 2) {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => ViewReceipt()));
+                                      } else if (selected_index == 3) {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => KYVDashboard()));
+                                      }
+                                   setState(() {
 
-                                     });
-                                    },
-                                    child: Container(
-                                      height: (Screen.height(context) / 2) - 10,
-                                      width: (Screen.height(context) / 2) - 10,
-                                      alignment: Alignment.center,
-                                      margin: EdgeInsets.all(10),
-                                      decoration: index == selected_index
-                                          ? UIHelper.roundedBorderWithColorWithShadow(5, c.colorAccentverylight, c.colorPrimaryDark, borderWidth: 0)
-                                          : UIHelper.roundedBorderWithColorWithShadow(5, c.need_improvement2, c.need_improvement2, borderWidth: 0),
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            child: Image.asset(
-                                              servicesList[index][key_img_path],
-                                            ),
-                                            height: MediaQuery.of(context).size.width * 0.2,
-                                            margin: EdgeInsets.only(
-                                              left: MediaQuery.of(context).size.width / 20,
-                                              right: MediaQuery.of(context).size.width / 20,
-                                            ),
-                                            padding: EdgeInsets.all(5),
-                                            width: MediaQuery.of(context).size.width,
-                                            /*decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                                colors: [
-                                                  index == selected_index ?c.white:c.colorPrimary,
-                                                  index == selected_index ?c.white:c.colorAccentlight,
-                                                ],
-                                                begin: const FractionalOffset(0.0, 0.0),
-                                                end: const FractionalOffset(0.0, 0.0),
-                                                stops: [1.0, 0.0],
-                                                tileMode: TileMode.clamp),
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(2),
-                                              topRight: Radius.circular(2),
-                                              bottomRight: Radius.circular(150),
-                                              bottomLeft: Radius.circular(150),
-                                            ),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black26,
-                                                  offset: Offset(0.5, 0.5),
-                                                  blurRadius: 0.5,
-                                                )
-                                              ]
-                                          ),*/
+                                   });
+                                  },
+                                  child: Container(
+                                    height: (Screen.height(context) / 2) - 10,
+                                    width: (Screen.height(context) / 2) - 10,
+                                    alignment: Alignment.center,
+                                    margin: EdgeInsets.all(10),
+                                    decoration: index == selected_index
+                                        ? UIHelper.roundedBorderWithColorWithShadow(5, c.colorAccentverylight, c.colorPrimaryDark, borderWidth: 0)
+                                        : UIHelper.roundedBorderWithColorWithShadow(5, c.need_improvement2, c.need_improvement2, borderWidth: 0),
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          child: Image.asset(
+                                            servicesList[index][key_img_path],
                                           ),
-                                          Container(
-                                            alignment: Alignment.center,
-                                            margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
-                                            child: Text(
-                                              getServiceName(servicesList[index][key_service_name]),
-                                              style: TextStyle(fontSize: 11, height: 1.5, color: index == selected_index ? c.white : c.grey_9),
-                                              textAlign: TextAlign.center,
-                                            ),
+                                          height: MediaQuery.of(context).size.width * 0.2,
+                                          margin: EdgeInsets.only(
+                                            left: MediaQuery.of(context).size.width / 20,
+                                            right: MediaQuery.of(context).size.width / 20,
                                           ),
-                                        ],
-                                      ),
+                                          padding: EdgeInsets.all(5),
+                                          width: MediaQuery.of(context).size.width,
+                                          /*decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                              colors: [
+                                                index == selected_index ?c.white:c.colorPrimary,
+                                                index == selected_index ?c.white:c.colorAccentlight,
+                                              ],
+                                              begin: const FractionalOffset(0.0, 0.0),
+                                              end: const FractionalOffset(0.0, 0.0),
+                                              stops: [1.0, 0.0],
+                                              tileMode: TileMode.clamp),
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(2),
+                                            topRight: Radius.circular(2),
+                                            bottomRight: Radius.circular(150),
+                                            bottomLeft: Radius.circular(150),
+                                          ),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black26,
+                                                offset: Offset(0.5, 0.5),
+                                                blurRadius: 0.5,
+                                              )
+                                            ]
+                                        ),*/
+                                        ),
+                                        Container(
+                                          alignment: Alignment.center,
+                                          margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                                          child: Text(
+                                            getServiceName(servicesList[index][key_service_name]),
+                                            style: TextStyle(fontSize: 11, height: 1.5, color: index == selected_index ? c.white : c.grey_9),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
                               ),
-                            );
-                          },
-                        ),
+                            ),
+                          );
+                        },
                       ),
                     ),
-                  )
-                ],
-              ),
+                  ),
+                )
+              ],
             ),
           ),
         ));
