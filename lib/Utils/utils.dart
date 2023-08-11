@@ -13,6 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:public_vptax/Activity/Payments/atom_paynets_gateway.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
@@ -41,9 +42,7 @@ class Utils {
   }
 
   bool isPasswordValid(value) {
-    return RegExp(
-            "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#%^&+=])(?=\\S+).{4,}")
-        .hasMatch(value);
+    return RegExp("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#%^&+=])(?=\\S+).{4,}").hasMatch(value);
   }
 
   launchURL(String url) async {
@@ -88,9 +87,7 @@ class Utils {
   }
 
   Future<void> showProgress(BuildContext context, int i) async {
-    i == 1
-        ? showLoading(context, 'loading'.tr().toString())
-        : showLoading(context, 'downloading'.tr().toString());
+    i == 1 ? showLoading(context, 'loading'.tr().toString()) : showLoading(context, 'downloading'.tr().toString());
   }
 
   Future<void> hideProgress(BuildContext context) async {
@@ -144,13 +141,7 @@ class Utils {
     return color == null ? null : ui.ColorFilter.mode(color, colorBlendMode);
   }
 
-  Future<void> showAlert(
-      BuildContext context, ContentType contentType, String message,
-      {String? title,
-      String? btnCount,
-      String? btnmsg,
-      double? titleFontSize,
-      double? messageFontSize}) async {
+  Future<void> showAlert(BuildContext context, ContentType contentType, String message, {String? title, String? btnCount, String? btnmsg, double? titleFontSize, double? messageFontSize}) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: true, // user must tap button!
@@ -161,16 +152,14 @@ class Utils {
         ContentInfo contentInfo = getContentInfo(contentType);
 
         final hsl = HSLColor.fromColor(contentInfo.color);
-        final hslDark =
-            hsl.withLightness((hsl.lightness - 0.1).clamp(0.0, 1.0));
+        final hslDark = hsl.withLightness((hsl.lightness - 0.1).clamp(0.0, 1.0));
 
         return Center(
           child: Container(
             width: size.width,
             height: size.width * 0.45,
             margin: EdgeInsets.symmetric(horizontal: size.width * 0.045),
-            decoration: UIHelper.roundedBorderWithColorWithShadow(
-                20, contentInfo.color, contentInfo.color),
+            decoration: UIHelper.roundedBorderWithColorWithShadow(20, contentInfo.color, contentInfo.color),
             child: Stack(
               clipBehavior: Clip.none,
               alignment: Alignment.center,
@@ -188,8 +177,7 @@ class Utils {
                       imagePath.bubbles,
                       height: size.height * 0.06,
                       width: size.width * 0.05,
-                      colorFilter:
-                          getColorFilter(hslDark.toColor(), ui.BlendMode.srcIn),
+                      colorFilter: getColorFilter(hslDark.toColor(), ui.BlendMode.srcIn),
                     ),
                   ),
                 ),
@@ -204,8 +192,7 @@ class Utils {
                       SvgPicture.asset(
                         imagePath.back,
                         height: size.height * 0.08,
-                        colorFilter: getColorFilter(
-                            hslDark.toColor(), ui.BlendMode.srcIn),
+                        colorFilter: getColorFilter(hslDark.toColor(), ui.BlendMode.srcIn),
                       ),
                       Positioned(
                         top: size.height * 0.025,
@@ -224,21 +211,15 @@ class Utils {
                   top: 25,
                   child: Text(
                     title ?? contentInfo.title,
-                    style: UIHelper.textDecoration(titleFontSize ?? 18, c.white,
-                        bold: true),
+                    style: UIHelper.textDecoration(titleFontSize ?? 18, c.white, bold: true),
                   ),
                 ),
 
                 Container(
-                  margin: EdgeInsets.only(
-                      bottom: size.width * 0.05,
-                      left: size.width * 0.05,
-                      right: size.width * 0.05,
-                      top: size.width * 0.02),
+                  margin: EdgeInsets.only(bottom: size.width * 0.05, left: size.width * 0.05, right: size.width * 0.05, top: size.width * 0.02),
                   child: Text(
                     message,
-                    style:
-                        UIHelper.textDecoration(messageFontSize ?? 15, c.white),
+                    style: UIHelper.textDecoration(messageFontSize ?? 15, c.white),
                     textAlign: TextAlign.center,
                     softWrap: true,
                   ),
@@ -267,40 +248,31 @@ class Utils {
                 // ***********************  Action Buttons Content *********************** //
 
                 Visibility(
-                  visible: contentType == ContentType.help ||
-                          contentType == ContentType.warning
-                      ? true
-                      : false,
+                  visible: contentType == ContentType.help || contentType == ContentType.warning ? true : false,
                   child: Positioned(
                     bottom: 0,
                     right: 0,
                     child: Row(children: [
                       Visibility(
-                        visible:
-                            btnCount == '1' || btnCount == '2' ? true : false,
+                        visible: btnCount == '1' || btnCount == '2' ? true : false,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 5, horizontal: 10),
+                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                           child: ElevatedButton(
                             onPressed: () {
                               performAction(btnmsg ?? '', context);
                             },
                             style: ButtonStyle(
                               elevation: MaterialStateProperty.all(5.0),
-                              backgroundColor:
-                                  MaterialStateProperty.all(c.white),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
+                              backgroundColor: MaterialStateProperty.all(c.white),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      20.0), // Set the desired border radius here
+                                  borderRadius: BorderRadius.circular(20.0), // Set the desired border radius here
                                 ),
                               ),
                             ),
                             child: Text(
                               'OK',
-                              style: TextStyle(
-                                  color: contentInfo.color, fontSize: 11),
+                              style: TextStyle(color: contentInfo.color, fontSize: 11),
                             ),
                           ),
                         ),
@@ -308,28 +280,23 @@ class Utils {
                       Visibility(
                         visible: btnCount == '2' ? true : false,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 5, horizontal: 10),
+                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                           child: ElevatedButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
                             style: ButtonStyle(
                               elevation: MaterialStateProperty.all(5.0),
-                              backgroundColor:
-                                  MaterialStateProperty.all(c.white),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
+                              backgroundColor: MaterialStateProperty.all(c.white),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      20.0), // Set the desired border radius here
+                                  borderRadius: BorderRadius.circular(20.0), // Set the desired border radius here
                                 ),
                               ),
                             ),
                             child: Text(
                               'Cancel',
-                              style: TextStyle(
-                                  color: contentInfo.color, fontSize: 11),
+                              style: TextStyle(color: contentInfo.color, fontSize: 11),
                             ),
                           ),
                         ),
@@ -383,8 +350,7 @@ class Utils {
     String ENCRYPTION_IV = '2SN22SkJGDyOAXUU';
     final key = encrypt.Key.fromUtf8(fixKey(ENCRYPTION_KEY));
     final iv = encrypt.IV.fromUtf8(ENCRYPTION_IV);
-    final encrypter = encrypt.Encrypter(
-        encrypt.AES(key, mode: encrypt.AESMode.cbc, padding: 'PKCS7'));
+    final encrypter = encrypt.Encrypter(encrypt.AES(key, mode: encrypt.AESMode.cbc, padding: 'PKCS7'));
     final encrypted = encrypter.encrypt(plainText, iv: iv);
 
     return "${encrypted.base64}:${iv.base64}";
@@ -395,10 +361,8 @@ class Utils {
     final key = encrypt.Key.fromUtf8(fixKey(ENCRYPTION_KEY));
     final iv = encrypt.IV.fromBase64(dateList[1]);
 
-    final encrypter = encrypt.Encrypter(
-        encrypt.AES(key, mode: encrypt.AESMode.cbc, padding: 'PKCS7'));
-    final decrypted =
-        encrypter.decrypt(encrypt.Encrypted.from64(dateList[0]), iv: iv);
+    final encrypter = encrypt.Encrypter(encrypt.AES(key, mode: encrypt.AESMode.cbc, padding: 'PKCS7'));
+    final decrypted = encrypter.decrypt(encrypt.Encrypted.from64(dateList[0]), iv: iv);
     print("Final Result: $decrypted");
 
     return decrypted;
@@ -437,9 +401,7 @@ class Utils {
   String generateRandomString(int length) {
     final random = Random();
     const availableChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    final randomString = List.generate(length,
-            (index) => availableChars[random.nextInt(availableChars.length)])
-        .join();
+    final randomString = List.generate(length, (index) => availableChars[random.nextInt(availableChars.length)]).join();
 
     return randomString;
   }
@@ -538,13 +500,20 @@ class Utils {
       await StartUpViewModel().getOpenServiceList("District");
       await StartUpViewModel().getOpenServiceList("Block");
       await StartUpViewModel().getOpenServiceList("Village");
-      await StartUpViewModel().getMainServiceList("TaxType",context: context);
-      await StartUpViewModel().getMainServiceList("FinYear",context: context);
-      await StartUpViewModel().getMainServiceList("PaymentTypeList",
-          dcode: "1", bcode: "1", pvcode: "1",context: context);
+      await StartUpViewModel().getMainServiceList("TaxType", context: context);
+      await StartUpViewModel().getMainServiceList("FinYear", context: context);
+      await StartUpViewModel().getMainServiceList("PaymentTypeList", dcode: "1", bcode: "1", pvcode: "1", context: context);
       // throw ('000');
     } catch (error) {
       print('error (${error.toString()}) has been caught');
     }
+  }
+
+  //Atom Paynets Gateway HTML Page Renger
+  openNdpsPG(context) {
+    String returnUrl = "https://pgtest.atomtech.in/mobilesdk/param";
+
+    String payDetails = '{"atomTokenId": "15000000411719", "merchId": "8952", "emailId": "sd@gmail.com", "mobileNumber": "9698547875", "returnUrl": "$returnUrl"}';
+    Navigator.push(context, MaterialPageRoute(builder: (context) => WebViewContainer("uat", payDetails)));
   }
 }

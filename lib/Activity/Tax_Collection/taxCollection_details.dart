@@ -1093,7 +1093,9 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                           margin: EdgeInsets.only(left: 5, right: 20),
                           padding: EdgeInsets.only(bottom: 10, right: 10),
                           child: CustomGradientButton(
-                            onPressed: () async {},
+                            onPressed: () async {
+                              Utils().openNdpsPG(context);
+                            },
                             width: 90,
                             height: 40,
                             child: Container(
