@@ -150,7 +150,7 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
                                         child: Center(
                                           child: UIHelper.titleTextStyle(getTaxName(index), c.white, 14, true, true),
                                         )),
-                                    taxWiseReturnDataWidget(index),
+                                    taxWiseReturnDataWidget(mainDataList[index]),
                                     Visibility(
                                         visible: mainselecteddynamicData[key_tax_total] > 0,
                                         child: Column(children: [
@@ -217,19 +217,6 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
                                                   demandCalculationWidget('total_amount_to_pay', mainDataList[index][key_tax_pay].toString(), true),
                                                 ],
                                               ))
-                                          // : Container(
-                                          //     alignment:
-                                          //         Alignment.topRight,
-                                          //     margin:
-                                          //         EdgeInsets.fromLTRB(
-                                          //             10, 0, 10, 0),
-                                          //     child: Icon(
-                                          //       Icons
-                                          //           .expand_more_outlined,
-                                          //       color: c.grey_7,
-                                          //       size: 20,
-                                          //     ),
-                                          //   )
                                         ])),
                                   ],
                                 ),
@@ -292,7 +279,7 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
     );
   }
 
-  Widget taxWiseReturnDataWidget(int mainIndex) {
+  Widget taxWiseReturnDataWidget(dynamic taxData) {
     return Container(
         padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
         transform: Matrix4.translationValues(0.0, -20.0, 0.0),
@@ -304,31 +291,25 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
                 padding: EdgeInsets.all(5),
                 decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.white, c.white),
                 child: Image.asset(
-                  getTaxImage(mainIndex),
+                  getTaxImage(taxData[key_taxtypeid].toString()),
                   fit: BoxFit.contain,
                   height: 40,
                   width: 40,
                 )),
             UIHelper.horizontalSpaceSmall,
-            mainDataList[mainIndex][key_taxtypeid] == 1
-                ? UIHelper.titleTextStyle("Building Licence Number : " + mainDataList[mainIndex]['building_licence_number'], c.grey_9, 12, true, true)
-                : mainDataList[mainIndex][key_taxtypeid] == 2
-                    ? UIHelper.titleTextStyle("Water Connection Number : " + mainDataList[mainIndex][key_assessment_no], c.grey_9, 12, true, true)
-                    : mainDataList[mainIndex][key_taxtypeid] == 4
-                        ? UIHelper.titleTextStyle("Assesment Number : " + mainDataList[mainIndex][key_assessment_no], c.grey_9, 12, true, true)
-                        : mainDataList[mainIndex][key_taxtypeid] == 5
-                            ? UIHelper.titleTextStyle("Lease Number : " + mainDataList[mainIndex][key_assessment_no], c.grey_9, 12, true, true)
-                            : UIHelper.titleTextStyle("Traders Code : " + mainDataList[mainIndex][key_assessment_no].toString(), c.grey_9, 12, true, true)
+            UIHelper.titleTextStyle('assesmentNumber'.tr().toString() + " : " + taxData[key_assessment_no], c.grey_9, 12, true, true)
+
+            // taxData[key_taxtypeid] == 1
+            //     ? UIHelper.titleTextStyle('assesmentNumber'.tr().toString() + taxData['building_licence_number'], c.grey_9, 12, true, true)
+            //     : taxData[key_taxtypeid] == 2
+            //         ? UIHelper.titleTextStyle("Water Connection Number : " + taxData[key_assessment_no], c.grey_9, 12, true, true)
+            //         : taxData[key_taxtypeid] == 4
+            //             ? UIHelper.titleTextStyle("Assesment Number : " + taxData[key_assessment_no], c.grey_9, 12, true, true)
+            //             : taxData[key_taxtypeid] == 5
+            //                 ? UIHelper.titleTextStyle("Lease Number : " + taxData[key_assessment_no], c.grey_9, 12, true, true)
+            //                 : UIHelper.titleTextStyle("Traders Code : " + taxData[key_assessment_no].toString(), c.grey_9, 12, true, true)
           ],
         ));
-  }
-
-  double getTotal(double d1, double d2) {
-    double s = 0.00;
-    double ss = 0.00;
-    ss = d1 - d2;
-    ss > 0 ? s = ss : s = 0.00;
-    return s;
   }
 
   double getTotalAmoutToPay() {
@@ -344,8 +325,8 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
     return selectedLang == "en" ? selectedTaxitem[0][key_taxtypedesc_en] : selectedTaxitem[0][key_taxtypedesc_ta];
   }
 
-  String getTaxImage(int index) {
-    List selectedTaxitem = taxTypeList.where((element) => element[key_taxtypeid].toString() == mainDataList[index][key_taxtypeid].toString()).toList();
+  String getTaxImage(String typeId) {
+    List selectedTaxitem = taxTypeList.where((element) => element[key_taxtypeid].toString() == typeId.toString()).toList();
     return selectedTaxitem[0][key_img_path].toString();
   }
 
