@@ -56,6 +56,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
   String selectedLang = "";
   String selectTaxtype = "";
   String mobile_widget = "";
+  String islogin = "";
 
   //List
   List isShowFlag = [];
@@ -118,7 +119,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
   Future<void> initialize() async {
     selectedLang = await preferencesService.getUserInfo("lang");
     print("asdasd $selectedLang");
-    mobile_widget = await preferencesService.getUserInfo(s.key_isLogin) == "yes"
+    islogin=await preferencesService.getUserInfo(s.key_isLogin);
+    mobile_widget = islogin == "yes"
         ? await preferencesService.getUserInfo("mobile_number")
         : widget.mobile;
     taxTypeList = preferencesService.taxTypeList;
@@ -731,8 +733,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                                 mainList[mainIndex]
                                                 [s.key_swm_total] >
                                                     0) {
-                                              preferencesService.addedTaxPayList
-                                                  .add(mainList[mainIndex]);
+                                              islogin=="yes"?preferencesService.addedTaxPayList.add(mainList[mainIndex]):null;
                                             }
 
                                           }
@@ -937,10 +938,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                                                         mainList[mainIndex][
                                                         s.key_swm_total] >
                                                             0) {
-                                                      preferencesService
-                                                          .addedTaxPayList
-                                                          .add(mainList[
-                                                      mainIndex]);
+                                                      islogin=="yes"?preferencesService.addedTaxPayList.add(mainList[mainIndex]):null;
+
                                                     }
 
                                                   }
@@ -1282,9 +1281,24 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView>
                     in sampletaxData[s.key_DEMAND_DETAILS]) {
                   if (addtaxListData[s.key_fin_year] ==
                           sampleSelectedList[s.key_fin_year] &&
-                      addtaxListData[s.key_amount] ==
-                          sampleSelectedList[s.key_amount]) {
+                       getDemad(
+                  addtaxListData,
+                           addtaxData[s.key_taxtypeid].toString())==
+                           getDemad(
+                               sampleSelectedList,
+                               sampletaxData[s.key_taxtypeid].toString())) {
                     sampleSelectedList[s.key_flag] = addtaxListData[s.key_flag];
+                    if(addtaxListData[s.key_flag]== true && sampletaxData[s.key_taxtypeid].toString()==addtaxListData[s.key_taxtypeid].toString()){
+                      sampletaxData[s.key_tax_total]=sampletaxData[s.key_tax_total]+double.parse(getDemad(
+                          addtaxListData,
+                          addtaxData[s.key_taxtypeid].toString()));
+                    }else{
+                      sampletaxData[s.key_swm_total]=sampletaxData[s.key_swm_total]+double.parse(getDemad(
+                          addtaxListData,
+                          addtaxData[s.key_taxtypeid].toString()));
+
+
+                    }
                   }
                 }
               }
