@@ -81,9 +81,13 @@ class _WebViewContainerState extends State<WebViewContainer> {
               if (response.trim().contains("cancelTransaction")) {
                 transactionResult = "Transaction Cancelled!";
               } else {
-                // final split = response.trim().split('|');
-                // final Map<int, String> values = {for (int i = 0; i < split.length; i++) i: split[i]};
-                // final splitTwo = values[1]!.split('=');
+                final split = response.trim().split('|');
+                final Map<int, String> values = {for (int i = 0; i < split.length; i++) i: split[i]};
+                final encData = values[1]!.replaceAll('encData=', "");
+                final merchId = values[2]!.replaceAll('merchId=', "");
+
+                var returnData = {"encData": "$encData", "merchId": "$merchId"};
+                print("split--------------" + returnData.toString());
 
                 // const platform = MethodChannel('flutter.dev/NDPSAESLibrary');
 
