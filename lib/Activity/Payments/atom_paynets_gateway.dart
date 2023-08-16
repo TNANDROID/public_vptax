@@ -9,15 +9,15 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:public_vptax/Utils/ContentInfo.dart';
 
 
-class WebViewContainer extends StatefulWidget {
+class AtomPaynetsView extends StatefulWidget {
   final mode;
   final payDetails;
-  WebViewContainer(this.mode, this.payDetails);
+  AtomPaynetsView(this.mode, this.payDetails);
   @override
-  createState() => _WebViewContainerState(this.mode, this.payDetails);
+  createState() => _AtomPaynetsViewState(this.mode, this.payDetails);
 }
 
-class _WebViewContainerState extends State<WebViewContainer> {
+class _AtomPaynetsViewState extends State<AtomPaynetsView> {
   final mode;
   final payDetails;
   final _key = UniqueKey();
@@ -32,7 +32,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
-  _WebViewContainerState(this.mode, this.payDetails);
+  _AtomPaynetsViewState(this.mode, this.payDetails);
 
   @override
   Widget build(BuildContext context) {
