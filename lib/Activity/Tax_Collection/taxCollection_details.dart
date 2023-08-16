@@ -1034,89 +1034,145 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
   }
 
   Future<void> _settingModalBottomSheet(BuildContext context) {
+    int selected_id=-1;
+
+    List list = [
+      {'id': 1, 'payment_gateway_name': 'Atom', 'img_path': imagePath.payment_gateway},
+      {'id': 2, 'payment_gateway_name': 'WorldLine', 'img_path': imagePath.payment_gateway},
+
+    ];
     return showModalBottomSheet(
         context: context,
         backgroundColor: c.full_transparent,
-        builder: (BuildContext bc) {
-          return Wrap(
-            children: <Widget>[
-              Container(
-                  decoration: UIHelper.GradientContainer(30.0, 30, 0, 0, [c.white, c.white]),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(margin: EdgeInsets.only(top: 10), child: Text("Select Payment Gateway", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold))),
-                      Container(
-                          child: AnimationLimiter(
-                              child: ListView.builder(
-                                  physics: const AlwaysScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemCount: 3,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return AnimationConfiguration.staggeredList(
-                                        position: index,
-                                        duration: const Duration(milliseconds: 1000),
-                                        child: SlideAnimation(
-                                          horizontalOffset: 200.0,
-                                          child: FlipAnimation(
-                                            child: Padding(
-                                                padding: EdgeInsets.all(10),
-                                                child: InkWell(
-                                                  onTap: () {
-                                                    print("Icon Pressed>>>>>>");
-                                                  },
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                      IconButton(
-                                                          onPressed: () {
-                                                            print("Icon Pressed");
-                                                          },
-                                                          icon: Image.asset(
-                                                            imagePath.download,
-                                                            height: 25,
-                                                            width: 25,
-                                                          )),
-                                                      Text(
-                                                        "Sample Text",
-                                                        style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: c.grey_9),
-                                                      )
-                                                    ],
+        builder: (BuildContext bc)
+    {
+      return StatefulBuilder(builder: (BuildContext context, StateSetter mystate) {
+      return Wrap(
+        children: <Widget>[
+          Container(
+              decoration: UIHelper.GradientContainer(
+                  50.0, 50, 0, 0, [c.white, c.white]),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(margin: EdgeInsets.only(top: 20, bottom: 10),
+                      child: Text("Select Payment Gateway", style: TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.bold))),
+                  Container(
+                      child: AnimationLimiter(
+                          child: ListView.builder(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: list.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return AnimationConfiguration.staggeredList(
+                                    position: index,
+                                    duration: const Duration(milliseconds: 800),
+                                    child: SlideAnimation(
+                                      horizontalOffset: 200.0,
+                                      child: FlipAnimation(
+                                        child: Padding(
+                                            padding: EdgeInsets.all(10),
+                                            child: InkWell(
+                                              onTap: () {
+                                                mystate(() {
+                                                  selected_id =
+                                                  list[index]['id'];
+                                                });
+                                                print("Icon Pressed>>>>>>" +
+                                                    list[index]['id']
+                                                        .toString());
+                                                print("Icon Pressed>>>>>>" +
+                                                    selected_id.toString());
+                                                print("Icon Pressed>>>>>>");
+                                              },
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment
+                                                    .start,
+                                                children: [
+                                                  SizedBox(width: 10,),
+                                                  IconButton(
+                                                      onPressed: () {
+                                                        print("Icon Pressed");
+                                                      },
+                                                      icon: Image.asset(
+                                                        list[index][key_img_path],
+                                                        height: 25,
+                                                        width: 25,
+                                                      )),
+                                                  Container(
+                                                    width: MediaQuery
+                                                        .of(context)
+                                                        .size
+                                                        .width / 2.5,
+                                                    child: Text(
+                                                      list[index]['payment_gateway_name'],
+                                                      style: TextStyle(
+                                                          fontWeight: FontWeight
+                                                              .normal,
+                                                          fontSize: 14,
+                                                          color: c.grey_9),
+                                                    ),
                                                   ),
-                                                )),
-                                          ),
-                                        ));
-                                  }))),
-                      Align(
-                        alignment: Alignment.bottomRight,
+                                                  Align(
+                                                    alignment: Alignment
+                                                        .centerRight,
+                                                    child: Visibility(
+                                                      visible: selected_id ==
+                                                          list[index]['id'],
+                                                      child: Image.asset(
+                                                        imagePath.tick,
+                                                        color: c
+                                                            .account_status_green_color,
+                                                        height: 25,
+                                                        width: 25,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            )),
+                                      ),
+                                    ));
+                              }))),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Container(
+                      margin: EdgeInsets.only(left: 5, right: 20),
+                      padding: EdgeInsets.only(bottom: 10, right: 10),
+                      child: CustomGradientButton(
+                        onPressed: () async {
+                          if(selected_id > 0){
+                            Navigator.of(context).pop();
+                            Utils().openNdpsPG(context);
+                          }else{
+                            Utils().showAlert(context, ContentType.fail, 'select_anyOne_gateway'.tr().toString());
+                            // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('select_anyOne_gateway'.tr().toString())));
+                          }
+
+                        },
+                        width: 120,
+                        height: 40,
                         child: Container(
-                          margin: EdgeInsets.only(left: 5, right: 20),
-                          padding: EdgeInsets.only(bottom: 10, right: 10),
-                          child: CustomGradientButton(
-                            onPressed: () async {
-                              Utils().openNdpsPG(context);
-                            },
-                            width: 90,
-                            height: 40,
-                            child: Container(
-                              alignment: Alignment.center,
-                              child: Text(
-                                "CONTINUE",
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            "CONTINUE",
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
                           ),
                         ),
-                      )
-                    ],
-                  )),
-            ],
-          );
+                      ),
+                    ),
+                  )
+                ],
+              )),
+        ],
+      );
+    });
         });
   }
 }

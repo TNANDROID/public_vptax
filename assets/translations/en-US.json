@@ -78,6 +78,7 @@
   "enter_assessment_number": "Please enter assessment number or receipt number",
   "enter_the_details": "Please enter the below details",
   "select_anyOne": "Please select any one",
+  "select_anyOne_gateway": "Please select payment gateway",
   "added_to_pay": "Added to pay",
   "tax_details": "Tax Details",
   "warning": "Warning !",

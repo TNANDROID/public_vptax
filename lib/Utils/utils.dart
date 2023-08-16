@@ -511,6 +511,7 @@ class Utils {
 
   //Atom Paynets Gateway HTML Page Renger
   openNdpsPG(context) {
+    // String returnUrl = "https://payment.atomtech.in/mobilesdk/param"; ////return url production
     String returnUrl = "https://pgtest.atomtech.in/mobilesdk/param";
 
     String payDetails = '{"atomTokenId": "15000000411719", "merchId": "8952", "emailId": "sd@gmail.com", "mobileNumber": "9698547875", "returnUrl": "$returnUrl"}';

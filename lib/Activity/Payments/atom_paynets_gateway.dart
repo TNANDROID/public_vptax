@@ -6,21 +6,23 @@ import 'package:flutter/services.dart';
 import 'package:public_vptax/Utils/utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:public_vptax/Utils/ContentInfo.dart';
 
-class AtomPaynetsView extends StatefulWidget {
+
+class WebViewContainer extends StatefulWidget {
   final mode;
   final payDetails;
-  AtomPaynetsView(this.mode, this.payDetails);
+  WebViewContainer(this.mode, this.payDetails);
   @override
-  createState() => _AtomPaynetsViewState(this.mode, this.payDetails);
+  createState() => _WebViewContainerState(this.mode, this.payDetails);
 }
 
-class _AtomPaynetsViewState extends State<AtomPaynetsView> {
+class _WebViewContainerState extends State<WebViewContainer> {
   final mode;
   final payDetails;
   final _key = UniqueKey();
   late WebViewController _controller;
-
+  var transactionResult = "";
   final Completer<WebViewController> _controllerCompleter = Completer<WebViewController>();
 
   @override
@@ -30,7 +32,7 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
-  _AtomPaynetsViewState(this.mode, this.payDetails);
+  _WebViewContainerState(this.mode, this.payDetails);
 
   @override
   Widget build(BuildContext context) {
@@ -45,85 +47,83 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
         ),
         body: SafeArea(
             child: WebView(
-          key: UniqueKey(),
-          initialUrl: 'about:blank',
-          onWebViewCreated: (WebViewController webViewController) {
-            _controllerCompleter.future.then((value) => _controller = value);
-            _controllerCompleter.complete(webViewController);
-            debugPrint("payDetails from webview $payDetails");
-            _loadHtmlFromAssets(mode);
-          },
-          navigationDelegate: (NavigationRequest request) async {
-            if (request.url.startsWith("upi://")) {
-              debugPrint("upi url started loading");
-              try {
-                // ignore: deprecated_member_use
-                await launch(request.url);
-              } catch (e) {
-                _closeWebView(context, "Transaction Status = cannot open UPI applications");
-                throw 'custom error for UPI Intent';
-              }
-              return NavigationDecision.prevent;
-            }
-            return NavigationDecision.navigate;
-          },
-          javascriptMode: JavascriptMode.unrestricted,
-          onPageFinished: (String url) async {
-            if (url.contains("AIPAYLocalFile")) {
-              debugPrint(" AIPAYLocalFile Now url loaded: $url");
-              await _controller.runJavascriptReturningResult("openPay('" + payDetails + "')");
-            }
+              key: UniqueKey(),
+              initialUrl: 'about:blank',
+              onWebViewCreated: (WebViewController webViewController) {
+                _controllerCompleter.future.then((value) => _controller = value);
+                _controllerCompleter.complete(webViewController);
+                debugPrint("payDetails from webview $payDetails");
+                _loadHtmlFromAssets(mode);
+              },
+              navigationDelegate: (NavigationRequest request) async {
+                if (request.url.startsWith("upi://")) {
+                  debugPrint("upi url started loading");
+                  try {
+                    // ignore: deprecated_member_use
+                    await launch(request.url);
+                  } catch (e) {
+                    _closeWebView(context, "Transaction Status = cannot open UPI applications");
+                    throw 'custom error for UPI Intent';
+                  }
+                  return NavigationDecision.prevent;
+                }
+                return NavigationDecision.navigate;
+              },
+              javascriptMode: JavascriptMode.unrestricted,
+              onPageFinished: (String url) async {
+                if (url.contains("AIPAYLocalFile")) {
+                  debugPrint(" AIPAYLocalFile Now url loaded: $url");
+                  await _controller.runJavascriptReturningResult("openPay('" + payDetails + "')");
+                }
 
-            if (url.contains('/mobilesdk/param')) {
-              final response = await _controller.runJavascriptReturningResult("document.getElementsByTagName('h5')[0].innerHTML");
-              debugPrint("HTML response : $response");
-              var transactionResult = "";
-              if (response.trim().contains("cancelTransaction")) {
-                transactionResult = "Transaction Cancelled!";
-              } else {
-                final split = response.trim().split('|');
-                final Map<int, String> values = {for (int i = 0; i < split.length; i++) i: split[i]};
-                final encData = values[1]!.replaceAll('encData=', "");
-                final merchId = values[2]!.replaceAll('merchId=', "");
+                if (url.contains('/mobilesdk/param')) {
+                  final response = await _controller.runJavascriptReturningResult("document.getElementsByTagName('h5')[0].innerHTML");
+                  debugPrint("HTML response : $response");
+                  if (response.trim().contains("cancelTransaction")) {
+                    transactionResult = "Transaction Cancelled!";
+                  } else {
+                    final split = response.trim().split('|');
+                    final Map<int, String> values = {for (int i = 0; i < split.length; i++) i: split[i]};
+                    final encData = values[1]!.replaceAll('encData=', "");
+                    final merchId = values[2]!.replaceAll('merchId=', "");
 
-                var returnData = {"merchId": "$merchId", "encData": "$encData"};
-                print("returnData--------------" + returnData.toString());
+                    var returnData = {"encData": "$encData", "merchId": "$merchId"};
+                    print("split--------------" + returnData.toString());
 
-                // const platform = MethodChannel('flutter.dev/NDPSAESLibrary');
+                    // const platform = MethodChannel('flutter.dev/NDPSAESLibrary');
 
-                // try {
-                //   final String result = await platform.invokeMethod('NDPSAESInit', {'AES_Method': 'decrypt', 'text': splitTwo[1].toString(), 'encKey': _responseDecryptionKey});
-                //   var respJsonStr = result.toString();
-                //   Map<String, dynamic> jsonInput = jsonDecode(respJsonStr);
-                //   debugPrint("read full respone : $jsonInput");
+                    // try {
+                    //   final String result = await platform.invokeMethod('NDPSAESInit', {'AES_Method': 'decrypt', 'text': splitTwo[1].toString(), 'encKey': _responseDecryptionKey});
+                    //   var respJsonStr = result.toString();
+                    //   Map<String, dynamic> jsonInput = jsonDecode(respJsonStr);
+                    //   debugPrint("read full respone : $jsonInput");
 
-                //   //calling validateSignature function from atom_pay_helper file
-                //   var checkFinalTransaction = Utils().validateSignature(jsonInput, _responsehashKey);
+                    //   //calling validateSignature function from atom_pay_helper file
+                    //   var checkFinalTransaction = Utils().validateSignature(jsonInput, _responsehashKey);
 
-                //   if (checkFinalTransaction) {
-                //     if (jsonInput["payInstrument"]["responseDetails"]["statusCode"] == 'OTS0000' || jsonInput["payInstrument"]["responseDetails"]["statusCode"] == 'OTS0551') {
-                //       debugPrint("Transaction success");
-                //       transactionResult = "Transaction Success";
-                //     } else {
-                //       debugPrint("Transaction failed");
-                //       transactionResult = "Transaction Failed";
-                //     }
-                //   } else {
-                //     debugPrint("signature mismatched");
-                //     transactionResult = "failed";
-                //   }
-                //   debugPrint("Transaction Response : $jsonInput");
-                // } on PlatformException catch (e) {
-                //   debugPrint("Failed to decrypt: '${e.message}'.");
-                // }
-                transactionResult = "Waiting..!";
-              }
-
-              _closeWebView(context, transactionResult);
-            }
-          },
-          gestureNavigationEnabled: true,
-        )),
+                    //   if (checkFinalTransaction) {
+                    //     if (jsonInput["payInstrument"]["responseDetails"]["statusCode"] == 'OTS0000' || jsonInput["payInstrument"]["responseDetails"]["statusCode"] == 'OTS0551') {
+                    //       debugPrint("Transaction success");
+                    //       transactionResult = "Transaction Success";
+                    //     } else {
+                    //       debugPrint("Transaction failed");
+                    //       transactionResult = "Transaction Failed";
+                    //     }
+                    //   } else {
+                    //     debugPrint("signature mismatched");
+                    //     transactionResult = "failed";
+                    //   }
+                    //   debugPrint("Transaction Response : $jsonInput");
+                    // } on PlatformException catch (e) {
+                    //   debugPrint("Failed to decrypt: '${e.message}'.");
+                    // }
+                    transactionResult = "Waiting..!";
+                  }
+                  _closeWebView(context, transactionResult);
+                }
+              },
+              gestureNavigationEnabled: true,
+            )),
       ),
     );
   }
@@ -138,7 +138,8 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
     // ignore: use_build_context_synchronously
     Navigator.pop(context); // Close current window
     // ignore: use_build_context_synchronously
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Transaction Status = $transactionResult")));
+    Utils().showAlert(context, ContentType.fail, "Transaction Status = $transactionResult");// Close current window
+    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Transaction Status = $transactionResult")));
   }
 
   Future<bool> _handleBackButtonAction(BuildContext context) async {
@@ -146,26 +147,27 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: const Text('Do you want to exit the payment ?'),
-              actions: <Widget>[
-                // ignore: deprecated_member_use
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('No'),
-                ),
-                // ignore: deprecated_member_use
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.of(context).pop(); // Close current window
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Transaction Status = Transaction cancelled")));
-                  },
-                  child: const Text('Yes'),
-                ),
-              ],
-            ));
+          title: const Text('Do you want to exit the payment ?'),
+          actions: <Widget>[
+            // ignore: deprecated_member_use
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('No'),
+            ),
+            // ignore: deprecated_member_use
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.of(context).pop();
+                Utils().showAlert(context, ContentType.fail, "Transaction cancelled!");// Close current window
+                // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Transaction Status = Transaction cancelled")));
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        ));
     return Future.value(true);
   }
 }

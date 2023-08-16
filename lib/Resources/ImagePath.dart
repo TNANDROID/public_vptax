@@ -37,6 +37,8 @@ String village = "assets/images/village.png";
 String village_development = "assets/images/village_2.png";
 String group = "assets/images/group.png";
 String utils = "assets/images/utility.png";
+String payment_gateway = "assets/images/payment_gateway.png";
+String tick = "assets/images/tick.png";
 
 String help = 'assets/images/help.svg';
 String failure = 'assets/images/failure.svg';
