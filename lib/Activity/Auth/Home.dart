@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:public_vptax/Activity/About_Village/know_your_village.dart';
 import 'package:public_vptax/Activity/Auth/View_receipt.dart';
-import 'package:public_vptax/Activity/Tax_Collection/know_your_village.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
@@ -82,11 +82,11 @@ class _HomeState extends State<Home> {
 
     taxTypeList.clear();
     taxTypeList = preferencesService.taxTypeList;
-    islogin=await preferencesService.getUserInfo(key_isLogin);
+    islogin = await preferencesService.getUserInfo(key_isLogin);
     print("islogin>>" + islogin.toString());
     print("tax>>" + taxTypeList.toString());
     setState(() {
-      if(preferencesService.getUserInfo("lang") != null && preferencesService.getUserInfo("lang") != "" && preferencesService.getUserInfo("lang") == "en") {
+      if (preferencesService.getUserInfo("lang") != null && preferencesService.getUserInfo("lang") != "" && preferencesService.getUserInfo("lang") == "en") {
         context.setLocale(Locale('en', 'US'));
       } else {
         preferencesService.setUserInfo("lang", "ta");
@@ -104,8 +104,8 @@ class _HomeState extends State<Home> {
           appBar: PreferredSize(
             preferredSize: AppBar().preferredSize,
             child: Container(
-              padding: EdgeInsets.only(top: 20),
-              height: 70,
+                padding: EdgeInsets.only(top: 20),
+                height: 70,
                 decoration: UIHelper.GradientContainer(0, 0, 30, 30, [c.colorAccentlight, c.colorPrimaryDark]),
                 child: Stack(
                   alignment: Alignment.center,
@@ -164,16 +164,15 @@ class _HomeState extends State<Home> {
                     Positioned(
                       right: 15,
                       child: Visibility(
-                        visible: islogin=="no",
+                        visible: islogin == "no",
                         child: InkWell(
                           onTap: () async {
-                            await preferencesService.setUserInfo(key_isLogin,'yes');
-                            await preferencesService.setUserInfo(key_mobile_number,'9875235654');
-                            islogin="yes";
+                            await preferencesService.setUserInfo(key_isLogin, 'yes');
+                            await preferencesService.setUserInfo(key_mobile_number, '9875235654');
+                            islogin = "yes";
                             print("islogin>>" + islogin.toString());
                             print("login successful");
-                            setState(() {
-                            });
+                            setState(() {});
                           },
                           child: Text(
                             'login'.tr().toString(),
@@ -188,18 +187,18 @@ class _HomeState extends State<Home> {
                     Positioned(
                       right: 15,
                       child: Visibility(
-                        visible: islogin=="yes",
+                        visible: islogin == "yes",
                         child: InkWell(
-                          onTap: (){
+                          onTap: () {
                             logout();
                           },
                           child: Image.asset(
-                                    imagePath.logout,
-                                    color: c.white,
-                                    fit: BoxFit.contain,
-                                    height: 25,
-                                    width: 25,
-                                  ),
+                            imagePath.logout,
+                            color: c.white,
+                            fit: BoxFit.contain,
+                            height: 25,
+                            width: 25,
+                          ),
                         ),
                       ),
                     )
@@ -280,27 +279,30 @@ class _HomeState extends State<Home> {
                             itemCount: taxTypeList == null ? 0 : taxTypeList.length,
                             itemBuilder: (context, i) {
                               return InkWell(
-                                onTap: () async{
-
+                                onTap: () async {
                                   index_val = i;
-                                  if( await preferencesService.getUserInfo(key_isLogin) == "yes") {
+                                  if (await preferencesService.getUserInfo(key_isLogin) == "yes") {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (_) => TaxCollectionDetailsView(
-                                              selectedTaxTypeData: taxTypeList[i],
-                                              isTaxDropDown: false,
-                                              isHome: true,
-                                              mobile: preferencesService.getUserInfo(key_mobile_number).toString(),
-                                              selectedEntryType: 1,
-                                            )));
-                                  }else{
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(selectedTaxTypeData: taxTypeList[i],flag: "1",)));
-
+                                                  selectedTaxTypeData: taxTypeList[i],
+                                                  isTaxDropDown: false,
+                                                  isHome: true,
+                                                  mobile: preferencesService.getUserInfo(key_mobile_number).toString(),
+                                                  selectedEntryType: 1,
+                                                )));
+                                  } else {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => TaxCollectionView(
+                                                  selectedTaxTypeData: taxTypeList[i],
+                                                  flag: "1",
+                                                )));
                                   }
 
-                                  setState(() {
-                                  });
+                                  setState(() {});
                                 },
                                 child: Container(
                                   padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
@@ -383,36 +385,41 @@ class _HomeState extends State<Home> {
                               child: FadeInAnimation(
                                 child: InkWell(
                                   onTap: () async {
-                                      selected_index = index;
-                                      if (selected_index == 0) {
-    if( islogin == "yes") {
-      print(islogin);
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => TaxCollectionDetailsView(
-              selectedTaxTypeData: taxTypeList[0],
-              isTaxDropDown: true,
-              isHome: true,
-              mobile: preferencesService.getUserInfo(key_mobile_number),
-              selectedEntryType: 1,
-            )));
-    }else{
-      Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(flag: "2",)));
-
-
-    }
-
-                                      } else if (selected_index == 1) {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(flag: "2",)));
-                                      } else if (selected_index == 2) {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => ViewReceipt()));
-                                      } else if (selected_index == 3) {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => KYVDashboard()));
+                                    selected_index = index;
+                                    if (selected_index == 0) {
+                                      if (islogin == "yes") {
+                                        print(islogin);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (_) => TaxCollectionDetailsView(
+                                                      selectedTaxTypeData: taxTypeList[0],
+                                                      isTaxDropDown: true,
+                                                      isHome: true,
+                                                      mobile: preferencesService.getUserInfo(key_mobile_number),
+                                                      selectedEntryType: 1,
+                                                    )));
+                                      } else {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => TaxCollectionView(
+                                                      flag: "2",
+                                                    )));
                                       }
-                                   setState(() {
-
-                                   });
+                                    } else if (selected_index == 1) {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => TaxCollectionView(
+                                                    flag: "2",
+                                                  )));
+                                    } else if (selected_index == 2) {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => ViewReceipt()));
+                                    } else if (selected_index == 3) {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => KYVDashboard()));
+                                    }
+                                    setState(() {});
                                   },
                                   child: Container(
                                     height: (Screen.height(context) / 2) - 10,
@@ -501,13 +508,22 @@ class _HomeState extends State<Home> {
           //the return value will be from "Yes" or "No" options
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('exit_app'.tr().toString(),style: TextStyle(fontSize: 14),),
-            content: Text('do_you_want_to_exit_an_app'.tr().toString(),style: TextStyle(fontSize: 13),),
+            title: Text(
+              'exit_app'.tr().toString(),
+              style: TextStyle(fontSize: 14),
+            ),
+            content: Text(
+              'do_you_want_to_exit_an_app'.tr().toString(),
+              style: TextStyle(fontSize: 13),
+            ),
             actions: [
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(false),
                 //return false when click on "NO"
-                child: Text('no'.tr().toString(),style: TextStyle(fontSize: 12),),
+                child: Text(
+                  'no'.tr().toString(),
+                  style: TextStyle(fontSize: 12),
+                ),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -518,7 +534,10 @@ class _HomeState extends State<Home> {
                   }
                 },
                 //return true when click on "Yes"
-                child: Text('yes'.tr().toString(),style: TextStyle(fontSize: 12),),
+                child: Text(
+                  'yes'.tr().toString(),
+                  style: TextStyle(fontSize: 12),
+                ),
               ),
             ],
           ),

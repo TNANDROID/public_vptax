@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:public_vptax/Activity/About_Village/population_view.dart';
 import 'package:public_vptax/Layout/customgradientbutton.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
@@ -46,7 +47,8 @@ class _KYVDashboardState extends State<KYVDashboard> {
               width: Screen.width(context),
               height: Screen.height(context),
               color: c.inputGrey,
-              child: Column(
+              child: SingleChildScrollView(
+                  child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
@@ -92,9 +94,11 @@ class _KYVDashboardState extends State<KYVDashboard> {
                         ),
                       ],
                     ),
-                  )
+                  ),
+                  UIHelper.verticalSpaceSmall,
+                  PopulationView(),
                 ],
-              ),
+              )),
             );
           },
           viewModelBuilder: () => StartUpViewModel()),
@@ -126,13 +130,16 @@ class _KYVDashboardState extends State<KYVDashboard> {
       keyCode = key_pvcode;
       titleText = key_pvname;
       titleTextTamil = key_pvname_ta;
-      initValue = selectedBlock;
+      initValue = selectedVillage;
     } else {
       print("End.....");
     }
     return FormBuilderDropdown(
       style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w600, color: c.text_color),
       decoration: InputDecoration(
+        labelText: inputHint,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
+        labelStyle: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_7),
         filled: true,
         fillColor: Colors.white,
         enabledBorder: UIHelper.getInputBorder(1, borderColor: c.white),
