@@ -514,6 +514,6 @@ class Utils {
     String returnUrl = "https://pgtest.atomtech.in/mobilesdk/param";
 
     String payDetails = '{"atomTokenId": "15000000411719", "merchId": "8952", "emailId": "sd@gmail.com", "mobileNumber": "9698547875", "returnUrl": "$returnUrl"}';
-    Navigator.push(context, MaterialPageRoute(builder: (context) => WebViewContainer("uat", payDetails)));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => AtomPaynetsView("uat", payDetails)));
   }
 }

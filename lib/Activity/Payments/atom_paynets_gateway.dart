@@ -7,15 +7,15 @@ import 'package:public_vptax/Utils/utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class WebViewContainer extends StatefulWidget {
+class AtomPaynetsView extends StatefulWidget {
   final mode;
   final payDetails;
-  WebViewContainer(this.mode, this.payDetails);
+  AtomPaynetsView(this.mode, this.payDetails);
   @override
-  createState() => _WebViewContainerState(this.mode, this.payDetails);
+  createState() => _AtomPaynetsViewState(this.mode, this.payDetails);
 }
 
-class _WebViewContainerState extends State<WebViewContainer> {
+class _AtomPaynetsViewState extends State<AtomPaynetsView> {
   final mode;
   final payDetails;
   final _key = UniqueKey();
@@ -30,7 +30,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
-  _WebViewContainerState(this.mode, this.payDetails);
+  _AtomPaynetsViewState(this.mode, this.payDetails);
 
   @override
   Widget build(BuildContext context) {
@@ -86,8 +86,8 @@ class _WebViewContainerState extends State<WebViewContainer> {
                 final encData = values[1]!.replaceAll('encData=', "");
                 final merchId = values[2]!.replaceAll('merchId=', "");
 
-                var returnData = {"encData": "$encData", "merchId": "$merchId"};
-                print("split--------------" + returnData.toString());
+                var returnData = {"merchId": "$merchId", "encData": "$encData"};
+                print("returnData--------------" + returnData.toString());
 
                 // const platform = MethodChannel('flutter.dev/NDPSAESLibrary');
 
@@ -116,7 +116,9 @@ class _WebViewContainerState extends State<WebViewContainer> {
                 // } on PlatformException catch (e) {
                 //   debugPrint("Failed to decrypt: '${e.message}'.");
                 // }
+                transactionResult = "Waiting..!";
               }
+
               _closeWebView(context, transactionResult);
             }
           },
