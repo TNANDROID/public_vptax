@@ -3,9 +3,6 @@ import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:responsive_grid_list/responsive_grid_list.dart';
-import 'package:stacked/stacked.dart';
-
-import '../../Model/startup_model.dart';
 
 class PopulationView extends StatefulWidget {
   const PopulationView({super.key});
@@ -157,6 +154,7 @@ class _PopulationViewState extends State<PopulationView> {
               Expanded(flex: 1, child: Container(padding: EdgeInsets.all(5), child: Center(child: UIHelper.titleTextStyle("Female", c.grey_9, 12, true, true)))),
             ],
           )),
+          UIHelper.verticalSpaceMedium,
           Container(
               transform: Matrix4.translationValues(0.0, -20.0, 0.0),
               height: populationList.length * 35,
@@ -191,13 +189,14 @@ class _PopulationViewState extends State<PopulationView> {
       width: Screen.width(context),
       margin: EdgeInsets.all(16),
       padding: EdgeInsets.all(10),
-      decoration: UIHelper.roundedBorderWithColor(15, 15, 0, 0, c.white, borderColor: c.text_color, borderWidth: 1),
+      decoration: UIHelper.roundedBorderWithColor(15, 15, 0, 0, c.need_improvement2, borderColor: c.text_color, borderWidth: 1),
       child: Column(
         children: [
           UIHelper.verticalSpaceSmall,
           Container(
-            child: UIHelper.titleTextStyle("Habitation Details", c.grey_8, 14, true, true),
+            child: UIHelper.titleTextStyle("Habitation Details", c.text_color, 14, true, true),
           ),
+          UIHelper.verticalSpaceMedium,
           Container(
               height: 130,
               child: ResponsiveGridList(
@@ -261,6 +260,7 @@ class _PopulationViewState extends State<PopulationView> {
           UIHelper.verticalSpaceSmall,
           expandViewWidget(1, "Habitation Wise Population List"),
           if (selectedIndexes.contains(1)) habitationWiseTableList(),
+          UIHelper.verticalSpaceMedium,
         ],
       ),
     );

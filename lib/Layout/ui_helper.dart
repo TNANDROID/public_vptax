@@ -153,17 +153,28 @@ class UIHelper {
     ]);
   }
 
-  //Uneven Container Widget Provider
-  static Widget unEvenContainer(double radius, Widget contentWidget) {
-    return ClipPath(
-      clipper: CustomClip(),
-      child: Container(
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(radius),
-            color: c.need_improvement,
-          ),
-          child: contentWidget),
+  //Container Style Provider with Background image
+  static BoxDecoration roundedBorderWithColorWithbgImage(double radius, Color backgroundColor, String img_url,
+      {Color borderColor = Colors.transparent, double borderWidth = 1, double imgOpacity = 0.2}) {
+    return BoxDecoration(
+      borderRadius: BorderRadius.circular(radius),
+      border: Border.all(width: borderWidth, color: borderColor),
+      color: backgroundColor,
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black26,
+          offset: Offset(2, 2),
+          blurRadius: 3.0,
+        )
+      ],
+      image: DecorationImage(
+        image: AssetImage(img_url), // Replace with your image path
+        fit: BoxFit.cover, // Image fit mode
+        colorFilter: ColorFilter.mode(
+          Colors.white.withOpacity(imgOpacity), // Adjust opacity of the watermark
+          BlendMode.dstATop,
+        ),
+      ),
     );
   }
 
