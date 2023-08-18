@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:http/io_client.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
@@ -20,7 +18,6 @@ import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../Layout/customgradientbutton.dart';
 import '../../Model/startup_model.dart';
 import '../../Resources/StringsKey.dart';
@@ -49,14 +46,11 @@ class _ViewReceiptState extends State<ViewReceipt> {
   bool villageFlag=false;
   bool listvisbility = false;
   String finalOTP = '';
-  String userPassKey = "";
-  String userDecriptKey = "";
   Uint8List? pdf;
   PreferenceService preferencesService = locator<PreferenceService>();
   final  TextEditingController assessmentController = TextEditingController();
   final  TextEditingController receiptController = TextEditingController();
   final  scrollController = ScrollController();
-  TextEditingController mobileController = TextEditingController();
   OtpFieldController OTPcontroller = OtpFieldController();
   List<dynamic> taxType = [
     {"taxCode": "01", "taxname": 'propertyTax'.tr().toString()},
@@ -86,9 +80,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
     {"pvcode": "04", "pvname": 'Tanjavur'},
     {"pvcode": "05", "pvname": 'Thiruvarur'},
   ];
-  Map<String, String> defaultSelectedDistrict = {
-
-  };
   @override
   void initState() {
     super.initState();
@@ -100,7 +91,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
     districtFlag = true;
     blockFlag=true;
     villageFlag=true;
-    districtItems.add(defaultSelectedDistrict);
+    // districtItems.add(defaultSelectedDistrict);
     receiptController.addListener(() {
       if (receiptController.text.isNotEmpty) {
         assessmentController.clear();
@@ -117,12 +108,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
       context.setLocale(Locale('ta', 'IN'));
 
     });
-    /*List<Map> dlist =
-    // await dbClient.rawQuery('SELECT * FROM ' + table_District);
-    print(dlist.toString());
-    districtItems.add(defaultSelectedDistrict);
-    districtItems.addAll(dlist);
-    selectedDistrict = defaultSelectedDistrict[key_dcode]!;*/
   }
   Future<bool> _onWillPop() async {
     Navigator.of(context, rootNavigator: true).pop(context);
@@ -135,33 +120,36 @@ class _ViewReceiptState extends State<ViewReceipt> {
     String keyCode = "";
     String titleText = "";
     String titleTextTamil = "";
-
+    String initValue="";
     if (index == 0) {
       dropList = taxType;
       keyCode = "taxCode";
       titleText = "taxname";
       titleTextTamil = "taxname";
     } else if (index == 1) {
-      dropList = districtlist;
-      keyCode = "dcode";
-      titleText ="dname";
-      titleTextTamil ="dname";
+      dropList = preferencesService.districtList;
+      keyCode = key_dcode;
+      titleText = key_dname;
+      titleTextTamil = key_dname_ta;
+      initValue = selectedDistrict;
     } else if (index == 2) {
-      dropList =blockList;
-      keyCode = "bcode";
-      titleText = "bname";
-      titleTextTamil = "bname";
+      dropList = model.selectedBlockList;
+      keyCode = key_bcode;
+      titleText = key_bname;
+      titleTextTamil = key_bname_ta;
+      initValue = selectedBlock;
     } else if (index == 3) {
       dropList =villageList;
       keyCode = "pvcode";
       titleText = "pvname";
       titleTextTamil = "pvname";
     }
-    return FormBuilderDropdown(
+    return
+      FormBuilderDropdown(
       style: TextStyle(
           fontSize: 12, fontWeight: FontWeight.w400, color: c.grey_8),
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.only(left: 5),
+        contentPadding: EdgeInsets.only(left: 5,top: 6),
         suffixIcon: Icon(
           Icons.arrow_drop_down,
           color: c.grey_8,
@@ -169,18 +157,21 @@ class _ViewReceiptState extends State<ViewReceipt> {
         constraints: BoxConstraints(maxHeight: 35),
         hintText: inputHint,
         hintStyle: TextStyle(
-          fontSize: 11,
-          color: c.red
+            fontSize: 11,
+            color: c.black
         ),
         filled: true,
-        fillColor: c.need_improvement2,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: c.need_improvement2, width: 10.0),
+        fillColor: c.full_transparent,
+        enabledBorder:OutlineInputBorder(
+          borderSide: BorderSide(color: c.need_improvement2, width: 25.0),
           borderRadius: BorderRadius.circular(18),
         ),
-        focusedBorder:
-        UIHelper.getInputBorder(1, borderColor: c.dot_light_screen_lite),
-        focusedErrorBorder: OutlineInputBorder(
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(width: 25.0,color: c.need_improvement2),
+          borderRadius: BorderRadius.circular(
+              20), // Increase the radius to adjust the height
+        ),
+        focusedErrorBorder:OutlineInputBorder(
           borderSide: BorderSide(width: 10.0),
           borderRadius: BorderRadius.circular(
               20), // Increase the radius to adjust the height
@@ -196,24 +187,32 @@ class _ViewReceiptState extends State<ViewReceipt> {
           : index == 2
           ? selectedBlock
           : selectedvillage,
-      onTap: () async {
+      /*onTap: () async {
         if (index == 0) {
-          selectedDistrict = "";
+          selectedDistrict="";
           selectedBlock = "";
+          listvisbility=false;
+          receiptController.text="";
+          assessmentController.text="";
           selectedvillage = "";
         } else if (index == 1) {
           selectedBlock = "";
           selectedvillage = "";
+          listvisbility=false;
+          receiptController.text="";
+          assessmentController.text="";
         } else if (index == 2) {
           selectedvillage = "";
+          listvisbility=false;
+          receiptController.text="";
+          assessmentController.text="";
         }
         setState(() {});
-      },
+      },*/
       // iconSize: 28,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(
-            errorText:inputHint)
+        FormBuilderValidators.required(errorText:'')
       ]),
       items: dropList.map((item) => DropdownMenuItem(
         value: item[keyCode],
@@ -229,16 +228,22 @@ class _ViewReceiptState extends State<ViewReceipt> {
       ))
           .toList(),
       onChanged: (value) async {
+        print("onchanged>>>>>"+index.toString());
         if(index==0)
-          {
-            selectedTaxType=value.toString();
-            selectedDistrict = "";
-            selectedBlock = "";
-            selectedvillage = "";
-          }
-       else if (index == 1) {
+        {
+          selectedTaxType=value.toString();
+        }
+        else if (index == 1) {
+          model.selectedBlockList.clear();
+          model.selectedVillageList.clear();
           selectedDistrict = value.toString();
-
+          selectedBlock = "";
+          selectedvillage = "";
+          Future.delayed(Duration(milliseconds: 500), () {
+            model.loadUIBlock(selectedDistrict);
+            setState(() {});
+            Utils().hideProgress(context);
+          });
         } else if (index == 2) {
           selectedBlock = value.toString();
         } else if (index == 3) {
@@ -270,7 +275,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                   onModelReady: (model) async {},
                   builder: (context, model, child) {
                     return Container(
-                        child:dropdowncard(context, model),);
+                      child:dropdowncard(context, model),);
                   },
                   viewModelBuilder: () => StartUpViewModel()),
             )));
@@ -318,7 +323,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                             UIHelper.horizontalSpaceMedium,
                             Expanded(
                               flex: 2,
-                              child: addInputDropdownField(0, 'select_taxtype'.tr().toString(),'',model),
+                              child: addInputDropdownField(0, 'select_taxtype'.tr().toString(),"tax_type",model),
                             )
                           ],
                         ),
@@ -342,7 +347,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                             Expanded(
                               flex: 2,
                               child:
-                              addInputDropdownField(1, 'select_District'.tr().toString(), "", model),
+                              addInputDropdownField(1, 'select_District'.tr().toString(), "district", model),
                             )
                           ],
                         ),
@@ -365,7 +370,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                             UIHelper.horizontalSpaceMedium,
                             Expanded(
                               flex: 2,
-                              child:addInputDropdownField(2, 'select_Block'.tr().toString(), "", model),
+                              child:addInputDropdownField(2, 'select_Block'.tr().toString(), "block", model),
                             )
                           ],
                         ),
@@ -506,13 +511,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                               ])),])),
             Container(
                 transform: Matrix4.translationValues(5.0,-150.0,10.0),
-                child:InkWell(
-                  onTap: ()
-                  {
-                    /*scrollController.animateTo(0,
-                        duration: Duration(milliseconds: 500), curve: Curves.easeInOut);*/
-                  },
-                  child: TextButton(
+               child: TextButton(
                     child:Padding(
                         padding: EdgeInsets.only(left: 5,right: 5),
                         child: Text("submit".tr().toString(),
@@ -533,7 +532,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
                       });
                     },
                   ),
-                )
             ),
             listview()
           ]
@@ -543,16 +541,15 @@ class _ViewReceiptState extends State<ViewReceipt> {
   Widget listview()
   {
     return  Visibility(
-        visible:listvisbility,
+      visible:listvisbility,
       child: Container(
           transform: Matrix4.translationValues(-5.0,-80.0,10.0),
-          padding: EdgeInsets.only(left: 10,right: 10),
+          padding: EdgeInsets.only(left: 22,right: 22),
           child: AnimationLimiter(
             child: ListView.builder(
               physics: const AlwaysScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount:1,
-              // itemCount: houseList == null ? 0 : houseList.length,
               itemBuilder: (BuildContext context, int index) {
                 return  AnimationConfiguration.staggeredList(
                   position: index,
@@ -560,169 +557,174 @@ class _ViewReceiptState extends State<ViewReceipt> {
                   child: SlideAnimation(
                     horizontalOffset: 200.0,
                     child: FlipAnimation(
-                      child: InkWell(
-                        onTap: () { },
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: c.white,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                topRight: Radius.circular(10),
-                                bottomRight: Radius.circular(10),
-                                bottomLeft: Radius.circular(10),
-                              ),
-                              border: Border.all(
-                                  color: c.colorPrimary,width: 2
-                              )
-                          ),
-                          margin:  EdgeInsets.symmetric(horizontal:10, vertical: 10),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 100,
-                                height: 185,
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                      colors: [
-                                        c.colorPrimary,
-                                        c.colorPrimaryDark,
-                                      ],
-                                      begin: const FractionalOffset(0.0, 0.0),
-                                      end: const FractionalOffset(1.0, 0.0),
-                                      stops: [1.0, 0.0],
-                                      tileMode: TileMode.clamp),
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(5),
-                                    topRight: Radius.circular(110),
-                                    bottomRight: Radius.circular(110),
-                                    bottomLeft: Radius.circular(5),
+                      child:Stack(
+                          children: [
+                            Container(
+                              height: 220,
+                              decoration: UIHelper.roundedBorderWithColorWithShadow(
+                                  10,c.white,c.white,borderColor: Colors.transparent,borderWidth: 0),
+                              child: Row(
+                                children: [
+                                Expanded(flex: 1,
+                                    child: Container(
+                                  decoration: BoxDecoration(
+                                      color: c.colorAccentlight,
+                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10))
                                   ),
-                                ),
+                                  )),
+                                Expanded(
+                                    flex: 3,
+                                    child: Container(decoration: BoxDecoration(
+                                    color: c.white,
+                                    borderRadius: BorderRadius.only(topRight: Radius.circular(10),
+                                        bottomRight: Radius.circular(10))
+                                ),)),
+                              ],),
+                            ),
+                            Container(
+                              margin: EdgeInsets.all(10.0),
+                                color: c.full_transparent,
+                            child:
+                            Column(
+                              children: [
+                              Row(
+                                children: [
+                                  Padding(padding: EdgeInsets.only(left: 7,top: 5),
+                                  child: Text(
+                                    'receiptno'.tr().toString(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14,
+                                      color: c.white
+                                    ),
+                                  ),),
+                                  UIHelper.horizontalSpaceSmall,
+                                  Padding(padding: EdgeInsets.only(top: 5),
+                                  child: Text(
+                                    '123456',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: c.primary_text_color2
+                                    ),
+                                  ),)
+                                ],
                               ),
-                              Container(
-                                child:  Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.only(left: 10,top: 10),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                UIHelper.verticalSpaceSmall,
+                               Row(
+                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                   children: [
+                                     InkWell(
+                                       child:Stack(
                                         children: [
-                                          Text(
-                                            'collectionDate'.tr().toString(),
-                                            style:
-                                            TextStyle(
-                                              fontSize: 12,
-                                              fontWeight:
-                                              FontWeight
-                                                  .bold,
-                                              color: c.grey_9,
+                                          Container(
+                                            width:280,
+                                            padding: EdgeInsets.all(5),
+                                            margin: EdgeInsets.only(left: 0,right: 10,bottom: 0,top: 10),
+                                            decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.white, c.white,borderColor: c.full_transparent,borderWidth: 0),
+                                            child: Column(
+                                              children: [
+                                                Padding(
+                                                    padding: EdgeInsets.only(top: 7,left: 5,right: 5),
+                                                  child:Text(
+                                                    'download_tamil'.tr().toString(),
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style:TextStyle(
+                                                      fontSize: 12,
+                                                      color: c.text_color,
+                                                      fontWeight: FontWeight.w500
+                                                    )
+                                                  )
+                                                ),
+                                                Padding(
+                                                    padding: EdgeInsets.only(top: 5,bottom: 5),
+                                                   child:Text(
+                                                    'tamil_1'.tr().toString(),
+                                                     style: TextStyle(
+                                                       fontWeight: FontWeight.w500,
+                                                       color: c.text_color,
+                                                       fontSize: 12,
+                                                     ),
+                                                   )
+                                               ),
+                                              ],
                                             ),
                                           ),
-                                          SizedBox(
-                                              height: 5),
-                                          Text(
-                                            "",
-                                            style:
-                                            TextStyle(
-                                              fontSize: 13,
-                                              fontWeight:
-                                              FontWeight.bold,
-                                              color: c.grey_10,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.only(left: 12),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'receiptno'.tr().toString()+":",
-                                            style:
-                                            TextStyle(
-                                              fontSize: 12,
-                                              fontWeight:
-                                              FontWeight
-                                                  .normal,
-                                              color: Colors
-                                                  .black,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                              height: 5),
-                                          Text(
-                                            "",
-                                            style:
-                                            TextStyle(
-                                              fontSize: 13,
-                                              fontWeight:
-                                              FontWeight.bold,
-                                              color: c.grey_10,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                        child: Row(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            UIHelper.horizontalSpaceSmall,
-                                            Text(
-                                                'download_tamil'.tr().toString()+"\n"+"tamil_1".tr().toString()+"\n",
-                                                style:
-                                                TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.bold,color: c.grey_9
-                                                )
-                                            ),
-                                            InkWell(
-                                              onTap: ()
-                                              {
-                                                _settingModalBottomSheet(context);
-                                                print("download_tamil".tr().toString()+"\n"+"tamil_1".tr().toString()+"\n");
-                                              },
-                                              child: Padding(padding: EdgeInsets.only(left: 25),
-                                                child:Image.asset(imagePath.download,height: 17,width: 17,),),
-                                            )
-                                          ],
-                                        )
-                                    ),
-                                    Container(
-                                      child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          UIHelper.horizontalSpaceSmall,
-                                          Text(
-                                            'download_english'.tr().toString()+"\n"+"english_1".tr().toString()+"\n",
-                                            style:
-                                            TextStyle(
-                                              fontSize: 12,
-                                              fontWeight:
-                                              FontWeight.bold,
-                                              color: c.grey_9,
-                                            ),
-                                          ),
-                                          InkWell(
-                                            onTap: (){
-                                              _settingModalBottomSheet(context);
-                                              print('download_english'.tr().toString()+"english_1".tr().toString());
-                                            },
-                                            child: Padding(padding: EdgeInsets.only(left: 25),
-                                              child:Image.asset(imagePath.download,height: 17,width: 17,),),
+                                          Container(
+                                            transform: Matrix4.translationValues(-8,25,0),
+                                            decoration: UIHelper.circleWithColorWithShadow(300, c.white, c.white),
+                                            child: Image.asset(imagePath.download_img,height: 25,width: 25,),
                                           )
                                         ],
-                                      ),
-                                    ),
-                                  ],
-                                ),)
-                            ],
-                          ),
+                                         ),
+                                       onTap: (){
+                                         print("Receipt Downloaded Successfully");
+                                         _settingModalBottomSheet(context);
+                                       },
+                                     )
+                                   ],
+                               ),
+                                UIHelper.verticalSpaceMedium,
+                               Row(
+                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                 children: [
+                                   InkWell(
+                                     child:  Stack(
+                                       children: [
+                                         Container(
+                                             width:280,
+                                             padding: EdgeInsets.all(5),
+                                             margin: EdgeInsets.only(left: 0,right:10,bottom: 25,top:6),
+                                             decoration: UIHelper.roundedBorderWithColorWithShadow(
+                                                 10,c.white,c.white,borderColor:c.full_transparent,borderWidth: 0),
+                                             child: Column(
+                                               children: [
+                                                 Padding(
+                                                   padding: EdgeInsets.only(top: 7,left: 5,right: 5),
+                                                   child: Text(
+                                                     'download_english'.tr().toString(),
+                                                     overflow: TextOverflow.ellipsis,
+                                                     textAlign: TextAlign.right,
+                                                     style: TextStyle(
+                                                         color: c.text_color,
+                                                         fontWeight: FontWeight.w500,
+                                                         fontSize: 12,
+                                                     ),
+                                                   ),
+                                                 ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(top: 5,bottom: 5),
+                                                child: Text(
+                                                  'english_1'.tr().toString(),
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: c.text_color
+                                                  ),
+                                                ),)
+                                               ],
+                                             )
+                                         ),
+                                         Container(
+                                           transform: Matrix4.translationValues(-11,22,0),
+                                           decoration: UIHelper.circleWithColorWithShadow(300, c.white, c.white),
+                                           child:Image.asset(imagePath.download_img,height: 25,width: 25,), //Icon
+                                         ),
+                                       ],),
+                                     onTap: (){
+                                       print('Receipt Downloaded Successfully');
+                                       _settingModalBottomSheet(context);
+                                     },
+                                   )
+                                 ],
+                               ),
+                                // UIHelper.verticalSpaceMedium,
+                            ],)
+                            )
+                          ])
 
-                        ),),),
+                    ),
                   ),
                 );
               },
@@ -777,9 +779,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
           return Wrap(
             children: <Widget>[
               Container(
-                // padding:EdgeInsets.only(left: 10,right: 10,top: 5,bottom: 10),
-                // margin: EdgeInsets.only(
-                //     bottom: 10,top: 10,left: 10,right: 10),
                   decoration: UIHelper.GradientContainer(
                       30.0,30,0,0, [c.white, c.white]),
                   child: Column(
@@ -818,7 +817,42 @@ class _ViewReceiptState extends State<ViewReceipt> {
                           ],
                         ),
                       ),
-                      CustomGradientButton(
+                      Container(
+                        height: 40,
+                          padding: EdgeInsets.all(5),
+                          margin: EdgeInsets.only(left: 0,right:10,bottom: 15,top: 5),
+                          decoration: UIHelper.roundedBorderWithColorWithShadow(
+                              10,c.colorAccentlight,c.colorAccentlight,borderColor: Colors.transparent,borderWidth: 0),
+                         child:InkWell(
+                                         child:  Padding(
+                                         padding: EdgeInsets.only(left: 5,top: 5,bottom: 5,right: 5),
+                                         child:  Text(
+                                         'verifyOTP'.tr().toString(),
+                                         textAlign: TextAlign.center,
+                                         overflow: TextOverflow.ellipsis,
+                                         style: TextStyle(
+                                         color: c.white,
+                                          fontWeight: FontWeight.w500,
+                                         fontSize: 13,
+                                         decorationStyle: TextDecorationStyle.wavy
+                                         ),
+                                         ),
+                                         ),
+                           onTap: ()async{
+                             if (await utils.isOnline()) {
+                             Navigator.pop(context);
+                             utils.showAlert(context, ContentType.success, "Receipt Downloaded Successfully");
+                             } else {
+                             utils.showAlert(
+                             context,
+                             ContentType.fail,
+                             "noInternet".tr().toString(),
+                             );
+                             }
+                           },
+                         )
+                      ),
+                     /* CustomGradientButton(
                         onPressed: () async {
                           if (await utils.isOnline()) {
                             Navigator.pop(context);
@@ -838,6 +872,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                           alignment: Alignment.center,
                           child: Text(
                             'verifyOTP'.tr().toString(),
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.bold,
@@ -845,7 +880,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                             ),
                           ),
                         ),
-                      ),
+                      ),*/
                     ],
                   )),
             ],
@@ -853,5 +888,99 @@ class _ViewReceiptState extends State<ViewReceipt> {
         }
     );
   }
+  Future<void> get_PDF() async {
+    utils.showProgress(context, 1);
 
+    Map jsonRequest = {
+      s.key_service_id: "get_pdf",
+      "work_id":"7815241" ,
+      "inspection_id": "162890",
+    };
+    Map encrypted_request = {
+      s.key_user_name: "9595959595",
+      s.key_data_content: jsonRequest,
+    };
+    print("getPDF_request_encrpt>>" + encrypted_request.toString());
+    var response = await apiServices.mainServiceFunction(encrypted_request);
+
+
+    utils.hideProgress(context);
+
+    String data = response.body;
+    var userData = jsonDecode(data);
+    var status = userData[s.key_status];
+    var response_value = userData[s.key_response];
+
+    if (status == s.key_ok && response_value == s.key_ok) {
+      var pdftoString = userData[s.key_json_data];
+      pdf = const Base64Codec().decode(pdftoString['pdf_string']);
+    }
+  }
+// Future<void> getpdf() async {
+//   String? key = key_user_passKey;
+//   Map request = {
+//     s.key_service_id: "get_pdf",
+//     "work_id": "7815241",
+//     "inspection_id": "162890"
+//   };
+//   Map jsonrequest = {
+//     s.key_user_name: "9595959595",
+//     s.key_data_content: request
+//   };
+//   String jsonString = jsonEncode(jsonrequest);
+//
+//   String headerSignature = utils.generateHmacSha256(jsonString, key!, true);
+//
+//   String header_token = utils.jwt_Encode(key, "9595959595"!, headerSignature);
+//
+//   HttpClient _client = HttpClient(context: await Utils().globalContext);
+//   _client.badCertificateCallback =
+//       (X509Certificate cert, String host, int port) => false;
+//
+//
+//   Map<String, String> header = {
+//     "Content-Type": "application/json",
+//     "Authorization": "Bearer $header_token"
+//   };
+//
+//   var response = await apiServices.mainServiceFunction(jsonrequest);
+//   print("getPDF_request_encrpt>>" + jsonrequest.toString());
+//
+//   utils.hideProgress(context);
+//
+//
+//   String data = response.body;
+//
+//   print("getPDF_response>>" + data);
+//
+//   String? authorizationHeader = response.headers['authorization'];
+//
+//   String? token = authorizationHeader?.split(' ')[1];
+//
+//   print("getPDF Authorization -  $token");
+//
+//   String responceSignature = utils.jwt_Decode(key, token!);
+//
+//   String responceData = utils.generateHmacSha256(data, key, false);
+//
+//   print("getPDF responceSignature -  $responceSignature");
+//
+//   print("getPDF responceData -  $responceData");
+//
+//   if (responceSignature == responceData) {
+//     print("getPDF responceSignature - Token Verified");
+//     var userData = jsonDecode(data);
+//
+//     var status = userData[s.key_status];
+//     var response_value = userData[s.key_response];
+//     print(response_value.statusCode);
+//     if(response_value.statuscode==200)
+//       {
+//         if (status == s.key_ok && response_value == s.key_ok) {
+//           var pdftoString = userData[s.key_json_data];
+//           pdf = const Base64Codec().decode(pdftoString['pdf_string']);
+//         }
+//       }
+//   }
+// }
 }
