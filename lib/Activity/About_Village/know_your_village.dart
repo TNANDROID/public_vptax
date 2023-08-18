@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:public_vptax/Activity/About_Village/assets_details.dart';
+import 'package:public_vptax/Activity/About_Village/habitation_details.dart';
 import 'package:public_vptax/Activity/About_Village/population_view.dart';
 import 'package:public_vptax/Activity/About_Village/taxWise_details.dart';
-import 'package:public_vptax/Activity/About_Village/village_work_details.dart';
-import 'package:public_vptax/Layout/customgradientbutton.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
-import 'package:public_vptax/Resources/ImagePath.dart' as imagepath;
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
-import 'package:stacked/stacked.dart';
+import 'package:public_vptax/Resources/ImagePath.dart' as imagepath;
 import 'package:public_vptax/Resources/StringsKey.dart';
+import 'package:stacked/stacked.dart';
+
 import '../../Model/startup_model.dart';
 import '../../Services/Preferenceservices.dart';
 import '../../Services/locator.dart';
@@ -27,6 +27,7 @@ class KYVDashboard extends StatefulWidget {
 
 class _KYVDashboardState extends State<KYVDashboard> {
   bool isSelectedAll = false;
+  bool isAddressShow = false;
   String selectedLang = "";
   dynamic selectedDistrict = {};
   dynamic selectedBlock = {};
@@ -43,39 +44,91 @@ class _KYVDashboardState extends State<KYVDashboard> {
           onViewModelReady: (model) async {},
           builder: (context, model, child) {
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                    padding: EdgeInsets.all(10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        UIHelper.titleTextStyle("Know Your Village", c.text_color, 16, true, false),
-                        UIHelper.verticalSpaceSmall,
-                        Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-                          Expanded(flex: 2, child: addInputDropdownField(1, 'districtName'.tr().toString(), "district", model)),
-                          UIHelper.horizontalSpaceSmall,
-                          Expanded(flex: 2, child: model.selectedBlockList.isNotEmpty ? addInputDropdownField(2, 'blockName'.tr().toString(), "block", model) : SizedBox()),
-                        ]),
-                        UIHelper.verticalSpaceSmall,
-                        Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-                          Expanded(flex: 2, child: model.selectedVillageList.isNotEmpty ? addInputDropdownField(3, 'villageName'.tr().toString(), "village", model) : SizedBox()),
-                          Expanded(flex: 2, child: SizedBox()),
-                        ])
-                      ],
-                    )),
-                isSelectedAll ? Expanded(child: SingleChildScrollView(child: Column(children: [PopulationView(), WorkDetailsView(), AssetDetailsView(), DCBView()]))) : SizedBox()
-                // : Expanded(
-                //     child: Container(
-                //     padding: EdgeInsets.all(5),
-                //     margin: EdgeInsets.all(15),
-                //     width: Screen.width(context),
-                //     decoration: UIHelper.roundedBorderWithColorWithbgImage(0, c.white, "", imgOpacity: 0.4),
-                //   ))
+                Container(padding: EdgeInsets.all(10), child: UIHelper.titleTextStyle("Know Your Village", c.text_color, 16, true, false)),
+                isAddressShow
+                    ? Container(padding: EdgeInsets.fromLTRB(10, 5, 10, 5), child: customCardDesign())
+                    : Container(
+                        padding: EdgeInsets.all(10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                              Expanded(flex: 2, child: addInputDropdownField(1, 'districtName'.tr().toString(), "district", model)),
+                              UIHelper.horizontalSpaceSmall,
+                              Expanded(flex: 2, child: model.selectedBlockList.isNotEmpty ? addInputDropdownField(2, 'blockName'.tr().toString(), "block", model) : SizedBox()),
+                            ]),
+                            UIHelper.verticalSpaceSmall,
+                            Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                              Expanded(flex: 2, child: model.selectedVillageList.isNotEmpty ? addInputDropdownField(3, 'villageName'.tr().toString(), "village", model) : SizedBox()),
+                              Expanded(flex: 2, child: SizedBox()),
+                            ])
+                          ],
+                        )),
+                isSelectedAll
+                    ? Expanded(child: SingleChildScrollView(child: Column(children: [habitationView(), PopulationView(), AssetDetailsView(), DCBView()])))
+                    : Center(
+                        child: Column(
+                        children: [
+                          Image.asset(imagepath.waitingImg, fit: BoxFit.contain, height: Screen.width(context) / 2, width: Screen.width(context) / 2),
+                          UIHelper.verticalSpaceMedium,
+                          UIHelper.titleTextStyle("Awaiting input from your side...", c.text_color, 14, true, true)
+                        ],
+                      ))
               ],
             );
           },
           viewModelBuilder: () => StartUpViewModel()),
     );
+  }
+
+//Custom Card Design
+  Widget customCardDesign() {
+    String address = "";
+    address = selectedDistrict[key_dname] + ", " + selectedBlock[key_bname] + ", " + selectedVillage[key_pvname] + ".";
+    return Stack(children: [
+      Container(
+        color: c.colorPrimary,
+        height: 45,
+        width: 35,
+      ),
+      Stack(children: [
+        Container(
+          decoration: UIHelper.roundedBorderWithColor(10, 30, 10, 30, c.white, borderColor: c.colorPrimary, borderWidth: 2),
+          height: 35,
+          margin: EdgeInsets.all(5),
+          padding: EdgeInsets.only(left: 5),
+          width: Screen.width(context),
+          child: Row(children: [
+            Icon(
+              Icons.location_on,
+              size: 25,
+              color: c.colorPrimary,
+            ),
+            UIHelper.titleTextStyle(address, c.text_color, 12, true, true),
+          ]),
+        ),
+        Positioned(
+            right: 0,
+            child: Container(
+                margin: EdgeInsets.only(top: 5),
+                decoration: UIHelper.roundedBorderWithColor(0, 30, 0, 30, c.colorPrimary),
+                height: 35,
+                width: 40,
+                child: GestureDetector(
+                  onTap: () {
+                    isAddressShow = false;
+                    setState(() {});
+                  },
+                  child: Icon(
+                    Icons.restart_alt,
+                    size: 25,
+                    color: c.white,
+                  ),
+                )))
+      ]),
+    ]);
   }
 
   //Dropdown Input Field Widget
@@ -108,23 +161,22 @@ class _KYVDashboardState extends State<KYVDashboard> {
       print("End.....");
     }
     return FormBuilderDropdown(
-      style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w600, color: c.text_color),
       decoration: InputDecoration(
         labelText: inputHint,
+        constraints: BoxConstraints(maxHeight: 35),
         floatingLabelBehavior: FloatingLabelBehavior.never,
         labelStyle: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_7),
         filled: true,
         fillColor: Colors.white,
-        enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
-        focusedBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
+        enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7, radius: 5),
+        focusedBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7, radius: 5),
         focusedErrorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
         errorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
         errorStyle: const TextStyle(fontSize: 10),
-        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12), // Optional: Adjust padding
+        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6), // Optional: Adjust padding
       ),
       name: fieldName,
       initialValue: initValue,
-      iconSize: 30,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(errorText: "$inputHint ${'isEmpty'.tr()}"),
@@ -165,6 +217,7 @@ class _KYVDashboardState extends State<KYVDashboard> {
           });
         } else if (index == 3) {
           selectedVillage = value;
+          isAddressShow = true;
           isSelectedAll = true;
           Future.delayed(Duration(milliseconds: 200), () {
             Utils().hideProgress(context);

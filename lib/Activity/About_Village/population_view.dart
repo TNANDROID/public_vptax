@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:public_vptax/Layout/customclip.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
@@ -12,12 +13,17 @@ class PopulationView extends StatefulWidget {
 
 class _PopulationViewState extends State<PopulationView> {
   List selectedIndexes = [];
-  List<dynamic> mainPopulationList = [
-    {"title": "Number of Habitations", "value": "8"},
-    {"title": "Number of Streets", "value": "5"},
-    {"title": "Number of Wards", "value": "3"}
+  List colourList = [
+    {"c1": Color(0xFF2E3192), "c2": Color(0xFF1BFFFF)},
+    {"c1": Color(0xFFD4145A), "c2": Color(0xFFFBB03B)},
+    {"c1": Color(0xFF11998E), "c2": Color(0xFF38EF7D)},
+    {"c1": Color(0xFF662D8C), "c2": Color(0xFFED1E79)},
+    {"c1": Color(0xFF596164), "c2": Color(0xFFEE9CA7)},
+    {"c1": Color(0xFF614385), "c2": Color(0xFF516395)},
+    {"c1": Color(0xFFFF5F6D), "c2": Color(0xFFFFC371)},
+    {"c1": Color(0xFF1EAE98), "c2": Color(0xFFD8B5FF)},
+    {"c1": Color(0xFF09203F), "c2": Color(0xFF537895)}
   ];
-
   List<dynamic> numberPopulationList = [
     {"title": "Number of Population", "total": "1000", "male": "600", "female": "400"},
     {"title": "SC Population", "total": "600", "male": "400", "female": "200"},
@@ -46,26 +52,6 @@ class _PopulationViewState extends State<PopulationView> {
     populationList.add(totalData);
   }
 
-  Widget getPopulationIcon(int index) {
-    return Container(
-      padding: EdgeInsets.all(3),
-      color: index == 0
-          ? c.colorPrimaryDark
-          : index == 1
-              ? c.green_new
-              : c.dot_dark_screen4,
-      child: Icon(
-        index == 0
-            ? Icons.domain_add_outlined
-            : index == 1
-                ? Icons.add_road_outlined
-                : Icons.home_outlined,
-        size: 25,
-        color: c.white,
-      ),
-    );
-  }
-
   Widget expandViewWidget(int index, String title) {
     return GestureDetector(
         onTap: () {
@@ -89,52 +75,30 @@ class _PopulationViewState extends State<PopulationView> {
         ));
   }
 
-  Widget getPopulationDetailsIcon(int index) {
-    return Container(
-      padding: EdgeInsets.all(3),
-      color: index == 0
-          ? c.colorPrimaryDark
-          : index == 1
-              ? c.green_new
-              : c.dot_dark_screen4,
-      child: Icon(
-        Icons.groups_outlined,
-        size: 35,
-        color: c.white,
+  Widget customCardDesign(int index, String title, String Value) {
+    return Column(children: [
+      Container(
+        decoration: UIHelper.roundedBorderWithColorWithShadow(15, colourList[index]['c1'], colourList[index]['c2']),
+        height: 85,
+        width: Screen.width(context) / 3.8,
+        child: Row(children: [
+          Expanded(
+            child: UIHelper.titleTextStyle(title, c.white, 14, true, true),
+          ),
+        ]),
       ),
-    );
-  }
-
-  Widget keyValueRowWidget(String key, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        UIHelper.titleTextStyle("$key : ", c.grey_9, 13, false, true),
-        UIHelper.titleTextStyle("$value", c.grey_9, 14, true, true),
-      ],
-    );
-  }
-
-  Widget populationOfScStWidsget(dynamic data) {
-    return Container(
-        width: Screen.width(context) / 3,
-        margin: EdgeInsets.all(10),
-        decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.white, c.white),
-        child: Column(
-          children: [
-            Container(
-                width: Screen.width(context),
-                height: 40,
-                decoration: UIHelper.roundedBorderWithColor(10, 10, 0, 0, Colors.blue),
-                child: Center(
-                  child: UIHelper.titleTextStyle(data["title"], c.white, 14, true, true),
-                )),
-            Container(
-                width: Screen.width(context),
-                padding: EdgeInsets.all(5),
-                child: Column(children: [keyValueRowWidget("Total", data['total']), keyValueRowWidget("Male", data['male']), keyValueRowWidget("Female", data['female'])])),
-          ],
-        ));
+      Container(
+        transform: Matrix4.translationValues(0.0, -20.0, 0.0),
+        decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.white, c.white, borderColor: colourList[index]['c2'], borderWidth: 2),
+        height: 45,
+        width: Screen.width(context) / 4.8,
+        child: Row(children: [
+          Expanded(
+            child: UIHelper.titleTextStyle(Value, colourList[index]['c1'], 14, true, true),
+          ),
+        ]),
+      )
+    ]);
   }
 
   Widget habitationWiseTableList() {
@@ -194,70 +158,34 @@ class _PopulationViewState extends State<PopulationView> {
         children: [
           UIHelper.verticalSpaceSmall,
           Container(
-            child: UIHelper.titleTextStyle("Habitation Details", c.text_color, 14, true, true),
+            child: UIHelper.titleTextStyle("Population Details", c.text_color, 14, true, true),
           ),
           UIHelper.verticalSpaceMedium,
-          Container(
-              height: 130,
-              child: ResponsiveGridList(
-                  listViewBuilderOptions: ListViewBuilderOptions(physics: NeverScrollableScrollPhysics()),
-                  horizontalGridMargin: 0,
-                  verticalGridMargin: 0,
-                  minItemWidth: Screen.width(context) / 5,
-                  children: List.generate(
-                    mainPopulationList.length,
-                    (index) {
-                      dynamic getData = mainPopulationList[index];
-                      return Stack(children: [
-                        Column(children: [
-                          SizedBox(height: 15),
-                          Container(
-                            decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.white, c.white, borderColor: c.grey_2),
-                            height: 85,
-                            child: Container(
-                                padding: EdgeInsets.all(5),
-                                child: Row(children: [
-                                  Expanded(child: Center(child: UIHelper.titleTextStyle(getData['title'] + "\n" + getData['value'], c.grey_8, 12, false, true))),
-                                ])),
-                          )
-                        ]),
-                        Positioned(top: 0, left: 10, child: ClipRRect(borderRadius: BorderRadius.circular(5.0), child: getPopulationIcon(index))),
-                      ]);
-                    },
-                  ))),
-          UIHelper.verticalSpaceSmall,
-          expandViewWidget(0, "Population Details"),
-          if (selectedIndexes.contains(0))
-            Container(
-                width: Screen.width(context),
-                padding: EdgeInsets.all(10),
-                decoration: UIHelper.GradientContainer(0, 0, 10, 10, [c.grey_3, c.white]),
-                child: Column(
-                  children: [
-                    Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      ClipRRect(borderRadius: BorderRadius.circular(5.0), child: getPopulationDetailsIcon(0)),
-                      UIHelper.horizontalSpaceSmall,
-                      Column(children: [
-                        keyValueRowWidget("Number of Population", "1998"),
-                        UIHelper.verticalSpaceTiny,
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            keyValueRowWidget("Male", "1000"),
-                            UIHelper.horizontalSpaceMedium,
-                            keyValueRowWidget("Female", "998"),
-                          ],
-                        ),
-                        UIHelper.verticalSpaceSmall,
-                      ])
-                    ]),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [populationOfScStWidsget(numberPopulationList[1]), populationOfScStWidsget(numberPopulationList[2])],
-                    )
-                  ],
-                )),
-          UIHelper.verticalSpaceSmall,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              customCardDesign(0, numberPopulationList[0]['title'], numberPopulationList[0]['total']),
+              customCardDesign(1, "Male", numberPopulationList[0]['male']),
+              customCardDesign(2, "Female", numberPopulationList[0]['female']),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              customCardDesign(3, numberPopulationList[1]['title'], numberPopulationList[1]['total']),
+              customCardDesign(4, "Male", numberPopulationList[1]['male']),
+              customCardDesign(5, "Female", numberPopulationList[1]['female']),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              customCardDesign(6, numberPopulationList[2]['title'], numberPopulationList[2]['total']),
+              customCardDesign(7, "Male", numberPopulationList[2]['male']),
+              customCardDesign(8, "Female", numberPopulationList[2]['female']),
+            ],
+          ),
+          UIHelper.verticalSpaceMedium,
           expandViewWidget(1, "Habitation Wise Population List"),
           if (selectedIndexes.contains(1)) habitationWiseTableList(),
           UIHelper.verticalSpaceMedium,

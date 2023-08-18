@@ -17,7 +17,7 @@ class DCBView extends StatefulWidget {
 
 class _DCBViewState extends State<DCBView> {
   PreferenceService preferencesService = locator<PreferenceService>();
-  List<Color> colorsList = [c.followers, c.followingBg, c.colorAccentveryverylight, c.red_new, c.need_improvement_color];
+  List<Color> colorsList = [c.followers, c.need_improvement_color, c.followingBg, c.colorAccentveryverylight, c.red_new];
   List imgList = [imagepath.house, imagepath.water, imagepath.professional, imagepath.nontax1, imagepath.trade];
 
   String selectedFinYear = "";
@@ -37,6 +37,7 @@ class _DCBViewState extends State<DCBView> {
     return FormBuilderDropdown(
       decoration: InputDecoration(
         floatingLabelBehavior: FloatingLabelBehavior.never,
+        constraints: BoxConstraints(maxHeight: 35),
         labelText: 'financialYear'.tr().toString(),
         labelStyle: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_7),
         filled: true,
@@ -50,7 +51,6 @@ class _DCBViewState extends State<DCBView> {
       ),
       name: 'financial_year',
       initialValue: selectedFinYear,
-      iconSize: 30,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       items: dropList
           .map((item) => DropdownMenuItem(

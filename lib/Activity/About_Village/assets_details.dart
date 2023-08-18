@@ -11,7 +11,7 @@ class AssetDetailsView extends StatefulWidget {
 
 class _AssetDetailsViewState extends State<AssetDetailsView> {
   List imageUrl = ["assets/images/lamp.png", "assets/images/waterTank.png", "assets/images/road.png"];
-
+  List<Color> colorsList = [c.followers, c.followingBg, c.red_new];
   List workdetailsList = [
     {"title": "Number Of EB Connection", "value": "0"},
     {"title": "Number Of OHT Tank (Oorani/MI Tank)", "value": "0/0"},
@@ -20,17 +20,48 @@ class _AssetDetailsViewState extends State<AssetDetailsView> {
 
 //Card Design Widget
   Widget customizedCardDesign(int index) {
+    Color borderclr = colorsList[index];
     dynamic getData = workdetailsList[index];
-    return Container(
-      height: Screen.width(context) / 4,
-      width: Screen.width(context) / 4,
-      padding: EdgeInsets.all(10),
-      decoration: UIHelper.roundedBorderWithColorWithbgImage(50, c.white, imageUrl[index], borderColor: c.grey_5, borderWidth: 2),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [UIHelper.titleTextStyle(getData['title'], c.text_color, 12, true, true), UIHelper.titleTextStyle(getData['value'], c.black, 14, true, true)],
+    return Stack(children: [
+      Container(
+        height: Screen.width(context) / 4,
+        width: Screen.width(context) / 4,
+        padding: EdgeInsets.all(8),
+        decoration: UIHelper.GradientContainer(30, 0, 0, 30, [c.white, c.grey_2], borderColor: borderclr, intwid: 3, stop1: 0.5, stop2: 0.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [UIHelper.titleTextStyle(getData['title'], borderclr, 12, true, true), UIHelper.titleTextStyle(getData['value'], borderclr, 14, true, true)],
+        ),
       ),
-    );
+      Positioned(
+          top: 0,
+          right: 0,
+          child: Container(
+            transform: Matrix4.translationValues(3.0, -3.0, 0.0),
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(width: 9, color: borderclr), // Top border
+                right: BorderSide(width: 9, color: borderclr), // Right border
+              ),
+            ),
+          )),
+      Positioned(
+          bottom: 0,
+          left: 0,
+          child: Container(
+            transform: Matrix4.translationValues(-3.0, 3.0, 0.0),
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(width: 9, color: borderclr), // Top border
+                left: BorderSide(width: 9, color: borderclr), // Right border
+              ),
+            ),
+          )),
+    ]);
   }
 
   @override
