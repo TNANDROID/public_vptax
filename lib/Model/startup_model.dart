@@ -25,6 +25,7 @@ class StartUpViewModel extends BaseViewModel {
   List<dynamic> finYearList = [];
   List<dynamic> taxTypeList = [];
   List<dynamic> PaymentTypeList = [];
+  List<dynamic> GatewayList = [];
   List<dynamic> taxCollectionDetailsList = [];
 
 
@@ -87,7 +88,12 @@ class StartUpViewModel extends BaseViewModel {
     }else if (type == "PaymentTypeList") {
       dynamic request = {key_service_id: service_key_PaymentTypeList,key_dcode:dcode, key_bcode:bcode, key_pvcode:pvcode};
       requestData = {key_data_content: request};
+    }else if (type == "GatewayList") {
+      dynamic request = {key_service_id: service_key_GatewayList};
+      requestData = {key_data_content: request};
     }else if (type == "TaxCollectionDetails") {
+      requestData = {key_data_content: requestDataValue};
+    }else if (type == "CollectionPaymentTokenList") {
       requestData = {key_data_content: requestDataValue};
     }
     print("requestData>>"+requestData.toString());
@@ -170,10 +176,25 @@ class StartUpViewModel extends BaseViewModel {
       }
       PaymentTypeList = res_jsonArray;
       preferencesService.PaymentTypeList = PaymentTypeList.toList();
-    }else if (type == "TaxCollectionDetails") {
+    }
+    else if (type == "GatewayList") {
       var status = response[key_status];
       var response_value = response[key_response];
       List res_jsonArray = [];
+      if (status == key_success && response_value == key_success) {
+        res_jsonArray = response[key_data];
+        print("response_GatewayList>>>>>>"+res_jsonArray.toString());
+      }else{
+        Utils().showAlert(context, ContentType.warning, response_value.toString());
+      }
+      GatewayList = res_jsonArray;
+      preferencesService.GatewayList = GatewayList.toList();
+    }
+    else if (type == "TaxCollectionDetails") {
+      var status = response[key_status];
+      var response_value = response[key_response];
+      List res_jsonArray = [];
+      preferencesService.taxCollectionDetailsList = [];
       if (status == key_success && response_value == key_success) {
         res_jsonArray = response[key_data_set];
         print("response_TaxCollectionDetails1>>>>>>"+res_jsonArray.toString());
@@ -200,6 +221,32 @@ class StartUpViewModel extends BaseViewModel {
         preferencesService.taxCollectionDetailsList = taxCollectionDetailsList;
       }else{
         preferencesService.taxCollectionDetailsList = [];
+        Utils().showAlert(context, ContentType.warning, response_value.toString());
+      }
+    }
+    else if (type == "CollectionPaymentTokenList") {
+     /* response={
+          "STATUS": "SUCCESS",
+          "RESPONSE": "SUCCESS",
+          "pay_params": {
+            "a": "Mjc5MjQ3MDQtZGYzYy05ZGQ1LTZhOWQtYzdlMWFhZTVhNjQ4",
+            "b": "MTUwMDAwMDA0MTE3MTk=",
+            "c": "OTAw",
+            "d": "c2RAZ21haWwuY29t",
+            "e": "OTY5ODU0Nzg3NQ==",
+            "f": "MjAyMy0wOC0xMSAxMTozMTo1OA==",
+            "g": "ODk1Mg=="
+        }
+      };*/
+      var status = response[key_status];
+      var response_value = response[key_response];
+      if (status == key_success && response_value == key_success) {
+        dynamic pay_params = response['pay_params'];
+        print("response_CollectionPaymentTokenList>>>>>>"+response_value.toString());
+
+        return pay_params;
+
+      }else{
         Utils().showAlert(context, ContentType.warning, response_value.toString());
       }
     }

@@ -123,5 +123,7 @@
   "no" : "No",
   "pay_previous" : "Please pay the previous selected tax amount",
   "pay_pending_year" : "You can't able to pay with pending year",
-  "select_all_field": "Please fill all the details"
+  "select_all_field": "Please fill all the details",
+  "payment_mode": "Payment Mode : ",
+  "select_payment_gateway": "Select Payment Gateway"
 }

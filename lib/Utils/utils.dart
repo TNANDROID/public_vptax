@@ -432,6 +432,11 @@ class Utils {
   bool isNumberValid(value) {
     return RegExp(r'^[6789]\d{9}$').hasMatch(value);
   }
+  bool isEmailValid(value) {
+    return RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+    ).hasMatch(value);
+  }
 
   String generateHmacSha256(String message, String S_key, bool flag) {
     String hashData = "";
@@ -473,6 +478,23 @@ class Utils {
 
     return token;
   }
+  String encodeBase64(String data) {
+    String encoded = "";
+
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    encoded = stringToBase64.encode(data);      // dXNlcm5hbWU6cGFzc3dvcmQ=
+    String decoded = stringToBase64.decode(encoded);
+
+    return encoded;
+  }
+  String decodeBase64(String data) {
+    String decoded = "";
+
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    decoded = stringToBase64.decode(data);
+
+    return decoded;
+  }
 
   String jwt_Decode(String secretKey, String jwtToken) {
     String signature = "";
@@ -503,6 +525,7 @@ class Utils {
       await StartUpViewModel().getMainServiceList("TaxType", context: context);
       await StartUpViewModel().getMainServiceList("FinYear", context: context);
       await StartUpViewModel().getMainServiceList("PaymentTypeList", dcode: "1", bcode: "1", pvcode: "1", context: context);
+      await StartUpViewModel().getMainServiceList("GatewayList",context: context);
       // throw ('000');
     } catch (error) {
       print('error (${error.toString()}) has been caught');
@@ -510,11 +533,13 @@ class Utils {
   }
 
   //Atom Paynets Gateway HTML Page Renger
-  openNdpsPG(context) {
+  openNdpsPG(context,String atomTokenId,String merchId,String emailId,String mobileNumber) {
     // String returnUrl = "https://payment.atomtech.in/mobilesdk/param"; ////return url production
     String returnUrl = "https://pgtest.atomtech.in/mobilesdk/param";
 
-    String payDetails = '{"atomTokenId": "15000000411719", "merchId": "8952", "emailId": "sd@gmail.com", "mobileNumber": "9698547875", "returnUrl": "$returnUrl"}';
-    Navigator.push(context, MaterialPageRoute(builder: (context) => AtomPaynetsView("uat", payDetails)));
+    // String payDetails = '{"atomTokenId": "15000000411719", "merchId": "8952", "emailId": "sd@gmail.com", "mobileNumber": "9698547875", "returnUrl": "$returnUrl"}';
+    Map payDetails = { key_atomTokenId: atomTokenId, key_merchId: merchId, key_emailId: emailId, key_mobileNumber: mobileNumber, key_returnUrl: returnUrl};
+    print("request>>"+json.encode(payDetails));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => AtomPaynetsView("uat", json.encode(payDetails))));
   }
 }

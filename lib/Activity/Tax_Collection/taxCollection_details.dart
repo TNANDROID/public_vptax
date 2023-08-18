@@ -2,6 +2,7 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -62,6 +63,10 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
   ScrollController controller_scroll = ScrollController();
 
   var selectedTaxTypeData;
+  TextEditingController nameTextController = TextEditingController();
+  TextEditingController mobileTextController = TextEditingController();
+  TextEditingController emailTextController = TextEditingController();
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
   @override
   void initState() {
@@ -424,7 +429,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                   flex: 2,
                                   child: Container(
                                       padding: EdgeInsets.all(8.0),
-                                      child: Center(child: UIHelper.titleTextStyle(getDemad(taxData[rowIndex], selectedTaxTypeData['taxtypeid'].toString()), c.grey_8, 12, false, true))),
+                                      child: Center(child: UIHelper.titleTextStyle(getDemadAmount(taxData[rowIndex], selectedTaxTypeData['taxtypeid'].toString()), c.grey_8, 12, false, true))),
                                 ),
                                 rowIndex == 0 || taxData[rowIndex - 1][s.key_flag] == true
                                     ? Expanded(
@@ -445,9 +450,9 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                                               taxData[i][s.key_flag] = false;
                                                               print("Tot>>${mainList[mainIndex][s.key_tax_total]}");
                                                               mainList[mainIndex][s.key_tax_total] =
-                                                                  mainList[mainIndex][s.key_tax_total] - double.parse(getDemad(taxData[i], selectedTaxTypeData['taxtypeid'].toString()));
+                                                                  mainList[mainIndex][s.key_tax_total] - double.parse(getDemadAmount(taxData[i], selectedTaxTypeData['taxtypeid'].toString()));
 
-                                                              print("Tot>>${getDemad(taxData[i], selectedTaxTypeData['taxtypeid'].toString())}");
+                                                              print("Tot>>${getDemadAmount(taxData[i], selectedTaxTypeData['taxtypeid'].toString())}");
                                                               print("Tot${mainList[mainIndex][s.key_tax_total]}");
                                                               mainList[mainIndex][s.key_tax_pay] = getTotal(
                                                                   mainList[mainIndex][s.key_tax_total], double.parse(getTaxAdvance(mainList[mainIndex], selectedTaxTypeData['taxtypeid'].toString())));
@@ -461,7 +466,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                                         taxData[rowIndex][s.key_flag] = true;
                                                         print('key_demand: ${getTaxAdvance(mainList[mainIndex], selectedTaxTypeData['taxtypeid'].toString())}');
                                                         mainList[mainIndex][s.key_tax_total] =
-                                                            mainList[mainIndex][s.key_tax_total] + double.parse(getDemad(taxData[rowIndex], selectedTaxTypeData['taxtypeid'].toString()));
+                                                            mainList[mainIndex][s.key_tax_total] + double.parse(getDemadAmount(taxData[rowIndex], selectedTaxTypeData['taxtypeid'].toString()));
                                                         mainList[mainIndex][s.key_tax_pay] = getTotal(
                                                             mainList[mainIndex][s.key_tax_total], double.parse(getTaxAdvance(mainList[mainIndex], selectedTaxTypeData['taxtypeid'].toString())));
                                                       }
@@ -546,7 +551,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                       flex: 2,
                                       child: Container(
                                           padding: EdgeInsets.all(8.0),
-                                          child: Center(child: UIHelper.titleTextStyle(getDemad(swmData[rowIndex], selectedTaxTypeData['taxtypeid'].toString()), c.grey_8, 12, false, true))),
+                                          child: Center(child: UIHelper.titleTextStyle(getDemadAmount(swmData[rowIndex], selectedTaxTypeData['taxtypeid'].toString()), c.grey_8, 12, false, true))),
                                     ),
                                     rowIndex == 0 || taxData[rowIndex - 1][s.key_flag] == true
                                         ? Expanded(
@@ -565,14 +570,14 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                                               if (i >= rowIndex) {
                                                                 swmData[i][s.key_flag] = false;
                                                                 mainList[mainIndex][s.key_swm_total] =
-                                                                    mainList[mainIndex][s.key_swm_total] - double.parse(getDemad(swmData[i], selectedTaxTypeData['taxtypeid'].toString()));
+                                                                    mainList[mainIndex][s.key_swm_total] - double.parse(getDemadAmount(swmData[i], selectedTaxTypeData['taxtypeid'].toString()));
                                                                 mainList[mainIndex][s.key_swm_pay] = getTotal(mainList[mainIndex][s.key_swm_total], mainList[mainIndex][s.key_swm_available_advance]);
                                                               }
                                                             }
                                                           } else {
                                                             swmData[rowIndex][s.key_flag] = true;
                                                             mainList[mainIndex][s.key_swm_total] =
-                                                                mainList[mainIndex][s.key_swm_total] + double.parse(getDemad(swmData[rowIndex], selectedTaxTypeData['taxtypeid'].toString()));
+                                                                mainList[mainIndex][s.key_swm_total] + double.parse(getDemadAmount(swmData[rowIndex], selectedTaxTypeData['taxtypeid'].toString()));
                                                             mainList[mainIndex][s.key_swm_pay] = getTotal(mainList[mainIndex][s.key_swm_total], mainList[mainIndex][s.key_swm_available_advance]);
                                                           }
                                                         } else {
@@ -827,7 +832,13 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
               alignment: Alignment.centerRight,
               child: InkWell(
                   onTap: () {
-                    _settingModalBottomSheet(context);
+                    List finalList = [];
+                    for (int i = 0; i < mainList.length; i++) {
+                      mainList[i][key_tax_total]>0? finalList.add(mainList[i]):null;
+                    }
+                    print("FinalList>>"+finalList.toString());
+                    print("FinalListSize>>"+finalList.length.toString());
+                    finalList.isNotEmpty?_settingModalBottomSheet(context,finalList): Utils().showAlert(context, ContentType.warning, 'select_demand'.tr().toString());
                   },
                   child: Container(
                       margin: EdgeInsets.only(top: 5, right: 30, bottom: 10),
@@ -866,12 +877,12 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
               for (var addtaxListData in addtaxData[s.key_DEMAND_DETAILS]) {
                 for (var sampleSelectedList in sampletaxData[s.key_DEMAND_DETAILS]) {
                   if (addtaxListData[s.key_fin_year] == sampleSelectedList[s.key_fin_year] &&
-                      getDemad(addtaxListData, addtaxData[s.key_taxtypeid].toString()) == getDemad(sampleSelectedList, sampletaxData[s.key_taxtypeid].toString())) {
+                      getDemadAmount(addtaxListData, addtaxData[s.key_taxtypeid].toString()) == getDemadAmount(sampleSelectedList, sampletaxData[s.key_taxtypeid].toString())) {
                     sampleSelectedList[s.key_flag] = addtaxListData[s.key_flag];
                     if (addtaxListData[s.key_flag] == true && sampletaxData[s.key_taxtypeid].toString() == addtaxListData[s.key_taxtypeid].toString()) {
-                      sampletaxData[s.key_tax_total] = sampletaxData[s.key_tax_total] + double.parse(getDemad(addtaxListData, addtaxData[s.key_taxtypeid].toString()));
+                      sampletaxData[s.key_tax_total] = sampletaxData[s.key_tax_total] + double.parse(getDemadAmount(addtaxListData, addtaxData[s.key_taxtypeid].toString()));
                     } else {
-                      sampletaxData[s.key_swm_total] = sampletaxData[s.key_swm_total] + double.parse(getDemad(addtaxListData, addtaxData[s.key_taxtypeid].toString()));
+                      sampletaxData[s.key_swm_total] = sampletaxData[s.key_swm_total] + double.parse(getDemadAmount(addtaxListData, addtaxData[s.key_taxtypeid].toString()));
                     }
                   }
                 }
@@ -948,16 +959,16 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
     String street = "";
     switch (taxTypeId) {
       case '1':
-        street = (mainList[mainIndex][s.key_door_no] ?? '') + ", " + selectedLang == 'en' ? (mainList[mainIndex][s.key_street_name_en] ?? '') : (mainList[mainIndex][s.key_street_name_ta] ?? '');
+        street = (mainList[mainIndex][s.key_door_no] ?? '') + ", " + (selectedLang == 'en' ? (mainList[mainIndex][s.key_street_name_en] ?? '') : (mainList[mainIndex][s.key_street_name_ta] ?? ''));
         break;
       case '2':
         street = selectedLang == 'en' ? (mainList[mainIndex]["street_name"] ?? '') : (mainList[mainIndex]["street_name"] ?? '');
         break;
       case '4':
-        street = (mainList[mainIndex]['doorno'] ?? '') + ", " + selectedLang == 'en' ? (mainList[mainIndex]["street_name_t"] ?? '') : (mainList[mainIndex]["street_name_t"] ?? '');
+        street = (mainList[mainIndex]['doorno'] ?? '') + ", " + (selectedLang == 'en' ? (mainList[mainIndex]["street_name_t"] ?? '') : (mainList[mainIndex]["street_name_t"] ?? ''));
         break;
       case '5':
-        street = (mainList[mainIndex]['doorno'] ?? '') + ", " + selectedLang == 'en' ? (mainList[mainIndex]["street_name"] ?? '') : (mainList[mainIndex]["street_name"] ?? '');
+        street = (mainList[mainIndex]['doorno'] ?? '') + ", " + (selectedLang == 'en' ? (mainList[mainIndex]["street_name"] ?? '') : (mainList[mainIndex]["street_name"] ?? ''));
         break;
       case '6':
         street = (mainList[mainIndex][s.key_localbody_name] ?? '') + ", " + (mainList[mainIndex][s.key_bname] ?? '');
@@ -967,7 +978,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
     return street;
   }
 
-  String getDemad(taxData, String taxTypeId) {
+  String getDemadAmount(taxData, String taxTypeId) {
     String amount = "";
     switch (taxTypeId) {
       case '1':
@@ -989,6 +1000,29 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
 
     // taxData[rowIndex][s.key_demand].toString();
     return amount;
+  }
+  String getDemandId(taxData, String taxTypeId) {
+    String demandId = "";
+    switch (taxTypeId) {
+      case '1':
+        demandId = taxData['demandid'].toString();
+        break;
+      case '2':
+        demandId = taxData['wtdemandid'].toString();
+        break;
+      case '4':
+        demandId = taxData['assesmentdemandid'].toString();
+        break;
+      case '5':
+        demandId = taxData['assessment_demand_id'].toString();
+        break;
+      case '6':
+        demandId = taxData['assessment_demand_id'].toString();
+        break;
+    }
+
+    // taxData[rowIndex][s.key_demand].toString();
+    return demandId;
   }
 
   String getTaxAdvance(taxData, String taxTypeId) {
@@ -1033,16 +1067,22 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
     return flag;
   }
 
-  Future<void> _settingModalBottomSheet(BuildContext context) {
+  Future<void> _settingModalBottomSheet(BuildContext context, List finalList) {
     int selected_id=-1;
+    nameTextController.text='';
+    mobileTextController.text='';
+    emailTextController.text='';
 
-    List list = [
+   /* List list = [
       {'id': 1, 'payment_gateway_name': 'Atom', 'img_path': imagePath.payment_gateway},
       {'id': 2, 'payment_gateway_name': 'WorldLine', 'img_path': imagePath.payment_gateway},
 
-    ];
+    ];*/
+    List list = preferencesService.GatewayList;
+    List paymentType = preferencesService.PaymentTypeList;
     return showModalBottomSheet(
         context: context,
+        isScrollControlled: true,
         backgroundColor: c.full_transparent,
         builder: (BuildContext bc)
     {
@@ -1056,8 +1096,15 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(margin: EdgeInsets.only(top: 20, bottom: 10),
-                      child: Text("Select Payment Gateway", style: TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.bold))),
+                      child: Text(('payment_mode'.tr().toString() + (selectedLang == 'en' ?paymentType[0][key_paymenttype_en]:paymentType[0][key_paymenttype_ta])), style: TextStyle(
+                          fontSize: 13, fontWeight: FontWeight.bold))),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(margin: EdgeInsets.only(top: 5,left: 20, bottom: 5),
+                        child: Text('select_payment_gateway'.tr().toString(), style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.normal,color: c.black))),
+                  ),
+
                   Container(
                       child: AnimationLimiter(
                           child: ListView.builder(
@@ -1072,63 +1119,57 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                       horizontalOffset: 200.0,
                                       child: FlipAnimation(
                                         child: Padding(
-                                            padding: EdgeInsets.all(10),
+                                            padding: EdgeInsets.fromLTRB(20,10,20,10),
                                             child: InkWell(
                                               onTap: () {
                                                 mystate(() {
                                                   selected_id =
-                                                  list[index]['id'];
+                                                  list[index][key_gateway_id];
                                                 });
                                                 print("Icon Pressed>>>>>>" +
-                                                    list[index]['id']
+                                                    list[index][key_gateway_id]
                                                         .toString());
                                                 print("Icon Pressed>>>>>>" +
                                                     selected_id.toString());
                                                 print("Icon Pressed>>>>>>");
                                               },
                                               child: Row(
-                                                mainAxisAlignment: MainAxisAlignment
-                                                    .start,
                                                 children: [
-                                                  SizedBox(width: 10,),
+                                                  Align(
+                                                    alignment: Alignment
+                                                        .centerLeft,
+                                                    child:selected_id ==
+                                                        list[index][key_gateway_id]? Image.asset(
+                                                      imagePath.tick,
+                                                      color: c
+                                                          .account_status_green_color,
+                                                      height: 25,
+                                                      width: 25,
+                                                    ):Image.asset(
+                                                      imagePath.unchecked,
+                                                      color: c
+                                                          .grey_9,
+                                                      height: 25,
+                                                      width: 25,
+                                                    ),
+                                                  ),
                                                   IconButton(
                                                       onPressed: () {
                                                         print("Icon Pressed");
                                                       },
                                                       icon: Image.asset(
-                                                        list[index][key_img_path],
+                                                        imagePath.payment_gateway,
                                                         height: 25,
                                                         width: 25,
                                                       )),
-                                                  Container(
-                                                    width: MediaQuery
-                                                        .of(context)
-                                                        .size
-                                                        .width / 2.5,
-                                                    child: Text(
-                                                      list[index]['payment_gateway_name'],
-                                                      style: TextStyle(
-                                                          fontWeight: FontWeight
-                                                              .normal,
-                                                          fontSize: 14,
-                                                          color: c.grey_9),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment: Alignment
-                                                        .centerRight,
-                                                    child: Visibility(
-                                                      visible: selected_id ==
-                                                          list[index]['id'],
-                                                      child: Image.asset(
-                                                        imagePath.tick,
-                                                        color: c
-                                                            .account_status_green_color,
-                                                        height: 25,
-                                                        width: 25,
-                                                      ),
-                                                    ),
-                                                  )
+                                                 Text(
+                                                  list[index][key_gateway_name],
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight
+                                                          .normal,
+                                                      fontSize: 12,
+                                                      color: c.grey_9),
+                                                ),
                                                 ],
                                               ),
                                             )),
@@ -1136,15 +1177,54 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                     ));
                               }))),
                   Align(
-                    alignment: Alignment.bottomRight,
+                    alignment: Alignment.centerLeft,
+                    child: Container(margin: EdgeInsets.only(top: 10,left: 20, bottom: 5),
+                        child: Text('enter_the_details'.tr().toString(), style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.normal,color: c.black))),
+                  ),
+                  Container(
+                    margin: EdgeInsets.fromLTRB(20,10,20,0),
+                    child: FormBuilder(
+                        key: _formKey,
+                        child:Column(
+                      children: [
+                        addInputFormControl(
+                            'name',
+                            'name'.tr().toString(),
+                            key_name),
+                        UIHelper.verticalSpaceSmall,
+                        addInputFormControl(
+                            'mobile',
+                            'mobileNumber'.tr().toString(),
+                            key_mobile_number),
+                        UIHelper.verticalSpaceSmall,
+                        addInputFormControl(
+                            'email',
+                            'emailAddress'.tr().toString(),
+                            key_email),
+                        UIHelper.verticalSpaceSmall,
+                      ],
+                    )),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
                     child: Container(
-                      margin: EdgeInsets.only(left: 5, right: 20),
-                      padding: EdgeInsets.only(bottom: 10, right: 10),
+                      margin: EdgeInsets.only(left: 5, right: 20,bottom: 20),
+                      /*margin: EdgeInsets.only(left: 5, right: 20),
+                      padding: EdgeInsets.only(bottom: 30, right: 10),*/
                       child: CustomGradientButton(
                         onPressed: () async {
                           if(selected_id > 0){
-                            Navigator.of(context).pop();
-                            Utils().openNdpsPG(context);
+                            nameTextController.text='Test';
+                            mobileTextController.text='9875235654';
+                            emailTextController.text='test@gmail.com';
+                            if (_formKey.currentState!.saveAndValidate()) {
+                              Map<String, dynamic> postParams =
+                              Map.from(_formKey.currentState!.value);
+                              postParams.removeWhere((key, value) => value == null);
+                              Navigator.of(context).pop();
+                              getPaymentToken(finalList,selected_id);
+                            }
                           }else{
                             Utils().showAlert(context, ContentType.fail, 'select_anyOne_gateway'.tr().toString());
                             // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('select_anyOne_gateway'.tr().toString())));
@@ -1175,4 +1255,148 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
     });
         });
   }
+
+  Widget addInputFormControl(
+      String nameField, String hintText, String fieldType) {
+    return FormBuilderTextField(
+      style: TextStyle(
+          fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_9),
+      name: nameField,
+      controller: fieldType == key_mobile_number?mobileTextController:fieldType == key_name?nameTextController:emailTextController,
+      autocorrect: false,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      onChanged: (value) {},
+      decoration: InputDecoration(
+        labelText: hintText,
+        labelStyle: TextStyle(
+            fontSize: 11.0, fontWeight: FontWeight.w600, color: c.grey_7),
+        filled: true,
+        fillColor: Colors.white,
+        enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
+        focusedBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
+        focusedErrorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
+        errorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
+        errorStyle: TextStyle(fontSize: 10),
+        contentPadding: EdgeInsets.symmetric(
+            vertical: 8, horizontal: 12), // Optional: Adjust padding
+      ),
+      validator: fieldType == key_mobile_number
+          ? ((value) {
+        if (value == "" || value == null) {
+          return "$hintText ${'isEmpty'.tr()}";
+        }
+        if (!Utils().isNumberValid(value)) {
+          return "$hintText ${'isInvalid'.tr()}";
+        }
+        return null;
+      }):fieldType == key_email
+          ? ((value) {
+        if (value == "" || value == null) {
+          return "$hintText ${'isEmpty'.tr()}";
+        }
+        if (!Utils().isEmailValid(value)) {
+          return "$hintText ${'isInvalid'.tr()}";
+        }
+        return null;
+      })
+          : FormBuilderValidators.compose([
+        FormBuilderValidators.required(
+            errorText: "$hintText ${'isEmpty'.tr()}"),
+      ]),
+      inputFormatters: fieldType == key_mobile_number
+          ? [
+        FilteringTextInputFormatter.digitsOnly,
+        LengthLimitingTextInputFormatter(10),
+      ]
+          : [],
+      keyboardType: fieldType == key_mobile_number || fieldType == key_number
+          ? TextInputType.number
+          : TextInputType.text,
+    );
+  }
+
+  /*{
+  "data_content": {
+  "service_id": "CollectionPaymentTokenList",
+  "language_name": "en",
+  "taxtypeid": "1",
+  "dcode": "1",
+  "bcode": "1",
+  "pvcode": "1",
+  "paymenttypeid": "5",
+  "assessment_no": "22",
+  "name": "Muthu",
+  "mobile_no": "9698547875",
+  "email_id": "sd@gmail.com",
+  "payment_gateway": 1,
+  "assessment_demand_list": {
+  "Assessment_Details": [
+  {
+  "assessment_no": "22",
+  "property_demand_id": [
+  "36209149"
+  ]
+  }
+  ]
+  }
+  }
+  }*/
+  Future<void> getPaymentToken(List selList, int selected_id) async {
+    List finalList = selList;
+
+    try {
+      dynamic request = {};
+      print("request>>"+"request");
+
+       List<String> property_demand_id =[];
+      for (var data in finalList[0][s.key_DEMAND_DETAILS]) {
+        if (data[s.key_flag] == true) {
+          property_demand_id.add(getDemandId(data, finalList[0][s.key_taxtypeid].toString()));
+        }
+      }
+     
+      List Assessment_Details =[
+        {
+          s.key_assessment_no: finalList[0][s.key_assessment_no].toString(),
+          'property_demand_id': property_demand_id,
+        }
+      ];
+      dynamic assessment_demand_list = {
+        'Assessment_Details':Assessment_Details,
+      };
+      request = {
+        s.key_service_id: s.service_key_CollectionPaymentTokenList,
+        s.key_language_name: selectedLang,
+        s.key_taxtypeid: finalList[0][s.key_taxtypeid].toString(),
+        s.key_dcode: finalList[0][s.key_dcode].toString(),
+        s.key_bcode: finalList[0][s.key_bcode].toString(),
+        s.key_pvcode: finalList[0][s.key_lbcode].toString(),
+        s.key_assessment_no: finalList[0][s.key_assessment_no].toString(),
+        s.key_paymenttypeid: 5,
+        s.key_name: nameTextController.text,
+        s.key_mobile_no: mobileTextController.text,
+        s.key_email_id: emailTextController.text,
+        s.key_payment_gateway: selected_id,
+        'assessment_demand_list': assessment_demand_list,
+      };
+      print("request>>"+request.toString());
+      dynamic pay_params=await StartUpViewModel().getMainServiceList("CollectionPaymentTokenList", requestDataValue: request, context: context, taxType: finalList[0][s.key_taxtypeid].toString(), lang: selectedLang);
+      print("response_pay_params>>>>>>"+pay_params.toString());
+      String transaction_unique_id=Utils().decodeBase64(pay_params['a'].toString());
+      String atomTokenId=Utils().decodeBase64(pay_params['b'].toString());
+      String req_payment_amount=Utils().decodeBase64(pay_params['c'].toString());
+      String public_transaction_email_id=Utils().decodeBase64(pay_params['d'].toString());
+      String public_transaction_mobile_no=Utils().decodeBase64(pay_params['e'].toString());
+      String txmStartTime=Utils().decodeBase64(pay_params['f'].toString());
+      String merchId=Utils().decodeBase64(pay_params['g'].toString());
+      print("response_pay_params>>>>>>"+" transaction_unique_id= "+transaction_unique_id+" atomTokenId= "+atomTokenId+" req_payment_amount= " +req_payment_amount+" public_transaction_email_id= "+public_transaction_email_id
+          +" public_transaction_mobile_no= "+public_transaction_mobile_no+" txmStartTime= "+txmStartTime+" merchId= "+merchId);
+
+      Utils().openNdpsPG(context,atomTokenId,merchId,public_transaction_email_id,public_transaction_mobile_no);
+      // throw ('000');
+    } catch (error) {
+      print('error (${error.toString()}) has been caught');
+    }
+  }
+
 }

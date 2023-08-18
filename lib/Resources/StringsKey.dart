@@ -33,6 +33,7 @@ String key_gender = "gender";
 String key_level = "level";
 String key_office_address = "office_address";
 String key_email = "email";
+String key_email_id = "email_id";
 String key_noRecord = "NO_RECORD";
 String key_ok = "OK";
 String key_success = "SUCCESS";
@@ -62,6 +63,7 @@ String key_amount = "Amount";
 String key_flag = "flag";
 String key_mode_type = "mode_type";
 String key_mobile_number = "mobile_number";
+String key_mobile_no = "mobile_no";
 String key_assessment_id = "assessment_id";
 String key_lbcode = "lbcode";
 String key_lbtype = "lbtype";
@@ -104,6 +106,18 @@ String key_tax_pay= "tax_pay";
 String key_swm_pay= "swm_pay";
 String key_isLogin= "isLogin";
 String key_isChecked= "isChecked";
+String key_gateway_id= "gateway_id";
+String key_gateway_name= "gateway_name";
+String key_paymenttypeid= "paymenttypeid";
+String key_paymenttype_en= "paymenttype_en";
+String key_paymenttype_ta= "paymenttype_ta";
+String key_payment_gateway= "payment_gateway";
+String key_atomTokenId= "atomTokenId";
+String key_merchId= "merchId";
+String key_emailId= "emailId";
+String key_mobileNumber= "mobileNumber";
+String key_returnUrl= "returnUrl";
+
 
 
 
@@ -118,5 +132,7 @@ String service_key_village_list_all = "village_list_all";
 String service_key_TaxTypeList = "TaxTypeList";
 String service_key_FinYearList = "FinYearList";
 String service_key_PaymentTypeList = "PaymentTypeList";
+String service_key_GatewayList = "GatewayList";
 String service_key_DemandSelectionList = "DemandSelectionList";
+String service_key_CollectionPaymentTokenList = "CollectionPaymentTokenList";
 

@@ -376,6 +376,6 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
         context,
         MaterialPageRoute(
             builder: (context) =>
-             Home(isLogin: "islogin")));
+             Home(isLogin: true)));
   }
 }

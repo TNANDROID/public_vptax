@@ -9,6 +9,7 @@ class PreferenceService {
   List<dynamic> taxTypeList = [];
   List<dynamic> finYearList = [];
   List<dynamic> PaymentTypeList = [];
+  List<dynamic> GatewayList = [];
   List<dynamic> addedTaxPayList = [];
   List<dynamic> offlineTaxPayList = [];
   List<dynamic> taxCollectionDetailsList = [];
@@ -37,6 +38,7 @@ class PreferenceService {
     taxTypeList = [];
     finYearList = [];
     PaymentTypeList = [];
+    GatewayList = [];
     addedTaxPayList = [];
     taxCollectionDetailsList = [];
     SharedPreferences prefs = await SharedPreferences.getInstance();

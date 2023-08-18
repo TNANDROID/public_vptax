@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:public_vptax/Utils/utils.dart';
@@ -23,6 +24,12 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
   final _key = UniqueKey();
   late WebViewController _controller;
   var transactionResult = "";
+  final String requestHashKey = 'KEY1234567234'; //mandatory
+  final String _responsehashKey = 'KEYRESP123657234'; //mandatory
+  final String requestEncryptionKey =
+      'A4476C2062FFA58980DC8F79EB6A799E'; //mandatory
+  final String _responseDecryptionKey =
+      '75AEF0FA1B94B3C10D4F5B268F757F11'; //mandatory
   final Completer<WebViewController> _controllerCompleter = Completer<WebViewController>();
 
   @override
@@ -81,7 +88,8 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
                   debugPrint("HTML response : $response");
                   if (response.trim().contains("cancelTransaction")) {
                     transactionResult = "Transaction Cancelled!";
-                  } else {
+                  }
+                  else {
                     final split = response.trim().split('|');
                     final Map<int, String> values = {for (int i = 0; i < split.length; i++) i: split[i]};
                     final encData = values[1]!.replaceAll('encData=', "");
@@ -89,18 +97,21 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
 
                     var returnData = {"encData": "$encData", "merchId": "$merchId"};
                     print("split--------------" + returnData.toString());
+                    print("encData--------------" + encData.toString());
+                    print("merchId--------------" + merchId.toString());
+                    // getPaymentStatus(); To Start Here....
 
                     // const platform = MethodChannel('flutter.dev/NDPSAESLibrary');
-
+                    //
                     // try {
                     //   final String result = await platform.invokeMethod('NDPSAESInit', {'AES_Method': 'decrypt', 'text': splitTwo[1].toString(), 'encKey': _responseDecryptionKey});
                     //   var respJsonStr = result.toString();
                     //   Map<String, dynamic> jsonInput = jsonDecode(respJsonStr);
                     //   debugPrint("read full respone : $jsonInput");
-
+                    //
                     //   //calling validateSignature function from atom_pay_helper file
                     //   var checkFinalTransaction = Utils().validateSignature(jsonInput, _responsehashKey);
-
+                    //
                     //   if (checkFinalTransaction) {
                     //     if (jsonInput["payInstrument"]["responseDetails"]["statusCode"] == 'OTS0000' || jsonInput["payInstrument"]["responseDetails"]["statusCode"] == 'OTS0551') {
                     //       debugPrint("Transaction success");
@@ -119,6 +130,51 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
                     // }
                     transactionResult = "Waiting..!";
                   }
+                  /*else {
+                    final split = response.trim().split('|');
+                    final Map<int, String> values = {
+                      for (int i = 0; i < split.length; i++) i: split[i]
+                    };
+
+                    final splitTwo = values[1]!.split('=');
+                    const platform = MethodChannel('flutter.dev/NDPSAESLibrary');
+
+                    try {
+                      final String result =
+                      await platform.invokeMethod('NDPSAESInit', {
+                        'AES_Method': 'decrypt',
+                        'text': splitTwo[1].toString(),
+                        'encKey': _responseDecryptionKey
+                      });
+                      var respJsonStr = result.toString();
+                      Map<String, dynamic> jsonInput = jsonDecode(respJsonStr);
+                      debugPrint("read full respone : $jsonInput");
+
+                      //calling validateSignature function from atom_pay_helper file
+                      var checkFinalTransaction = validateSignature(jsonInput, _responsehashKey);
+
+                      if (checkFinalTransaction) {
+                        if (jsonInput["payInstrument"]["responseDetails"]
+                        ["statusCode"] ==
+                            'OTS0000' ||
+                            jsonInput["payInstrument"]["responseDetails"]
+                            ["statusCode"] ==
+                                'OTS0551') {
+                          debugPrint("Transaction success");
+                          transactionResult = "Transaction Success";
+                        } else {
+                          debugPrint("Transaction failed");
+                          transactionResult = "Transaction Failed";
+                        }
+                      } else {
+                        debugPrint("signature mismatched");
+                        transactionResult = "failed";
+                      }
+                      debugPrint("Transaction Response : $jsonInput");
+                    } on PlatformException catch (e) {
+                      debugPrint("Failed to decrypt: '${e.message}'.");
+                    }
+                  }*/
                   _closeWebView(context, transactionResult);
                 }
               },
@@ -127,7 +183,27 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
       ),
     );
   }
-
+  validateSignature(Map data, resHashKey) {
+    String signatureString = data["payInstrument"]["merchDetails"]["merchId"]
+        .toString() +
+        data["payInstrument"]["payDetails"]["atomTxnId"].toString() +
+        data['payInstrument']['merchDetails']['merchTxnId'].toString() +
+        data['payInstrument']['payDetails']['totalAmount'].toStringAsFixed(2) +
+        data['payInstrument']['responseDetails']['statusCode'].toString() +
+        data['payInstrument']['payModeSpecificData']['subChannel'][0].toString() +
+        data['payInstrument']['payModeSpecificData']['bankDetails']['bankTxnId']
+            .toString();
+    var bytes = utf8.encode(signatureString);
+    var key = utf8.encode(resHashKey);
+    var hmacSha512 = Hmac(sha512, key);
+    var digest = hmacSha512.convert(bytes);
+    var genSig = digest.toString();
+    if (data['payInstrument']['payDetails']['signature'] == genSig) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   _loadHtmlFromAssets(mode) async {
     final localUrl = mode == 'uat' ? "assets/certificate/aipay_uat.html" : "assets/certificate/aipay_prod.html";
     String fileText = await rootBundle.loadString(localUrl);
@@ -138,7 +214,7 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
     // ignore: use_build_context_synchronously
     Navigator.pop(context); // Close current window
     // ignore: use_build_context_synchronously
-    Utils().showAlert(context, ContentType.fail, "Transaction Status = $transactionResult");// Close current window
+    Utils().showAlert(context, ContentType.fail, "$transactionResult");// Close current window
     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Transaction Status = $transactionResult")));
   }
 

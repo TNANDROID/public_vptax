@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:public_vptax/Activity/About_Village/know_your_village.dart';
 import 'package:public_vptax/Activity/Auth/View_receipt.dart';
+import 'package:public_vptax/Activity/Tax_Collection/know_your_village.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
@@ -26,7 +26,8 @@ import 'Download_receipt.dart';
 import 'Splash.dart';
 
 class Home extends StatefulWidget {
-  Home({super.key, required isLogin});
+  final isLogin;
+  const Home({super.key, this.isLogin});
 
   @override
   State<Home> createState() => _HomeState();
@@ -43,6 +44,7 @@ class _HomeState extends State<Home> {
   bool flag = true;
   String langText = 'தமிழ்';
   String islogin = 'no';
+  String selectedLang = "";
 
   @override
   void initState() {
@@ -69,7 +71,8 @@ class _HomeState extends State<Home> {
     index_val = -1;
     selected_index = -1;
     langText = 'தமிழ்';
-    await Utils().apiCalls(context);
+    selectedLang = await preferencesService.getUserInfo("lang");
+    widget.isLogin==true? await Utils().apiCalls(context):null;
     List s_list = [
       {'service_id': 0, 'service_name': 'check_your_dues', 'img_path': imagePath.due4},
       {'service_id': 1, 'service_name': 'quickPay', 'img_path': imagePath.quick_pay1},
@@ -82,11 +85,11 @@ class _HomeState extends State<Home> {
 
     taxTypeList.clear();
     taxTypeList = preferencesService.taxTypeList;
-    islogin = await preferencesService.getUserInfo(key_isLogin);
+    islogin=await preferencesService.getUserInfo(key_isLogin);
     print("islogin>>" + islogin.toString());
     print("tax>>" + taxTypeList.toString());
     setState(() {
-      if (preferencesService.getUserInfo("lang") != null && preferencesService.getUserInfo("lang") != "" && preferencesService.getUserInfo("lang") == "en") {
+      if(selectedLang != null && selectedLang != "" && selectedLang == "en") {
         context.setLocale(Locale('en', 'US'));
       } else {
         preferencesService.setUserInfo("lang", "ta");
@@ -164,15 +167,16 @@ class _HomeState extends State<Home> {
                     Positioned(
                       right: 15,
                       child: Visibility(
-                        visible: islogin == "no",
+                        visible: islogin=="no",
                         child: InkWell(
                           onTap: () async {
-                            await preferencesService.setUserInfo(key_isLogin, 'yes');
-                            await preferencesService.setUserInfo(key_mobile_number, '9875235654');
-                            islogin = "yes";
+                            await preferencesService.setUserInfo(key_isLogin,'yes');
+                            await preferencesService.setUserInfo(key_mobile_number,'9875235654');
+                            islogin="yes";
                             print("islogin>>" + islogin.toString());
                             print("login successful");
-                            setState(() {});
+                            setState(() {
+                            });
                           },
                           child: Text(
                             'login'.tr().toString(),
@@ -187,9 +191,9 @@ class _HomeState extends State<Home> {
                     Positioned(
                       right: 15,
                       child: Visibility(
-                        visible: islogin == "yes",
+                        visible: islogin=="yes",
                         child: InkWell(
-                          onTap: () {
+                          onTap: (){
                             logout();
                           },
                           child: Image.asset(
@@ -279,30 +283,27 @@ class _HomeState extends State<Home> {
                             itemCount: taxTypeList == null ? 0 : taxTypeList.length,
                             itemBuilder: (context, i) {
                               return InkWell(
-                                onTap: () async {
+                                onTap: () async{
+
                                   index_val = i;
-                                  if (await preferencesService.getUserInfo(key_isLogin) == "yes") {
+                                  if( await preferencesService.getUserInfo(key_isLogin) == "yes") {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (_) => TaxCollectionDetailsView(
-                                                  selectedTaxTypeData: taxTypeList[i],
-                                                  isTaxDropDown: false,
-                                                  isHome: true,
-                                                  mobile: preferencesService.getUserInfo(key_mobile_number).toString(),
-                                                  selectedEntryType: 1,
-                                                )));
-                                  } else {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => TaxCollectionView(
-                                                  selectedTaxTypeData: taxTypeList[i],
-                                                  flag: "1",
-                                                )));
+                                              selectedTaxTypeData: taxTypeList[i],
+                                              isTaxDropDown: false,
+                                              isHome: true,
+                                              mobile: preferencesService.getUserInfo(key_mobile_number).toString(),
+                                              selectedEntryType: 1,
+                                            )));
+                                  }else{
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(selectedTaxTypeData: taxTypeList[i],flag: "1",)));
+
                                   }
 
-                                  setState(() {});
+                                  setState(() {
+                                  });
                                 },
                                 child: Container(
                                   padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
@@ -328,7 +329,7 @@ class _HomeState extends State<Home> {
                                         alignment: Alignment.center,
                                         margin: EdgeInsets.all(10),
                                         child: Text(
-                                          preferencesService.getUserInfo('lang') == 'en' ? taxTypeList[i][key_taxtypedesc_en] : taxTypeList[i][key_taxtypedesc_ta],
+                                          selectedLang == 'en' ? taxTypeList[i][key_taxtypedesc_en] : taxTypeList[i][key_taxtypedesc_ta],
                                           style: TextStyle(fontSize: 12, height: 1.5, color: c.grey_9),
                                           textAlign: TextAlign.center,
                                         ),
@@ -376,7 +377,7 @@ class _HomeState extends State<Home> {
                       crossAxisCount: 2,
                       children: List.generate(
                         servicesList == null ? 0 : servicesList.length,
-                        (int index) {
+                            (int index) {
                           return AnimationConfiguration.staggeredGrid(
                             position: index,
                             duration: const Duration(milliseconds: 375),
@@ -387,39 +388,37 @@ class _HomeState extends State<Home> {
                                   onTap: () async {
                                     selected_index = index;
                                     if (selected_index == 0) {
-                                      if (islogin == "yes") {
+                                      if( islogin == "yes") {
                                         print(islogin);
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (_) => TaxCollectionDetailsView(
-                                                      selectedTaxTypeData: taxTypeList[0],
-                                                      isTaxDropDown: true,
-                                                      isHome: true,
-                                                      mobile: preferencesService.getUserInfo(key_mobile_number),
-                                                      selectedEntryType: 1,
-                                                    )));
-                                      } else {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => TaxCollectionView(
-                                                      flag: "2",
-                                                    )));
+                                                  selectedTaxTypeData: taxTypeList[0],
+                                                  isTaxDropDown: true,
+                                                  isHome: true,
+                                                  mobile: preferencesService.getUserInfo(key_mobile_number),
+                                                  selectedEntryType: 1,
+                                                )));
+                                      }else{
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(flag: "2",)));
+
+
                                       }
+
                                     } else if (selected_index == 1) {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => TaxCollectionView(
-                                                    flag: "2",
-                                                  )));
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(flag: "2",)));
                                     } else if (selected_index == 2) {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => ViewReceipt()));
                                     } else if (selected_index == 3) {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => KYVDashboard()));
+                                    }else if (selected_index == 4) {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => Villagedevelopment()));
                                     }
-                                    setState(() {});
+
+                                    setState(() {
+
+                                    });
                                   },
                                   child: Container(
                                     height: (Screen.height(context) / 2) - 10,
@@ -504,44 +503,32 @@ class _HomeState extends State<Home> {
 
   Future<bool> showExitPopup() async {
     return await showDialog(
-          //show confirm dialogue
-          //the return value will be from "Yes" or "No" options
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(
-              'exit_app'.tr().toString(),
-              style: TextStyle(fontSize: 14),
-            ),
-            content: Text(
-              'do_you_want_to_exit_an_app'.tr().toString(),
-              style: TextStyle(fontSize: 13),
-            ),
-            actions: [
-              ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                //return false when click on "NO"
-                child: Text(
-                  'no'.tr().toString(),
-                  style: TextStyle(fontSize: 12),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (Platform.isAndroid) {
-                    SystemNavigator.pop();
-                  } else if (Platform.isIOS) {
-                    exit(0);
-                  }
-                },
-                //return true when click on "Yes"
-                child: Text(
-                  'yes'.tr().toString(),
-                  style: TextStyle(fontSize: 12),
-                ),
-              ),
-            ],
+      //show confirm dialogue
+      //the return value will be from "Yes" or "No" options
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('exit_app'.tr().toString(),style: TextStyle(fontSize: 14),),
+        content: Text('do_you_want_to_exit_an_app'.tr().toString(),style: TextStyle(fontSize: 13),),
+        actions: [
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            //return false when click on "NO"
+            child: Text('no'.tr().toString(),style: TextStyle(fontSize: 12),),
           ),
-        ) ??
+          ElevatedButton(
+            onPressed: () {
+              if (Platform.isAndroid) {
+                SystemNavigator.pop();
+              } else if (Platform.isIOS) {
+                exit(0);
+              }
+            },
+            //return true when click on "Yes"
+            child: Text('yes'.tr().toString(),style: TextStyle(fontSize: 12),),
+          ),
+        ],
+      ),
+    ) ??
         false; //if showDialouge had returned null, then return false
   }
 
@@ -550,6 +537,7 @@ class _HomeState extends State<Home> {
       case 'தமிழ்':
         setState(() {
           langText = value;
+          selectedLang = "ta";
           preferencesService.setUserInfo("lang", "ta");
           context.setLocale(Locale('ta', 'IN'));
         });
@@ -557,6 +545,7 @@ class _HomeState extends State<Home> {
       case 'English':
         setState(() {
           langText = value;
+          selectedLang = "en";
           preferencesService.setUserInfo("lang", "en");
           context.setLocale(Locale('en', 'US'));
         });

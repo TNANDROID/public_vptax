@@ -80,7 +80,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
       () {
         Navigator.of(context).push(
           PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => Home(isLogin: false),
+            pageBuilder: (context, animation, secondaryAnimation) => Home(isLogin: true),
             transitionDuration: const Duration(seconds: 2),
             transitionsBuilder: (context, animation, secondaryAnimation, child) {
               // Slide transition
@@ -105,10 +105,10 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
   // *************************** Future Functionality  *************************** //
 
   // Future<void> initialize() async {
-  //   preferencesService.getUserInfo("lang") == "en"
+  //   selectedLang == "en"
   //       ? preferencesService.setUserInfo("lang", "en")
   //       : preferencesService.setUserInfo("lang", "ta");
-  //   selectedLanguage = await preferencesService.getUserInfo("lang") == "en"
+  //   selectedLanguage = await selectedLang == "en"
   //       ? langItems[0][s.key_langCode]
   //       : langItems[1][s.key_langCode];
 
