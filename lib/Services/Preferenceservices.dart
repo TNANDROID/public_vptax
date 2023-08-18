@@ -11,7 +11,6 @@ class PreferenceService {
   List<dynamic> PaymentTypeList = [];
   List<dynamic> GatewayList = [];
   List<dynamic> addedTaxPayList = [];
-  List<dynamic> offlineTaxPayList = [];
   List<dynamic> taxCollectionDetailsList = [];
   //Set User Info
   Future<bool> setUserInfo(String key, String value) async {

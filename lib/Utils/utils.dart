@@ -211,15 +211,15 @@ class Utils {
                   top: 25,
                   child: Text(
                     title ?? contentInfo.title,
-                    style: UIHelper.textDecoration(titleFontSize ?? 18, c.white, bold: true),
+                    style: UIHelper.textDecoration(titleFontSize ?? 14, c.white, bold: true),
                   ),
                 ),
 
                 Container(
-                  margin: EdgeInsets.only(bottom: size.width * 0.05, left: size.width * 0.05, right: size.width * 0.05, top: size.width * 0.02),
+                  margin: EdgeInsets.only(bottom: size.width * 0.05, left: size.width * 0.05, right: size.width * 0.05, top: size.width * 0.07),
                   child: Text(
                     message,
-                    style: UIHelper.textDecoration(messageFontSize ?? 15, c.white),
+                    style: UIHelper.textDecoration(messageFontSize ?? 14, c.white),
                     textAlign: TextAlign.center,
                     softWrap: true,
                   ),
@@ -541,5 +541,76 @@ class Utils {
     Map payDetails = { key_atomTokenId: atomTokenId, key_merchId: merchId, key_emailId: emailId, key_mobileNumber: mobileNumber, key_returnUrl: returnUrl};
     print("request>>"+json.encode(payDetails));
     Navigator.push(context, MaterialPageRoute(builder: (context) => AtomPaynetsView("uat", json.encode(payDetails))));
+  }
+
+  String getDemadAmount(taxData, String taxTypeId) {
+    String amount = "";
+    switch (taxTypeId) {
+      case '1':
+        amount = taxData['demand'].toString();
+        break;
+      case '2':
+        amount = taxData['watercharges'].toString();
+        break;
+      case '4':
+        amount = taxData['profession_tax'].toString();
+        break;
+      case '5':
+        amount = taxData['nontax_amount'].toString();
+        break;
+      case '6':
+        amount = taxData['traders_rate'].toString();
+        break;
+    }
+
+    // taxData[rowIndex][s.key_demand].toString();
+    return amount;
+  }
+  String getDemandId(taxData, String taxTypeId) {
+    String demandId = "";
+    switch (taxTypeId) {
+      case '1':
+        demandId = taxData['demandid'].toString();
+        break;
+      case '2':
+        demandId = taxData['wtdemandid'].toString();
+        break;
+      case '4':
+        demandId = taxData['assesmentdemandid'].toString();
+        break;
+      case '5':
+        demandId = taxData['assessment_demand_id'].toString();
+        break;
+      case '6':
+        demandId = taxData['assessment_demand_id'].toString();
+        break;
+    }
+
+    // taxData[rowIndex][s.key_demand].toString();
+    return demandId;
+  }
+
+  String getTaxAdvance(taxData, String taxTypeId) {
+    String amount = "";
+    switch (taxTypeId) {
+      case '1':
+        amount = taxData['property_available_advance'].toString();
+        break;
+      case '2':
+        amount = taxData['water_available_advance'].toString();
+        break;
+      case '4':
+        amount = taxData['professional_available_advance'].toString();
+        break;
+      case '5':
+        amount = taxData['non_available_advance'].toString();
+        break;
+      case '6':
+        amount = taxData['trade_available_advance'].toString();
+        break;
+    }
+
+    // taxData[rowIndex][s.key_demand].toString();
+    return amount;
   }
 }

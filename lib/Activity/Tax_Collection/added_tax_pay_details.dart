@@ -11,6 +11,7 @@ import 'package:responsive_grid_list/responsive_grid_list.dart';
 import 'package:stacked/stacked.dart';
 import '../../Layout/ui_helper.dart';
 import '../../Model/startup_model.dart';
+import '../../Utils/utils.dart';
 
 class TaxPayDetailsView extends StatefulWidget {
   TaxPayDetailsView({Key? key});
@@ -185,7 +186,7 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
                                                                         padding: EdgeInsets.all(8.0),
                                                                         child: Center(
                                                                             child: UIHelper.titleTextStyle(
-                                                                                "\u{20B9} " + getDemad(selectedTaxonly[index], mainselecteddynamicData[key_taxtypeid].toString()),
+                                                                                "\u{20B9} " + Utils().getDemadAmount(selectedTaxonly[index], mainselecteddynamicData[key_taxtypeid].toString()),
                                                                                 c.black,
                                                                                 12,
                                                                                 false,
@@ -202,19 +203,19 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
                                                 children: [
                                                   demandCalculationWidget('demand_selected', mainDataList[index][key_tax_total].toString(), false),
                                                   UIHelper.verticalSpaceSmall,
-                                                  demandCalculationWidget('advance_amount', mainDataList[index]['tax_advance'].toString(), false),
+                                                  demandCalculationWidget('advance_amount', Utils().getTaxAdvance(mainDataList[index], mainDataList[index][key_taxtypeid].toString()), false),
                                                   UIHelper.verticalSpaceSmall,
                                                   mainDataList[index]['swm_total'] > 0
                                                       ? Column(
                                                           children: [
-                                                            demandCalculationWidget('swm_charges', mainDataList[index]['swm_total'].toString(), false),
+                                                            demandCalculationWidget('swm_charges', mainDataList[index][key_swm_total].toString(), false),
                                                             UIHelper.verticalSpaceSmall,
-                                                            demandCalculationWidget('swm_advance_charges', mainDataList[index]['swm_advance'].toString(), false),
+                                                            demandCalculationWidget('swm_advance_charges', mainDataList[index][key_swm_available_advance].toString(), false),
                                                             UIHelper.verticalSpaceSmall,
                                                           ],
                                                         )
                                                       : SizedBox(),
-                                                  demandCalculationWidget('total_amount_to_pay', mainDataList[index][key_tax_pay].toString(), true),
+                                                  demandCalculationWidget('total_amount_to_pay', (mainDataList[index][key_tax_pay]+mainDataList[index][key_swm_pay]).toString(), true),
                                                 ],
                                               ))
                                         ])),
@@ -297,7 +298,7 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
                   width: 40,
                 )),
             UIHelper.horizontalSpaceSmall,
-            UIHelper.titleTextStyle('assesmentNumber'.tr().toString() + " : " + taxData[key_assessment_no], c.grey_9, 12, true, true)
+            UIHelper.titleTextStyle('assesmentNumber'.tr().toString() + " : " + taxData[key_assessment_no].toString(), c.grey_9, 12, true, true)
 
             // taxData[key_taxtypeid] == 1
             //     ? UIHelper.titleTextStyle('assesmentNumber'.tr().toString() + taxData['building_licence_number'], c.grey_9, 12, true, true)
@@ -330,27 +331,4 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
     return selectedTaxitem[0][key_img_path].toString();
   }
 
-  String getDemad(taxData, String taxTypeId) {
-    String amount = "";
-    switch (taxTypeId) {
-      case '1':
-        amount = taxData['demand'].toString();
-        break;
-      case '2':
-        amount = taxData['watercharges'].toString();
-        break;
-      case '4':
-        amount = taxData['profession_tax'].toString();
-        break;
-      case '5':
-        amount = taxData['nontax_amount'].toString();
-        break;
-      case '6':
-        amount = taxData['traders_rate'].toString();
-        break;
-    }
-
-    // taxData[rowIndex][s.key_demand].toString();
-    return amount;
-  }
 }

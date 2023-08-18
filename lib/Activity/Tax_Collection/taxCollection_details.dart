@@ -429,7 +429,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                   flex: 2,
                                   child: Container(
                                       padding: EdgeInsets.all(8.0),
-                                      child: Center(child: UIHelper.titleTextStyle(getDemadAmount(taxData[rowIndex], selectedTaxTypeData['taxtypeid'].toString()), c.grey_8, 12, false, true))),
+                                      child: Center(child: UIHelper.titleTextStyle(Utils().getDemadAmount(taxData[rowIndex], selectedTaxTypeData['taxtypeid'].toString()), c.grey_8, 12, false, true))),
                                 ),
                                 rowIndex == 0 || taxData[rowIndex - 1][s.key_flag] == true
                                     ? Expanded(
@@ -450,12 +450,12 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                                               taxData[i][s.key_flag] = false;
                                                               print("Tot>>${mainList[mainIndex][s.key_tax_total]}");
                                                               mainList[mainIndex][s.key_tax_total] =
-                                                                  mainList[mainIndex][s.key_tax_total] - double.parse(getDemadAmount(taxData[i], selectedTaxTypeData['taxtypeid'].toString()));
+                                                                  mainList[mainIndex][s.key_tax_total] - double.parse(Utils().getDemadAmount(taxData[i], selectedTaxTypeData['taxtypeid'].toString()));
 
-                                                              print("Tot>>${getDemadAmount(taxData[i], selectedTaxTypeData['taxtypeid'].toString())}");
+                                                              print("Tot>>${Utils().getDemadAmount(taxData[i], selectedTaxTypeData['taxtypeid'].toString())}");
                                                               print("Tot${mainList[mainIndex][s.key_tax_total]}");
                                                               mainList[mainIndex][s.key_tax_pay] = getTotal(
-                                                                  mainList[mainIndex][s.key_tax_total], double.parse(getTaxAdvance(mainList[mainIndex], selectedTaxTypeData['taxtypeid'].toString())));
+                                                                  mainList[mainIndex][s.key_tax_total], double.parse(Utils().getTaxAdvance(mainList[mainIndex], selectedTaxTypeData['taxtypeid'].toString())));
                                                             }
                                                             if (taxData[0][s.key_flag] == false) {
                                                               preferencesService.setUserInfo(key_isChecked, "");
@@ -464,11 +464,11 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                                         }
                                                       } else {
                                                         taxData[rowIndex][s.key_flag] = true;
-                                                        print('key_demand: ${getTaxAdvance(mainList[mainIndex], selectedTaxTypeData['taxtypeid'].toString())}');
+                                                        print('key_demand: ${Utils().getTaxAdvance(mainList[mainIndex], selectedTaxTypeData['taxtypeid'].toString())}');
                                                         mainList[mainIndex][s.key_tax_total] =
-                                                            mainList[mainIndex][s.key_tax_total] + double.parse(getDemadAmount(taxData[rowIndex], selectedTaxTypeData['taxtypeid'].toString()));
+                                                            mainList[mainIndex][s.key_tax_total] + double.parse(Utils().getDemadAmount(taxData[rowIndex], selectedTaxTypeData['taxtypeid'].toString()));
                                                         mainList[mainIndex][s.key_tax_pay] = getTotal(
-                                                            mainList[mainIndex][s.key_tax_total], double.parse(getTaxAdvance(mainList[mainIndex], selectedTaxTypeData['taxtypeid'].toString())));
+                                                            mainList[mainIndex][s.key_tax_total], double.parse(Utils().getTaxAdvance(mainList[mainIndex], selectedTaxTypeData['taxtypeid'].toString())));
                                                       }
                                                     } else {
                                                       Utils().showAlert(context, ContentType.fail, 'pay_pending_year'.tr().toString());
@@ -481,20 +481,22 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                                     main_totalAmount = 0.00;
                                                     if (islogin == "yes") {
                                                       preferencesService.addedTaxPayList.removeWhere((element) => element['taxtypeid'].toString() == selectedTaxTypeData['taxtypeid'].toString());
-                                                    } else {
-                                                      preferencesService.offlineTaxPayList.removeWhere((element) => element['taxtypeid'].toString() == selectedTaxTypeData['taxtypeid'].toString());
                                                     }
                                                     for (int i = 0; i < mainList.length; i++) {
                                                       main_totalAmount = main_totalAmount + mainList[i][s.key_tax_pay] + mainList[i][s.key_swm_pay];
                                                     }
-
-                                                    mainList.forEach((element) {
-                                                      element[key_DEMAND_DETAILS].forEach((e) {
-                                                        if (e[key_flag] == true) {
-                                                          islogin == "yes" ? preferencesService.addedTaxPayList.add(element) : preferencesService.offlineTaxPayList.add(element);
-                                                        }
+                                                    if (islogin == "yes") {
+                                                      mainList.forEach((
+                                                          element) {
+                                                        element[key_DEMAND_DETAILS]
+                                                            .forEach((e) {
+                                                          if (e[key_flag] ==
+                                                              true) {
+                                                             preferencesService.addedTaxPayList.add(element);
+                                                          }
+                                                        });
                                                       });
-                                                    });
+                                                    }
 
                                                     getCount();
                                                     repeatOnce();
@@ -551,7 +553,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                       flex: 2,
                                       child: Container(
                                           padding: EdgeInsets.all(8.0),
-                                          child: Center(child: UIHelper.titleTextStyle(getDemadAmount(swmData[rowIndex], selectedTaxTypeData['taxtypeid'].toString()), c.grey_8, 12, false, true))),
+                                          child: Center(child: UIHelper.titleTextStyle(Utils().getDemadAmount(swmData[rowIndex], selectedTaxTypeData['taxtypeid'].toString()), c.grey_8, 12, false, true))),
                                     ),
                                     rowIndex == 0 || taxData[rowIndex - 1][s.key_flag] == true
                                         ? Expanded(
@@ -570,14 +572,14 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                                               if (i >= rowIndex) {
                                                                 swmData[i][s.key_flag] = false;
                                                                 mainList[mainIndex][s.key_swm_total] =
-                                                                    mainList[mainIndex][s.key_swm_total] - double.parse(getDemadAmount(swmData[i], selectedTaxTypeData['taxtypeid'].toString()));
+                                                                    mainList[mainIndex][s.key_swm_total] - double.parse(Utils().getDemadAmount(swmData[i], selectedTaxTypeData['taxtypeid'].toString()));
                                                                 mainList[mainIndex][s.key_swm_pay] = getTotal(mainList[mainIndex][s.key_swm_total], mainList[mainIndex][s.key_swm_available_advance]);
                                                               }
                                                             }
                                                           } else {
                                                             swmData[rowIndex][s.key_flag] = true;
                                                             mainList[mainIndex][s.key_swm_total] =
-                                                                mainList[mainIndex][s.key_swm_total] + double.parse(getDemadAmount(swmData[rowIndex], selectedTaxTypeData['taxtypeid'].toString()));
+                                                                mainList[mainIndex][s.key_swm_total] + double.parse(Utils().getDemadAmount(swmData[rowIndex], selectedTaxTypeData['taxtypeid'].toString()));
                                                             mainList[mainIndex][s.key_swm_pay] = getTotal(mainList[mainIndex][s.key_swm_total], mainList[mainIndex][s.key_swm_available_advance]);
                                                           }
                                                         } else {
@@ -591,20 +593,21 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                                         main_totalAmount = 0.00;
                                                         if (islogin == "yes") {
                                                           preferencesService.addedTaxPayList.removeWhere((element) => element['taxtypeid'].toString() == selectedTaxTypeData['taxtypeid'].toString());
-                                                        } else {
-                                                          preferencesService.offlineTaxPayList.removeWhere((element) => element['taxtypeid'].toString() == selectedTaxTypeData['taxtypeid'].toString());
                                                         }
                                                         for (int i = 0; i < mainList.length; i++) {
                                                           main_totalAmount = main_totalAmount + mainList[i][s.key_tax_pay] + mainList[i][s.key_swm_pay];
                                                         }
-
-                                                        mainList.forEach((element) {
-                                                          element[key_DEMAND_DETAILS].forEach((e) {
-                                                            if (e[key_flag] == true) {
-                                                              islogin == "yes" ? preferencesService.addedTaxPayList.add(element) : preferencesService.offlineTaxPayList.add(element);
-                                                            }
+                                                        if (islogin == "yes") {
+                                                          mainList.forEach((
+                                                              element) {
+                                                            element[key_DEMAND_DETAILS]
+                                                                .forEach((e) {
+                                                              if (e[key_flag] == true) {
+                                                                 preferencesService.addedTaxPayList.add(element);
+                                                              }
+                                                            });
                                                           });
-                                                        });
+                                                        }
 
                                                         getCount();
                                                         repeatOnce();
@@ -637,7 +640,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             UIHelper.titleTextStyle("${'demand'.tr()} : \u{20B9} ${mainList[mainIndex][s.key_tax_total]}", c.black, 11, false, false),
-            UIHelper.titleTextStyle("${'advance'.tr()} : \u{20B9} ${getTaxAdvance(mainList[mainIndex], selectedTaxTypeData['taxtypeid'].toString())}", c.black, 11, false, false),
+            UIHelper.titleTextStyle("${'advance'.tr()} : \u{20B9} ${Utils().getTaxAdvance(mainList[mainIndex], selectedTaxTypeData['taxtypeid'].toString())}", c.black, 11, false, false),
           ],
         ),
         UIHelper.verticalSpaceSmall,
@@ -877,12 +880,18 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
               for (var addtaxListData in addtaxData[s.key_DEMAND_DETAILS]) {
                 for (var sampleSelectedList in sampletaxData[s.key_DEMAND_DETAILS]) {
                   if (addtaxListData[s.key_fin_year] == sampleSelectedList[s.key_fin_year] &&
-                      getDemadAmount(addtaxListData, addtaxData[s.key_taxtypeid].toString()) == getDemadAmount(sampleSelectedList, sampletaxData[s.key_taxtypeid].toString())) {
+                      (Utils().getDemadAmount(addtaxListData, addtaxData[s.key_taxtypeid].toString()) == Utils().getDemadAmount(sampleSelectedList, sampletaxData[s.key_taxtypeid].toString()))) {
                     sampleSelectedList[s.key_flag] = addtaxListData[s.key_flag];
-                    if (addtaxListData[s.key_flag] == true && sampletaxData[s.key_taxtypeid].toString() == addtaxListData[s.key_taxtypeid].toString()) {
-                      sampletaxData[s.key_tax_total] = sampletaxData[s.key_tax_total] + double.parse(getDemadAmount(addtaxListData, addtaxData[s.key_taxtypeid].toString()));
-                    } else {
-                      sampletaxData[s.key_swm_total] = sampletaxData[s.key_swm_total] + double.parse(getDemadAmount(addtaxListData, addtaxData[s.key_taxtypeid].toString()));
+                    if (addtaxListData[s.key_flag] == true) {
+                      if(sampletaxData[s.key_taxtypeid].toString() == "1") {
+                        if( sampletaxData[s.key_taxtypeid].toString() == addtaxListData[s.key_taxtypeid].toString()) {
+                          sampletaxData[s.key_tax_total] = sampletaxData[s.key_tax_total] + double.parse(Utils().getDemadAmount(addtaxListData, addtaxData[s.key_taxtypeid].toString()));
+                        } else {
+                          sampletaxData[s.key_swm_total] = sampletaxData[s.key_swm_total] + double.parse(Utils().getDemadAmount(addtaxListData, addtaxData[s.key_taxtypeid].toString()));
+                        }
+                      } else {
+                        sampletaxData[s.key_tax_total] = sampletaxData[s.key_tax_total] + double.parse(Utils().getDemadAmount(addtaxListData, addtaxData[s.key_taxtypeid].toString()));
+                      }
                     }
                   }
                 }
@@ -978,76 +987,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
     return street;
   }
 
-  String getDemadAmount(taxData, String taxTypeId) {
-    String amount = "";
-    switch (taxTypeId) {
-      case '1':
-        amount = taxData['demand'].toString();
-        break;
-      case '2':
-        amount = taxData['watercharges'].toString();
-        break;
-      case '4':
-        amount = taxData['profession_tax'].toString();
-        break;
-      case '5':
-        amount = taxData['nontax_amount'].toString();
-        break;
-      case '6':
-        amount = taxData['traders_rate'].toString();
-        break;
-    }
 
-    // taxData[rowIndex][s.key_demand].toString();
-    return amount;
-  }
-  String getDemandId(taxData, String taxTypeId) {
-    String demandId = "";
-    switch (taxTypeId) {
-      case '1':
-        demandId = taxData['demandid'].toString();
-        break;
-      case '2':
-        demandId = taxData['wtdemandid'].toString();
-        break;
-      case '4':
-        demandId = taxData['assesmentdemandid'].toString();
-        break;
-      case '5':
-        demandId = taxData['assessment_demand_id'].toString();
-        break;
-      case '6':
-        demandId = taxData['assessment_demand_id'].toString();
-        break;
-    }
-
-    // taxData[rowIndex][s.key_demand].toString();
-    return demandId;
-  }
-
-  String getTaxAdvance(taxData, String taxTypeId) {
-    String amount = "";
-    switch (taxTypeId) {
-      case '1':
-        amount = taxData['property_available_advance'].toString();
-        break;
-      case '2':
-        amount = taxData['water_available_advance'].toString();
-        break;
-      case '4':
-        amount = taxData['professional_available_advance'].toString();
-        break;
-      case '5':
-        amount = taxData['non_available_advance'].toString();
-        break;
-      case '6':
-        amount = taxData['trade_available_advance'].toString();
-        break;
-    }
-
-    // taxData[rowIndex][s.key_demand].toString();
-    return amount;
-  }
 
   bool getFlagStatus(String assId) {
     bool flag = false;
@@ -1351,7 +1291,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
        List<String> property_demand_id =[];
       for (var data in finalList[0][s.key_DEMAND_DETAILS]) {
         if (data[s.key_flag] == true) {
-          property_demand_id.add(getDemandId(data, finalList[0][s.key_taxtypeid].toString()));
+          property_demand_id.add(Utils().getDemandId(data, finalList[0][s.key_taxtypeid].toString()));
         }
       }
      

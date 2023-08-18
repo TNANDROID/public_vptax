@@ -246,6 +246,8 @@ class StartUpViewModel extends BaseViewModel {
 
         return pay_params;
 
+      }else if(response_value == key_fail){
+        Utils().showAlert(context, ContentType.warning, response[key_message].toString());
       }else{
         Utils().showAlert(context, ContentType.warning, response_value.toString());
       }
