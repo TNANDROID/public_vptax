@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
@@ -26,7 +28,7 @@ class _AssetDetailsViewState extends State<AssetDetailsView> {
       Container(
         height: Screen.width(context) / 4,
         width: Screen.width(context) / 4,
-        padding: EdgeInsets.all(8),
+        padding: EdgeInsets.all(3),
         decoration: UIHelper.GradientContainer(30, 0, 0, 30, [c.white, c.grey_2], borderColor: borderclr, intwid: 3, stop1: 0.5, stop2: 0.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -42,8 +44,8 @@ class _AssetDetailsViewState extends State<AssetDetailsView> {
             height: 40,
             decoration: BoxDecoration(
               border: Border(
-                top: BorderSide(width: 9, color: borderclr), // Top border
-                right: BorderSide(width: 9, color: borderclr), // Right border
+                top: BorderSide(width: 9, color: borderclr),
+                right: BorderSide(width: 9, color: borderclr),
               ),
             ),
           )),
@@ -56,8 +58,8 @@ class _AssetDetailsViewState extends State<AssetDetailsView> {
             height: 40,
             decoration: BoxDecoration(
               border: Border(
-                bottom: BorderSide(width: 9, color: borderclr), // Top border
-                left: BorderSide(width: 9, color: borderclr), // Right border
+                bottom: BorderSide(width: 9, color: borderclr),
+                left: BorderSide(width: 9, color: borderclr),
               ),
             ),
           )),
@@ -68,7 +70,7 @@ class _AssetDetailsViewState extends State<AssetDetailsView> {
   Widget build(BuildContext context) {
     return Container(
       width: Screen.width(context),
-      margin: EdgeInsets.all(16),
+      margin: EdgeInsets.all(10),
       padding: EdgeInsets.all(10),
       decoration: UIHelper.roundedBorderWithColor(15, 15, 0, 0, c.need_improvement2, borderColor: c.text_color, borderWidth: 1),
       child: Column(

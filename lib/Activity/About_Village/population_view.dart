@@ -1,9 +1,9 @@
+// ignore_for_file: prefer_const_constructors, non_constant_identifier_names
+
 import 'package:flutter/material.dart';
-import 'package:public_vptax/Layout/customclip.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
-import 'package:responsive_grid_list/responsive_grid_list.dart';
 
 class PopulationView extends StatefulWidget {
   const PopulationView({super.key});
@@ -38,7 +38,6 @@ class _PopulationViewState extends State<PopulationView> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     int total = 0;
     int maleTotal = 0;
@@ -128,7 +127,7 @@ class _PopulationViewState extends State<PopulationView> {
                 itemBuilder: (context, rowIndex) {
                   int siNo = rowIndex + 1;
                   dynamic habitationGetData = populationList[rowIndex];
-                  return Container(
+                  return SizedBox(
                       height: 30,
                       child: Row(
                         children: [
@@ -151,7 +150,7 @@ class _PopulationViewState extends State<PopulationView> {
   Widget build(BuildContext context) {
     return Container(
       width: Screen.width(context),
-      margin: EdgeInsets.all(16),
+      margin: EdgeInsets.all(10),
       padding: EdgeInsets.all(10),
       decoration: UIHelper.roundedBorderWithColor(15, 15, 0, 0, c.need_improvement2, borderColor: c.text_color, borderWidth: 1),
       child: Column(

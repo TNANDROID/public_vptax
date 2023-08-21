@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, prefer_const_constructors
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -72,7 +74,7 @@ class _DCBViewState extends State<DCBView> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         UIHelper.titleTextStyle("$key : ", c.white, 13, false, true),
-        UIHelper.titleTextStyle("$value", c.white, 13, true, true),
+        UIHelper.titleTextStyle(value, c.white, 13, true, true),
       ],
     );
   }
@@ -97,7 +99,7 @@ class _DCBViewState extends State<DCBView> {
               children: [
                 UIHelper.titleTextStyle(data['title'], c.white, 14, true, true),
                 UIHelper.verticalSpaceSmall,
-                Container(
+                SizedBox(
                     width: Screen.width(context) / 3,
                     child: Column(
                       children: [
@@ -109,43 +111,40 @@ class _DCBViewState extends State<DCBView> {
               ],
             ),
           )),
-      Container(
-          // transform: Matrix4.translationValues(-30.0, 0.0, 0.0),
-          child: ClipRRect(
-              borderRadius: BorderRadius.circular(50),
-              child: Container(
-                  color: c.white,
-                  padding: EdgeInsets.all(5),
-                  width: 100,
-                  height: 100,
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Container(
-                          color: borderclr,
-                          padding: EdgeInsets.all(5),
-                          width: 100,
-                          height: 100,
-                          child: ClipRRect(
-                              borderRadius: BorderRadius.circular(50),
-                              child: Container(
-                                  color: c.white,
-                                  width: 100,
-                                  height: 100,
-                                  padding: EdgeInsets.all(10),
-                                  child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(50),
-                                      child: Container(
-                                          child: Image.asset(
-                                        imgUrl,
-                                        fit: BoxFit.contain,
-                                        height: 80,
-                                        width: 80,
-                                      )))))))))),
+      ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: Container(
+              color: c.white,
+              padding: EdgeInsets.all(5),
+              width: 100,
+              height: 100,
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: Container(
+                      color: borderclr,
+                      padding: EdgeInsets.all(5),
+                      width: 100,
+                      height: 100,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Container(
+                              color: c.white,
+                              width: 100,
+                              height: 100,
+                              padding: EdgeInsets.all(10),
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Image.asset(
+                                    imgUrl,
+                                    fit: BoxFit.contain,
+                                    height: 80,
+                                    width: 80,
+                                  )))))))),
     ]);
   }
 
   Widget taxDetailListWidget() {
-    return Container(
+    return SizedBox(
         height: taxDetailList.length * 110,
         child: ListView.builder(
           physics: NeverScrollableScrollPhysics(),
@@ -165,7 +164,7 @@ class _DCBViewState extends State<DCBView> {
   Widget build(BuildContext context) {
     return Container(
       width: Screen.width(context),
-      margin: EdgeInsets.all(16),
+      margin: EdgeInsets.all(10),
       padding: EdgeInsets.all(10),
       decoration: UIHelper.roundedBorderWithColor(15, 15, 0, 0, c.need_improvement2, borderColor: c.text_color, borderWidth: 1),
       child: Column(

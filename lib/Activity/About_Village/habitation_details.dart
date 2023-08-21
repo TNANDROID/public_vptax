@@ -42,7 +42,7 @@ class _habitationViewState extends State<habitationView> {
   Widget build(BuildContext context) {
     return Container(
       width: Screen.width(context),
-      margin: EdgeInsets.all(16),
+      margin: EdgeInsets.all(10),
       padding: EdgeInsets.all(10),
       decoration: UIHelper.roundedBorderWithColor(15, 15, 0, 0, c.need_improvement2, borderColor: c.text_color, borderWidth: 1),
       child: Column(

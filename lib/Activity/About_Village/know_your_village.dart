@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -43,41 +45,43 @@ class _KYVDashboardState extends State<KYVDashboard> {
       body: ViewModelBuilder<StartUpViewModel>.reactive(
           onViewModelReady: (model) async {},
           builder: (context, model, child) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(padding: EdgeInsets.all(10), child: UIHelper.titleTextStyle("Know Your Village", c.text_color, 16, true, false)),
-                isAddressShow
-                    ? Container(padding: EdgeInsets.fromLTRB(10, 5, 10, 5), child: customCardDesign())
-                    : Container(
-                        padding: EdgeInsets.all(10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-                              Expanded(flex: 2, child: addInputDropdownField(1, 'districtName'.tr().toString(), "district", model)),
-                              UIHelper.horizontalSpaceSmall,
-                              Expanded(flex: 2, child: model.selectedBlockList.isNotEmpty ? addInputDropdownField(2, 'blockName'.tr().toString(), "block", model) : SizedBox()),
-                            ]),
-                            UIHelper.verticalSpaceSmall,
-                            Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-                              Expanded(flex: 2, child: model.selectedVillageList.isNotEmpty ? addInputDropdownField(3, 'villageName'.tr().toString(), "village", model) : SizedBox()),
-                              Expanded(flex: 2, child: SizedBox()),
-                            ])
-                          ],
-                        )),
-                isSelectedAll
-                    ? Expanded(child: SingleChildScrollView(child: Column(children: [habitationView(), PopulationView(), AssetDetailsView(), DCBView()])))
-                    : Center(
-                        child: Column(
-                        children: [
-                          Image.asset(imagepath.waitingImg, fit: BoxFit.contain, height: Screen.width(context) / 2, width: Screen.width(context) / 2),
-                          UIHelper.verticalSpaceMedium,
-                          UIHelper.titleTextStyle("Awaiting input from your side...", c.text_color, 14, true, true)
-                        ],
-                      ))
-              ],
-            );
+            return Container(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    UIHelper.titleTextStyle("Know Your Village", c.text_color, 16, true, false),
+                    isAddressShow
+                        ? Container(padding: EdgeInsets.fromLTRB(10, 5, 10, 5), child: customCardDesign())
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              UIHelper.verticalSpaceSmall,
+                              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                                Expanded(flex: 2, child: addInputDropdownField(1, 'districtName'.tr().toString(), "district", model)),
+                                UIHelper.horizontalSpaceSmall,
+                                Expanded(flex: 2, child: model.selectedBlockList.isNotEmpty ? addInputDropdownField(2, 'blockName'.tr().toString(), "block", model) : SizedBox()),
+                              ]),
+                              UIHelper.verticalSpaceSmall,
+                              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                                Expanded(flex: 2, child: model.selectedVillageList.isNotEmpty ? addInputDropdownField(3, 'villageName'.tr().toString(), "village", model) : SizedBox()),
+                                Expanded(flex: 2, child: SizedBox()),
+                              ])
+                            ],
+                          ),
+                    isSelectedAll
+                        ? Expanded(child: SingleChildScrollView(child: Column(children: [habitationView(), PopulationView(), AssetDetailsView(), DCBView()])))
+                        : Center(
+                            child: Column(
+                            children: [
+                              UIHelper.verticalSpaceLarge,
+                              Image.asset(imagepath.waitingImg, fit: BoxFit.contain, height: Screen.width(context) / 2, width: Screen.width(context) / 2),
+                              UIHelper.verticalSpaceMedium,
+                              UIHelper.titleTextStyle("Awaiting input from your side...", c.text_color, 14, true, true)
+                            ],
+                          ))
+                  ],
+                ));
           },
           viewModelBuilder: () => StartUpViewModel()),
     );
@@ -134,31 +138,27 @@ class _KYVDashboardState extends State<KYVDashboard> {
   //Dropdown Input Field Widget
   Widget addInputDropdownField(int index, String inputHint, String fieldName, StartUpViewModel model) {
     List dropList = [];
-    String keyCode = "";
     String titleText = "";
     String titleTextTamil = "";
     dynamic initValue = {};
 
     if (index == 1) {
       dropList = preferencesService.districtList;
-      keyCode = key_dcode;
       titleText = key_dname;
       titleTextTamil = key_dname_ta;
       initValue = selectedDistrict;
     } else if (index == 2) {
       dropList = model.selectedBlockList;
-      keyCode = key_bcode;
       titleText = key_bname;
       titleTextTamil = key_bname_ta;
       initValue = selectedBlock;
     } else if (index == 3) {
       dropList = model.selectedVillageList;
-      keyCode = key_pvcode;
       titleText = key_pvname;
       titleTextTamil = key_pvname_ta;
       initValue = selectedVillage;
     } else {
-      print("End.....");
+      debugPrint("End.....");
     }
     return FormBuilderDropdown(
       decoration: InputDecoration(
@@ -223,7 +223,7 @@ class _KYVDashboardState extends State<KYVDashboard> {
             Utils().hideProgress(context);
           });
         } else {
-          print("End of the Statement......");
+          debugPrint("End.....");
         }
 
         setState(() {});
