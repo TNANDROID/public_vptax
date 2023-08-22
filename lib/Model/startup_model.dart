@@ -11,7 +11,6 @@ import 'package:public_vptax/Utils/utils.dart';
 import 'package:stacked/stacked.dart';
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 
-
 class StartUpViewModel extends BaseViewModel {
   PreferenceService preferencesService = locator<PreferenceService>();
   ApiServices apiServices = locator<ApiServices>();
@@ -28,7 +27,6 @@ class StartUpViewModel extends BaseViewModel {
   List<dynamic> GatewayList = [];
   List<dynamic> taxCollectionDetailsList = [];
 
-
   Future<void> loadUIBlock(String value) async {
     selectedBlockList.clear();
     for (var item in preferencesService.blockList) {
@@ -41,8 +39,7 @@ class StartUpViewModel extends BaseViewModel {
   Future<void> loadUIVillage(String distcode, String blockcode) async {
     selectedVillageList.clear();
     for (var item in preferencesService.villageList) {
-      if (item['dcode'].toString() == distcode &&
-          item['bcode'].toString() == blockcode) {
+      if (item['dcode'].toString() == distcode && item['bcode'].toString() == blockcode) {
         selectedVillageList.add(item);
       }
     }
@@ -59,10 +56,10 @@ class StartUpViewModel extends BaseViewModel {
     } else {
       requestData = {key_service_id: service_key_village_list_all};
     }
-    print("requestData>>"+jsonEncode(requestData));
+    print("requestData>>" + jsonEncode(requestData));
 
     var response = await apiServices.openServiceFunction(requestData);
-    print("response>>"+response.toString());
+    print("response>>" + response.toString());
     if (type == "District") {
       districtList = response;
       preferencesService.districtList = districtList.toList();
@@ -75,38 +72,40 @@ class StartUpViewModel extends BaseViewModel {
     }
     setBusy(false);
   }
-  Future getMainServiceList(String type,{String dcode = "1",String bcode= "1",String pvcode= "1",String taxType= "1",String lang= "en", dynamic requestDataValue,required BuildContext context}) async {
+
+  Future getMainServiceList(String type,
+      {String dcode = "1", String bcode = "1", String pvcode = "1", String taxType = "1", String lang = "en", dynamic requestDataValue, required BuildContext context}) async {
     setBusy(true);
     dynamic requestData = {};
     var response;
     if (type == "TaxType") {
       dynamic request = {key_service_id: service_key_TaxTypeList};
-      requestData = {key_data_content:request};
+      requestData = {key_data_content: request};
     } else if (type == "FinYear") {
       dynamic request = {key_service_id: service_key_FinYearList};
       requestData = {key_data_content: request};
-    }else if (type == "PaymentTypeList") {
-      dynamic request = {key_service_id: service_key_PaymentTypeList,key_dcode:dcode, key_bcode:bcode, key_pvcode:pvcode};
+    } else if (type == "PaymentTypeList") {
+      dynamic request = {key_service_id: service_key_PaymentTypeList, key_dcode: dcode, key_bcode: bcode, key_pvcode: pvcode};
       requestData = {key_data_content: request};
-    }else if (type == "GatewayList") {
+    } else if (type == "GatewayList") {
       dynamic request = {key_service_id: service_key_GatewayList};
       requestData = {key_data_content: request};
-    }else if (type == "TaxCollectionDetails") {
+    } else if (type == "TaxCollectionDetails") {
       requestData = {key_data_content: requestDataValue};
-    }else if (type == "CollectionPaymentTokenList") {
+    } else if (type == "CollectionPaymentTokenList") {
       requestData = {key_data_content: requestDataValue};
     }
-    print("requestData>>"+requestData.toString());
+    print("requestData>>" + requestData.toString());
     if (await Utils().isOnline()) {
       try {
         Utils().showProgress(context, 1);
-         response = await apiServices.mainServiceFunction(requestData);
+        response = await apiServices.mainServiceFunction(requestData);
         Utils().hideProgress(context);
       } catch (error) {
         print('error (${error.toString()}) has been caught');
         Utils().hideProgress(context);
       }
-      }else {
+    } else {
       Utils().showAlert(
         context,
         ContentType.fail,
@@ -114,16 +113,14 @@ class StartUpViewModel extends BaseViewModel {
       );
     }
 
-
-
     if (type == "TaxType") {
       var status = response[key_status];
       var response_value = response[key_response];
       List res_jsonArray = [];
       if (status == key_success && response_value == key_success) {
         res_jsonArray = response[key_data];
-        print("response_TaxType>>>>>>"+res_jsonArray.toString());
-      }else{
+        print("response_TaxType>>>>>>" + res_jsonArray.toString());
+      } else {
         Utils().showAlert(context, ContentType.warning, response_value.toString());
       }
       taxTypeList = res_jsonArray;
@@ -150,82 +147,76 @@ class StartUpViewModel extends BaseViewModel {
       }
 
       preferencesService.taxTypeList = taxTypeList.toList();
-    }
-    else if (type == "FinYear") {
+    } else if (type == "FinYear") {
       var status = response[key_status];
       var response_value = response[key_response];
       List res_jsonArray = [];
       if (status == key_success && response_value == key_success) {
         res_jsonArray = response[key_data];
-        print("response_FinYear>>>>>>"+res_jsonArray.toString());
-      }else{
+        print("response_FinYear>>>>>>" + res_jsonArray.toString());
+      } else {
         Utils().showAlert(context, ContentType.warning, response_value.toString());
       }
       finYearList = res_jsonArray;
       preferencesService.finYearList = finYearList.toList();
-    }
-    else if (type == "PaymentTypeList") {
+    } else if (type == "PaymentTypeList") {
       var status = response[key_status];
       var response_value = response[key_response];
       List res_jsonArray = [];
       if (status == key_success && response_value == key_success) {
         res_jsonArray = response[key_data];
-        print("response_PaymentTypeList>>>>>>"+res_jsonArray.toString());
-      }else{
+        print("response_PaymentTypeList>>>>>>" + res_jsonArray.toString());
+      } else {
         Utils().showAlert(context, ContentType.warning, response_value.toString());
       }
       PaymentTypeList = res_jsonArray;
       preferencesService.PaymentTypeList = PaymentTypeList.toList();
-    }
-    else if (type == "GatewayList") {
+    } else if (type == "GatewayList") {
       var status = response[key_status];
       var response_value = response[key_response];
       List res_jsonArray = [];
       if (status == key_success && response_value == key_success) {
         res_jsonArray = response[key_data];
-        print("response_GatewayList>>>>>>"+res_jsonArray.toString());
-      }else{
+        print("response_GatewayList>>>>>>" + res_jsonArray.toString());
+      } else {
         Utils().showAlert(context, ContentType.warning, response_value.toString());
       }
       GatewayList = res_jsonArray;
       preferencesService.GatewayList = GatewayList.toList();
-    }
-    else if (type == "TaxCollectionDetails") {
+    } else if (type == "TaxCollectionDetails") {
       var status = response[key_status];
       var response_value = response[key_response];
       List res_jsonArray = [];
       preferencesService.taxCollectionDetailsList = [];
       if (status == key_success && response_value == key_success) {
         res_jsonArray = response[key_data_set];
-        print("response_TaxCollectionDetails1>>>>>>"+res_jsonArray.toString());
-        for(int i = 0; i < res_jsonArray.length; i++) {
-
+        print("response_TaxCollectionDetails1>>>>>>" + res_jsonArray.toString());
+        for (int i = 0; i < res_jsonArray.length; i++) {
           res_jsonArray[i][key_ASSESSMENT_DETAILS].forEach((item) {
             item[key_tax_total] = 0.00;
             item[key_swm_total] = 0.00;
             item[key_tax_pay] = 0.00;
             item[key_swm_pay] = 0.00;
-            item[key_DEMAND_DETAILS].forEach((item2) {
-              item2[key_flag] = false;
-              // Additional calculations or logic can be added here if needed
-            });
-            // Additional calculations or logic can be added here if needed
+            if (item[key_no_of_demand_available] > 0) {
+              item[key_DEMAND_DETAILS].forEach((item2) {
+                item2[key_flag] = false;
+              });
+            }
           });
           for (var sampletaxData in res_jsonArray[i][key_ASSESSMENT_DETAILS]) {
             taxCollectionDetailsList.add(sampletaxData);
           }
         }
 
-        print("response_TaxCollectionDetails2>>>>>>"+taxCollectionDetailsList.toString());
+        print("response_TaxCollectionDetails2>>>>>>" + taxCollectionDetailsList.toString());
 
         preferencesService.taxCollectionDetailsList = taxCollectionDetailsList;
-      }else{
+      } else {
         preferencesService.taxCollectionDetailsList = [];
         Utils().showAlert(context, ContentType.warning, response_value.toString());
       }
-    }
-    else if (type == "CollectionPaymentTokenList") {
-     /* response={
+    } else if (type == "CollectionPaymentTokenList") {
+      /* response={
           "STATUS": "SUCCESS",
           "RESPONSE": "SUCCESS",
           "pay_params": {
@@ -242,13 +233,12 @@ class StartUpViewModel extends BaseViewModel {
       var response_value = response[key_response];
       if (status == key_success && response_value == key_success) {
         dynamic pay_params = response['pay_params'];
-        print("response_CollectionPaymentTokenList>>>>>>"+response_value.toString());
+        print("response_CollectionPaymentTokenList>>>>>>" + response_value.toString());
 
         return pay_params;
-
-      }else if(response_value == key_fail){
+      } else if (response_value == key_fail) {
         Utils().showAlert(context, ContentType.warning, response[key_message].toString());
-      }else{
+      } else {
         Utils().showAlert(context, ContentType.warning, response_value.toString());
       }
     }

@@ -15,51 +15,42 @@ class ApiServices {
     "Accept": "application/json",
   };
 
-
- // local
+  // local
   String mainURL = "http://10.163.19.158/vptax/project/webservices/vptax_services_online.php";
-  String openURL = "http://10.163.19.158/vptax/project/webservices/open_services/open_services.php";
-
+  String openURL = "http://10.163.19.137:8090/vptax/project/webservices/open_services/open_services.php";
 
   ioclientCertificate() async {
     HttpClient _client = HttpClient(context: await utils.globalContext);
-    _client.badCertificateCallback =
-        (X509Certificate cert, String host, int port) => false;
+    _client.badCertificateCallback = (X509Certificate cert, String host, int port) => false;
     IOClient _ioClient = IOClient(_client);
     return _ioClient;
   }
-
-
 
   /**********************************************/
   /*********Main API Service Call********/
   /**********************************************/
 
   Future mainServiceFunction(dynamic jsonRequest) async {
-
     HttpClient _client = HttpClient(context: await Utils().globalContext);
-    _client.badCertificateCallback =
-        (X509Certificate cert, String host, int port) => false;
+    _client.badCertificateCallback = (X509Certificate cert, String host, int port) => false;
 
     IOClient _ioClient = new IOClient(_client);
 
     Map<String, String> header = {
       "Content-Type": "application/json",
     };
-    print("Header>>>>>>"+header.toString());
-    var response = await _ioClient.post(
-        Uri.parse(mainURL),
-        body: json.encode(jsonRequest),headers: header);
+    print("Header>>>>>>" + header.toString());
+    var response = await _ioClient.post(Uri.parse(mainURL), body: json.encode(jsonRequest), headers: header);
 
-    print("response>>>>>>"+response.toString());
+    print("response>>>>>>" + response.toString());
     var mainData;
     if (response.statusCode == 200) {
       var data = response.body;
       var jsonData = jsonDecode(data);
       mainData = jsonData[key_main_data];
-      print("response>>>>>>"+mainData.toString());
-    return mainData;
-  }
+      print("response>>>>>>" + mainData.toString());
+      return mainData;
+    }
   }
   /**********************************************/
   /*********Open Service API Call********/
@@ -68,10 +59,8 @@ class ApiServices {
   Future<List> openServiceFunction(dynamic jsonRequest) async {
     IOClient _ioClient = await ioclientCertificate();
 
-    var response = await _ioClient.post(
-        Uri.parse(openURL),
-        body: json.encode(jsonRequest));
-    print("response>>"+response.toString());
+    var response = await _ioClient.post(Uri.parse(openURL), body: json.encode(jsonRequest));
+    print("response>>" + response.toString());
 
     if (response.statusCode == 200) {
       var data = response.body;
@@ -89,5 +78,4 @@ class ApiServices {
     }
     return [];
   }
-
 }

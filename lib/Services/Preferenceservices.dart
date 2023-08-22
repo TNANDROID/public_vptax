@@ -12,6 +12,8 @@ class PreferenceService {
   List<dynamic> GatewayList = [];
   List<dynamic> addedTaxPayList = [];
   List<dynamic> taxCollectionDetailsList = [];
+  List<dynamic> TransactionList = [];
+
   //Set User Info
   Future<bool> setUserInfo(String key, String value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

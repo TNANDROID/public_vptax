@@ -35,6 +35,7 @@ String right_arrow = "assets/images/right_arrow.png";
 String right_arrow_icon = "assets/images/right_arrow_icon.png";
 String village = "assets/images/village.png";
 String village_development = "assets/images/village_2.png";
+String check_transaction_status = "assets/images/invoice.png";
 String group = "assets/images/group.png";
 String utils = "assets/images/utility.png";
 String payment_gateway = "assets/images/payment_gateway.png";
@@ -42,6 +43,8 @@ String tick = "assets/images/tick.png";
 String unchecked = "assets/images/unchecked.png";
 String waitingImg = "assets/images/waiting.png";
 String download_img = "assets/images/download_2.png";
+String rightarrow = "assets/images/rightarrow.png";
+String downarrow = "assets/images/downarrow.png";
 
 String help = 'assets/images/help.svg';
 String failure = 'assets/images/failure.svg';
