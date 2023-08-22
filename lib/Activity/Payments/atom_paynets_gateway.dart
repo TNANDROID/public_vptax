@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_brace_in_string_interps, avoid_print, non_constant_identifier_names, use_build_context_synchronously
+// ignore_for_file: unnecessary_brace_in_string_interps, avoid_print, non_constant_identifier_names, use_build_context_synchronously, unused_local_variable
 
 import 'dart:async';
 import 'dart:convert';
@@ -26,6 +26,7 @@ class AtomPaynetsView extends StatefulWidget {
 
 class _AtomPaynetsViewState extends State<AtomPaynetsView> {
   ApiServices apiServices = locator<ApiServices>();
+  String selectedLang = "";
 
   final mode;
   final payDetails;
@@ -38,11 +39,19 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
   final String _responseDecryptionKey = '75AEF0FA1B94B3C10D4F5B268F757F11'; //mandatory
   final Completer<WebViewController> _controllerCompleter = Completer<WebViewController>();
 
+  var preferencesService;
+  var receiptList;
+
   @override
   void initState() {
     super.initState();
     // Enable hybrid composition.
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    initialize();
+  }
+
+  Future<void> initialize() async {
+    selectedLang = await preferencesService.getUserInfo("lang");
   }
 
   _AtomPaynetsViewState(this.mode, this.payDetails);
@@ -75,7 +84,7 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
                 // ignore: deprecated_member_use
                 await launch(request.url);
               } catch (e) {
-                _closeWebView(context, "Transaction Status = cannot open UPI applications");
+                _closeWebView(context, "Transaction Status = cannot open UPI applications", ContentType.fail);
                 throw 'custom error for UPI Intent';
               }
               return NavigationDecision.prevent;
@@ -131,11 +140,9 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
                 // } on PlatformException catch (e) {
                 //   debugPrint("Failed to decrypt: '${e.message}'.");
                 // }
-                await getPaymentStatus(context, encData, merchId);
-
-                transactionResult = "Waiting...!";
+                transactionResult = await getPaymentStatus(context, encData, merchId);
               }
-              _closeWebView(context, transactionResult);
+              _closeWebView(context, transactionResult, transactionResult.contains("Success") ? ContentType.success : ContentType.fail);
             }
           },
           gestureNavigationEnabled: true,
@@ -170,9 +177,12 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
     _controller.loadUrl(Uri.dataFromString(fileText, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString());
   }
 
-  _closeWebView(context, transactionResult) {
+  _closeWebView(context, transactionResult, ContentType type) async {
     Navigator.pop(context);
-    Utils().showAlert(context, ContentType.fail, "$transactionResult");
+    Utils().showAlert(context, type, "$transactionResult");
+    if (type == ContentType.success) {
+      await getReceipt();
+    }
   }
 
   Future<bool> _handleBackButtonAction(BuildContext context) async {
@@ -204,11 +214,29 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
     return Future.value(true);
   }
 
-  Future<void> getPaymentStatus(BuildContext context, encData, String merchId) async {
+  Future<void> getReceipt() async {
+    var receiptRequestData = {
+      key_service_id: service_key_GetReceipt,
+      key_receipt_id: receiptList[key_receipt_id].toString(),
+      key_receipt_no: receiptList[key_receipt_no].toString(),
+      key_taxtypeid: receiptList[key_taxtypeid].toString(),
+      key_state_code: receiptList[key_state_code].toString(),
+      key_dcode: receiptList[key_dcode].toString(),
+      key_bcode: receiptList[key_bcode].toString(),
+      key_pvcode: receiptList[key_pvcode].toString(),
+      key_language_name: selectedLang
+    };
+    var GetReceiptList = {key_data_content: receiptRequestData};
+
+    var response = await apiServices.mainServiceFunction(GetReceiptList);
+    print('response>>: ${response}');
+  }
+
+  Future<String> getPaymentStatus(BuildContext context, encData, String merchId) async {
+    var responceMessage = '';
     var requestData = {key_service_id: service_key_SaveCollectionList, key_merchId_server_side: merchId, key_encdata_server_side: encData};
 
     var PaymentStatusList = {key_data_content: requestData};
-    print('PaymentStatusList: ${jsonEncode(PaymentStatusList)}');
 
     if (await Utils().isOnline()) {
       try {
@@ -219,11 +247,9 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
           var receiptResponce = response[key_data];
           if (receiptResponce[key_status] == key_success && receiptResponce[key_response] == key_success) {
             var receiptDetails = receiptResponce[key_data];
-
-            String receiptID = receiptDetails[key_receipt_id].toString();
-            String receiptNO = receiptDetails[key_receipt_no].toString();
-            print('receiptID: ${receiptID}');
-            print('receiptNO: ${receiptNO}');
+            receiptList = [];
+            receiptList = receiptDetails;
+            responceMessage = response[key_message];
           }
         }
       } catch (error) {
@@ -236,5 +262,6 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
         "noInternet".tr().toString(),
       );
     }
+    return responceMessage;
   }
 }

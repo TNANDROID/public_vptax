@@ -113,4 +113,7 @@ Color need_improvement_color = Color(0xFF1E90FF);
 Color unsatisfied_color = Color(0xFFFFA500);
 Color satisfied_color = Color(0xFF00FA9A);
 Color red_new = Color(0xFFDE0239);
+Color red_new_light = Color.fromARGB(255, 255, 233, 233);
 Color splashBtn = Color(0xFF00b2ce);
+Color light_pink = Color(0xCAFFD4E7);
+Color orangeClr = Color(0xFFFF5F6D);
