@@ -15,6 +15,7 @@ import 'package:public_vptax/Utils/ContentInfo.dart';
 
 import '../../Services/Apiservices.dart';
 import '../../Services/locator.dart';
+import '../Auth/Pdf_Viewer.dart';
 
 class AtomPaynetsView extends StatefulWidget {
   final mode;
@@ -179,10 +180,10 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
 
   _closeWebView(context, transactionResult, ContentType type) async {
     Navigator.pop(context);
-    Utils().showAlert(context, type, "$transactionResult");
-    if (type == ContentType.success) {
+    Utils().showAlert(context, type, "$transactionResult").then((value) => () async {if (type == ContentType.success) {
       await getReceipt();
-    }
+    }});
+
   }
 
   Future<bool> _handleBackButtonAction(BuildContext context) async {
@@ -223,13 +224,32 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
       key_state_code: receiptList[key_state_code].toString(),
       key_dcode: receiptList[key_dcode].toString(),
       key_bcode: receiptList[key_bcode].toString(),
-      key_pvcode: receiptList[key_pvcode].toString(),
+      key_pvcode: receiptList[key_lbcode].toString(),
       key_language_name: selectedLang
     };
     var GetReceiptList = {key_data_content: receiptRequestData};
 
     var response = await apiServices.mainServiceFunction(GetReceiptList);
     print('response>>: ${response}');
+    if (response[key_status] == key_success && response[key_response] == key_success) {
+      var receiptResponce = response[key_main_data];
+      var pdftoString = receiptResponce['receipt_content'];
+      Uint8List? pdf = const Base64Codec().decode(pdftoString);
+      MaterialPageRoute(
+          builder: (context) => PDF_Viewer(
+            pdfBytes: pdf,
+            receipt_no: receiptList[key_receipt_no].toString(),
+          ));
+
+    }else{
+      Utils().showAlert(
+        context,
+        ContentType.fail,
+        response[key_response],
+      );
+
+    }
+
   }
 
   Future<String> getPaymentStatus(BuildContext context, encData, String merchId) async {
