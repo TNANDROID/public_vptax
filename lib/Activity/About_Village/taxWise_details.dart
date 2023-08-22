@@ -19,7 +19,7 @@ class DCBView extends StatefulWidget {
 
 class _DCBViewState extends State<DCBView> {
   PreferenceService preferencesService = locator<PreferenceService>();
-  List<Color> colorsList = [c.followers, c.need_improvement_color, c.followingBg, c.colorAccentveryverylight, c.red_new];
+  List<Color> colorsList = [c.followers, c.need_improvement_color, c.followingBg, c.colorAccentveryverylight, c.dot_light_screen1];
   List imgList = [imagepath.house, imagepath.water, imagepath.professional, imagepath.nontax1, imagepath.trade];
 
   String selectedFinYear = "";
@@ -173,7 +173,7 @@ class _DCBViewState extends State<DCBView> {
           UIHelper.verticalSpaceSmall,
           Center(
               child: Container(
-            child: UIHelper.titleTextStyle("Demand Collection Balance", c.text_color, 14, true, true),
+            child: UIHelper.titleTextStyle('financial_situation'.tr().toString(), c.text_color, 14, true, true),
           )),
           UIHelper.verticalSpaceMedium,
           Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
