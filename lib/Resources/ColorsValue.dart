@@ -10,6 +10,7 @@ Color colorAccentverylight = Color(0xfff89a42);
 Color red = Color(0xFFB71C1C);
 Color failureRed = Color(0xffc72c41);
 Color yellow_new = Color(0xFFFFC947);
+Color yellow_new_light = Color.fromARGB(255, 250, 237, 207);
 Color warningYellow = Color(0xffFCA652);
 Color account_status_green_color = Color(0xFF45c240);
 Color green_new = Color(0xFF12C06A);
@@ -38,6 +39,8 @@ Color text_color = Color(0xFF1E4175);
 Color bg = Color(0xFFF5F5F5);
 Color full_transparent = Color(0xFF00FF0000);
 Color grey_4 = Color(0xFFdddbda);
+Color red_new = Color(0xFFDE0239);
+Color red_new_light = Color.fromARGB(255, 255, 233, 233);
 
 //*********Un Used Variables**************/
 
@@ -112,8 +115,6 @@ Color calender_color = Color(0xFFe74c3c);
 Color need_improvement_color = Color(0xFF1E90FF);
 Color unsatisfied_color = Color(0xFFFFA500);
 Color satisfied_color = Color(0xFF00FA9A);
-Color red_new = Color(0xFFDE0239);
-Color red_new_light = Color.fromARGB(255, 255, 233, 233);
 Color splashBtn = Color(0xFF00b2ce);
 Color light_pink = Color(0xCAFFD4E7);
 Color orangeClr = Color(0xFFFF5F6D);

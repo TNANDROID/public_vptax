@@ -131,5 +131,14 @@
   "transaction_history": "Transaction History",
   "work_details": "Work Details",
   "select_finyear": "Select Financial Year",
-  "check_transaction_status": "Check Transaction Status"
+  "transaction_id": "Transaction ID",
+  "transaction_date": "Transaction Date",
+  "transaction_amount": "Transaction Amount",
+  "check_status": "Check Status",
+  "pending": "Pending",
+  "failed": "Failed",
+  "mobile": "Mobile",
+  "email": "Email",
+  "check_transaction_status": "Check Transaction Status",
+  "storage_permission": "Please allow Storage Permission to read your internal Storage"
 }

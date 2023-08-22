@@ -616,8 +616,8 @@ class _HomeState extends State<Home> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           flagMobileActive
-                              ? BottomText(context, mobileController, 'mobile', 'Mobile Number', TextInputType.number, isMobile: true)
-                              : BottomText(context, emailController, 'email', 'Email', TextInputType.emailAddress),
+                              ? BottomText(context, mobileController, 'mobile', 'mobileNumber'.tr(), TextInputType.number, isMobile: true)
+                              : BottomText(context, emailController, 'email', 'email'.tr(), TextInputType.emailAddress),
                         ],
                       ),
                     ),
@@ -653,7 +653,10 @@ class _HomeState extends State<Home> {
                   ],
                 ));
           });
-        });
+        }).whenComplete(() {
+      flagMobileActive = true;
+      setState(() {});
+    });
   }
 
   Card badge(BuildContext context, bool isActive, Function onPressed, {isMobileActive = true}) {
@@ -662,7 +665,7 @@ class _HomeState extends State<Home> {
       color: isActive ? c.green_new : c.inputGrey,
       shadowColor: isActive ? c.account_status_green_color : c.black,
       child: SizedBox(
-        width: 80,
+        width: 120,
         height: 30, // Adjust the height as needed
         child: TextButton(
           onPressed: () {
@@ -685,7 +688,7 @@ class _HomeState extends State<Home> {
               ),
               SizedBox(width: 4),
               Text(
-                isMobileActive ? 'Mobile' : 'Email',
+                isMobileActive ? 'mobile'.tr() : 'email'.tr(),
                 style: TextStyle(color: isActive ? c.white : Colors.black, fontSize: 11),
               ),
             ],

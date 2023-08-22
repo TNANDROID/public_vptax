@@ -31,6 +31,8 @@ class _CheckTransactionState extends State<CheckTransaction> {
 
   int statusFlag = 0;
 
+  String selectLang = '';
+
   @override
   void initState() {
     super.initState();
@@ -39,6 +41,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
 
   Future<void> initialize() async {
     mainList = preferencesService.TransactionList;
+    selectLang = await preferencesService.getUserInfo('lang');
     FilterList();
 
     setState(() {});
@@ -104,7 +107,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
                   }),
             )),
             SizedBox(
-              width: Screen.width(context) * 0.8,
+              width: Screen.width(context) * 0.95,
               height: 75,
               child: Card(
                 elevation: 5,
@@ -139,6 +142,14 @@ class _CheckTransactionState extends State<CheckTransaction> {
   }
 
   Expanded TabBar(String type, Function onPressed) {
+    String headerText = '';
+    if (type == 'Success') {
+      headerText = "success".tr();
+    } else if (type == 'Pending') {
+      headerText = "pending".tr();
+    } else {
+      headerText = "failed".tr();
+    }
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
@@ -185,8 +196,8 @@ class _CheckTransactionState extends State<CheckTransaction> {
                 ),
                 SizedBox(width: 4),
                 Text(
-                  type,
-                  style: TextStyle(color: c.text_color, fontSize: 13),
+                  headerText,
+                  style: TextStyle(color: c.text_color, fontSize: selectLang == 'ta' ? 11 : 13),
                 ),
               ],
             ),
@@ -197,25 +208,40 @@ class _CheckTransactionState extends State<CheckTransaction> {
   }
 
   Stack buildTransactionStatusCard(var item) {
+    String headerText = '';
+
     String status = item[key_transaction_status];
     String transID = item[key_transaction_id].toString();
     String transDate = item[key_transaction_date];
     String transAmount = item[key_res_paid_amount].toString();
 
+    Color cardColorPrimary;
+    Color cardColorPrimaryDark;
+    Color cardColorSecondary;
+
+    if (status == 'SUCCESS') {
+      cardColorPrimary = c.green_new;
+      cardColorSecondary = c.light_green;
+      cardColorPrimaryDark = c.successGreen;
+      headerText = "success".tr();
+    } else if (status == 'PENDING') {
+      cardColorPrimary = c.warningYellow;
+      cardColorSecondary = c.yellow_new_light;
+      cardColorPrimaryDark = c.yellow_new;
+      headerText = "pending".tr();
+    } else {
+      cardColorPrimary = c.red_new;
+      cardColorSecondary = c.red_new_light;
+      cardColorPrimaryDark = c.failureRed;
+      headerText = "failed".tr();
+    }
+
     return Stack(
       children: [
         Card(
           elevation: 5,
-          shadowColor: status == 'SUCCESS'
-              ? c.green_new
-              : status == 'PENDING'
-                  ? c.warningYellow
-                  : c.red_new,
-          color: status == 'SUCCESS'
-              ? c.light_green
-              : status == 'PENDING'
-                  ? c.green_combo
-                  : c.red_new_light,
+          shadowColor: cardColorPrimary,
+          color: cardColorSecondary,
           margin: EdgeInsets.all(10),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
@@ -232,7 +258,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
                   Row(
                     children: [
                       Text(
-                        'Transaction ID : ',
+                        "${"transaction_id".tr().toString()} :",
                         style: TextStyle(fontSize: 12, color: c.black),
                       ),
                       Text(
@@ -244,7 +270,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
                   Row(
                     children: [
                       Text(
-                        'Transaction Date : ',
+                        "${"transaction_date".tr().toString()} :",
                         style: TextStyle(fontSize: 12, color: c.black),
                       ),
                       Text(
@@ -256,7 +282,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
                   Row(
                     children: [
                       Text(
-                        'Transaction Amount : ',
+                        "${"transaction_amount".tr().toString()} :",
                         style: TextStyle(fontSize: 12, color: c.black),
                       ),
                       Text(
@@ -275,29 +301,41 @@ class _CheckTransactionState extends State<CheckTransaction> {
                             // Add your onPressed logic here
                           },
                           style: ElevatedButton.styleFrom(
-                            fixedSize: Size(125, 30),
-                            backgroundColor: status == 'SUCCESS' ? c.green_new : c.warningYellow, // Set the button color
+                            fixedSize: Size(selectLang == 'ta' ? 150 : 130, 30),
+                            backgroundColor: cardColorPrimary,
                           ),
                           child: Text(
-                            status == 'SUCCESS' ? 'Download Reciept' : 'Check Status',
-                            style: TextStyle(fontSize: 11, color: c.white),
+                            status == 'SUCCESS' ? 'download_receipt'.tr() : 'check_status'.tr(),
+                            style: TextStyle(fontSize: selectLang == 'ta' ? 10 : 12, color: c.text_color, fontWeight: FontWeight.w600),
                           ),
                         ),
                       ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Icon(
-                            status == 'SUCCESS'
-                                ? Icons.check_circle_outline_rounded
-                                : status == 'PENDING'
-                                    ? Icons.error_outline_rounded
-                                    : Icons.clear,
-                            color: c.green_new,
+                          Container(
+                            decoration: status == 'FAILED'
+                                ? BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: cardColorPrimary,
+                                      width: 1.5,
+                                    ),
+                                  )
+                                : null,
+                            child: Icon(
+                              status == 'SUCCESS'
+                                  ? Icons.check_circle_outline_rounded
+                                  : status == 'PENDING'
+                                      ? Icons.error_outline_rounded
+                                      : Icons.clear,
+                              color: cardColorPrimary,
+                              size: status == 'FAILED' ? 15 : 15,
+                            ),
                           ),
                           SizedBox(width: 5), // Add some spacing between the icon and text
                           Text(
-                            status,
+                            headerText,
                             style: TextStyle(fontSize: 11, color: c.text_color, fontWeight: FontWeight.bold),
                           ),
                         ],
@@ -319,7 +357,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
                   transform: Matrix4.translationValues(0.0, 1.0, 0.0),
                   width: 25,
                   height: 50,
-                  decoration: UIHelper.GradientContainer(10, 0, 0, 0, [c.green_new, c.green_new]),
+                  decoration: UIHelper.GradientContainer(10, 0, 0, 0, [cardColorPrimary, cardColorPrimary]),
                   child: Center(child: UIHelper.titleTextStyle('', c.white, 18, true, true)),
                 ),
                 ClipPath(
@@ -327,7 +365,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
                   child: Container(
                     width: 40,
                     height: 20,
-                    color: c.green_new,
+                    color: cardColorPrimary,
                     //   decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.colorPrimary, c.colorPrimary, borderWidth: 0),
                   ),
                 )
@@ -336,11 +374,11 @@ class _CheckTransactionState extends State<CheckTransaction> {
                   margin: EdgeInsets.only(left: 7.5, top: 1),
                   transform: Matrix4.translationValues(-15.0, 0.0, 0.0),
                   child: ClipPath(
-                    clipper: RightTriangleClipper(),
+                    clipper: RightTriangleClipper1(),
                     child: Container(
                       width: 10,
                       height: 8.5,
-                      color: c.successGreen,
+                      color: cardColorPrimaryDark,
                     ),
                   )),
             ],
