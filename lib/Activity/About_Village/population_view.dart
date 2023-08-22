@@ -76,16 +76,18 @@ class _PopulationViewState extends State<PopulationView> {
 
   Widget customCardDesign(int index, String title, String Value) {
     return Column(children: [
-      Container(
-        decoration: UIHelper.roundedBorderWithColorWithShadow(15, colourList[index]['c1'], colourList[index]['c2']),
-        height: 85,
-        width: Screen.width(context) / 3.8,
-        child: Row(children: [
-          Expanded(
-            child: UIHelper.titleTextStyle(title, c.white, 14, true, true),
-          ),
-        ]),
-      ),
+      Opacity(
+          opacity: 0.7, // Set the desired opacity here
+          child: Container(
+            decoration: UIHelper.roundedBorderWithColorWithShadow(15, colourList[index]['c1'], colourList[index]['c2']),
+            height: 85,
+            width: Screen.width(context) / 3.8,
+            child: Row(children: [
+              Expanded(
+                child: UIHelper.titleTextStyle(title, c.white, 14, true, true),
+              ),
+            ]),
+          )),
       Container(
         transform: Matrix4.translationValues(0.0, -20.0, 0.0),
         decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.white, c.white, borderColor: colourList[index]['c2'], borderWidth: 2),
