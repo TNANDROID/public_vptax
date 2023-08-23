@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
@@ -77,7 +78,7 @@ class _AssetDetailsViewState extends State<AssetDetailsView> {
         children: [
           UIHelper.verticalSpaceSmall,
           Container(
-            child: UIHelper.titleTextStyle("Asset Details", c.text_color, 14, true, true),
+            child: UIHelper.titleTextStyle('asset_details'.tr().toString(), c.text_color, 14, true, true),
           ),
           UIHelper.verticalSpaceMedium,
           Row(

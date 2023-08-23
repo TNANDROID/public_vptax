@@ -288,16 +288,30 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Container(
-                        transform: Matrix4.translationValues(25.0, 0.0, 0.0),
-                        child: ClipPath(
-                          clipper: RightTriangleClipper1(),
-                          child: Container(
-                            width: 15,
-                            height: 15,
+                    Stack(
+                      children: [
+                        Positioned(
+                            bottom: 0,
+                            child: Container(
+                              transform: Matrix4.translationValues(22.0, 0.0, 0.0),
+                              width: 12,
+                              height: 10,
+                              color: c.orangeClr,
+                            )),
+                        Container(
+                          transform: Matrix4.translationValues(22.0, 0.0, 0.0),
+                          width: 12,
+                          height: 20,
+                          decoration: BoxDecoration(
                             color: c.red,
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(100), // Adjust this value for a smaller/bigger circle
+                              bottomRight: Radius.circular(100),
+                            ),
                           ),
-                        )),
+                        ),
+                      ],
+                    ),
                     InkWell(
                         onTap: () {
                           setState(() {
@@ -315,9 +329,9 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                         child: Container(
                           height: 30,
                           width: MediaQuery.of(context).size.width / 2,
-                          transform: Matrix4.translationValues(25.0, 0.0, 0.0),
+                          transform: Matrix4.translationValues(22.0, 0.0, 0.0),
                           padding: EdgeInsets.all(5),
-                          decoration: UIHelper.GradientContainer(5, 0, 5, 10, [c.colorPrimary, c.orangeClr]),
+                          decoration: UIHelper.GradientContainer(5, 0, 5, 14, [c.colorPrimary, c.orangeClr]),
                           //decoration: UIHelper.GradientContainer(5, 0, 5, 10, [Color(0xFFFFF59D), Color(0xFFFFE082)]),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -672,7 +686,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
     int swmHeight = swmData.length * 30;
     return Container(
         margin: EdgeInsets.only(top: 15),
-        decoration: UIHelper.GradientContainer(5, 5, 5, 5, [Color(0xFFFFF3E0), Color(0xFFFFF9C4)]),
+        decoration: UIHelper.GradientContainer(5, 5, 5, 5, [Color(0xFFFFF3E0), Color(0xFFFFF3E0)]),
         padding: EdgeInsets.only(top: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -680,12 +694,12 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
             Visibility(
                 visible: taxData.isNotEmpty,
                 child: Container(
-                    height: roundedValueOfHeight * 62,
+                    height: roundedValueOfHeight * 72,
                     child: ResponsiveGridList(
                         listViewBuilderOptions: ListViewBuilderOptions(physics: NeverScrollableScrollPhysics()),
                         horizontalGridMargin: 20,
                         verticalGridMargin: 0,
-                        minItemWidth: Screen.width(context) / 3,
+                        minItemWidth: Screen.width(context) / 4,
                         children: List.generate(
                           taxData.length,
                           (index) {
@@ -771,19 +785,22 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                       children: [
                                         SizedBox(height: 7),
                                         Container(
+                                            padding: EdgeInsets.all(5.0),
                                             decoration: isStatus == "isEnable"
-                                                ? UIHelper.roundedBorderWithColorWithShadow(5, c.colorAccent3, c.colorAccent3)
-                                                : UIHelper.roundedBorderWithColorWithShadow(5, c.white, c.white),
-                                            height: 40,
-                                            child: Row(
+                                                ? UIHelper.roundedBorderWithColorWithShadow(5, c.followingBg, c.satisfied)
+                                                : isStatus == "isWaiting"
+                                                    ? UIHelper.roundedBorderWithColorWithShadow(5, c.white, c.white)
+                                                    : UIHelper.roundedBorderWithColorWithShadow(5, c.grey_3, c.grey_3),
+                                            height: 50,
+                                            child: Column(
                                               children: [
-                                                Expanded(child: Center(child: UIHelper.titleTextStyle(finYearStr + "\n" + durationStr, c.grey_8, 10, false, true))),
+                                                UIHelper.titleTextStyle(finYearStr + " ( $durationStr )", isStatus == "isEnable" ? c.white : c.grey_8, 10, false, true),
                                                 Expanded(
                                                   child: Container(
-                                                      padding: EdgeInsets.all(8.0),
+                                                      padding: EdgeInsets.all(5.0),
                                                       child: Center(
-                                                          child: UIHelper.titleTextStyle(
-                                                              "\u{20B9} " + Utils().getDemadAmount(taxData[index], selectedTaxTypeData[key_taxtypeid].toString()), c.black, 12, false, false))),
+                                                          child: UIHelper.titleTextStyle("\u{20B9} " + Utils().getDemadAmount(taxData[index], selectedTaxTypeData[key_taxtypeid].toString()),
+                                                              isStatus == "isEnable" ? c.white : c.black, 12, false, false))),
                                                 ),
                                               ],
                                             ))
@@ -793,7 +810,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                         right: 5,
                                         child: Container(
                                             decoration: isStatus == "isEnable"
-                                                ? UIHelper.circleWithColorWithShadow(0, c.green_new, c.green_new, borderColor: c.white, borderWidth: 2)
+                                                ? UIHelper.circleWithColorWithShadow(0, c.green_new, c.satisfied, borderColor: c.white, borderWidth: 2)
                                                 : isStatus == "isWaiting"
                                                     ? UIHelper.circleWithColorWithShadow(0, c.yello, c.yello, borderColor: c.white, borderWidth: 2)
                                                     : UIHelper.circleWithColorWithShadow(0, c.grey_3, c.grey_3, borderColor: c.white, borderWidth: 2),

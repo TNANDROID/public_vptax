@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, non_constant_identifier_names
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
@@ -159,7 +160,7 @@ class _PopulationViewState extends State<PopulationView> {
         children: [
           UIHelper.verticalSpaceSmall,
           Container(
-            child: UIHelper.titleTextStyle("Population Details", c.text_color, 14, true, true),
+            child: UIHelper.titleTextStyle('population_details'.tr().toString(), c.text_color, 14, true, true),
           ),
           UIHelper.verticalSpaceMedium,
           Row(
@@ -187,7 +188,7 @@ class _PopulationViewState extends State<PopulationView> {
             ],
           ),
           UIHelper.verticalSpaceMedium,
-          expandViewWidget(1, "Habitation Wise Population List"),
+          expandViewWidget(1, 'population_list'.tr().toString()),
           if (selectedIndexes.contains(1)) habitationWiseTableList(),
           UIHelper.verticalSpaceMedium,
         ],

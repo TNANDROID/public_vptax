@@ -40,113 +40,14 @@ class _KYVDashboardState extends State<KYVDashboard> {
 
   PreferenceService preferencesService = locator<PreferenceService>();
 
-  List colourList = [
-    {"c1": Color(0xFF00FF77), "c2": Color(0xFF008631), "c3": Color(0xFF1fd665), "c4": Color(0xFF83f28f)}
-  ];
-  Widget customCardDesign01() {
-    dynamic selectedColour = colourList[0];
-    return Row(
-      children: [
-        // Container(
-        //     transform: Matrix4.translationValues(00, -15.0, 0.0),
-        //     child: Stack(
-        //       children: [
-        //         Container(
-        //           height: 40,
-        //           width: 30,
-        //           decoration: UIHelper.roundedBorderWithColorWithShadow(15, selectedColour["c1"], selectedColour["c1"]),
-        //         ),
-        //         Positioned(
-        //             bottom: 0,
-        //             child: Container(
-        //               height: 15,
-        //               width: 30,
-        //               decoration: UIHelper.roundedBorderWithColorWithShadow(15, selectedColour["c2"], selectedColour["c2"]),
-        //             )),
-        //       ],
-        //     )),
-        Container(
-            transform: Matrix4.translationValues(00, -15.0, 0.0),
-            child: Stack(
-              children: [
-                Container(
-                  height: 40,
-                  width: 30,
-                  //decoration: UIHelper.roundedBorderWithColor(15, 0, 15, 0, selectedColour["c1"]),
-                  decoration: UIHelper.roundedBorderWithColorWithShadow(15, selectedColour["c1"], selectedColour["c1"]),
-                ),
-                Positioned(
-                    bottom: 0,
-                    child: Container(
-                      height: 15,
-                      width: 30,
-                      decoration: UIHelper.roundedBorderWithColorWithShadow(18, selectedColour["c2"], selectedColour["c2"]),
-                    )),
-              ],
-            )),
-        Expanded(
-            child: Container(
-          transform: Matrix4.translationValues(-20, 0.0, 0.0),
-          decoration: UIHelper.roundedBorderWithColorWithShadow(0, c.white, c.white, borderColor: c.grey_4, borderWidth: 1),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(children: [
-                Container(
-                  transform: Matrix4.translationValues(-2, -22, 0.0),
-                  height: 24,
-                  width: 20,
-                  decoration: UIHelper.roundedBorderWithColor(0, 0, 0, 0, selectedColour["c1"]),
-                ),
-                Container(
-                    transform: Matrix4.translationValues(-2, 0.0, 0.0),
-                    child: Column(
-                      children: [
-                        Center(
-                          child: TrapezoidContainer(
-                            width: 70,
-                            height: 10,
-                            color: selectedColour["c4"],
-                          ),
-                        ),
-                        Container(
-                          height: 70,
-                          width: 70,
-                          decoration: UIHelper.roundedBorderWithColor(0, 0, 0, 0, selectedColour["c3"]),
-                          padding: EdgeInsets.all(5),
-                          child: Container(
-                            decoration: UIHelper.roundedBorderWithColor(5, 5, 5, 5, c.full_transparent, borderColor: c.white, borderWidth: 1),
-                            child: Icon(
-                              Icons.done,
-                              size: 30,
-                              color: c.white,
-                            ),
-                          ),
-                        ),
-                        Transform.rotate(
-                            angle: pi, // 180 degrees in radians
-                            child: Center(
-                              child: TrapezoidContainer(
-                                width: 70,
-                                height: 10,
-                                color: selectedColour["c2"],
-                              ),
-                            )),
-                      ],
-                    )),
-                Container(
-                  transform: Matrix4.translationValues(-2, -22.0, 0.0),
-                  height: 24,
-                  width: 150,
-                  decoration: UIHelper.roundedBorderWithColor(0, 0, 0, 0, selectedColour["c1"]),
-                  child: Center(child: UIHelper.titleTextStyle("Success", c.white, 14, true, true)),
-                ),
-              ]),
-            ],
-          ),
-        ))
-      ],
-    );
+  @override
+  void initState() {
+    super.initState();
+    initialize();
+  }
+
+  Future<void> initialize() async {
+    selectedLang = await preferencesService.getUserInfo("lang");
   }
 
   @override
@@ -162,16 +63,7 @@ class _KYVDashboardState extends State<KYVDashboard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    UIHelper.titleTextStyle("Know Your Village", c.text_color, 16, true, false),
-                    customCardDesign01(),
-                    ClipPath(
-                      clipper: HalfCircleClipper(),
-                      child: Container(
-                        width: 200,
-                        height: 100,
-                        color: c.red,
-                      ),
-                    ),
+                    UIHelper.titleTextStyle('know_your_village'.tr().toString(), c.text_color, 14, true, false),
                     isAddressShow
                         ? Container(padding: EdgeInsets.fromLTRB(10, 5, 10, 5), child: customCardDesign())
                         : Column(
@@ -199,7 +91,7 @@ class _KYVDashboardState extends State<KYVDashboard> {
                               UIHelper.verticalSpaceLarge,
                               Image.asset(imagepath.waitingImg, fit: BoxFit.contain, height: Screen.width(context) / 2, width: Screen.width(context) / 2),
                               UIHelper.verticalSpaceMedium,
-                              UIHelper.titleTextStyle("Awaiting input from your side...", c.text_color, 14, true, true)
+                              UIHelper.titleTextStyle('waiting_input'.tr().toString(), c.text_color, 14, true, true)
                             ],
                           ))
                   ],
@@ -212,7 +104,11 @@ class _KYVDashboardState extends State<KYVDashboard> {
 //Custom Card Design
   Widget customCardDesign() {
     String address = "";
-    address = selectedDistrict[key_dname] + ", " + selectedBlock[key_bname] + ", " + selectedVillage[key_pvname] + ".";
+    if (selectedLang == "en") {
+      address = selectedDistrict[key_dname] + ", " + selectedBlock[key_bname] + ", " + selectedVillage[key_pvname] + ".";
+    } else {
+      address = selectedDistrict[key_dname_ta] + ", " + selectedBlock[key_bname_ta] + ", " + selectedVillage[key_pvname_ta] + ".";
+    }
     return Stack(children: [
       Container(
         color: c.colorPrimary,

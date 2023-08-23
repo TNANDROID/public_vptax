@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 class CustomClip extends CustomClipper<Path> {
@@ -111,71 +109,6 @@ class RightTriangleClipper extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
-    return false;
-  }
-}
-
-class TrapezoidContainer extends StatelessWidget {
-  final double width;
-  final double height;
-  final Color color;
-
-  const TrapezoidContainer({
-    required this.width,
-    required this.height,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipPath(
-      clipper: TrapezoidClipper(),
-      child: Container(
-        width: width,
-        height: height,
-        color: color,
-      ),
-    );
-  }
-}
-
-class TrapezoidClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final path = Path()
-      ..moveTo(size.width * 0.2, 0) // Top-left corner
-      ..lineTo(size.width * 0.8, 0) // Top-right corner
-      ..lineTo(size.width, size.height) // Bottom-right corner
-      ..lineTo(0, size.height) // Bottom-left corner
-      ..close();
-
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
-    return false;
-  }
-}
-
-class HalfCircleClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final path = Path()
-      ..addArc(
-        Rect.fromCircle(
-          center: Offset(size.width / 2, size.height),
-          radius: size.width,
-        ),
-        0,
-        pi,
-      );
-
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) {
     return false;
   }
 }

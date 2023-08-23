@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
@@ -49,7 +50,7 @@ class _habitationViewState extends State<habitationView> {
         children: [
           UIHelper.verticalSpaceSmall,
           Container(
-            child: UIHelper.titleTextStyle("Habitation Details", c.text_color, 14, true, true),
+            child: UIHelper.titleTextStyle('habitation_details'.tr().toString(), c.text_color, 14, true, true),
           ),
           UIHelper.verticalSpaceMedium,
           Container(
