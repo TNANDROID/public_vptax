@@ -1,15 +1,14 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print, non_constant_identifier_names
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print, non_constant_identifier_names, unnecessary_brace_in_string_interps
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
-import 'package:public_vptax/Resources/ImagePath.dart';
-
 import '../../Layout/customclip.dart';
 import '../../Layout/ui_helper.dart';
 import '../../Model/transaction_model.dart';
 import '../../Resources/StringsKey.dart';
+import '../../Services/Apiservices.dart';
 import '../../Services/Preferenceservices.dart';
 import '../../Services/locator.dart';
 
@@ -23,6 +22,8 @@ class CheckTransaction extends StatefulWidget {
 class _CheckTransactionState extends State<CheckTransaction> {
   final TransactionModel transactionModel = TransactionModel();
   PreferenceService preferencesService = locator<PreferenceService>();
+  ApiServices apiServices = locator<ApiServices>();
+  String selectedLang = "";
 
   List mainList = [];
   List successList = [];
@@ -122,15 +123,15 @@ class _CheckTransactionState extends State<CheckTransaction> {
                     TabBar('Success', () {
                       statusFlag = 1;
                       setState(() {});
-                    }),
+                    }, statusFlag == 1 ? true : false),
                     TabBar('Pending', () {
                       statusFlag = 2;
                       setState(() {});
-                    }),
+                    }, statusFlag == 2 ? true : false),
                     TabBar('Failed', () {
                       statusFlag = 3;
                       setState(() {});
-                    })
+                    }, statusFlag == 3 ? true : false)
                   ],
                 ),
               ),
@@ -141,18 +142,24 @@ class _CheckTransactionState extends State<CheckTransaction> {
     );
   }
 
-  Expanded TabBar(String type, Function onPressed) {
+  Expanded TabBar(String type, Function onPressed, bool isActive) {
     String headerText = '';
+    Color bgColor;
     if (type == 'Success') {
       headerText = "success".tr();
+      bgColor = c.light_green_new;
     } else if (type == 'Pending') {
       headerText = "pending".tr();
+      bgColor = c.yellow_new_light;
     } else {
       headerText = "failed".tr();
+      bgColor = c.red_new_light;
     }
     return Expanded(
+      flex: 1,
       child: Container(
         decoration: BoxDecoration(
+          color: isActive ? bgColor : null,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Center(
@@ -194,9 +201,11 @@ class _CheckTransactionState extends State<CheckTransaction> {
                             : c.warningYellow,
                   ),
                 ),
-                SizedBox(width: 4),
+                SizedBox(width: 3),
                 Text(
                   headerText,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                   style: TextStyle(color: c.text_color, fontSize: selectLang == 'ta' ? 11 : 13),
                 ),
               ],
@@ -210,7 +219,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
   Stack buildTransactionStatusCard(var item) {
     String headerText = '';
 
-    String status = item[key_transaction_status];
+    String status = item[key_transaction_status] ?? '';
     String transID = item[key_transaction_id].toString();
     String transDate = item[key_transaction_date];
     String transAmount = item[key_res_paid_amount].toString();
@@ -224,7 +233,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
       cardColorSecondary = c.light_green;
       cardColorPrimaryDark = c.successGreen;
       headerText = "success".tr();
-    } else if (status == 'PENDING') {
+    } else if (status == 'PENDING' || status == '') {
       cardColorPrimary = c.warningYellow;
       cardColorSecondary = c.yellow_new_light;
       cardColorPrimaryDark = c.yellow_new;
@@ -298,7 +307,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
                         visible: status == 'FAILED' ? false : true,
                         child: ElevatedButton(
                           onPressed: () {
-                            // Add your onPressed logic here
+                            checkReceiptStatus(status, transID, selectLang, context);
                           },
                           style: ElevatedButton.styleFrom(
                             fixedSize: Size(selectLang == 'ta' ? 150 : 130, 30),
@@ -326,11 +335,11 @@ class _CheckTransactionState extends State<CheckTransaction> {
                             child: Icon(
                               status == 'SUCCESS'
                                   ? Icons.check_circle_outline_rounded
-                                  : status == 'PENDING'
-                                      ? Icons.error_outline_rounded
-                                      : Icons.clear,
+                                  : status == 'FAILED'
+                                      ? Icons.clear
+                                      : Icons.error_outline_rounded,
                               color: cardColorPrimary,
-                              size: status == 'FAILED' ? 15 : 15,
+                              size: status == 'FAILED' ? 11 : 15,
                             ),
                           ),
                           SizedBox(width: 5), // Add some spacing between the icon and text
@@ -394,16 +403,29 @@ class _CheckTransactionState extends State<CheckTransaction> {
     pendingList = [];
 
     for (var item in mainList) {
-      var transactionStatus = item[key_transaction_status];
+      var transactionStatus = item[key_transaction_status] ?? '';
 
       if (transactionStatus == "SUCCESS") {
         successList.add(item);
-      } else if (transactionStatus == "PENDING") {
+      } else if (transactionStatus == "PENDING" || transactionStatus == "") {
         pendingList.add(item);
       } else if (transactionStatus == "FAILED") {
         failureList.add(item);
       }
     }
     setState(() {});
+  }
+
+  Future<void> checkReceiptStatus(String flag, String transID, String lang, BuildContext context) async {
+    var requestData = {if (flag == "SUCCESS") key_service_id: service_key_TransactionidWiseGetReceipt, key_transaction_id: transID, key_language_name: lang};
+
+    var GetRequestDataList = {key_data_content: requestData};
+
+    var response = await apiServices.mainServiceFunction(GetRequestDataList);
+    print('response>>: ${response}');
+    if (response[key_status] == key_success && response[key_response] == key_success) {
+      var receiptResponce = response[key_main_data];
+      print('receiptResponce: ${receiptResponce}');
+    }
   }
 }

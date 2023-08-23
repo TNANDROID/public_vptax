@@ -41,6 +41,8 @@ Color full_transparent = Color(0xFF00FF0000);
 Color grey_4 = Color(0xFFdddbda);
 Color red_new = Color(0xFFDE0239);
 Color red_new_light = Color.fromARGB(255, 255, 233, 233);
+Color light_green = Color(0xFFf3fff3);
+Color light_green_new = Color.fromARGB(255, 232, 252, 232);
 
 //*********Un Used Variables**************/
 
@@ -65,7 +67,6 @@ Color gradEnd = Color(0xFF6bce67);
 Color gradStart = Color(0xFF45c240);
 Color followersBg = Color(0xFF6bce67);
 Color followingBg = Color(0xFF45c240);
-Color light_green = Color(0xFFf3fff3);
 Color pink = Color(0xFFbf63f9);
 Color pink_light = Color(0xFFdaa6fd);
 Color pink_very_light = Color(0xFFf5e7ff);
