@@ -52,34 +52,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
   final  TextEditingController receiptController = TextEditingController();
   final  scrollController = ScrollController();
   OtpFieldController OTPcontroller = OtpFieldController();
-  List<dynamic> taxType = [
-    {"taxCode": "01", "taxname": 'propertyTax'.tr().toString()},
-    {"taxCode": "02", "taxname": 'waterCharges'.tr().toString()},
-    {"taxCode": "03", "taxname": 'professionalTax'.tr().toString()},
-    {"taxCode": "04", "taxname": 'nonTax'.tr().toString()},
-    {"taxCode": "05", "taxname": 'tradeLicense'.tr().toString()},
-  ];
-  List<dynamic> districtlist = [
-    {"dcode": "01", "dname": 'Ariyalur'},
-    {"dcode": "02", "dname": 'Coimbatore'},
-    {"dcode": "03", "dname": 'Kancheepuram'},
-    {"dcode": "04", "dname": 'Tanjavur'},
-    {"dcode": "05", "dname": 'Thiruvarur'},
-  ];
-  List<dynamic> blockList = [
-    {"bcode": "01", "bname": 'Ariyalur'},
-    {"bcode": "02", "bname": 'Coimbatore'},
-    {"bcode": "03", "bname": 'Kancheepuram'},
-    {"bcode": "04", "bname": 'Tanjavur'},
-    {"bcode": "05", "bname": 'Thiruvarur'},
-  ];
-  List<dynamic> villageList = [
-    {"pvcode": "01", "pvname": 'Ariyalur'},
-    {"pvcode": "02", "pvname": 'Coimbatore'},
-    {"pvcode": "03", "pvname": 'Kancheepuram'},
-    {"pvcode": "04", "pvname": 'Tanjavur'},
-    {"pvcode": "05", "pvname": 'Thiruvarur'},
-  ];
   @override
   void initState() {
     super.initState();
@@ -122,27 +94,33 @@ class _ViewReceiptState extends State<ViewReceipt> {
     String titleTextTamil = "";
     String initValue="";
     if (index == 0) {
-      dropList = taxType;
-      keyCode = "taxCode";
-      titleText = "taxname";
-      titleTextTamil = "taxname";
+      dropList=preferencesService.taxTypeList;;
+      print("tax type>>>"+dropList.toString());
+      keyCode = key_taxtypeid;
+      titleText = key_taxtypedesc_en;
+      titleTextTamil = key_taxtypedesc_ta;
+      initValue=selectedTaxType;
     } else if (index == 1) {
       dropList = preferencesService.districtList;
+      print("districtList>>>"+dropList.toString());
       keyCode = key_dcode;
       titleText = key_dname;
       titleTextTamil = key_dname_ta;
       initValue = selectedDistrict;
     } else if (index == 2) {
-      dropList = model.selectedBlockList;
+      dropList =model.selectedBlockList;
+      print("blockList>>>"+dropList.toString());
       keyCode = key_bcode;
       titleText = key_bname;
       titleTextTamil = key_bname_ta;
       initValue = selectedBlock;
     } else if (index == 3) {
-      dropList =villageList;
-      keyCode = "pvcode";
-      titleText = "pvname";
-      titleTextTamil = "pvname";
+      dropList =model.selectedVillageList;
+      print("villageList>>>"+dropList.toString());
+      keyCode = key_pvcode;
+      titleText = key_pvname;
+      titleTextTamil = key_pvname_ta;
+      initValue=selectedvillage;
     }
     return
       FormBuilderDropdown(
@@ -155,11 +133,9 @@ class _ViewReceiptState extends State<ViewReceipt> {
           color: c.grey_8,
         ),
         constraints: BoxConstraints(maxHeight: 35),
-        hintText: inputHint,
-        hintStyle: TextStyle(
-            fontSize: 11,
-            color: c.black
-        ),
+        floatingLabelBehavior: FloatingLabelBehavior.never,
+        labelText: inputHint,
+        labelStyle: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_9),
         filled: true,
         fillColor: c.full_transparent,
         enabledBorder:OutlineInputBorder(
@@ -180,14 +156,9 @@ class _ViewReceiptState extends State<ViewReceipt> {
       icon: Container(width: 0, height: 0),
 
       name: fieldName,
-      initialValue: index == 0
-          ? selectedTaxType
-          : index == 1
-          ? selectedDistrict
-          : index == 2
-          ? selectedBlock
-          : selectedvillage,
-      /*onTap: () async {
+        initialValue: initValue,
+
+       /* onTap: () async {
         if (index == 0) {
           selectedDistrict="";
           selectedBlock = "";
@@ -212,7 +183,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
       // iconSize: 28,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(errorText:'')
+        FormBuilderValidators.required(errorText:inputHint)
       ]),
       items: dropList.map((item) => DropdownMenuItem(
         value: item[keyCode],
@@ -232,20 +203,16 @@ class _ViewReceiptState extends State<ViewReceipt> {
         if(index==0)
         {
           selectedTaxType=value.toString();
+          selectedDistrict="";
+          selectedBlock="";
+          selectedvillage="";
         }
         else if (index == 1) {
-          model.selectedBlockList.clear();
-          model.selectedVillageList.clear();
-          selectedDistrict = value.toString();
-          selectedBlock = "";
-          selectedvillage = "";
-          Future.delayed(Duration(milliseconds: 500), () {
-            model.loadUIBlock(selectedDistrict);
-            setState(() {});
-            Utils().hideProgress(context);
-          });
+         selectedDistrict=value.toString();
+         model.loadUIBlock(selectedDistrict);
         } else if (index == 2) {
           selectedBlock = value.toString();
+          model.loadUIVillage(selectedDistrict, selectedBlock);
         } else if (index == 3) {
           selectedvillage = value.toString();
         }

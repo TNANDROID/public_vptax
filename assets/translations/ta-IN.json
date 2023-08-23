@@ -146,5 +146,21 @@
   "population_details":"மக்கள் தொகை விவரங்கள்",
   "population_list":"மக்கள் தொகை பட்டியல்",
   "asset_details":"சொத்து விவரங்கள்",
-  "financial_situation":"நிதி நிலைமை"
+  "financial_situation":"நிதி நிலைமை",
+  "total_works": "மொத்த வேலைகள்",
+  "not_started_work": "தொடங்கபடாத வேலைகள்",
+  "work_in_progress": "நடந்து கொண்டிருக்கும் வேலைகள்",
+  "completed_work": "முடிக்கப்பட்ட வேலைகள்",
+  "habitation_name": "குக்கிராமத்தின் பெயர்",
+  "scheme_name": "திட்டத்தின் பெயர்",
+  "amount_spent_so_far": "இதுவரை செலவிடப்பட்ட தொகை",
+  "as_value": "ஏஎஸ் மதிப்பு ",
+  "financial_year": "நிதி ஆண்டு",
+  "scheme_group_name": "திட்டக் குழுவின் பெயர்",
+  "status": "நிலை",
+  "work_id": "பணி அடையாள எண்",
+  "receipt": "ரசீது",
+  "storage_permission":"உங்கள் உள் சேமிப்பகத்தைப் படிக்க சேமிப்பக அனுமதியை அனுமதிக்கவும்",
+  "download_receipt_success": "ரசீது வெற்றிகரமாக பதிவிறக்கம் செய்யப்பட்டது"
+
 }

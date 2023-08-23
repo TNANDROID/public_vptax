@@ -147,5 +147,19 @@
   "population_details":"Population Details",
   "population_list":"Habitation wise Population List",
   "asset_details":"Asset Details",
-  "financial_situation":"Demand Collection Balance"
+  "financial_situation":"Demand Collection Balance",
+  "total_works": "Total Works",
+  "not_started_work": "Not Started Work",
+  "work_in_progress": "Work In Progress",
+  "completed_work": "Completed Work",
+  "habitation_name": "Habitation Name",
+  "scheme_name": "Scheme Name",
+  "amount_spent_so_far": "Amount Spent So Far",
+  "as_value": "AS Value ",
+  "financial_year": "Financial year",
+  "scheme_group_name": "Scheme Group Name",
+  "status": "Status",
+  "work_id": "Work Id",
+  "download_receipt_success": "Receipt Downloaded Successfully",
+  "receipt": "Receipt"
 }
