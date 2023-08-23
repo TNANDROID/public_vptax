@@ -47,5 +47,14 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSDownloadsDirectoryUsageDescription</key>
+    	<string>This app requires access to the Downloads directory to save downloaded files.</string>
+    	<key>LSSupportsOpeningDocumentsInPlace</key>
+    	<true/>
+    	<key>UIFileSharingEnabled</key>
+    	<true/>
+    	<key>UIBackgroundModes</key>
+    	<array>
+        <string>fetch</string>
 </dict>
 </plist>

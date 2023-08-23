@@ -9,28 +9,50 @@ import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:public_vptax/Activity/Auth/Home.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../Utils/utils.dart';
+import 'package:public_vptax/Utils/ContentInfo.dart';
+
 
 class PDF_Viewer extends StatefulWidget {
   final pdfBytes;
-  final receipt_no;
-  PDF_Viewer({this.pdfBytes,this.receipt_no});
+  PDF_Viewer({this.pdfBytes});
 
   @override
   State<PDF_Viewer> createState() => _PDF_ViewerState();
 }
-
 class _PDF_ViewerState extends State<PDF_Viewer> {
+  Future<bool> _onWillPop() async {
+    print("back press");
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => Home(
+          isLogin: false,
+        )), (route) => false);
+
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () => _onWillPop(),
+        child:  Scaffold(
       appBar: AppBar(
         backgroundColor: c.colorPrimary,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context, true),
+          onPressed: () => {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Home(
+                      isLogin: false,
+                    )),
+                    (route) => false)
+          },
         ),
         actions: [
           IconButton(
@@ -38,11 +60,11 @@ class _PDF_ViewerState extends State<PDF_Viewer> {
             onPressed: () => {downloadPDF(widget.pdfBytes)},
           )
         ],
-        title: const Text("Document"),
+        title:  Text('receipt'.tr().toString(),style: TextStyle(fontSize: 14),),
         centerTitle: true, // like this!
       ),
       body: SfPdfViewer.memory(widget.pdfBytes),
-    );
+    ));
   }
 
   // ********************************************* Download PDF Func ***************************************//
@@ -103,14 +125,13 @@ class _PDF_ViewerState extends State<PDF_Viewer> {
       }
 
       try {
-
-        setPDFDirectory(downloadsDir, pdfBytes);
-      } catch (e) {
+        setPDFDirectory(downloadsDir, pdfBytes);      } catch (e) {
         print('Error writing PDF to file: $e');
         return;
       }
     }
   }
+
 
   // ********************************************* Notification PDF Func ***************************************//
 
@@ -161,25 +182,6 @@ class _PDF_ViewerState extends State<PDF_Viewer> {
       );
     }*/
 
-    void _openFilePath(String path) async {
-      final result = await OpenFile.open(path);
-      /*if (Platform.isAndroid) {
-      var status = await Permission.manageExternalStorage.status;
-      print("asdsdasd $status");
-
-      if (status != PermissionStatus.granted) {
-        status = await Permission.manageExternalStorage.request();
-      }
-      if (status.isGranted) {
-        final result = await OpenFile.open(path);
-      } else {
-        Utils().showAppSettings(context, s.storage_permission);
-      }
-
-    } else if (Platform.isIOS) {
-      final result = await OpenFile.open(path);
-    }*/
-    }
 
     Future<void> showAppSettings(BuildContext context, String msg) async {
       return showDialog<void>(
@@ -210,13 +212,16 @@ class _PDF_ViewerState extends State<PDF_Viewer> {
 
     void setPDFDirectory(Directory downloadsDir, Uint8List pdfBytes) async {
       String fileName;
+      print('pdfFile.path: ${downloadsDir.path}');
 
       fileName =
-      "Tax Receipt_${widget.receipt_no}_${DateFormat('dd-MM-yyyy_HH-mm-ss').format(DateTime.now())}";
+      "Tax Receipt_${DateFormat('dd-MM-yyyy_HH-mm-ss').format(DateTime.now())}";
       // Save the PDF bytes to a file in the downloads folder
       File pdfFile = File('${downloadsDir.path}/$fileName.pdf');
       await pdfFile.writeAsBytes(pdfBytes);
-      _openFilePath(pdfFile.path);
+      print('pdfFile.path: ${pdfFile.path}');
+      Utils().showAlert(context, ContentType.success, 'download_receipt_success'.tr().toString(), btnCount: "1", btnmsg: 'receipt',file_path:pdfFile.path );
+
     }
 
 }

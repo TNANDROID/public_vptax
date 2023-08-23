@@ -369,17 +369,29 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              UIHelper.titleTextStyle(('computerRegisterNumber'.tr().toString() + " : " + (mainList[mainIndex][s.key_assessment_id].toString() ?? "")), clr, 12, false, true),
+              UIHelper.verticalSpaceTiny,
               UIHelper.titleTextStyle(('building_licence_number'.tr().toString() + " : " + (mainList[mainIndex][s.key_building_licence_no].toString() ?? "")), clr, 12, false, true),
+              UIHelper.verticalSpaceTiny,
               UIHelper.titleTextStyle(('assesment_number'.tr().toString() + " : " + (mainList[mainIndex][s.key_assessment_no].toString() ?? "")), clr, 12, false, true),
             ],
           )
         : selectedTaxTypeData[s.key_taxtypeid] == 2
-            ? UIHelper.titleTextStyle(('water_connection_number'.tr().toString() + " : " + (mainList[mainIndex][s.key_assessment_no].toString() ?? "")), clr, 12, false, true)
-            : selectedTaxTypeData[s.key_taxtypeid] == 4
+            ? Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          UIHelper.titleTextStyle(('computerRegisterNumber'.tr().toString() + " : " + (mainList[mainIndex][s.key_assessment_id].toString() ?? "")), clr, 12, false, true),
+          UIHelper.verticalSpaceTiny,
+          UIHelper.titleTextStyle(('water_connection_number'.tr().toString() + " : " + (mainList[mainIndex][s.key_assessment_no].toString() ?? "")), clr, 12, false, true)
+        ],
+    ): selectedTaxTypeData[s.key_taxtypeid] == 4
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      UIHelper.titleTextStyle(('computerRegisterNumber'.tr().toString() + " : " + (mainList[mainIndex][s.key_assessment_id].toString() ?? "")), clr, 12, false, true),
+                      UIHelper.verticalSpaceTiny,
                       UIHelper.titleTextStyle(('financialYear'.tr().toString() + " : " + (mainList[mainIndex]['financialyear'].toString() ?? "")), clr, 12, false, true),
+                      UIHelper.verticalSpaceTiny,
                       UIHelper.titleTextStyle(('assesment_number'.tr().toString() + " : " + (mainList[mainIndex][s.key_assessment_no].toString() ?? "")), clr, 12, false, true),
                     ],
                   )
@@ -387,6 +399,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          UIHelper.titleTextStyle(('computerRegisterNumber'.tr().toString() + " : " + (mainList[mainIndex][s.key_assessment_id].toString() ?? "")), clr, 12, false, true),
+                          UIHelper.verticalSpaceTiny,
                           UIHelper.titleTextStyle(('lease_number'.tr().toString() + " : " + (mainList[mainIndex][s.key_assessment_no].toString() ?? "")), clr, 12, false, true),
                           UIHelper.verticalSpaceTiny,
                           UIHelper.titleTextStyle(('lease_state'.tr().toString() + " : " + (mainList[mainIndex]['lease_statename'].toString() ?? "")), clr, 12, false, true),
@@ -401,7 +415,14 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                               true),
                         ],
                       )
-                    : UIHelper.titleTextStyle(('traders_code'.tr().toString() + " : " + (mainList[mainIndex][s.key_assessment_no].toString() ?? "")), clr, 12, false, true);
+                    : Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          UIHelper.titleTextStyle(('computerRegisterNumber'.tr().toString() + " : " + (mainList[mainIndex][s.key_assessment_id].toString() ?? "")), clr, 12, false, true),
+          UIHelper.verticalSpaceTiny,
+          UIHelper.titleTextStyle(('traders_code'.tr().toString() + " : " + (mainList[mainIndex][s.key_assessment_no].toString() ?? "")), clr, 12, false, true)
+    ],
+    );
   }
 
   // Widget propertyTaxCollectionWidget(int mainIndex) {
@@ -681,6 +702,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
         }
       }
     }
+    print(taxData.toString());
     dynamic calcOfHeight = taxData.length / 2;
     int roundedValueOfHeight = calcOfHeight.ceil();
     int swmHeight = swmData.length * 30;
@@ -704,7 +726,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                           taxData.length,
                           (index) {
                             String finYearStr = "";
-                            if (selectedTaxTypeData[key_taxtypeid] == "4") {
+                            if (selectedTaxTypeData[key_taxtypeid].toString() == "4") {
                               finYearStr = taxData[index]['financialyear'];
                             } else {
                               finYearStr = taxData[index][key_fin_year];
@@ -787,7 +809,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                         Container(
                                             padding: EdgeInsets.all(5.0),
                                             decoration: isStatus == "isEnable"
-                                                ? UIHelper.roundedBorderWithColorWithShadow(5, c.followingBg, c.satisfied)
+                                                ? UIHelper.roundedBorderWithColorWithShadow(5, c.need_improvement, c.need_improvement)
                                                 : isStatus == "isWaiting"
                                                     ? UIHelper.roundedBorderWithColorWithShadow(5, c.white, c.white)
                                                     : UIHelper.roundedBorderWithColorWithShadow(5, c.grey_3, c.grey_3),
@@ -812,7 +834,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                             decoration: isStatus == "isEnable"
                                                 ? UIHelper.circleWithColorWithShadow(0, c.green_new, c.satisfied, borderColor: c.white, borderWidth: 2)
                                                 : isStatus == "isWaiting"
-                                                    ? UIHelper.circleWithColorWithShadow(0, c.yello, c.yello, borderColor: c.white, borderWidth: 2)
+                                                    ? UIHelper.circleWithColorWithShadow(0, c.yello, c.unsatisfied1, borderColor: c.white, borderWidth: 2)
                                                     : UIHelper.circleWithColorWithShadow(0, c.grey_3, c.grey_3, borderColor: c.white, borderWidth: 2),
                                             height: 14,
                                             width: 14))

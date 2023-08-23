@@ -14,23 +14,26 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:public_vptax/Utils/ContentInfo.dart';
 
 import '../../Services/Apiservices.dart';
+import '../../Services/Preferenceservices.dart';
 import '../../Services/locator.dart';
 import '../Auth/Pdf_Viewer.dart';
 
 class AtomPaynetsView extends StatefulWidget {
   final mode;
   final payDetails;
-  AtomPaynetsView(this.mode, this.payDetails);
+  final mcontext;
+  AtomPaynetsView(this.mode, this.payDetails, this.mcontext);
   @override
-  createState() => _AtomPaynetsViewState(this.mode, this.payDetails);
+  createState() => AtomPaynetsViewState(this.mode, this.payDetails, this.mcontext);
 }
 
-class _AtomPaynetsViewState extends State<AtomPaynetsView> {
+class AtomPaynetsViewState extends State<AtomPaynetsView> {
   ApiServices apiServices = locator<ApiServices>();
   String selectedLang = "";
 
   final mode;
   final payDetails;
+  final mcontext;
   final _key = UniqueKey();
   late WebViewController _controller;
   var transactionResult = "";
@@ -40,7 +43,7 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
   final String _responseDecryptionKey = '75AEF0FA1B94B3C10D4F5B268F757F11'; //mandatory
   final Completer<WebViewController> _controllerCompleter = Completer<WebViewController>();
 
-  var preferencesService;
+  PreferenceService preferencesService = locator<PreferenceService>();
   var receiptList;
 
   @override
@@ -55,7 +58,7 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
     selectedLang = await preferencesService.getUserInfo("lang");
   }
 
-  _AtomPaynetsViewState(this.mode, this.payDetails);
+  AtomPaynetsViewState(this.mode, this.payDetails, this.mcontext);
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +88,7 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
                 // ignore: deprecated_member_use
                 await launch(request.url);
               } catch (e) {
-                _closeWebView(context, "Transaction Status = cannot open UPI applications", ContentType.fail);
+                closeWebView(context, "Transaction Status = cannot open UPI applications", ContentType.fail);
                 throw 'custom error for UPI Intent';
               }
               return NavigationDecision.prevent;
@@ -143,7 +146,7 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
                 // }
                 transactionResult = await getPaymentStatus(context, encData, merchId);
               }
-              _closeWebView(context, transactionResult, transactionResult.contains("Success") ? ContentType.success : ContentType.fail);
+              closeWebView(context, transactionResult, transactionResult.contains("Success") ? ContentType.success : ContentType.fail);
             }
           },
           gestureNavigationEnabled: true,
@@ -178,12 +181,13 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
     _controller.loadUrl(Uri.dataFromString(fileText, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString());
   }
 
-  _closeWebView(context, transactionResult, ContentType type) async {
+  closeWebView(context, transactionResult, ContentType type) async {
     Navigator.pop(context);
-    Utils().showAlert(context, type, "$transactionResult").then((value) => () async {if (type == ContentType.success) {
-      await getReceipt();
-    }});
-
+    if (type == ContentType.success ) {
+      Utils().showAlert(mcontext, type, "$transactionResult", btnCount: "1", btnmsg: 'payment',receiptList:receiptList);
+    }else{
+      Utils().showAlert(mcontext, type, "$transactionResult", btnCount: "1");
+    }
   }
 
   Future<bool> _handleBackButtonAction(BuildContext context) async {
@@ -215,42 +219,6 @@ class _AtomPaynetsViewState extends State<AtomPaynetsView> {
     return Future.value(true);
   }
 
-  Future<void> getReceipt() async {
-    var receiptRequestData = {
-      key_service_id: service_key_GetReceipt,
-      key_receipt_id: receiptList[key_receipt_id].toString(),
-      key_receipt_no: receiptList[key_receipt_no].toString(),
-      key_taxtypeid: receiptList[key_taxtypeid].toString(),
-      key_state_code: receiptList[key_state_code].toString(),
-      key_dcode: receiptList[key_dcode].toString(),
-      key_bcode: receiptList[key_bcode].toString(),
-      key_pvcode: receiptList[key_lbcode].toString(),
-      key_language_name: selectedLang
-    };
-    var GetReceiptList = {key_data_content: receiptRequestData};
-
-    var response = await apiServices.mainServiceFunction(GetReceiptList);
-    print('response>>: ${response}');
-    if (response[key_status] == key_success && response[key_response] == key_success) {
-      var receiptResponce = response[key_main_data];
-      var pdftoString = receiptResponce['receipt_content'];
-      Uint8List? pdf = const Base64Codec().decode(pdftoString);
-      MaterialPageRoute(
-          builder: (context) => PDF_Viewer(
-            pdfBytes: pdf,
-            receipt_no: receiptList[key_receipt_no].toString(),
-          ));
-
-    }else{
-      Utils().showAlert(
-        context,
-        ContentType.fail,
-        response[key_response],
-      );
-
-    }
-
-  }
 
   Future<String> getPaymentStatus(BuildContext context, encData, String merchId) async {
     var responceMessage = '';

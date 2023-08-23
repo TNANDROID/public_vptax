@@ -11,6 +11,7 @@ import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:open_file/open_file.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:public_vptax/Activity/Payments/atom_paynets_gateway.dart';
@@ -21,9 +22,12 @@ import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui' as ui;
+import '../Activity/Auth/Pdf_Viewer.dart';
 import '../Model/startup_model.dart';
 import '../Resources/StringsKey.dart';
 import 'ContentInfo.dart';
+import '../../Services/Apiservices.dart';
+
 
 class Utils {
   PreferenceService preferencesService = locator<PreferenceService>();
@@ -141,10 +145,9 @@ class Utils {
     return color == null ? null : ui.ColorFilter.mode(color, colorBlendMode);
   }
 
-  Future<bool?> showAlert(BuildContext context, ContentType contentType, String message, {String? title, String? btnCount, String? btnmsg, double? titleFontSize, double? messageFontSize}) async {
-    bool returnFlag = false;
+  Future<void> showAlert(BuildContext mcontext, ContentType contentType, String message, {String? title, String? btnCount, String? btnmsg,var receiptList,String? file_path, double? titleFontSize, double? messageFontSize}) async {
     await showDialog<void>(
-      context: context,
+      context: mcontext,
       barrierDismissible: btnCount != null ? false : true, // user must tap button!
       builder: (BuildContext context) {
         // Size
@@ -155,7 +158,11 @@ class Utils {
         final hsl = HSLColor.fromColor(contentInfo.color);
         final hslDark = hsl.withLightness((hsl.lightness - 0.1).clamp(0.0, 1.0));
 
-        return Center(
+        return WillPopScope(
+            onWillPop: () async {
+              return false;
+            },
+            child: Center(
           child: Container(
             width: size.width,
             height: size.width * 0.45,
@@ -233,10 +240,12 @@ class Utils {
                   right: 0,
                   child: GestureDetector(
                     onTap: () {
-                      if (btnmsg == 'payment') {
-                        returnFlag = true;
-                      }
                       Navigator.of(context).pop();
+                      if (btnmsg == 'payment') {
+                        getReceipt(mcontext,receiptList);
+                      }else if (btnmsg == 'receipt') {
+                        openFilePath(file_path!);
+                      }
                     },
                     child: Container(
                       margin: const EdgeInsets.all(10.0),
@@ -262,8 +271,11 @@ class Utils {
                         child: ElevatedButton(
                           onPressed: () {
                             if (btnmsg == 'payment') {
-                              returnFlag = true;
                               Navigator.of(context).pop();
+                              getReceipt(mcontext,receiptList);
+                            }else if (btnmsg == 'receipt') {
+                              Navigator.of(context).pop();
+                              openFilePath(file_path!);
                             } else {
                               performAction(btnmsg ?? '', context);
                             }
@@ -278,7 +290,7 @@ class Utils {
                             ),
                           ),
                           child: Text(
-                            'OK',
+                            btnmsg == 'payment'?'View Receipt':'OK',
                             style: TextStyle(color: contentInfo.color, fontSize: 11),
                           ),
                         ),
@@ -313,10 +325,46 @@ class Utils {
               ],
             ),
           ),
-        );
+        ));
       },
     );
-    return returnFlag;
+  }
+  Future<void> getReceipt(BuildContext mcontext, receiptList) async {
+    String selectedLang = await preferencesService.getUserInfo("lang");
+    var receiptRequestData = {
+      key_service_id: service_key_GetReceipt,
+      key_receipt_id: receiptList[key_receipt_id].toString(),
+      key_receipt_no: receiptList[key_receipt_no].toString(),
+      key_taxtypeid: receiptList[key_taxtypeid].toString(),
+      key_state_code: receiptList[key_state_code].toString(),
+      key_dcode: receiptList[key_dcode].toString(),
+      key_bcode: receiptList[key_bcode].toString(),
+      key_pvcode: receiptList[key_lbcode].toString(),
+      key_language_name: selectedLang
+    };
+    var GetReceiptList = {key_data_content: receiptRequestData};
+
+    var response = await ApiServices().mainServiceFunction(GetReceiptList);
+    print('response>>: ${response}');
+    if (response[key_status] == key_success && response[key_response] == key_success) {
+      var receiptResponce = response[key_data];
+      var pdftoString = receiptResponce[key_receipt_content];
+      Uint8List? pdf = const Base64Codec().decode(pdftoString);
+      Navigator.of(mcontext).push(
+        MaterialPageRoute(
+            builder: (context) => PDF_Viewer(
+              pdfBytes: pdf,
+            )),
+      );
+
+    }else{
+      Utils().showAlert(mcontext, ContentType.fail, response[key_message]);
+
+    }
+
+  }
+  void openFilePath(String path) async {
+    final result = await OpenFile.open(path);
   }
 
   performAction(String type, BuildContext context) async {
@@ -543,14 +591,14 @@ class Utils {
   }
 
   //Atom Paynets Gateway HTML Page Renger
-  openNdpsPG(context, String atomTokenId, String merchId, String emailId, String mobileNumber) {
+  openNdpsPG(mcontext, String atomTokenId, String merchId, String emailId, String mobileNumber) {
     // String returnUrl = "https://payment.atomtech.in/mobilesdk/param"; ////return url production
     String returnUrl = "https://pgtest.atomtech.in/mobilesdk/param";
 
     // String payDetails = '{"atomTokenId": "15000000411719", "merchId": "8952", "emailId": "sd@gmail.com", "mobileNumber": "9698547875", "returnUrl": "$returnUrl"}';
     Map payDetails = {key_atomTokenId: atomTokenId, key_merchId: merchId, key_emailId: emailId, key_mobileNumber: mobileNumber, key_returnUrl: returnUrl};
     print("request>>" + json.encode(payDetails));
-    Navigator.push(context, MaterialPageRoute(builder: (context) => AtomPaynetsView("uat", json.encode(payDetails))));
+    Navigator.push(mcontext, MaterialPageRoute(builder: (context) => AtomPaynetsView("uat", json.encode(payDetails),mcontext)));
   }
 
   String getDemadAmount(taxData, String taxTypeId) {
