@@ -128,7 +128,8 @@ class _KYVDashboardState extends State<KYVDashboard> {
               size: 25,
               color: c.colorPrimary,
             ),
-            UIHelper.titleTextStyle(address, c.text_color, 12, true, true),
+            SizedBox(width: Screen.width(context) / 1.5, child: Text(address, overflow: TextOverflow.ellipsis, style: TextStyle(color: c.text_color, fontSize: 12, fontWeight: FontWeight.normal))),
+            // UIHelper.titleTextStyle(address, c.text_color, 12, true, true),
           ]),
         ),
         Positioned(

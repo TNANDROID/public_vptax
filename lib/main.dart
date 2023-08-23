@@ -2,12 +2,17 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:public_vptax/Activity/Auth/Splash.dart';
 import 'package:public_vptax/Services/locator.dart';
 
 Future<void> main() async {
   setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   await EasyLocalization.ensureInitialized();
   runApp(
     EasyLocalization(
