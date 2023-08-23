@@ -141,10 +141,11 @@ class Utils {
     return color == null ? null : ui.ColorFilter.mode(color, colorBlendMode);
   }
 
-  Future<void> showAlert(BuildContext context, ContentType contentType, String message, {String? title, String? btnCount, String? btnmsg, double? titleFontSize, double? messageFontSize}) async {
-    return showDialog<void>(
+  Future<bool?> showAlert(BuildContext context, ContentType contentType, String message, {String? title, String? btnCount, String? btnmsg, double? titleFontSize, double? messageFontSize}) async {
+    bool returnFlag = false;
+    await showDialog<void>(
       context: context,
-      barrierDismissible: true, // user must tap button!
+      barrierDismissible: btnCount != null ? false : true, // user must tap button!
       builder: (BuildContext context) {
         // Size
         final size = MediaQuery.of(context).size;
@@ -232,6 +233,9 @@ class Utils {
                   right: 0,
                   child: GestureDetector(
                     onTap: () {
+                      if (btnmsg == 'payment') {
+                        returnFlag = true;
+                      }
                       Navigator.of(context).pop();
                     },
                     child: Container(
@@ -247,62 +251,64 @@ class Utils {
 
                 // ***********************  Action Buttons Content *********************** //
 
-                Visibility(
-                  visible: contentType == ContentType.help || contentType == ContentType.warning ? true : false,
-                  child: Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Row(children: [
-                      Visibility(
-                        visible: btnCount == '1' || btnCount == '2' ? true : false,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              performAction(btnmsg ?? '', context);
-                            },
-                            style: ButtonStyle(
-                              elevation: MaterialStateProperty.all(5.0),
-                              backgroundColor: MaterialStateProperty.all(c.white),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0), // Set the desired border radius here
-                                ),
-                              ),
-                            ),
-                            child: Text(
-                              'OK',
-                              style: TextStyle(color: contentInfo.color, fontSize: 11),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Visibility(
-                        visible: btnCount == '2' ? true : false,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                          child: ElevatedButton(
-                            onPressed: () {
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Row(children: [
+                    Visibility(
+                      visible: btnCount == '1' || btnCount == '2' ? true : false,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (btnmsg == 'payment') {
+                              returnFlag = true;
                               Navigator.of(context).pop();
-                            },
-                            style: ButtonStyle(
-                              elevation: MaterialStateProperty.all(5.0),
-                              backgroundColor: MaterialStateProperty.all(c.white),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0), // Set the desired border radius here
-                                ),
+                            } else {
+                              performAction(btnmsg ?? '', context);
+                            }
+                          },
+                          style: ButtonStyle(
+                            elevation: MaterialStateProperty.all(5.0),
+                            backgroundColor: MaterialStateProperty.all(c.white),
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0), // Set the desired border radius here
                               ),
                             ),
-                            child: Text(
-                              'Cancel',
-                              style: TextStyle(color: contentInfo.color, fontSize: 11),
-                            ),
+                          ),
+                          child: Text(
+                            'OK',
+                            style: TextStyle(color: contentInfo.color, fontSize: 11),
                           ),
                         ),
                       ),
-                    ]),
-                  ),
+                    ),
+                    Visibility(
+                      visible: btnCount == '2' ? true : false,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          style: ButtonStyle(
+                            elevation: MaterialStateProperty.all(5.0),
+                            backgroundColor: MaterialStateProperty.all(c.white),
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0), // Set the desired border radius here
+                              ),
+                            ),
+                          ),
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(color: contentInfo.color, fontSize: 11),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]),
                 )
               ],
             ),
@@ -310,6 +316,7 @@ class Utils {
         );
       },
     );
+    return returnFlag;
   }
 
   performAction(String type, BuildContext context) async {
