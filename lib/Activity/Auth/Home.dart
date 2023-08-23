@@ -641,7 +641,8 @@ class _HomeState extends State<Home> {
                           ),
                           onTap: () async {
                             utils.closeKeypad(context);
-                            mobileController.text = "9876543210";
+                            // mobileController.text = "9876543210";
+                            mobileController.text = "9875235654";
                             bool resFlag = await transactionModel.getTransactionStatus(context, mobileController.text, emailController.text);
                             if (resFlag) {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => CheckTransaction()));

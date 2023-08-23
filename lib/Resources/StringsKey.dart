@@ -126,6 +126,7 @@ String key_transaction_status = "res_transaction_status";
 String key_transaction_id = "transaction_id";
 String key_transaction_date = "req_transaction_date_display";
 String key_res_paid_amount = "res_paid_amount";
+String key_receipt_content = "receipt_content";
 
 // ************************** Service Key Strings ************************** //
 
@@ -143,4 +144,5 @@ String service_key_DemandSelectionList = "DemandSelectionList";
 String service_key_CollectionPaymentTokenList = "CollectionPaymentTokenList";
 String service_key_SaveCollectionList = "SaveCollectionList";
 String service_key_GetReceipt = "GetReceipt";
+String service_key_TransactionidWiseGetReceipt = "TransactionidWiseGetReceipt";
 String service_key_TransactionHistory = "TransactionHistory";
