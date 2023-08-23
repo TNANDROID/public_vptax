@@ -41,7 +41,7 @@ class _DCBViewState extends State<DCBView> {
         floatingLabelBehavior: FloatingLabelBehavior.never,
         constraints: BoxConstraints(maxHeight: 35),
         labelText: 'financialYear'.tr().toString(),
-        labelStyle: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_7),
+        labelStyle: TextStyle(fontSize: 10.0, fontWeight: FontWeight.w400, color: c.grey_7),
         filled: true,
         fillColor: Colors.white,
         enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7, radius: 3),
@@ -59,7 +59,7 @@ class _DCBViewState extends State<DCBView> {
                 value: item[key_fin_year],
                 child: Text(
                   item[key_fin_year].toString(),
-                  style: TextStyle(fontSize: 11.0, fontWeight: FontWeight.w400, color: c.grey_9),
+                  style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.w400, color: c.grey_9),
                 ),
               ))
           .toList(),
@@ -73,8 +73,8 @@ class _DCBViewState extends State<DCBView> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        UIHelper.titleTextStyle("$key : ", c.white, 13, false, true),
-        UIHelper.titleTextStyle(value, c.white, 13, true, true),
+        UIHelper.titleTextStyle("$key : ", c.white, 11, false, true),
+        UIHelper.titleTextStyle(value, c.white, 11, true, true),
       ],
     );
   }
@@ -97,7 +97,7 @@ class _DCBViewState extends State<DCBView> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                UIHelper.titleTextStyle(data['title'], c.white, 14, true, true),
+                UIHelper.titleTextStyle(data['title'], c.white, 12, true, true),
                 UIHelper.verticalSpaceSmall,
                 SizedBox(
                     width: Screen.width(context) / 3,
@@ -173,7 +173,7 @@ class _DCBViewState extends State<DCBView> {
           UIHelper.verticalSpaceSmall,
           Center(
               child: Container(
-            child: UIHelper.titleTextStyle('financial_situation'.tr().toString(), c.text_color, 14, true, true),
+            child: UIHelper.titleTextStyle('financial_situation'.tr().toString(), c.text_color, 12, true, true),
           )),
           UIHelper.verticalSpaceMedium,
           Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [

@@ -50,7 +50,7 @@ class _habitationViewState extends State<habitationView> {
         children: [
           UIHelper.verticalSpaceSmall,
           Container(
-            child: UIHelper.titleTextStyle('habitation_details'.tr().toString(), c.text_color, 14, true, true),
+            child: UIHelper.titleTextStyle('habitation_details'.tr().toString(), c.text_color, 12, true, true),
           ),
           UIHelper.verticalSpaceMedium,
           Container(

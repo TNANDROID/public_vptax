@@ -15,14 +15,7 @@ class PopulationView extends StatefulWidget {
 class _PopulationViewState extends State<PopulationView> {
   List selectedIndexes = [];
   List colourList = [
-    {"c1": Color(0xFF2E3192), "c2": Color(0xFF1BFFFF)},
-    {"c1": Color(0xFFD4145A), "c2": Color(0xFFFBB03B)},
-    {"c1": Color(0xFF11998E), "c2": Color(0xFF38EF7D)},
-    {"c1": Color(0xFF662D8C), "c2": Color(0xFFED1E79)},
-    {"c1": Color(0xFF596164), "c2": Color(0xFFEE9CA7)},
     {"c1": Color(0xFF614385), "c2": Color(0xFF516395)},
-    {"c1": Color(0xFFFF5F6D), "c2": Color(0xFFFFC371)},
-    {"c1": Color(0xFF1EAE98), "c2": Color(0xFFD8B5FF)},
     {"c1": Color(0xFF09203F), "c2": Color(0xFF537895)}
   ];
   List<dynamic> numberPopulationList = [
@@ -66,7 +59,7 @@ class _PopulationViewState extends State<PopulationView> {
           color: c.text_color,
           padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
           child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            UIHelper.titleTextStyle(title, c.white, 14, true, true),
+            UIHelper.titleTextStyle(title, c.white, 11, true, true),
             Icon(
               selectedIndexes.contains(index) ? Icons.expand_less_outlined : Icons.expand_more_outlined,
               color: c.white,
@@ -76,27 +69,28 @@ class _PopulationViewState extends State<PopulationView> {
   }
 
   Widget customCardDesign(int index, String title, String Value) {
+    dynamic selectedColorData = colourList[index % colourList.length];
     return Column(children: [
       Opacity(
           opacity: 0.7, // Set the desired opacity here
           child: Container(
-            decoration: UIHelper.roundedBorderWithColorWithShadow(15, colourList[index]['c1'], colourList[index]['c2']),
+            decoration: UIHelper.roundedBorderWithColorWithShadow(15, selectedColorData['c1'], selectedColorData['c2']),
             height: 85,
             width: Screen.width(context) / 3.8,
             child: Row(children: [
               Expanded(
-                child: UIHelper.titleTextStyle(title, c.white, 14, true, true),
+                child: UIHelper.titleTextStyle(title, c.white, 12, true, true),
               ),
             ]),
           )),
       Container(
         transform: Matrix4.translationValues(0.0, -20.0, 0.0),
-        decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.white, c.white, borderColor: colourList[index]['c2'], borderWidth: 2),
-        height: 45,
+        decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.white, c.white, borderColor: selectedColorData['c2'], borderWidth: 2),
+        height: 35,
         width: Screen.width(context) / 4.8,
         child: Row(children: [
           Expanded(
-            child: UIHelper.titleTextStyle(Value, colourList[index]['c1'], 14, true, true),
+            child: UIHelper.titleTextStyle(Value, selectedColorData['c1'], 12, true, true),
           ),
         ]),
       )
@@ -107,23 +101,24 @@ class _PopulationViewState extends State<PopulationView> {
     return Container(
         decoration: UIHelper.GradientContainer(0, 0, 10, 10, [c.white, c.grey_3]),
         child: Column(children: [
+          UIHelper.verticalSpaceSmall,
           SizedBox(
               child: Row(
             children: [
               Expanded(
                 flex: 1,
-                child: Container(padding: EdgeInsets.all(5), child: Center(child: UIHelper.titleTextStyle("SI No", c.grey_9, 12, true, true))),
+                child: Container(padding: EdgeInsets.all(5), child: UIHelper.titleTextStyle("SI No", c.grey_9, 8, true, true)),
               ),
-              Expanded(flex: 2, child: Container(padding: EdgeInsets.all(5), child: Center(child: UIHelper.titleTextStyle("Habitation\nName", c.grey_9, 12, true, false)))),
-              Expanded(flex: 1, child: Container(padding: EdgeInsets.all(5), child: Center(child: UIHelper.titleTextStyle("Total", c.grey_9, 12, true, true)))),
-              Expanded(flex: 1, child: Container(padding: EdgeInsets.all(5), child: Center(child: UIHelper.titleTextStyle("Male", c.grey_9, 12, true, true)))),
-              Expanded(flex: 1, child: Container(padding: EdgeInsets.all(5), child: Center(child: UIHelper.titleTextStyle("Female", c.grey_9, 12, true, true)))),
+              Expanded(flex: 3, child: Container(padding: EdgeInsets.all(5), child: UIHelper.titleTextStyle("Habitation Name", c.grey_9, 10, true, false))),
+              Expanded(flex: 2, child: Container(padding: EdgeInsets.all(5), child: Align(alignment: Alignment.centerRight, child: UIHelper.titleTextStyle("Total", c.grey_9, 10, true, false)))),
+              Expanded(flex: 2, child: Container(padding: EdgeInsets.all(5), child: Align(alignment: Alignment.centerRight, child: UIHelper.titleTextStyle("Male", c.grey_9, 10, true, false)))),
+              Expanded(flex: 2, child: Container(padding: EdgeInsets.all(5), child: Align(alignment: Alignment.centerRight, child: UIHelper.titleTextStyle("Female", c.grey_9, 10, true, false)))),
             ],
           )),
           UIHelper.verticalSpaceMedium,
           Container(
               transform: Matrix4.translationValues(0.0, -20.0, 0.0),
-              height: populationList.length * 35,
+              height: populationList.length * 26,
               child: ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: populationList.length,
@@ -131,17 +126,26 @@ class _PopulationViewState extends State<PopulationView> {
                   int siNo = rowIndex + 1;
                   dynamic habitationGetData = populationList[rowIndex];
                   return SizedBox(
-                      height: 30,
+                      height: 25,
                       child: Row(
                         children: [
                           Expanded(
                             flex: 1,
-                            child: Container(padding: EdgeInsets.all(3), child: Center(child: UIHelper.titleTextStyle(populationList.length == siNo ? "" : "$siNo", c.grey_8, 12, false, true))),
+                            child: Container(padding: EdgeInsets.all(3), child: Center(child: UIHelper.titleTextStyle(populationList.length == siNo ? "" : "$siNo", c.grey_8, 10, false, false))),
                           ),
-                          Expanded(flex: 2, child: Container(padding: EdgeInsets.all(3), child: Center(child: UIHelper.titleTextStyle(habitationGetData['habitation'], c.grey_8, 12, false, true)))),
-                          Expanded(flex: 1, child: Container(padding: EdgeInsets.all(3), child: Center(child: UIHelper.titleTextStyle(habitationGetData['total'], c.grey_8, 12, true, true)))),
-                          Expanded(flex: 1, child: Container(padding: EdgeInsets.all(3), child: Center(child: UIHelper.titleTextStyle(habitationGetData['male'], c.grey_8, 12, true, true)))),
-                          Expanded(flex: 1, child: Container(padding: EdgeInsets.all(3), child: Center(child: UIHelper.titleTextStyle(habitationGetData['female'], c.grey_8, 12, true, true)))),
+                          Expanded(flex: 3, child: Container(padding: EdgeInsets.all(3), child: UIHelper.titleTextStyle(habitationGetData['habitation'], c.grey_8, 10, false, false))),
+                          Expanded(
+                              flex: 2,
+                              child: Container(
+                                  padding: EdgeInsets.all(3), child: Align(alignment: Alignment.centerRight, child: UIHelper.titleTextStyle(habitationGetData['total'], c.grey_8, 10, true, false)))),
+                          Expanded(
+                              flex: 2,
+                              child: Container(
+                                  padding: EdgeInsets.all(3), child: Align(alignment: Alignment.centerRight, child: UIHelper.titleTextStyle(habitationGetData['male'], c.grey_8, 10, true, false)))),
+                          Expanded(
+                              flex: 2,
+                              child: Container(
+                                  padding: EdgeInsets.all(3), child: Align(alignment: Alignment.centerRight, child: UIHelper.titleTextStyle(habitationGetData['female'], c.grey_8, 10, true, false)))),
                         ],
                       ));
                 },
@@ -160,7 +164,7 @@ class _PopulationViewState extends State<PopulationView> {
         children: [
           UIHelper.verticalSpaceSmall,
           Container(
-            child: UIHelper.titleTextStyle('population_details'.tr().toString(), c.text_color, 14, true, true),
+            child: UIHelper.titleTextStyle('population_details'.tr().toString(), c.text_color, 12, true, true),
           ),
           UIHelper.verticalSpaceMedium,
           Row(

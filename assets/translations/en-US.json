@@ -142,7 +142,7 @@
   "check_transaction_status": "Check Transaction Status",
   "storage_permission": "Please allow Storage Permission to read your internal Storage",
   "waiting_input":"Awaiting input from your side...",
-  "know_your_village":"Know your village",
+  "know_your_village":"your village",
   "habitation_details":"Habitation Details",
   "population_details":"Population Details",
   "population_list":"Habitation wise Population List",

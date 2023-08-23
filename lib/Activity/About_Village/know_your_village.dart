@@ -54,7 +54,7 @@ class _KYVDashboardState extends State<KYVDashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: c.white,
-      appBar: AppBar(backgroundColor: c.colorPrimary, centerTitle: true, elevation: 2, title: UIHelper.titleTextStyle('Your Village', c.white, 15, true, false)),
+      appBar: AppBar(backgroundColor: c.colorPrimary, centerTitle: true, elevation: 2, title: UIHelper.titleTextStyle('know_your_village'.tr().toString(), c.white, 15, true, false)),
       body: ViewModelBuilder<StartUpViewModel>.reactive(
           onViewModelReady: (model) async {},
           builder: (context, model, child) {
@@ -63,7 +63,6 @@ class _KYVDashboardState extends State<KYVDashboard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    UIHelper.titleTextStyle('know_your_village'.tr().toString(), c.text_color, 14, true, false),
                     isAddressShow
                         ? Container(padding: EdgeInsets.fromLTRB(10, 5, 10, 5), child: customCardDesign())
                         : Column(
@@ -91,7 +90,7 @@ class _KYVDashboardState extends State<KYVDashboard> {
                               UIHelper.verticalSpaceLarge,
                               Image.asset(imagepath.waitingImg, fit: BoxFit.contain, height: Screen.width(context) / 2, width: Screen.width(context) / 2),
                               UIHelper.verticalSpaceMedium,
-                              UIHelper.titleTextStyle('waiting_input'.tr().toString(), c.text_color, 14, true, true)
+                              UIHelper.titleTextStyle('waiting_input'.tr().toString(), c.text_color, 12, true, true)
                             ],
                           ))
                   ],
@@ -128,7 +127,7 @@ class _KYVDashboardState extends State<KYVDashboard> {
               size: 25,
               color: c.colorPrimary,
             ),
-            SizedBox(width: Screen.width(context) / 1.5, child: Text(address, overflow: TextOverflow.ellipsis, style: TextStyle(color: c.text_color, fontSize: 12, fontWeight: FontWeight.normal))),
+            SizedBox(width: Screen.width(context) / 1.5, child: Text(address, overflow: TextOverflow.visible, style: TextStyle(color: c.text_color, fontSize: 10, fontWeight: FontWeight.normal))),
             // UIHelper.titleTextStyle(address, c.text_color, 12, true, true),
           ]),
         ),

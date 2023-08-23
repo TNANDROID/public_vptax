@@ -33,8 +33,6 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
   PreferenceService preferencesService = locator<PreferenceService>();
   TextEditingController etTextController = TextEditingController();
-  List imgURLList = [imagePath.house, imagePath.water, imagePath.professional1, imagePath.nontax1, imagePath.trade];
-  List<Color> colorsList = [c.followers, c.need_improvement_color, c.followingBg, c.colorAccentveryverylight, c.dot_dark_screen4];
   String selectedLang = "";
   String selectedDistrict = "";
   String selectedBlock = "";
@@ -43,7 +41,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
   int selectedTaxType = 0;
   var selectedTaxTypeData;
   int selectedEntryType = 0;
-  int selectedIndex = 1;
+  int selectedIndex = -1;
   List taxlist = [];
 
   @override
@@ -60,8 +58,8 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
       selectedTaxType = selectedTaxTypeData[key_taxtypeid];
     } else {
       taxlist = preferencesService.taxTypeList;
-      selectedTaxTypeData = taxlist[0];
-      selectedTaxType = selectedTaxTypeData[key_taxtypeid];
+      selectedTaxTypeData = [];
+      selectedTaxType = 0;
     }
     setState(() {});
   }
@@ -86,7 +84,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                 return Container(
                     color: Colors.white,
                     width: Screen.width(context),
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(16),
                     child: Column(
                       children: [
                         Expanded(
@@ -266,51 +264,32 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
   Widget radioButtonWidget(int index, String title) {
     return GestureDetector(
         onTap: () {
-          selectedEntryType = index;
+          selectedTaxType > 0 ? selectedEntryType = index : Utils().showAlert(context, ContentType.warning, 'select_taxtype'.tr().toString());
+
           setState(() {});
         },
-        child: Stack(children: [
-          Container(
-              height: 70,
-              width: Screen.width(context),
-              padding: EdgeInsets.all(4),
-              decoration: UIHelper.roundedBorderWithColor(120, 15, 120, 15, c.white, borderColor: selectedEntryType == index ? c.text_color : c.grey_4, borderWidth: 3),
-              child: Container(
-                height: 60,
-                width: Screen.width(context),
-                padding: EdgeInsets.only(left: 100),
-                decoration: UIHelper.roundedBorderWithColor(120, 15, 120, 15, selectedEntryType == index ? c.grey_4 : c.grey_3),
-                child: Center(child: UIHelper.titleTextStyle(title, selectedEntryType == index ? c.text_color : c.grey_7, 10, true, false)),
-              )),
-          ClipRRect(
-              borderRadius: BorderRadius.circular(50),
-              child: Container(
-                  color: selectedEntryType == index ? c.text_color : c.grey_3,
-                  padding: EdgeInsets.all(3),
-                  width: 70,
-                  height: 70,
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: UIHelper.circleWithColorWithShadow(30, selectedEntryType == index ? c.text_color : c.grey_3, selectedEntryType == index ? c.text_color : c.grey_3,
-                            borderColor: c.white, borderWidth: 3),
-                        width: 100,
-                        height: 100,
-                        child: Icon(
-                          index == 1
-                              ? Icons.phone_iphone_outlined
-                              : index == 2
-                                  ? Icons.laptop_mac_outlined
-                                  : Icons.pin_outlined, // Use the icon you prefer (e.g., Icons.add, Icons.add_circle, etc.)
-                          color: selectedEntryType == index ? c.white : c.grey_7,
-                          size: 40,
+        child: ClipPath(
+            clipper: LeftTriangleClipper(),
+            child: Card(
+                elevation: 2,
+                child: Container(
+                    width: Screen.width(context),
+                    padding: EdgeInsets.all(7),
+                    color: selectedEntryType == index ? c.need_improvement : c.bg,
+                    child: Row(
+                      children: [
+                        UIHelper.horizontalSpaceSmall,
+                        Icon(
+                          selectedEntryType == index ? Icons.radio_button_checked_rounded : Icons.radio_button_off_rounded,
+                          color: c.grey_9,
+                          size: 17,
                         ),
-                      )))),
-        ]));
+                        UIHelper.horizontalSpaceSmall,
+                        Expanded(child: UIHelper.titleTextStyle(title, c.grey_9, 12, false, false)),
+                      ],
+                    )))));
   }
 
-//radio button
   Widget radioButtonListWidget() {
     return Visibility(
       visible: selectedTaxType > 0,
@@ -319,7 +298,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           UIHelper.titleTextStyle('select_anyOne'.tr().toString(), c.grey_9, 12, true, true),
-          UIHelper.verticalSpaceSmall,
+          UIHelper.verticalSpaceMedium,
           radioButtonWidget(1, 'via_mobileNumber'.tr().toString()),
           UIHelper.verticalSpaceSmall,
           radioButtonWidget(2, 'via_e_taxNumber'.tr().toString()),
@@ -437,41 +416,47 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
     );
   }
 
-  Widget taxWidgetGridData(dynamic data, int index) {
-    String imgURL = imgURLList[index - 1];
-    Color primaryClr = colorsList[index - 1];
+  Widget taxWidgetGridData(String imgURL, dynamic data, int index, double val) {
     return GestureDetector(
         onTap: () {
           selectedTaxTypeData = data;
           selectedTaxType = selectedTaxTypeData[key_taxtypeid];
-          selectedIndex = index;
+          print(selectedTaxType);
+          selectedTaxType == 1
+              ? selectedIndex = 1
+              : selectedTaxType == 2
+                  ? selectedIndex = 2
+                  : selectedTaxType == 4
+                      ? selectedIndex = 3
+                      : selectedTaxType == 5
+                          ? selectedIndex = 4
+                          : selectedIndex = 5;
+          print(selectedIndex);
+          print("index" + index.toString());
           setState(() {});
         },
-        child: Opacity(
-            opacity: selectedIndex == index ? 1.0 : 0.5,
-            child: Container(
-              width: Screen.width(context) / 2.5,
-              margin: EdgeInsets.all(3),
-              padding: EdgeInsets.all(3),
-              decoration: UIHelper.roundedBorderWithColorWithShadow(5, primaryClr, primaryClr, borderColor: selectedIndex == index ? c.red : c.full_transparent, borderWidth: 2),
-              child: Row(
-                children: [
-                  Container(
-                      width: 35,
-                      height: 35,
-                      padding: EdgeInsets.all(5),
-                      decoration: UIHelper.roundedBorderWithColor(5, 5, 5, 5, selectedIndex == index ? c.white : c.need_improvement2),
-                      child: Image.asset(
-                        imgURL.toString(),
-                        fit: BoxFit.contain,
-                        height: 15,
-                        width: 15,
-                      )),
-                  UIHelper.horizontalSpaceSmall,
-                  Flexible(child: UIHelper.titleTextStyle(selectedLang == "en" ? data[key_taxtypedesc_en] : data[key_taxtypedesc_ta], c.white, 10, true, true)),
-                ],
-              ),
-            )));
+        child: Container(
+          width: Screen.width(context) / val,
+          margin: EdgeInsets.all(5),
+          decoration: UIHelper.roundedBorderWithColorWithShadow(5, selectedIndex == index ? c.need_improvement : c.white, selectedIndex == index ? c.need_improvement : c.white),
+          child: Row(
+            children: [
+              Container(
+                  width: 35,
+                  height: 35,
+                  padding: EdgeInsets.all(5),
+                  decoration: UIHelper.roundedBorderWithColor(5, 5, 5, 5, selectedIndex == index ? c.white : c.need_improvement2),
+                  child: Image.asset(
+                    imgURL.toString(),
+                    fit: BoxFit.contain,
+                    height: 15,
+                    width: 15,
+                  )),
+              UIHelper.horizontalSpaceSmall,
+              Flexible(child: UIHelper.titleTextStyle(selectedLang == "en" ? data[key_taxtypedesc_en] : data[key_taxtypedesc_ta], c.grey_9, 10, true, true)),
+            ],
+          ),
+        ));
   }
 
   Widget taxWidgetGridView() {
@@ -481,15 +466,15 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
             UIHelper.verticalSpaceMedium,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [taxWidgetGridData(taxlist[0], 1), taxWidgetGridData(taxlist[1], 2)],
+              children: [taxWidgetGridData(imagePath.house, taxlist[0], 1, 2.5), taxWidgetGridData(imagePath.water, taxlist[1], 2, 2.5)],
             ),
             UIHelper.verticalSpaceSmall,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [taxWidgetGridData(taxlist[2], 3), taxWidgetGridData(taxlist[3], 4)],
+              children: [taxWidgetGridData(imagePath.professional1, taxlist[2], 3, 2.5), taxWidgetGridData(imagePath.nontax1, taxlist[3], 4, 2.5)],
             ),
             UIHelper.verticalSpaceSmall,
-            Align(alignment: Alignment.center, child: taxWidgetGridData(taxlist[4], 5)),
+            Align(alignment: Alignment.center, child: taxWidgetGridData(imagePath.trade, taxlist[4], 5, 2)),
             UIHelper.verticalSpaceMedium,
           ])
         : SizedBox();

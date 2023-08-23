@@ -30,10 +30,10 @@ class _AssetDetailsViewState extends State<AssetDetailsView> {
         height: Screen.width(context) / 4,
         width: Screen.width(context) / 4,
         padding: EdgeInsets.all(3),
-        decoration: UIHelper.GradientContainer(30, 0, 0, 30, [c.white, c.grey_2], borderColor: borderclr, intwid: 3, stop1: 0.5, stop2: 0.0),
+        decoration: UIHelper.GradientContainer(30, 0, 0, 30, [c.white, c.grey_2], borderColor: borderclr, intwid: 1, stop1: 0.5, stop2: 0.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [UIHelper.titleTextStyle(getData['title'], borderclr, 12, true, true), UIHelper.titleTextStyle(getData['value'], borderclr, 14, true, true)],
+          children: [UIHelper.titleTextStyle(getData['title'], c.text_color, 10, true, true), UIHelper.verticalSpaceTiny, UIHelper.titleTextStyle(getData['value'], c.text_color, 14, true, true)],
         ),
       ),
       Positioned(
@@ -45,8 +45,8 @@ class _AssetDetailsViewState extends State<AssetDetailsView> {
             height: 40,
             decoration: BoxDecoration(
               border: Border(
-                top: BorderSide(width: 9, color: borderclr),
-                right: BorderSide(width: 9, color: borderclr),
+                top: BorderSide(width: 6, color: borderclr),
+                right: BorderSide(width: 6, color: borderclr),
               ),
             ),
           )),
@@ -59,8 +59,8 @@ class _AssetDetailsViewState extends State<AssetDetailsView> {
             height: 40,
             decoration: BoxDecoration(
               border: Border(
-                bottom: BorderSide(width: 9, color: borderclr),
-                left: BorderSide(width: 9, color: borderclr),
+                bottom: BorderSide(width: 6, color: borderclr),
+                left: BorderSide(width: 6, color: borderclr),
               ),
             ),
           )),
@@ -78,7 +78,7 @@ class _AssetDetailsViewState extends State<AssetDetailsView> {
         children: [
           UIHelper.verticalSpaceSmall,
           Container(
-            child: UIHelper.titleTextStyle('asset_details'.tr().toString(), c.text_color, 14, true, true),
+            child: UIHelper.titleTextStyle('asset_details'.tr().toString(), c.text_color, 12, true, true),
           ),
           UIHelper.verticalSpaceMedium,
           Row(
