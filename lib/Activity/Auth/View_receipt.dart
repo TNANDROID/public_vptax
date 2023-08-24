@@ -135,41 +135,41 @@ class _ViewReceiptState extends State<ViewReceipt> {
     }
     return
       FormBuilderDropdown(
-      style: TextStyle(
-          fontSize: 12, fontWeight: FontWeight.w400, color: c.grey_8),
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.only(left: 5,top: 6),
-        suffixIcon: Icon(
-          Icons.arrow_drop_down,
-          color: c.grey_8,
+        style: TextStyle(
+            fontSize: 12, fontWeight: FontWeight.w400, color: c.grey_8),
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.only(left: 5,top: 6),
+          suffixIcon: Icon(
+            Icons.arrow_drop_down,
+            color: c.grey_8,
+          ),
+          constraints: BoxConstraints(maxHeight: 35),
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          labelText: inputHint,
+          labelStyle: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_9),
+          filled: true,
+          fillColor: c.full_transparent,
+          enabledBorder:OutlineInputBorder(
+            borderSide: BorderSide(color: c.need_improvement2, width: 25.0),
+            borderRadius: BorderRadius.circular(18),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(width: 25.0,color: c.need_improvement2),
+            borderRadius: BorderRadius.circular(
+                20), // Increase the radius to adjust the height
+          ),
+          focusedErrorBorder:OutlineInputBorder(
+            borderSide: BorderSide(width: 10.0),
+            borderRadius: BorderRadius.circular(
+                20), // Increase the radius to adjust the height
+          ),
         ),
-        constraints: BoxConstraints(maxHeight: 35),
-        floatingLabelBehavior: FloatingLabelBehavior.never,
-        labelText: inputHint,
-        labelStyle: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_9),
-        filled: true,
-        fillColor: c.full_transparent,
-        enabledBorder:OutlineInputBorder(
-          borderSide: BorderSide(color: c.need_improvement2, width: 25.0),
-          borderRadius: BorderRadius.circular(18),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(width: 25.0,color: c.need_improvement2),
-          borderRadius: BorderRadius.circular(
-              20), // Increase the radius to adjust the height
-        ),
-        focusedErrorBorder:OutlineInputBorder(
-          borderSide: BorderSide(width: 10.0),
-          borderRadius: BorderRadius.circular(
-              20), // Increase the radius to adjust the height
-        ),
-      ),
-      icon: Container(width: 0, height: 0),
+        icon: Container(width: 0, height: 0),
 
-      name: fieldName,
+        name: fieldName,
         initialValue: initValue,
 
-       /* onTap: () async {
+        /* onTap: () async {
         if (index == 0) {
           selectedDistrict="";
           selectedBlock = "";
@@ -191,45 +191,62 @@ class _ViewReceiptState extends State<ViewReceipt> {
         }
         setState(() {});
       },*/
-      // iconSize: 28,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(errorText:inputHint)
-      ]),
-      items: dropList.map((item) => DropdownMenuItem(
-        value: item[keyCode],
-        child: Text(
-          preferencesService.getUserInfo("lang") == "en"
-              ? item[titleText].toString()
-              : item[titleTextTamil].toString(),
-          style: TextStyle(
-              fontSize: 14.0,
-              fontWeight: FontWeight.w400,
-              color: c.grey_8),
-        ),
-      ))
-          .toList(),
-      onChanged: (value) async {
-        print("onchanged>>>>>"+index.toString());
-        if(index==0)
-        {
-          selectedTaxType=value.toString();
-          selectedDistrict="";
-          selectedBlock="";
-          selectedvillage="";
-        }
-        else if (index == 1) {
-         selectedDistrict=value.toString();
-         model.loadUIBlock(selectedDistrict);
-        } else if (index == 2) {
-          selectedBlock = value.toString();
-          model.loadUIVillage(selectedDistrict, selectedBlock);
-        } else if (index == 3) {
-          selectedvillage = value.toString();
-        }
-        setState(() {});
-      },
-    );
+        // iconSize: 28,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        validator: FormBuilderValidators.compose([
+          FormBuilderValidators.required(errorText:inputHint)
+        ]),
+        items: dropList.map((item) => DropdownMenuItem(
+            value: item[keyCode],
+            child: Padding(padding: EdgeInsets.only(left:10,top: 5),
+              child: Text(
+                preferencesService.getUserInfo("lang") == "en"
+                    ? item[titleText].toString()
+                    : item[titleTextTamil].toString(),
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w400,
+                    color: c.grey_8),
+              ),)
+        ))
+            .toList(),
+        onChanged: (value) async {
+          print("onchanged>>>>>"+index.toString());
+          if(index==0)
+          {
+            selectedTaxType=value.toString();
+            selectedDistrict="";
+            selectedBlock="";
+            selectedvillage="";
+            listvisbility=false;
+            receiptController.text="";
+            assessmentController.text="";
+          }
+          else if (index == 1) {
+            selectedDistrict=value.toString();
+            selectedBlock="";
+            selectedvillage="";
+            listvisbility=false;
+            receiptController.text="";
+            assessmentController.text="";
+            model.loadUIBlock(selectedDistrict);
+          } else if (index == 2) {
+            selectedBlock = value.toString();
+            selectedvillage="";
+            listvisbility=false;
+            receiptController.text="";
+            assessmentController.text="";
+            model.loadUIVillage(selectedDistrict, selectedBlock);
+          } else if (index == 3) {
+            selectedvillage = value.toString();
+            listvisbility=false;
+            receiptController.text="";
+            assessmentController.text="";
+          }
+          setState(() {});
+        },
+      );
   }
   @override
   Widget build (BuildContext context) {
@@ -347,8 +364,8 @@ class _ViewReceiptState extends State<ViewReceipt> {
                             ),
                             UIHelper.horizontalSpaceMedium,
                             Expanded(
-                              flex: 2,
-                              child:addInputDropdownField(2, 'select_Block'.tr().toString(), "block", model),
+                                flex: 2,
+                                child: addInputDropdownField(2, 'select_Block'.tr().toString(), "block", model)
                             )
                           ],
                         ),
@@ -410,7 +427,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                           ),
                                         ),
                                         child: Padding(
-                                          padding: EdgeInsets.only(top: 5,left: 3),
+                                          padding: EdgeInsets.only(top: 5,left: 10,bottom: 5),
                                           child: TextFormField(
                                             controller: assessmentController,
                                             inputFormatters: <TextInputFormatter>[
@@ -420,8 +437,9 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                             decoration: const InputDecoration(
                                                 border:InputBorder.none
                                             ),
+                                            textAlign: TextAlign.left,
                                             style: TextStyle(
-                                                fontSize: 12
+                                              fontSize: 12,
                                             ),
                                           ),
                                         ),
@@ -452,7 +470,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                     Expanded(
                                         flex: 2,
                                         child: Container(
-                                          padding: EdgeInsets.only(top: 5),
+                                          padding: EdgeInsets.only(top: 5,left: 10,bottom: 5),
                                           height:25,
                                           width:45,
                                           decoration: BoxDecoration(
@@ -488,28 +506,28 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                 ),
                               ])),])),
             Container(
-                transform: Matrix4.translationValues(5.0,-150.0,10.0),
-               child: TextButton(
-                    child:Padding(
-                        padding: EdgeInsets.only(left: 5,right: 5),
-                        child: Text("submit".tr().toString(),
-                            style: TextStyle(color: c.white, fontSize: 13))
-                    ),
-                    style: TextButton.styleFrom(
-                        fixedSize: const Size(130, 20),
-                        shape:StadiumBorder(),
-                        backgroundColor: c.colorPrimary
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        Validate();
-                        scrollController.animateTo(400,
-                          duration: Duration(milliseconds: 500),
-                          curve: Curves.linearToEaseOut,
-                        );
-                      });
-                    },
-                  ),
+              transform: Matrix4.translationValues(5.0,-150.0,10.0),
+              child: TextButton(
+                child:Padding(
+                    padding: EdgeInsets.only(left: 5,right: 5),
+                    child: Text("submit".tr().toString(),
+                        style: TextStyle(color: c.white, fontSize: 13))
+                ),
+                style: TextButton.styleFrom(
+                    fixedSize: const Size(130, 20),
+                    shape:StadiumBorder(),
+                    backgroundColor: c.colorPrimary
+                ),
+                onPressed: () {
+                  setState(() {
+                    Validate();
+                    scrollController.animateTo(400,
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.linearToEaseOut,
+                    );
+                  });
+                },
+              ),
             ),
             listview()
           ]
@@ -535,172 +553,186 @@ class _ViewReceiptState extends State<ViewReceipt> {
                   child: SlideAnimation(
                     horizontalOffset: 200.0,
                     child: FlipAnimation(
-                      child:Stack(
-                          children: [
-                            Container(
-                              height: 220,
-                              decoration: UIHelper.roundedBorderWithColorWithShadow(
-                                  10,c.white,c.white,borderColor: Colors.transparent,borderWidth: 0),
-                              child: Row(
-                                children: [
-                                Expanded(flex: 1,
-                                    child: Container(
-                                  decoration: BoxDecoration(
-                                      color: c.colorAccentlight,
-                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10))
-                                  ),
-                                  )),
-                                Expanded(
-                                    flex: 3,
-                                    child: Container(decoration: BoxDecoration(
-                                    color: c.white,
-                                    borderRadius: BorderRadius.only(topRight: Radius.circular(10),
-                                        bottomRight: Radius.circular(10))
-                                ),)),
-                              ],),
-                            ),
-                            Container(
-                              margin: EdgeInsets.all(10.0),
-                                color: c.full_transparent,
-                            child:
-                            Column(
-                              children: [
-                              Row(
-                                children: [
-                                  Padding(padding: EdgeInsets.only(left: 7,top: 5),
-                                  child: Text(
-                                    'receiptno'.tr().toString(),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                      color: c.white
-                                    ),
-                                  ),),
-                                  UIHelper.horizontalSpaceSmall,
-                                  Padding(padding: EdgeInsets.only(top: 5),
-                                  child: Text(
-                                    '123456',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: c.primary_text_color2
-                                    ),
-                                  ),)
-                                ],
+                        child:Stack(
+                            children: [
+                              Container(
+                                height: 220,
+                                decoration: UIHelper.roundedBorderWithColorWithShadow(
+                                    10,c.white,c.white,borderColor: Colors.transparent,borderWidth: 0),
+                                child: Row(
+                                  children: [
+                                    Expanded(flex: 1,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: c.colorAccentlight,
+                                              borderRadius: BorderRadius.only(topLeft: Radius.circular(10),
+                                                  bottomLeft: Radius.circular(10))
+                                          ),
+                                        )),
+                                    Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: c.white,
+                                              borderRadius: BorderRadius.only(topRight: Radius.circular(10),
+                                                  bottomRight: Radius.circular(10))
+                                          ),)),
+                                  ],),
                               ),
-                                UIHelper.verticalSpaceSmall,
-                               Row(
-                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                   children: [
-                                     InkWell(
-                                       child:Stack(
+                              Container(
+                                  margin: EdgeInsets.all(10.0),
+                                  color: c.full_transparent,
+                                  child:
+                                  Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
-                                          Container(
-                                            width:280,
-                                            padding: EdgeInsets.all(5),
-                                            margin: EdgeInsets.only(left: 0,right: 10,bottom: 0,top: 10),
-                                            decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.white, c.white,borderColor: c.full_transparent,borderWidth: 0),
-                                            child: Column(
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 7),
+                                            child: Text(
+                                              'receiptno'.tr().toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14,
+                                                  color: c.primary_text_color2
+                                              ),
+                                            ),),
+                                          UIHelper.horizontalSpaceSmall,
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 5),
+                                            child: Text(
+                                              '-',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14,
+                                                  color: c.primary_text_color2
+                                              ),
+                                            ),),
+                                          UIHelper.horizontalSpaceSmall,
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 0),
+                                            child: Text(
+                                              '123456',
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: c.primary_text_color2
+                                              ),
+                                            ),)],),
+                                      UIHelper.verticalSpaceSmall,
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          InkWell(
+                                            child:Stack(
                                               children: [
-                                                Padding(
-                                                    padding: EdgeInsets.only(top: 7,left: 5,right: 5),
-                                                  child:Text(
-                                                    'download_tamil'.tr().toString(),
-                                                    overflow: TextOverflow.ellipsis,
-                                                    style:TextStyle(
-                                                      fontSize: 12,
-                                                      color: c.text_color,
-                                                      fontWeight: FontWeight.w500
-                                                    )
-                                                  )
+                                                Container(
+                                                  width:280,
+                                                  padding: EdgeInsets.all(5),
+                                                  margin: EdgeInsets.only(left: 0,right: 10,bottom: 0,top: 10),
+                                                  decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.white, c.white,borderColor: c.full_transparent,borderWidth: 0),
+                                                  child: Column(
+                                                    children: [
+                                                      Padding(
+                                                          padding: EdgeInsets.only(top: 7,left: 5,right: 5),
+                                                          child:Text(
+                                                              'download_tamil'.tr().toString(),
+                                                              overflow: TextOverflow.ellipsis,
+                                                              style:TextStyle(
+                                                                  fontSize: 12,
+                                                                  color: c.text_color,
+                                                                  fontWeight: FontWeight.w500
+                                                              )
+                                                          )
+                                                      ),
+                                                      Padding(
+                                                          padding: EdgeInsets.only(top: 5,bottom: 5),
+                                                          child:Text(
+                                                            'tamil_1'.tr().toString(),
+                                                            style: TextStyle(
+                                                              fontWeight: FontWeight.w500,
+                                                              color: c.text_color,
+                                                              fontSize: 12,
+                                                            ),
+                                                          )
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                                Padding(
-                                                    padding: EdgeInsets.only(top: 5,bottom: 5),
-                                                   child:Text(
-                                                    'tamil_1'.tr().toString(),
-                                                     style: TextStyle(
-                                                       fontWeight: FontWeight.w500,
-                                                       color: c.text_color,
-                                                       fontSize: 12,
-                                                     ),
-                                                   )
-                                               ),
+                                                Container(
+                                                  transform: Matrix4.translationValues(-8,25,0),
+                                                  decoration: UIHelper.circleWithColorWithShadow(300, c.white, c.white),
+                                                  child: Image.asset(imagePath.download_img,height: 25,width: 25,),
+                                                )
                                               ],
                                             ),
-                                          ),
-                                          Container(
-                                            transform: Matrix4.translationValues(-8,25,0),
-                                            decoration: UIHelper.circleWithColorWithShadow(300, c.white, c.white),
-                                            child: Image.asset(imagePath.download_img,height: 25,width: 25,),
+                                            onTap: (){
+                                              print("Receipt Downloaded Successfully");
+                                              _settingModalBottomSheet(context);
+                                            },
                                           )
                                         ],
-                                         ),
-                                       onTap: (){
-                                         print("Receipt Downloaded Successfully");
-                                         _settingModalBottomSheet(context);
-                                       },
-                                     )
-                                   ],
-                               ),
-                                UIHelper.verticalSpaceMedium,
-                               Row(
-                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                 children: [
-                                   InkWell(
-                                     child:  Stack(
-                                       children: [
-                                         Container(
-                                             width:280,
-                                             padding: EdgeInsets.all(5),
-                                             margin: EdgeInsets.only(left: 0,right:10,bottom: 25,top:6),
-                                             decoration: UIHelper.roundedBorderWithColorWithShadow(
-                                                 10,c.white,c.white,borderColor:c.full_transparent,borderWidth: 0),
-                                             child: Column(
-                                               children: [
-                                                 Padding(
-                                                   padding: EdgeInsets.only(top: 7,left: 5,right: 5),
-                                                   child: Text(
-                                                     'download_english'.tr().toString(),
-                                                     overflow: TextOverflow.ellipsis,
-                                                     textAlign: TextAlign.right,
-                                                     style: TextStyle(
-                                                         color: c.text_color,
-                                                         fontWeight: FontWeight.w500,
-                                                         fontSize: 12,
-                                                     ),
-                                                   ),
-                                                 ),
-                                                Padding(
-                                                  padding: EdgeInsets.only(top: 5,bottom: 5),
-                                                child: Text(
-                                                  'english_1'.tr().toString(),
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: c.text_color
-                                                  ),
-                                                ),)
-                                               ],
-                                             )
-                                         ),
-                                         Container(
-                                           transform: Matrix4.translationValues(-11,22,0),
-                                           decoration: UIHelper.circleWithColorWithShadow(300, c.white, c.white),
-                                           child:Image.asset(imagePath.download_img,height: 25,width: 25,), //Icon
-                                         ),
-                                       ],),
-                                     onTap: (){
-                                       print('Receipt Downloaded Successfully');
-                                       _settingModalBottomSheet(context);
-                                     },
-                                   )
-                                 ],
-                               ),
-                                // UIHelper.verticalSpaceMedium,
-                            ],)
-                            )
-                          ])
+                                      ),
+                                      UIHelper.verticalSpaceMedium,
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          InkWell(
+                                            child:  Stack(
+                                              children: [
+                                                Container(
+                                                    width:280,
+                                                    padding: EdgeInsets.all(5),
+                                                    margin: EdgeInsets.only(left: 0,right:10,bottom: 25,top:6),
+                                                    decoration: UIHelper.roundedBorderWithColorWithShadow(
+                                                        10,c.white,c.white,borderColor:c.full_transparent,borderWidth: 0),
+                                                    child: Column(
+                                                      children: [
+                                                        Padding(
+                                                          padding: EdgeInsets.only(top: 7,left: 5,right: 5),
+                                                          child: Text(
+                                                            'download_english'.tr().toString(),
+                                                            overflow: TextOverflow.ellipsis,
+                                                            textAlign: TextAlign.right,
+                                                            style: TextStyle(
+                                                              color: c.text_color,
+                                                              fontWeight: FontWeight.w500,
+                                                              fontSize: 12,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Padding(
+                                                          padding: EdgeInsets.only(top: 5,bottom: 5),
+                                                          child: Text(
+                                                            'english_1'.tr().toString(),
+                                                            style: TextStyle(
+                                                                fontSize: 12,
+                                                                fontWeight: FontWeight.w500,
+                                                                color: c.text_color
+                                                            ),
+                                                          ),)
+                                                      ],
+                                                    )
+                                                ),
+                                                Container(
+                                                  transform: Matrix4.translationValues(-11,22,0),
+                                                  decoration: UIHelper.circleWithColorWithShadow(300, c.white, c.white),
+                                                  child:Image.asset(imagePath.download_img,height: 25,width: 25,), //Icon
+                                                ),
+                                              ],),
+                                            onTap: (){
+                                              print('Receipt Downloaded Successfully');
+                                              _settingModalBottomSheet(context);
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                      // UIHelper.verticalSpaceMedium,
+                                    ],)
+                              )
+                            ])
 
                     ),
                   ),
@@ -752,18 +784,21 @@ class _ViewReceiptState extends State<ViewReceipt> {
   void _settingModalBottomSheet(context) {
     showModalBottomSheet(
         context: context,
+        // enableDrag: false,
         backgroundColor: c.full_transparent,
         builder: (BuildContext bc) {
           return Wrap(
             children: <Widget>[
               Container(
+                  alignment:Alignment.center,
+                  height: MediaQuery.of(context).size.height*3/4,
                   decoration: UIHelper.GradientContainer(
                       30.0,30,0,0, [c.white, c.white]),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Container(
-                        padding: EdgeInsets.only(top: 10),
+                        padding: EdgeInsets.only(top: 15),
                         alignment:Alignment.center,
                         child: Text(
                             "Enter  OTP"
@@ -796,41 +831,44 @@ class _ViewReceiptState extends State<ViewReceipt> {
                         ),
                       ),
                       Container(
-                        height: 40,
+                          height: 40,
                           padding: EdgeInsets.all(5),
                           margin: EdgeInsets.only(left: 0,right:10,bottom: 15,top: 5),
-                          decoration: UIHelper.roundedBorderWithColorWithShadow(
-                              10,c.colorAccentlight,c.colorAccentlight,borderColor: Colors.transparent,borderWidth: 0),
-                         child:InkWell(
-                                         child:  Padding(
-                                         padding: EdgeInsets.only(left: 5,top: 5,bottom: 5,right: 5),
-                                         child:  Text(
-                                         'verifyOTP'.tr().toString(),
-                                         textAlign: TextAlign.center,
-                                         overflow: TextOverflow.ellipsis,
-                                         style: TextStyle(
-                                         color: c.white,
-                                          fontWeight: FontWeight.w500,
-                                         fontSize: 13,
-                                         decorationStyle: TextDecorationStyle.wavy
-                                         ),
-                                         ),
-                                         ),
-                           onTap: ()async{
-                             if (await utils.isOnline()) {
-                             Navigator.pop(context);
-                             utils.showAlert(context, ContentType.success, "Receipt Downloaded Successfully");
-                             } else {
-                             utils.showAlert(
-                             context,
-                             ContentType.fail,
-                             "noInternet".tr().toString(),
-                             );
-                             }
-                           },
-                         )
+                          decoration: UIHelper.roundedBorderWithColorWithShadow(10,c.colorAccentlight,c.colorAccentlight,borderColor: Colors.transparent,borderWidth: 0),
+                          child:InkWell(
+                            child:  Padding(
+                              padding: EdgeInsets.only(left: 5,top: 5,bottom: 5,right: 5),
+                              child:  Text(
+                                'verifyOTP'.tr().toString(),
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: c.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 13,
+                                  decorationStyle: TextDecorationStyle.wavy,
+                                ),
+                              ),
+                            ),
+                            onTap: ()async{
+                              if (await utils.isOnline()) {
+                                if(finalOTP.isNotEmpty)
+                                {
+                                  Navigator.pop(context);
+                                  utils.showAlert(context, ContentType.success, "Receipt Downloaded Successfully");
+                                }
+                                else
+                                {
+                                  utils.showAlert(context, ContentType.warning, "Please Enter A Valid OTP");
+                                }
+                              }
+                              else {
+                                utils.showAlert(context, ContentType.fail, "noInternet".tr().toString(),);
+                              }
+                            },
+                          )
                       ),
-                     /* CustomGradientButton(
+                      /* CustomGradientButton(
                         onPressed: () async {
                           if (await utils.isOnline()) {
                             Navigator.pop(context);
