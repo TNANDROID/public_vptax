@@ -178,18 +178,17 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
                                                           child: Container(
                                                               decoration: UIHelper.leftBorderContainer(c.green_new, c.grey_4),
                                                               height: 40,
-                                                              child: Row(
+                                                              child: Column(
                                                                 children: [
-                                                                  Expanded(child: Center(child: UIHelper.titleTextStyle(finYearStr + "\n" + durationStr, c.grey_8, 10, false, true))),
+                                                                  Expanded(child: Center(child: UIHelper.titleTextStyle(finYearStr + " ( $durationStr )", c.grey_8, 10, false, true))),
                                                                   Expanded(
                                                                     child: Container(
-                                                                        padding: EdgeInsets.all(8.0),
                                                                         child: Center(
                                                                             child: UIHelper.titleTextStyle(
                                                                                 "\u{20B9} " + Utils().getDemadAmount(selectedTaxonly[index], mainselecteddynamicData[key_taxtypeid].toString()),
                                                                                 c.black,
-                                                                                12,
-                                                                                false,
+                                                                                10,
+                                                                                true,
                                                                                 false))),
                                                                   ),
                                                                 ],
@@ -198,7 +197,7 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
                                                   ))),
                                           UIHelper.verticalSpaceMedium,
                                           Container(
-                                              padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
+                                              padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
                                               child: Column(
                                                 children: [
                                                   demandCalculationWidget('demand_selected', mainDataList[index][key_tax_total].toString(), false),
@@ -215,7 +214,16 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
                                                           ],
                                                         )
                                                       : SizedBox(),
-                                                  demandCalculationWidget('total_amount_to_pay', (mainDataList[index][key_tax_pay]+mainDataList[index][key_swm_pay]).toString(), true),
+                                                  demandCalculationWidget('total_amount_to_pay', (mainDataList[index][key_tax_pay] + mainDataList[index][key_swm_pay]).toString(), true),
+                                                  UIHelper.verticalSpaceSmall,
+                                                  Align(
+                                                      alignment: Alignment.centerRight,
+                                                      child: InkWell(
+                                                          onTap: () {},
+                                                          child: Container(
+                                                              decoration: UIHelper.GradientContainer(5, 5, 5, 5, [c.account_status_green_color, c.account_status_green_color]),
+                                                              padding: EdgeInsets.all(8),
+                                                              child: UIHelper.titleTextStyle('pay'.tr().toString(), c.white, 12, true, true))))
                                                 ],
                                               ))
                                         ])),
@@ -225,7 +233,7 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
                             },
                           ),
                         )),
-                        payWidget()
+                        //  payWidget()
                       ],
                     ));
               },
@@ -330,5 +338,4 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
     List selectedTaxitem = taxTypeList.where((element) => element[key_taxtypeid].toString() == typeId.toString()).toList();
     return selectedTaxitem[0][key_img_path].toString();
   }
-
 }
