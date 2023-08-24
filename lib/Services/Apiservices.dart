@@ -15,8 +15,8 @@ class ApiServices {
   };
 
   // local
-  String mainURL = "http://10.163.19.158/vptax/project/webservices/vptax_services_online.php";
-  String openURL = "http://10.163.19.158/vptax/project/webservices/open_services/open_services.php";
+  String mainURL = "http://10.163.19.137:8090/vptax/project/webservices/vptax_services_online.php";
+  String openURL = "http://10.163.19.137:8090/vptax/project/webservices/open_services/open_services.php";
 
   ioclientCertificate() async {
     HttpClient _client = HttpClient(context: await utils.globalContext);

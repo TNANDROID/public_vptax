@@ -23,6 +23,7 @@ import 'package:stacked/stacked.dart';
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 
 import '../../Resources/StringsKey.dart';
+import '../Auth/Home.dart';
 
 class TaxCollectionDetailsView extends StatefulWidget {
   final selectedTaxTypeData;
@@ -1644,7 +1645,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
           " merchId= " +
           merchId);
 
-      Utils().openNdpsPG(context, atomTokenId, merchId, public_transaction_email_id, public_transaction_mobile_no);
+     await Utils().openNdpsPG(context, atomTokenId, merchId, public_transaction_email_id, public_transaction_mobile_no);
+
       // throw ('000');
     } catch (error) {
       print('error (${error.toString()}) has been caught');

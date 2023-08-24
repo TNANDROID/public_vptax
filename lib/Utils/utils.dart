@@ -22,8 +22,10 @@ import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui' as ui;
+import '../Activity/Auth/Home.dart';
 import '../Activity/Auth/Pdf_Viewer.dart';
 import '../Model/startup_model.dart';
+import '../Model/transaction_model.dart';
 import '../Resources/StringsKey.dart';
 import 'ContentInfo.dart';
 import '../../Services/Apiservices.dart';
@@ -145,7 +147,7 @@ class Utils {
   }
 
   Future<void> showAlert(BuildContext mcontext, ContentType contentType, String message,
-      {String? title, String? btnCount, String? btnmsg, var receiptList, String? file_path, double? titleFontSize, double? messageFontSize}) async {
+      {String? title, String? btnCount, String? btnmsg, var receiptList, String? file_path, String? mobile, String? email, double? titleFontSize, double? messageFontSize}) async {
     await showDialog<void>(
       context: mcontext,
       barrierDismissible: btnCount != null ? false : true, // user must tap button!
@@ -239,12 +241,20 @@ class Utils {
                       top: 0,
                       right: 0,
                       child: GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           Navigator.of(context).pop();
                           if (btnmsg == 'payment') {
                             getReceipt(mcontext, receiptList);
                           } else if (btnmsg == 'receipt') {
                             openFilePath(file_path!);
+                          }else if (btnmsg == 'canceled') {
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Home(
+                                      isLogin: false,
+                                    )),
+                                    (route) => false);
                           }
                         },
                         child: Container(
@@ -269,13 +279,21 @@ class Utils {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                             child: ElevatedButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 if (btnmsg == 'payment') {
                                   Navigator.of(context).pop();
                                   getReceipt(mcontext, receiptList);
                                 } else if (btnmsg == 'receipt') {
                                   Navigator.of(context).pop();
                                   openFilePath(file_path!);
+                                }else if (btnmsg == 'canceled') {
+                                  Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Home(
+                                            isLogin: false,
+                                          )),
+                                          (route) => false);
                                 } else {
                                   performAction(btnmsg ?? '', context);
                                 }
@@ -591,14 +609,14 @@ class Utils {
   }
 
   //Atom Paynets Gateway HTML Page Renger
-  openNdpsPG(mcontext, String atomTokenId, String merchId, String emailId, String mobileNumber) {
+  Future<void> openNdpsPG(mcontext, String atomTokenId, String merchId, String emailId, String mobileNumber) async {
     // String returnUrl = "https://payment.atomtech.in/mobilesdk/param"; ////return url production
     String returnUrl = "https://pgtest.atomtech.in/mobilesdk/param";
 
     // String payDetails = '{"atomTokenId": "15000000411719", "merchId": "8952", "emailId": "sd@gmail.com", "mobileNumber": "9698547875", "returnUrl": "$returnUrl"}';
     Map payDetails = {key_atomTokenId: atomTokenId, key_merchId: merchId, key_emailId: emailId, key_mobileNumber: mobileNumber, key_returnUrl: returnUrl};
     print("request>>" + json.encode(payDetails));
-    Navigator.push(mcontext, MaterialPageRoute(builder: (context) => AtomPaynetsView("uat", json.encode(payDetails), mcontext)));
+    Navigator.push(mcontext, MaterialPageRoute(builder: (context) => AtomPaynetsView("uat", json.encode(payDetails), mcontext,emailId,mobileNumber)));
   }
 
   String getDemadAmount(taxData, String taxTypeId) {

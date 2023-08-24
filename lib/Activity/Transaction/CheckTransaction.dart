@@ -322,7 +322,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
                             checkReceiptStatus(status, transID, selectLang, taxTypeID, context);
                           },
                           style: ElevatedButton.styleFrom(
-                            fixedSize: Size(selectLang == 'ta' ? 150 : 130, 30),
+                            fixedSize: Size(130, 30),
                             backgroundColor: cardColorPrimary,
                           ),
                           child: Text(
@@ -357,7 +357,9 @@ class _CheckTransactionState extends State<CheckTransaction> {
                           SizedBox(width: 5), // Add some spacing between the icon and text
                           Text(
                             headerText,
-                            style: TextStyle(fontSize: 11, color: c.text_color, fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(fontSize: 10, color: c.text_color, fontWeight: FontWeight.bold),
                           ),
                         ],
                       )
@@ -429,6 +431,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
   }
 
   Future<void> checkReceiptStatus(String flag, String transID, String lang, String taxType, BuildContext context) async {
+    Utils().showProgress(context, 1);
     var requestData = {
       if (flag == "SUCCESS") key_service_id: service_key_TransactionidWiseGetReceipt else key_service_id: service_key_CheckTransaction,
       if (flag == "SUCCESS") key_taxtypeid: taxType,
@@ -440,6 +443,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
 
     var response = await apiServices.mainServiceFunction(GetRequestDataList);
     print('response>>: ${response}');
+    Utils().hideProgress(context);
     if (response[key_status] == key_success && response[key_response] == key_success) {
       if (flag == "SUCCESS") {
         var receiptResponce = response[key_data];

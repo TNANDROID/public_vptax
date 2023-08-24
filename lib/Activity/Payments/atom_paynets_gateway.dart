@@ -22,7 +22,9 @@ class AtomPaynetsView extends StatefulWidget {
   final mode;
   final payDetails;
   final mcontext;
-  AtomPaynetsView(this.mode, this.payDetails, this.mcontext);
+  final emailId;
+  final mobileNumber;
+  AtomPaynetsView(this.mode, this.payDetails, this.mcontext, this.emailId, this.mobileNumber);
   @override
   createState() => AtomPaynetsViewState(this.mode, this.payDetails, this.mcontext);
 }
@@ -186,7 +188,7 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
     if (type == ContentType.success ) {
       Utils().showAlert(mcontext, type, "$transactionResult", btnCount: "1", btnmsg: 'payment',receiptList:receiptList);
     }else{
-      Utils().showAlert(mcontext, type, "$transactionResult", btnCount: "1");
+      Utils().showAlert(mcontext, type, "$transactionResult", btnCount: "1",btnmsg: 'canceled');
     }
   }
 
@@ -209,7 +211,8 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
                   onPressed: () {
                     Navigator.pop(context);
                     Navigator.of(context).pop();
-                    Utils().showAlert(context, ContentType.fail, "Transaction cancelled!"); // Close current window
+                    Utils().showAlert(context, ContentType.fail, "Transaction cancelled!",btnmsg: 'canceled',
+                        mobile: widget.mobileNumber,email:widget.emailId); // Close current window
                     // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Transaction Status = Transaction cancelled")));
                   },
                   child: const Text('Yes'),
