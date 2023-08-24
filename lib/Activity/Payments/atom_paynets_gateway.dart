@@ -188,7 +188,8 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
     if (type == ContentType.success ) {
       Utils().showAlert(mcontext, type, "$transactionResult", btnCount: "1", btnmsg: 'payment',receiptList:receiptList);
     }else{
-      Utils().showAlert(mcontext, type, "$transactionResult", btnCount: "1",btnmsg: 'canceled');
+      String msg="$transactionResult \n Please Check Transaction History for more Details";
+      Utils().showAlert(mcontext, type, msg, btnCount: "1",btnmsg: 'canceled');
     }
   }
 

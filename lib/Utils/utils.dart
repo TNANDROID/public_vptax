@@ -349,6 +349,7 @@ class Utils {
   }
 
   Future<void> getReceipt(BuildContext mcontext, receiptList) async {
+    showProgress(mcontext, 1);
     String selectedLang = await preferencesService.getUserInfo("lang");
     var receiptRequestData = {
       key_service_id: service_key_GetReceipt,
@@ -365,6 +366,7 @@ class Utils {
 
     var response = await ApiServices().mainServiceFunction(GetReceiptList);
     print('response>>: ${response}');
+    hideProgress(mcontext);
     if (response[key_status] == key_success && response[key_response] == key_success) {
       var receiptResponce = response[key_data];
       var pdftoString = receiptResponce[key_receipt_content];

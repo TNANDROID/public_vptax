@@ -47,6 +47,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
   bool listvisbility = false;
   String finalOTP = '';
   Uint8List? pdf;
+  String selectedLang = "";
   PreferenceService preferencesService = locator<PreferenceService>();
   final  TextEditingController assessmentController = TextEditingController();
   final  TextEditingController receiptController = TextEditingController();
@@ -59,6 +60,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
   }
   Future<void> initialize() async {
     prefs = await SharedPreferences.getInstance();
+    selectedLang = await preferencesService.getUserInfo("lang");
     taxFlag=true;
     districtFlag = true;
     blockFlag=true;
@@ -75,7 +77,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
       }
     });
     setState(() {
-      prefs.getString("lang")!= null &&  prefs.getString("lang")!="" &&  prefs.getString("lang")=="en"?
+      selectedLang!= null &&  selectedLang!="" &&  selectedLang=="en"?
       context.setLocale(Locale('en', 'US')):
       context.setLocale(Locale('ta', 'IN'));
 
@@ -94,7 +96,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
     String titleTextTamil = "";
     String initValue="";
     if (index == 0) {
-      dropList=preferencesService.taxTypeList;;
+      dropList=preferencesService.taxTypeList;
       print("tax type>>>"+dropList.toString());
       keyCode = key_taxtypeid;
       titleText = key_taxtypedesc_en;
@@ -102,6 +104,9 @@ class _ViewReceiptState extends State<ViewReceipt> {
       initValue=selectedTaxType;
     } else if (index == 1) {
       dropList = preferencesService.districtList;
+      dropList.sort((a, b) {
+        return a[selectedLang=='en'?key_dname:key_dname_ta].compareTo(b[selectedLang=='en'?key_dname:key_dname_ta]);
+      });
       print("districtList>>>"+dropList.toString());
       keyCode = key_dcode;
       titleText = key_dname;
@@ -109,6 +114,9 @@ class _ViewReceiptState extends State<ViewReceipt> {
       initValue = selectedDistrict;
     } else if (index == 2) {
       dropList =model.selectedBlockList;
+      dropList.sort((a, b) {
+        return a[selectedLang=='en'?key_bname:key_bname_ta].compareTo(b[selectedLang=='en'?key_bname:key_bname_ta]);
+      });
       print("blockList>>>"+dropList.toString());
       keyCode = key_bcode;
       titleText = key_bname;
@@ -116,6 +124,9 @@ class _ViewReceiptState extends State<ViewReceipt> {
       initValue = selectedBlock;
     } else if (index == 3) {
       dropList =model.selectedVillageList;
+      dropList.sort((a, b) {
+        return a[selectedLang=='en'?key_pvname:key_pvname_ta].compareTo(b[selectedLang=='en'?key_pvname:key_pvname_ta]);
+      });
       print("villageList>>>"+dropList.toString());
       keyCode = key_pvcode;
       titleText = key_pvname;

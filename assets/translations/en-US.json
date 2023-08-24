@@ -161,5 +161,6 @@
   "status": "Status",
   "work_id": "Work Id",
   "download_receipt_success": "Receipt Downloaded Successfully",
-  "receipt": "Receipt"
+  "receipt": "Receipt",
+  "please_check_tran_history": "Please Check Transaction Status for more Details"
 }
