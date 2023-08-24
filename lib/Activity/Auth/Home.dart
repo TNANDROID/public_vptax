@@ -645,7 +645,13 @@ class _HomeState extends State<Home> {
                             mobileController.text = "9875235654";
                             bool resFlag = await transactionModel.getTransactionStatus(context, mobileController.text, emailController.text);
                             if (resFlag) {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => CheckTransaction()));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CheckTransaction(
+                                            mobileNumber: mobileController.text,
+                                            emailID: emailController.text,
+                                          )));
                             } else {
                               utils.showAlert(context, ContentType.fail, 'message');
                             }

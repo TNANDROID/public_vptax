@@ -7,6 +7,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
+import 'package:public_vptax/Resources/ImagePath.dart';
+import 'package:public_vptax/Utils/ContentInfo.dart';
+import 'package:public_vptax/Utils/utils.dart';
 import '../../Layout/customclip.dart';
 import '../../Layout/ui_helper.dart';
 import '../../Model/transaction_model.dart';
@@ -17,7 +20,9 @@ import '../../Services/locator.dart';
 import '../Auth/Pdf_Viewer.dart';
 
 class CheckTransaction extends StatefulWidget {
-  const CheckTransaction({super.key});
+  final mobileNumber;
+  final emailID;
+  const CheckTransaction({super.key, this.mobileNumber, this.emailID});
 
   @override
   State<CheckTransaction> createState() => _CheckTransactionState();
@@ -424,22 +429,35 @@ class _CheckTransactionState extends State<CheckTransaction> {
   }
 
   Future<void> checkReceiptStatus(String flag, String transID, String lang, String taxType, BuildContext context) async {
-    var requestData = {if (flag == "SUCCESS") key_service_id: service_key_TransactionidWiseGetReceipt, key_taxtypeid: taxType, key_transaction_id: transID, key_language_name: lang};
+    var requestData = {
+      if (flag == "SUCCESS") key_service_id: service_key_TransactionidWiseGetReceipt else key_service_id: service_key_CheckTransaction,
+      if (flag == "SUCCESS") key_taxtypeid: taxType,
+      key_transaction_id: transID,
+      key_language_name: lang
+    };
 
     var GetRequestDataList = {key_data_content: requestData};
 
     var response = await apiServices.mainServiceFunction(GetRequestDataList);
     print('response>>: ${response}');
     if (response[key_status] == key_success && response[key_response] == key_success) {
-      var receiptResponce = response[key_data];
-      var pdftoString = receiptResponce[key_receipt_content];
-      Uint8List? pdf = const Base64Codec().decode(pdftoString);
-      Navigator.of(context).push(
-        MaterialPageRoute(
-            builder: (context) => PDF_Viewer(
-                  pdfBytes: pdf,
-                )),
-      );
+      if (flag == "SUCCESS") {
+        var receiptResponce = response[key_data];
+        var pdftoString = receiptResponce[key_receipt_content];
+        Uint8List? pdf = const Base64Codec().decode(pdftoString);
+        Navigator.of(context).push(
+          MaterialPageRoute(
+              builder: (context) => PDF_Viewer(
+                    pdfBytes: pdf,
+                  )),
+        );
+      } else {
+        print('response>>: ${response[key_message]}');
+
+        Utils().showAlert(context, ContentType.help, '${response[key_message]}');
+        await transactionModel.getTransactionStatus(context, widget.mobileNumber, widget.emailID);
+        initialize();
+      }
     }
   }
 }
