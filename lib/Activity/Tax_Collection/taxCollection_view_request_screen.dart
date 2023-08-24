@@ -165,7 +165,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
     if (index == 1) {
       dropList = preferencesService.districtList;
       dropList.sort((a, b) {
-        return a[selectedLang=='en'?key_dname:key_dname_ta].compareTo(b[selectedLang=='en'?key_dname:key_dname_ta]);
+        return a[selectedLang == 'en' ? key_dname : key_dname_ta].compareTo(b[selectedLang == 'en' ? key_dname : key_dname_ta]);
       });
       keyCode = key_dcode;
       titleText = key_dname;
@@ -174,7 +174,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
     } else if (index == 2) {
       dropList = model.selectedBlockList;
       dropList.sort((a, b) {
-        return a[selectedLang=='en'?key_bname:key_bname_ta].compareTo(b[selectedLang=='en'?key_bname:key_bname_ta]);
+        return a[selectedLang == 'en' ? key_bname : key_bname_ta].compareTo(b[selectedLang == 'en' ? key_bname : key_bname_ta]);
       });
       keyCode = key_bcode;
       titleText = key_bname;
@@ -183,12 +183,12 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
     } else if (index == 3) {
       dropList = model.selectedVillageList;
       dropList.sort((a, b) {
-        return a[selectedLang=='en'?key_pvname:key_pvname_ta].compareTo(b[selectedLang=='en'?key_pvname:key_pvname_ta]);
+        return a[selectedLang == 'en' ? key_pvname : key_pvname_ta].compareTo(b[selectedLang == 'en' ? key_pvname : key_pvname_ta]);
       });
       keyCode = key_pvcode;
       titleText = key_pvname;
       titleTextTamil = key_pvname_ta;
-      initValue = selectedBlock;
+      initValue = selectedVillage;
     } else if (index == 4) {
       dropList = preferencesService.finYearList;
       keyCode = key_fin_year;
