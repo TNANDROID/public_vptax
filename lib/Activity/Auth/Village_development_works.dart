@@ -5,25 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:otp_text_field/otp_field.dart';
-import 'package:otp_text_field/style.dart';
 import 'package:public_vptax/Layout/customclip.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
-import 'package:public_vptax/Resources/StringsKey.dart' as s;
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
-import 'package:public_vptax/Utils/utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stacked/stacked.dart';
 import '../../Layout/Read_more_or_less.dart';
-import '../../Layout/customgradientbutton.dart';
-import '../../Model/startup_model.dart';
 import '../../Resources/StringsKey.dart';
-import '../../Services/Apiservices.dart';
-import '../../Utils/ContentInfo.dart';
 
 class Villagedevelopment extends StatefulWidget {
   @override
@@ -36,8 +25,12 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
   final _controller = ScrollController();
   bool flag = true;
   bool cardvisibility = false;
-  bool arrowvisibility = false;
-  final List<String> items = [
+  bool totalworkvisibility=true;
+  bool notstartedvisibility=false;
+  bool progressvisibility=false;
+  bool completedvisibility=false;
+  List worklist=[];
+  final List items = [
     '01',
     '02',
     '03',
@@ -45,12 +38,12 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
     '05',
   ];
   List workitems=[
-    {'id':0,'name':'total_works'.tr().toString()},
+    {'id':0,'name':'total_works'.tr().toString(),},
     {'id':1,'name':'not_started_work'.tr().toString()},
     {'id':2,'name':'work_in_progress'.tr().toString()},
     {'id':3,'name':'completed_work'.tr().toString()},
   ];
-  List<bool> showFlag = [];
+  List showFlag = [];
   @override
   void initState() {
     super.initState();
@@ -68,6 +61,8 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
         }
       }
     });
+    worklist.addAll(workitems);
+    print("worklist values>>>>"+worklist.toString());
   }
   Future<bool> _onWillPop() async {
     Navigator.of(context, rootNavigator: true).pop(context);
@@ -161,6 +156,7 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
            ),
             Container(
               padding:EdgeInsets.only(top: 15,left: 5,right: 5,),
+              // child:Text(workitems[i][])),
               child: Text('work_details'.tr().toString(),style: TextStyle(color: c.primary_text_color2),),),
             Container(
               width: MediaQuery.of(context).size.width,
@@ -177,213 +173,216 @@ Widget _workdetails(BuildContext context){
     return SingleChildScrollView(
       controller: _controller,
        scrollDirection: Axis.horizontal,
-       child: Container(
-          // padding:EdgeInsets.only(top: 10,left: 10,right: 5,bottom: 10),
-        // padding:EdgeInsets.only(left: 15,top: 1,bottom: 1),
-         decoration: BoxDecoration(
-           color: c.white,
-           borderRadius: BorderRadius.only(topRight: Radius.circular(0),
-               topLeft: Radius.circular(0),
-               bottomLeft: Radius.circular(0),
-               bottomRight: Radius.circular(0)),
-           border: Border.all(color: c.colorPrimaryDark,width: 1.5)
-               ),
-                  child: Row(
-                    children: [
-                      InkWell(
-                        onTap: (){
-                          setState(() {
-                            cardvisibility=true;
-                            card();
-                            workitems[0]['name'].toString();
-                          });
-                        },
-                       child: CustomPaint(
-                         foregroundPainter: BorderPainter(),
-                         child: ClipPath(
-                           clipper: RightTriangleClipper(),
-                           child: Container(
-                               width: 130,
-                               height: 45,
-                               decoration: UIHelper.roundedBorderWithColorWithShadow(0, c.white, c.white,),
-                               child:Column(
-                                 children: [
-                                   Padding(
-                                     padding: EdgeInsets.only(right: 25,top: 5,left: 5),
-                                     child: Text(
-                                       workitems[0]['name'].toString(),
-                                       overflow: TextOverflow.ellipsis,
-                                       style: TextStyle(
-                                           fontWeight: FontWeight.w500,
-                                           fontSize: 12,
-                                           color: c.primary_text_color2
-                                       ),
-                                     ),),
-                                   Padding(
-                                     padding: EdgeInsets.only(left: 0,right: 30,top: 5,bottom: 2),
-                                     child:Text(
-                                       '10',
-                                       style: TextStyle(
-                                           fontWeight: FontWeight.w500,
-                                           fontSize: 12,
-                                           color: c.primary_text_color2
-                                       ),
-                                     ),
-                                   )
-                                 ],
-                               )
-                             // color: c.need_improvement,
-                           ),
-                         ),
-                       ),
-                      ),
-                       InkWell(
-                         onTap: (){
-                           setState(() {
-                             cardvisibility=true;
-                             card();
-                             print("Not Started>>>>");
-                           });
-                         },
-                child: CustomPaint(
-                  foregroundPainter: BorderPainter(),
-                  child: ClipPath(
-                    clipper: RightTriangleClipper(),
-                    child: Container(
-                        width: 130,
-                        height: 45,
-                        decoration: UIHelper.roundedBorderWithColorWithShadow(0, c.white, c.white),
-                        child:Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(right: 30,top: 5,left: 5),
-                              child:Text(
-                                workitems[1]['name'].toString(),
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 12,
-                                    color: c.primary_text_color2
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 0,right: 30,top: 5,bottom: 2),
-                              child:Text(
-                                '3',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 12,
-                                    color: c.primary_text_color2
-                                ),
-                              ),
-                            )
-                          ],
-                        )
-
-                      // color: c.need_improvement,
-                    ),
-                  ),
-                ),
-              ),
-                      InkWell(
-                        onTap: (){
-                          setState(() {
-                            cardvisibility=true;
-                            card();
-                            print("Work In Progress>>>>");
-                          });
-                        },
-                child: CustomPaint(
-                    foregroundPainter: BorderPainter(),
-                    child: ClipPath(
-                      clipper: RightTriangleClipper(),
-                      child: Container(
-                          width: 130,
-                          height: 45,
-                          decoration: UIHelper.roundedBorderWithColorWithShadow(0, c.white, c.white),
-                          child:Column(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(right: 30,top: 5,left: 5),
-                                child:Text(
-                                  workitems[2]['name'].toString(),
-                                  overflow: TextOverflow.ellipsis,
+        child: Container(
+            decoration: BoxDecoration(
+                color: c.white,
+                borderRadius: BorderRadius.only(topRight: Radius.circular(0),
+                    topLeft: Radius.circular(0),
+                    bottomLeft: Radius.circular(0),
+                    bottomRight: Radius.circular(0)),
+                border: Border.all(color: c.colorPrimaryDark,width: 1.5)
+            ),
+            child: Row(
+                children: [
+                  InkWell(
+                    onTap: (){
+                      totalworkvisibility=true;
+                      progressvisibility=false;
+                      notstartedvisibility=false;
+                      completedvisibility=false;
+                      setState(() {
+                        cardvisibility=true;
+                        card();
+                        workitems[0]['name'].toString();
+                      });
+                    },
+                    child: CustomPaint(
+                      foregroundPainter: BorderPainter(),
+                      child: ClipPath(
+                        clipper: RightTriangleClipper(),
+                        child: Container(
+                            width: 150,
+                            height: 58,
+                            padding: EdgeInsets.only(top: 10,left: 0,right: 20),
+                            decoration: totalworkvisibility?UIHelper.roundedBorderWithColorWithShadow(0, c.colorPrimary, c.colorPrimary):UIHelper.roundedBorderWithColorWithShadow(0, c.white, c.white),
+                            child:Column(
+                              children: [
+                                Text(
+                                  workitems[0]['name'].toString(),
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 12,
+                                      fontSize: 11,
                                       color: c.primary_text_color2
                                   ),
                                 ),
+                                Padding(
+                                  padding: EdgeInsets.only(right: 25,top: 15),
+                                  child:  Text(
+                                    '10',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12,
+                                        color: c.primary_text_color2
+                                    ),
+                                    // textAlign: TextAlign.center,
+                                  ),)
+                              ],
+                            )
+                          // color: c.need_improvement,
+                        ),
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: (){
+                      totalworkvisibility=false;
+                      notstartedvisibility=true;
+                      progressvisibility=false;
+                      completedvisibility=false;
+                      setState(() {
+                        cardvisibility=true;
+                        card();
+                        print("Not Started>>>>");
+                      });
+                    },
+                    child: CustomPaint(
+                      foregroundPainter: BorderPainter(),
+                      child: ClipPath(
+                        clipper: RightTriangleClipper(),
+                        child: Container(
+                            width: 150,
+                            height: 58,
+                            padding: EdgeInsets.only(top: 5,left: 15,right: 0),
+                            decoration: notstartedvisibility?UIHelper.roundedBorderWithColorWithShadow(0, c.colorPrimary, c.colorPrimary):UIHelper.roundedBorderWithColorWithShadow(0, c.white, c.white),
+                           child:Column(
+                             children: [
+                               Text(
+                                 workitems[1]['name'].toString(),
+                                 style: TextStyle(
+                                     fontWeight: FontWeight.w500,
+                                     fontSize: 11,
+                                     color: c.primary_text_color2
+                                 ),
+                               ),
+                               Padding(
+                                 padding: EdgeInsets.only(right: 50,top: 6),
+                                 child:  Text(
+                                   '4',
+                                   style: TextStyle(
+                                       fontWeight: FontWeight.w500,
+                                       fontSize: 12,
+                                       color: c.primary_text_color2
+                                   ),
+                                   textAlign: TextAlign.center,
+                                 ),)
+                             ],
+                           )
+                          // color: c.need_improvement,
+                        ),
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: (){
+                      progressvisibility=true;
+                      totalworkvisibility=false;
+                      notstartedvisibility=false;
+                      completedvisibility=false;
+                      setState(() {
+                        cardvisibility=true;
+                        card();
+                        print("Work In Progress>>>>");
+                      });
+                    },
+                    child: CustomPaint(
+                      foregroundPainter: BorderPainter(),
+                      child: ClipPath(
+                        clipper: RightTriangleClipper(),
+                        child: Container(
+                            width: 150,
+                            height: 58,
+                            padding: EdgeInsets.only(left: 10,right: 15),
+                            decoration: progressvisibility?UIHelper.roundedBorderWithColorWithShadow(0, c.colorPrimary, c.colorPrimary):UIHelper.roundedBorderWithColorWithShadow(0, c.white, c.white),
+                            // decoration: UIHelper.roundedBorderWithColorWithShadow(0, c.white, c.white),
+                            child:Column(
+                              children: [
+                                Text(
+                                  workitems[2]['name'].toString(),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 11,
+                                      color: c.primary_text_color2
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(right: 50,),
+                                  child:  Text(
+                                    '3',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12,
+                                        color: c.primary_text_color2
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),)
+                              ],
+                            )
+                          // color: c.need_improvement,
+                        ),
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: (){
+                      completedvisibility=true;
+                      progressvisibility=false;
+                      totalworkvisibility=false;
+                      notstartedvisibility=false;
+                      setState(() {
+                        cardvisibility=true;
+                        card();
+                        print("Completed Work>>>>");
+                      });
+                    },
+                    child: ClipPath(
+                      // clipper: RightTriangleClipper(),
+                      child: Container(
+                          width: 110,
+                          height: 58,
+                          padding: EdgeInsets.only(left: 10,right: 0,top: 5),
+                          decoration: completedvisibility?UIHelper.roundedBorderWithColorWithShadow(0, c.colorPrimary, c.colorPrimary):UIHelper.roundedBorderWithColorWithShadow(0, c.white, c.white),
+                          // decoration: UIHelper.roundedBorderWithColorWithShadow(0, c.white, c.white),
+                          child:Column(
+                            children: [
+                              Text(
+                                workitems[3]['name'].toString(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 11,
+                                    color: c.primary_text_color2
+                                ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 0,right: 30,top: 5,bottom: 2),
-                                child:Text(
+                              Padding(padding: EdgeInsets.only(right: 25,top: 6),
+                                child:  Text(
                                   '3',
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 12,
                                       color: c.primary_text_color2
                                   ),
-                                ),
-                              )
+                                  // textAlign: TextAlign.center,
+                                ),)
                             ],
                           )
                         // color: c.need_improvement,
                       ),
-                    )
-                ),
-              ),
-                       InkWell(
-                         onTap: (){
-                           setState(() {
-                             cardvisibility=true;
-                             card();
-                             print("Completed Work>>>>");
-                           });
-                         },
-                         child: ClipPath(
-                           clipper: RightTriangleClipper(),
-                           child: Container(
-                               width: 130,
-                               height: 45,
-                               decoration: UIHelper.roundedBorderWithColorWithShadow(0, c.white, c.white),
-                               child:Column(
-                                 children: [
-                                   Padding(
-                                     padding: EdgeInsets.only(right: 30,top: 5,left: 5),
-                                     child:Text(
-                                       workitems[3]['name'].toString(),
-                                       overflow: TextOverflow.ellipsis,
-                                       style: TextStyle(
-                                           fontWeight: FontWeight.w500,
-                                           fontSize: 12,
-                                           color: c.primary_text_color2
-                                       ),
-                                     ),
-                                   ),
-                                   Padding(
-                                     padding: EdgeInsets.only(left: 0,right: 30,top: 5,bottom: 2),
-                                     child:Text(
-                                       '4',
-                                       style: TextStyle(
-                                           fontWeight: FontWeight.w500,
-                                           fontSize: 12,
-                                           color: c.primary_text_color2
-                                       ),
-                                     ),
-                                   )
-                                 ],
-                               )
-                             // color: c.need_improvement,
-                           ),
-                         ),
-              )
-    ])));
+                    ),
+                  )
+                ]))
+      );
 
 }
-Widget card()
-{
+Widget card() {
   return  Visibility(
     visible:cardvisibility,
     child: Container(
@@ -391,20 +390,19 @@ Widget card()
         child: ListView.builder(
           physics:NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          itemCount:2,
+          itemCount:items.length,
           itemBuilder: (BuildContext context, int index) {
-            Color itemColor = index % 2 == 0 ? c.dark_pink : c.need_improvement;
+            // Color itemColor = index % 2 == 0 ? c.dark_pink : c.need_improvement;
+            Color itemColor =c.colorPrimary ;
             ListTile(
               leading: Text('${index + 1}'), // Display serial number
               title: Text(items[index],),
             );
             return Container(
               margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-              // transform: Matrix4.translationValues(0, 20, 0),
               decoration: UIHelper.roundedBorderWithColorWithShadow(
                   25,c.white,c.white,borderColor: Colors.transparent,borderWidth: 0),
               child: AnimationConfiguration.staggeredList(
-                key: ValueKey(workitems[index]),
                 position: index,
                 duration: const Duration(milliseconds: 800),
                 child: SlideAnimation(
@@ -526,12 +524,18 @@ Widget card()
                                                           Padding(
                                                             padding: EdgeInsets.only(right:5),
                                                             child:  InkWell(
-                                                              child:  Image.asset(imagePath.downarrow,height: 18,width: 18,color: c.white,),
+                                                              child:Image.asset(imagePath.downarrow,height: 18,width: 18,color: c.white,),
+                                                              // child:  showFlag.contains(index)?Image.asset(imagePath.downarrow,height: 18,width: 18,color: c.white,),
                                                               onTap: (){
                                                                 setState(() {
-                                                                  print("item index>>>"+items[index].toString());
-                                                                 arrowvisibility=!arrowvisibility;
-                                                                 // showFlag[index]=!showFlag[index];
+                                                                if(showFlag.contains(index))
+                                                                  {
+                                                                    showFlag.remove(index);
+                                                                  }
+                                                                else
+                                                                  {
+                                                                    showFlag.add(index);
+                                                                  }
                                                                 });
                                                                 print("Work Type name tapped");
                                                               },
@@ -549,11 +553,10 @@ Widget card()
                                   color: c.full_transparent,
                                 ),
                               ]),
-                          card_design(context, int.parse(items[index]))
+                          card_design(context,index)
 
                         ],
                       )
-
                   ),
                 ),
               ),
@@ -564,7 +567,7 @@ Widget card()
 }
   Widget card_design(BuildContext context,int index) {
     return Visibility(
-      visible:arrowvisibility,
+      visible:showFlag.contains(index),
       child:AnimationLimiter(
          child: Container(
               child:  ListView.builder(
@@ -572,7 +575,7 @@ Widget card()
                 shrinkWrap: true,
                 itemCount: 1,
                 itemBuilder: (context,index) {
-                 Color itemColor =index % 2 == 0 ? c.light_pink : c.colorAccent2;
+                 Color itemColor=c.unsatisfied1;
                   // final item = villagelist[mainIndex][key_workdetails][index];
                   return Container(
                     child: AnimationConfiguration.staggeredList(
@@ -599,12 +602,12 @@ Widget card()
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Expanded(
-                                        flex: 2,
+                                        flex: 1,
                                         child: Text(
                                           'work_id'.tr().toString(),
                                           style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: c.grey_8),
                                           overflow: TextOverflow.clip,
-                                          maxLines: 1,
+                                          maxLines: 2,
                                           softWrap: true,
                                         ),
                                       ),
@@ -636,12 +639,12 @@ Widget card()
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Expanded(
-                                        flex: 2,
+                                        flex: 1,
                                         child: Text(
                                           'scheme_group_name'.tr().toString(),
                                           style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.grey_8),
                                           overflow: TextOverflow.clip,
-                                          maxLines: 1,
+                                          maxLines: 2,
                                           softWrap: true,
                                         ),
                                       ),
@@ -658,20 +661,20 @@ Widget card()
                                       Expanded(
                                         flex: 1,
                                         child: Container(
-                                          margin: EdgeInsets.fromLTRB(10,0, 10, 0),
+                                          margin: EdgeInsets.fromLTRB(0,0, 10, 0),
                                           child: ExpandableText(
-                                            'New Housing Work Scheme for PMAY',
+                                            'New Housing Work Scheme for PMAY,Housing Scheme Under',
                                             trimLines: 2,
                                             txtcolor:"2",
                                           ),
                                         ),),
                                     ],
                                   ),
-                                  // UIHelper.verticalSpaceSmall,
+                                  UIHelper.verticalSpaceSmall,
                                   Row(
                                     children: [
                                       Expanded(
-                                        flex:2,
+                                        flex:1,
                                         child: Text(
                                           'financial_year'.tr().toString(),
                                           style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: c.grey_8),
@@ -702,7 +705,7 @@ Widget card()
                                   Row(
                                     children: [
                                       Expanded(
-                                        flex:2,
+                                        flex:1,
                                         child: Text(
                                           'as_value'.tr().toString(),
                                           style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: c.grey_8),
@@ -725,7 +728,6 @@ Widget card()
                                           "100000",
                                           style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: c.grey_8),
                                           overflow: TextOverflow.clip,
-
                                         ),
                                       ),
                                     ],
@@ -734,7 +736,7 @@ Widget card()
                                   Row(
                                     children: [
                                       Expanded(
-                                        flex:2,
+                                        flex:1,
                                         child: Text(
                                           'scheme_name'.tr().toString(),
                                           style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: c.grey_8),
@@ -765,12 +767,13 @@ Widget card()
                                   Row(
                                     children: [
                                       Expanded(
-                                        flex:2,
+                                        flex:1,
                                         child: Text(
                                           'amount_spent_so_far'.tr().toString(),
                                           style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: c.grey_8),
                                           overflow: TextOverflow.ellipsis,
                                           softWrap: true,
+                                          maxLines: 3,
                                         ),),
                                       Expanded(
                                         flex: 0,
@@ -796,7 +799,7 @@ Widget card()
                                   Row(
                                     children: [
                                       Expanded(
-                                        flex:2,
+                                        flex:1,
                                         child: Text(
                                           'status'.tr().toString(),
                                           style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: c.grey_8),
