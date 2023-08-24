@@ -70,10 +70,10 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
 
   Widget demandCalculationWidget(String title, String value, bool isBoold) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(child: UIHelper.titleTextStyle(title.tr().toString() + " : ", c.grey_8, 10, isBoold, false)),
-        UIHelper.titleTextStyle("\u{20B9} " + value, c.grey_9, 11, isBoold, false),
+        Expanded(flex: 3, child: Align(alignment: Alignment.centerRight, child: UIHelper.titleTextStyle(title.tr().toString() + " : ", c.grey_8, 10, isBoold, false))),
+        Expanded(flex: 1, child: UIHelper.titleTextStyle("\u{20B9} " + value, c.grey_9, 11, isBoold, false)),
       ],
     );
   }

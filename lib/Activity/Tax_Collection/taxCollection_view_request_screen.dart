@@ -236,6 +236,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
           selectedDistrict = value.toString();
           selectedBlock = "";
           selectedVillage = "";
+          _formKey.currentState!.patchValue({'block': "", 'village': ""});
           Future.delayed(Duration(milliseconds: 500), () {
             model.loadUIBlock(selectedDistrict);
             setState(() {});
@@ -244,6 +245,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
         } else if (index == 2) {
           selectedBlock = value.toString();
           selectedVillage = "";
+          _formKey.currentState!.patchValue({'village': ""});
           model.selectedVillageList.clear();
           Future.delayed(Duration(milliseconds: 500), () {
             model.loadUIVillage(selectedDistrict, selectedBlock);
