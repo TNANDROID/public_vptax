@@ -28,7 +28,6 @@ import '../Resources/StringsKey.dart';
 import 'ContentInfo.dart';
 import '../../Services/Apiservices.dart';
 
-
 class Utils {
   PreferenceService preferencesService = locator<PreferenceService>();
 
@@ -145,7 +144,8 @@ class Utils {
     return color == null ? null : ui.ColorFilter.mode(color, colorBlendMode);
   }
 
-  Future<void> showAlert(BuildContext mcontext, ContentType contentType, String message, {String? title, String? btnCount, String? btnmsg,var receiptList,String? file_path, double? titleFontSize, double? messageFontSize}) async {
+  Future<void> showAlert(BuildContext mcontext, ContentType contentType, String message,
+      {String? title, String? btnCount, String? btnmsg, var receiptList, String? file_path, double? titleFontSize, double? messageFontSize}) async {
     await showDialog<void>(
       context: mcontext,
       barrierDismissible: btnCount != null ? false : true, // user must tap button!
@@ -163,172 +163,173 @@ class Utils {
               return false;
             },
             child: Center(
-          child: Container(
-            width: size.width,
-            height: size.width * 0.45,
-            margin: EdgeInsets.symmetric(horizontal: size.width * 0.045),
-            decoration: UIHelper.roundedBorderWithColorWithShadow(20, contentInfo.color, contentInfo.color),
-            child: Stack(
-              clipBehavior: Clip.none,
-              alignment: Alignment.center,
-              children: [
-                // ***********************  Bottom Splash Icon *********************** //
+              child: Container(
+                width: size.width,
+                height: size.width * 0.45,
+                margin: EdgeInsets.symmetric(horizontal: size.width * 0.045),
+                decoration: UIHelper.roundedBorderWithColorWithShadow(20, contentInfo.color, contentInfo.color),
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  alignment: Alignment.center,
+                  children: [
+                    // ***********************  Bottom Splash Icon *********************** //
 
-                Positioned(
-                  bottom: 0,
-                  left: size.width * 0.001,
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(20),
-                    ),
-                    child: SvgPicture.asset(
-                      imagePath.bubbles,
-                      height: size.height * 0.06,
-                      width: size.width * 0.05,
-                      colorFilter: getColorFilter(hslDark.toColor(), ui.BlendMode.srcIn),
-                    ),
-                  ),
-                ),
-
-                // ***********************  Bubble With Icon *********************** //
-                Positioned(
-                  top: -size.height * 0.035,
-                  left: size.width * 0.08,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        imagePath.back,
-                        height: size.height * 0.08,
-                        colorFilter: getColorFilter(hslDark.toColor(), ui.BlendMode.srcIn),
-                      ),
-                      Positioned(
-                        top: size.height * 0.025,
+                    Positioned(
+                      bottom: 0,
+                      left: size.width * 0.001,
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(20),
+                        ),
                         child: SvgPicture.asset(
-                          contentInfo.assetPath,
-                          height: size.height * 0.022,
+                          imagePath.bubbles,
+                          height: size.height * 0.06,
+                          width: size.width * 0.05,
+                          colorFilter: getColorFilter(hslDark.toColor(), ui.BlendMode.srcIn),
                         ),
-                      )
-                    ],
-                  ),
-                ),
-
-                // ***********************  Text Content *********************** //
-
-                Positioned(
-                  top: 25,
-                  child: Text(
-                    title ?? contentInfo.title,
-                    style: UIHelper.textDecoration(titleFontSize ?? 14, c.white, bold: true),
-                  ),
-                ),
-
-                Container(
-                  margin: EdgeInsets.only(bottom: size.width * 0.05, left: size.width * 0.05, right: size.width * 0.05, top: size.width * 0.07),
-                  child: Text(
-                    message,
-                    style: UIHelper.textDecoration(messageFontSize ?? 14, c.white),
-                    textAlign: TextAlign.center,
-                    softWrap: true,
-                  ),
-                ),
-
-                // ***********************  Close Icon button *********************** //
-
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      if (btnmsg == 'payment') {
-                        getReceipt(mcontext,receiptList);
-                      }else if (btnmsg == 'receipt') {
-                        openFilePath(file_path!);
-                      }
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.all(10.0),
-                      child: Icon(
-                        Icons.close_rounded,
-                        size: 20,
-                        color: c.white,
                       ),
                     ),
-                  ),
-                ),
 
-                // ***********************  Action Buttons Content *********************** //
+                    // ***********************  Bubble With Icon *********************** //
+                    Positioned(
+                      top: -size.height * 0.035,
+                      left: size.width * 0.08,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            imagePath.back,
+                            height: size.height * 0.08,
+                            colorFilter: getColorFilter(hslDark.toColor(), ui.BlendMode.srcIn),
+                          ),
+                          Positioned(
+                            top: size.height * 0.025,
+                            child: SvgPicture.asset(
+                              contentInfo.assetPath,
+                              height: size.height * 0.022,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
 
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: Row(children: [
-                    Visibility(
-                      visible: btnCount == '1' || btnCount == '2' ? true : false,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (btnmsg == 'payment') {
-                              Navigator.of(context).pop();
-                              getReceipt(mcontext,receiptList);
-                            }else if (btnmsg == 'receipt') {
-                              Navigator.of(context).pop();
-                              openFilePath(file_path!);
-                            } else {
-                              performAction(btnmsg ?? '', context);
-                            }
-                          },
-                          style: ButtonStyle(
-                            elevation: MaterialStateProperty.all(5.0),
-                            backgroundColor: MaterialStateProperty.all(c.white),
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0), // Set the desired border radius here
+                    // ***********************  Text Content *********************** //
+
+                    Positioned(
+                      top: 25,
+                      child: Text(
+                        title ?? contentInfo.title,
+                        style: UIHelper.textDecoration(titleFontSize ?? 14, c.white, bold: true),
+                      ),
+                    ),
+
+                    Container(
+                      margin: EdgeInsets.only(bottom: size.width * 0.05, left: size.width * 0.05, right: size.width * 0.05, top: size.width * 0.07),
+                      child: Text(
+                        message,
+                        style: UIHelper.textDecoration(messageFontSize ?? 14, c.white),
+                        textAlign: TextAlign.center,
+                        softWrap: true,
+                      ),
+                    ),
+
+                    // ***********************  Close Icon button *********************** //
+
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          if (btnmsg == 'payment') {
+                            getReceipt(mcontext, receiptList);
+                          } else if (btnmsg == 'receipt') {
+                            openFilePath(file_path!);
+                          }
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.all(10.0),
+                          child: Icon(
+                            Icons.close_rounded,
+                            size: 20,
+                            color: c.white,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // ***********************  Action Buttons Content *********************** //
+
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Row(children: [
+                        Visibility(
+                          visible: btnCount == '1' || btnCount == '2' ? true : false,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (btnmsg == 'payment') {
+                                  Navigator.of(context).pop();
+                                  getReceipt(mcontext, receiptList);
+                                } else if (btnmsg == 'receipt') {
+                                  Navigator.of(context).pop();
+                                  openFilePath(file_path!);
+                                } else {
+                                  performAction(btnmsg ?? '', context);
+                                }
+                              },
+                              style: ButtonStyle(
+                                elevation: MaterialStateProperty.all(5.0),
+                                backgroundColor: MaterialStateProperty.all(c.white),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0), // Set the desired border radius here
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                btnmsg == 'payment' ? 'View Receipt' : 'OK',
+                                style: TextStyle(color: contentInfo.color, fontSize: 11),
                               ),
                             ),
                           ),
-                          child: Text(
-                            btnmsg == 'payment'?'View Receipt':'OK',
-                            style: TextStyle(color: contentInfo.color, fontSize: 11),
-                          ),
                         ),
-                      ),
-                    ),
-                    Visibility(
-                      visible: btnCount == '2' ? true : false,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          style: ButtonStyle(
-                            elevation: MaterialStateProperty.all(5.0),
-                            backgroundColor: MaterialStateProperty.all(c.white),
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0), // Set the desired border radius here
+                        Visibility(
+                          visible: btnCount == '2' ? true : false,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              style: ButtonStyle(
+                                elevation: MaterialStateProperty.all(5.0),
+                                backgroundColor: MaterialStateProperty.all(c.white),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0), // Set the desired border radius here
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                'Cancel',
+                                style: TextStyle(color: contentInfo.color, fontSize: 11),
                               ),
                             ),
                           ),
-                          child: Text(
-                            'Cancel',
-                            style: TextStyle(color: contentInfo.color, fontSize: 11),
-                          ),
                         ),
-                      ),
-                    ),
-                  ]),
-                )
-              ],
-            ),
-          ),
-        ));
+                      ]),
+                    )
+                  ],
+                ),
+              ),
+            ));
       },
     );
   }
+
   Future<void> getReceipt(BuildContext mcontext, receiptList) async {
     String selectedLang = await preferencesService.getUserInfo("lang");
     var receiptRequestData = {
@@ -353,16 +354,15 @@ class Utils {
       Navigator.of(mcontext).push(
         MaterialPageRoute(
             builder: (context) => PDF_Viewer(
-              pdfBytes: pdf,
-            )),
+                  pdfBytes: pdf,
+                  flag: 'payment',
+                )),
       );
-
-    }else{
+    } else {
       Utils().showAlert(mcontext, ContentType.fail, response[key_message]);
-
     }
-
   }
+
   void openFilePath(String path) async {
     final result = await OpenFile.open(path);
   }
@@ -598,7 +598,7 @@ class Utils {
     // String payDetails = '{"atomTokenId": "15000000411719", "merchId": "8952", "emailId": "sd@gmail.com", "mobileNumber": "9698547875", "returnUrl": "$returnUrl"}';
     Map payDetails = {key_atomTokenId: atomTokenId, key_merchId: merchId, key_emailId: emailId, key_mobileNumber: mobileNumber, key_returnUrl: returnUrl};
     print("request>>" + json.encode(payDetails));
-    Navigator.push(mcontext, MaterialPageRoute(builder: (context) => AtomPaynetsView("uat", json.encode(payDetails),mcontext)));
+    Navigator.push(mcontext, MaterialPageRoute(builder: (context) => AtomPaynetsView("uat", json.encode(payDetails), mcontext)));
   }
 
   String getDemadAmount(taxData, String taxTypeId) {

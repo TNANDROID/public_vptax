@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -15,22 +14,28 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../Utils/utils.dart';
 import 'package:public_vptax/Utils/ContentInfo.dart';
 
-
 class PDF_Viewer extends StatefulWidget {
   final pdfBytes;
-  PDF_Viewer({this.pdfBytes});
+  final flag;
+  PDF_Viewer({this.pdfBytes, this.flag});
 
   @override
   State<PDF_Viewer> createState() => _PDF_ViewerState();
 }
+
 class _PDF_ViewerState extends State<PDF_Viewer> {
   Future<bool> _onWillPop() async {
-    print("back press");
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => Home(
-          isLogin: false,
-        )), (route) => false);
+    if (widget.flag != null && widget.flag == 'payment') {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Home(
+                    isLogin: false,
+                  )),
+          (route) => false);
+    } else {
+      Navigator.of(context).pop();
+    }
 
     return true;
   }
@@ -39,32 +44,40 @@ class _PDF_ViewerState extends State<PDF_Viewer> {
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () => _onWillPop(),
-        child:  Scaffold(
-      appBar: AppBar(
-        backgroundColor: c.colorPrimary,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => {
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Home(
-                      isLogin: false,
-                    )),
-                    (route) => false)
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.file_download_rounded, color: Colors.white),
-            onPressed: () => {downloadPDF(widget.pdfBytes)},
-          )
-        ],
-        title:  Text('receipt'.tr().toString(),style: TextStyle(fontSize: 14),),
-        centerTitle: true, // like this!
-      ),
-      body: SfPdfViewer.memory(widget.pdfBytes),
-    ));
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: c.colorPrimary,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () => {
+                if (widget.flag != null && widget.flag == 'payment')
+                  {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Home(
+                                  isLogin: false,
+                                )),
+                        (route) => false)
+                  }
+                else
+                  {Navigator.of(context).pop()}
+              },
+            ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.file_download_rounded, color: Colors.white),
+                onPressed: () => {downloadPDF(widget.pdfBytes)},
+              )
+            ],
+            title: Text(
+              'receipt'.tr().toString(),
+              style: TextStyle(fontSize: 14),
+            ),
+            centerTitle: true, // like this!
+          ),
+          body: SfPdfViewer.memory(widget.pdfBytes),
+        ));
   }
 
   // ********************************************* Download PDF Func ***************************************//
@@ -125,16 +138,15 @@ class _PDF_ViewerState extends State<PDF_Viewer> {
       }
 
       try {
-        setPDFDirectory(downloadsDir, pdfBytes);      } catch (e) {
+        setPDFDirectory(downloadsDir, pdfBytes);
+      } catch (e) {
         print('Error writing PDF to file: $e');
         return;
       }
     }
   }
 
-
   // ********************************************* Notification PDF Func ***************************************//
-
 
   /*  Future<void> showNotification(
         String title, String message, String payload) async {
@@ -182,46 +194,36 @@ class _PDF_ViewerState extends State<PDF_Viewer> {
       );
     }*/
 
+  Future<void> showAppSettings(BuildContext context, String msg) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(msg, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: c.black)),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Allow Permission', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: c.primary_text_color2)),
+              onPressed: () async {
+                await openAppSettings();
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-    Future<void> showAppSettings(BuildContext context, String msg) async {
-      return showDialog<void>(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(msg,
-                style: TextStyle(
-                    fontSize: 15, fontWeight: FontWeight.w800, color: c.black)),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Allow Permission',
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w800,
-                        color: c.primary_text_color2)),
-                onPressed: () async {
-                  await openAppSettings();
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
+  void setPDFDirectory(Directory downloadsDir, Uint8List pdfBytes) async {
+    String fileName;
+    print('pdfFile.path: ${downloadsDir.path}');
 
-    void setPDFDirectory(Directory downloadsDir, Uint8List pdfBytes) async {
-      String fileName;
-      print('pdfFile.path: ${downloadsDir.path}');
-
-      fileName =
-      "Tax Receipt_${DateFormat('dd-MM-yyyy_HH-mm-ss').format(DateTime.now())}";
-      // Save the PDF bytes to a file in the downloads folder
-      File pdfFile = File('${downloadsDir.path}/$fileName.pdf');
-      await pdfFile.writeAsBytes(pdfBytes);
-      print('pdfFile.path: ${pdfFile.path}');
-      Utils().showAlert(context, ContentType.success, 'download_receipt_success'.tr().toString(), btnCount: "1", btnmsg: 'receipt',file_path:pdfFile.path );
-
-    }
-
+    fileName = "Tax Receipt_${DateFormat('dd-MM-yyyy_HH-mm-ss').format(DateTime.now())}";
+    // Save the PDF bytes to a file in the downloads folder
+    File pdfFile = File('${downloadsDir.path}/$fileName.pdf');
+    await pdfFile.writeAsBytes(pdfBytes);
+    print('pdfFile.path: ${pdfFile.path}');
+    Utils().showAlert(context, ContentType.success, 'download_receipt_success'.tr().toString(), btnCount: "1", btnmsg: 'receipt', file_path: pdfFile.path);
+  }
 }

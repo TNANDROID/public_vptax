@@ -1,4 +1,7 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print, non_constant_identifier_names, unnecessary_brace_in_string_interps
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print, non_constant_identifier_names, unnecessary_brace_in_string_interps, use_build_context_synchronously
+
+import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +14,7 @@ import '../../Resources/StringsKey.dart';
 import '../../Services/Apiservices.dart';
 import '../../Services/Preferenceservices.dart';
 import '../../Services/locator.dart';
+import '../Auth/Pdf_Viewer.dart';
 
 class CheckTransaction extends StatefulWidget {
   const CheckTransaction({super.key});
@@ -202,11 +206,13 @@ class _CheckTransactionState extends State<CheckTransaction> {
                   ),
                 ),
                 SizedBox(width: 3),
-                Text(
-                  headerText,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: TextStyle(color: c.text_color, fontSize: selectLang == 'ta' ? 11 : 13),
+                Flexible(
+                  child: Text(
+                    headerText,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: TextStyle(color: c.text_color, fontSize: selectLang == 'ta' ? 10 : 13),
+                  ),
                 ),
               ],
             ),
@@ -223,6 +229,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
     String transID = item[key_transaction_id].toString();
     String transDate = item[key_transaction_date];
     String transAmount = item[key_res_paid_amount].toString();
+    String taxTypeID = item[key_taxtypeid].toString();
 
     Color cardColorPrimary;
     Color cardColorPrimaryDark;
@@ -307,7 +314,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
                         visible: status == 'FAILED' ? false : true,
                         child: ElevatedButton(
                           onPressed: () {
-                            checkReceiptStatus(status, transID, selectLang, context);
+                            checkReceiptStatus(status, transID, selectLang, taxTypeID, context);
                           },
                           style: ElevatedButton.styleFrom(
                             fixedSize: Size(selectLang == 'ta' ? 150 : 130, 30),
@@ -416,16 +423,23 @@ class _CheckTransactionState extends State<CheckTransaction> {
     setState(() {});
   }
 
-  Future<void> checkReceiptStatus(String flag, String transID, String lang, BuildContext context) async {
-    var requestData = {if (flag == "SUCCESS") key_service_id: service_key_TransactionidWiseGetReceipt, key_transaction_id: transID, key_language_name: lang};
+  Future<void> checkReceiptStatus(String flag, String transID, String lang, String taxType, BuildContext context) async {
+    var requestData = {if (flag == "SUCCESS") key_service_id: service_key_TransactionidWiseGetReceipt, key_taxtypeid: taxType, key_transaction_id: transID, key_language_name: lang};
 
     var GetRequestDataList = {key_data_content: requestData};
 
     var response = await apiServices.mainServiceFunction(GetRequestDataList);
     print('response>>: ${response}');
     if (response[key_status] == key_success && response[key_response] == key_success) {
-      var receiptResponce = response[key_main_data];
-      print('receiptResponce: ${receiptResponce}');
+      var receiptResponce = response[key_data];
+      var pdftoString = receiptResponce[key_receipt_content];
+      Uint8List? pdf = const Base64Codec().decode(pdftoString);
+      Navigator.of(context).push(
+        MaterialPageRoute(
+            builder: (context) => PDF_Viewer(
+                  pdfBytes: pdf,
+                )),
+      );
     }
   }
 }
