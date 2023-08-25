@@ -857,7 +857,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
     return Visibility(
         visible: mainList.isNotEmpty,
         child: Container(
-      margin: EdgeInsets.only(top: 10, left: 20, right: 20,bottom: 10),
+      margin: EdgeInsets.only(top: 5, left: 20, right: 20,bottom: 15),
       decoration: UIHelper.GradientContainer(20, 20, 20, 20, [c.subscription_type_red_color, c.subscription_type_red_color],  intwid: 0),
       child: Container(
         margin: EdgeInsets.only( left: 5,bottom: 3),
@@ -892,7 +892,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                       UIHelper.titleTextStyle("pending_assessment_transaction".tr().toString(), c.grey_10, 11, true, true),
-                      UIHelper.titleTextStyle(" $totalAssessment", c.grey_10, 14, true, true),
+                      UIHelper.titleTextStyle(" $pendingAssessment", c.grey_10, 14, true, true),
                     ],),
                     SizedBox(height: 5,),
                     UIHelper.titleTextStyle("transaction_warning_hint".tr().toString(), c.subscription_type_red_color, 13, true, true),

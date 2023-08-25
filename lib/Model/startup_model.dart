@@ -46,8 +46,9 @@ class StartUpViewModel extends BaseViewModel {
   }
 
   // Get District List
-  Future getOpenServiceList(String type) async {
+  Future getOpenServiceList(String type, BuildContext context) async {
     setBusy(true);
+    var response;
     dynamic requestData = {};
     if (type == "District") {
       requestData = {key_service_id: service_key_district_list_all};
@@ -57,8 +58,24 @@ class StartUpViewModel extends BaseViewModel {
       requestData = {key_service_id: service_key_village_list_all};
     }
     print("requestData>>" + jsonEncode(requestData));
+    if (await Utils().isOnline()) {
+      try {
+        Utils().showProgress(context, 1);
+        response = await apiServices.openServiceFunction(requestData);
+        Utils().hideProgress(context);
+      } catch (error) {
+        print('error (${error.toString()}) has been caught');
+        Utils().hideProgress(context);
+      }
+    } else {
+      Utils().showAlert(
+        context,
+        ContentType.fail,
+        "noInternet".tr().toString(),
+      );
+    }
 
-    var response = await apiServices.openServiceFunction(requestData);
+
     print("response>>" + response.toString());
     if (type == "District") {
       districtList = response;
@@ -180,6 +197,8 @@ class StartUpViewModel extends BaseViewModel {
       GatewayList = res_jsonArray;
       preferencesService.GatewayList = GatewayList.toList();
     } else if (type == "TaxCollectionDetails") {
+      preferencesService.setUserInfo(key_total_assesment, "0");
+      preferencesService.setUserInfo(key_pending_assessment, "0");
       var status = response[key_status];
       var response_value = response[key_response];
       List res_jsonArray = [];
@@ -212,8 +231,8 @@ class StartUpViewModel extends BaseViewModel {
         preferencesService.setUserInfo(key_pending_assessment, pen_ass.toString());
       } else {
         preferencesService.taxCollectionDetailsList = [];
-        preferencesService.setUserInfo(key_total_assesment, '');
-        preferencesService.setUserInfo(key_pending_assessment, '');
+        preferencesService.setUserInfo(key_total_assesment, "0");
+        preferencesService.setUserInfo(key_pending_assessment, "0");
         Utils().showAlert(context, ContentType.warning, response_value.toString());
       }
     } else if (type == "CollectionPaymentTokenList") {

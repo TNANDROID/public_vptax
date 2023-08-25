@@ -597,9 +597,9 @@ class Utils {
 
   Future<void> apiCalls(BuildContext context) async {
     try {
-      await StartUpViewModel().getOpenServiceList("District");
-      await StartUpViewModel().getOpenServiceList("Block");
-      await StartUpViewModel().getOpenServiceList("Village");
+      await StartUpViewModel().getOpenServiceList("District",context);
+      await StartUpViewModel().getOpenServiceList("Block",context);
+      await StartUpViewModel().getOpenServiceList("Village",context);
       await StartUpViewModel().getMainServiceList("TaxType", context: context);
       await StartUpViewModel().getMainServiceList("FinYear", context: context);
       await StartUpViewModel().getMainServiceList("PaymentTypeList", dcode: "1", bcode: "1", pvcode: "1", context: context);
