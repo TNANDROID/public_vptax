@@ -70,6 +70,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
   TextEditingController mobileTextController = TextEditingController();
   TextEditingController emailTextController = TextEditingController();
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
+  bool _isKeyboardFocused = false;
+
 
   @override
   void initState() {
@@ -196,12 +198,12 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                 ),
                                 Visibility(
                                   visible: mainList.isEmpty,
-                                  child: Container(margin: EdgeInsets.only(top: 100, right: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true)),
+                                  child: Center(child: Container(margin: EdgeInsets.only(top: 100), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true))),
                                 )
                               ],
                             )),
                       ),
-                      Visibility(visible: islogin != "yes", child: payWidget())
+                      Visibility(visible: islogin != "yes"|| !widget.isHome, child: payWidget())
                     ],
                   ));
             },
@@ -461,7 +463,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                     height: roundedValueOfHeight * 72,
                     child: ResponsiveGridList(
                         listViewBuilderOptions: ListViewBuilderOptions(physics: NeverScrollableScrollPhysics()),
-                        horizontalGridMargin: 20,
+                        horizontalGridMargin: 15,
                         verticalGridMargin: 0,
                         minItemWidth: Screen.width(context) / 4,
                         children: List.generate(
@@ -549,7 +551,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                   children: [
                                     Column(
                                       children: [
-                                        SizedBox(height: 7),
+                                        SizedBox(height: 5),
                                         Container(
                                             padding: EdgeInsets.all(5.0),
                                             decoration: isStatus
@@ -558,13 +560,23 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                             height: 50,
                                             child: Column(
                                               children: [
-                                                UIHelper.titleTextStyle(finYearStr + " ( $durationStr )", isStatus ? c.white : c.grey_8, 10, false, true),
+                                                Expanded(
+                                                  child: Text(
+                                                    finYearStr + " ( $durationStr )",
+                                                    style: TextStyle(
+                                                        fontSize: 10,
+                                                        fontWeight: FontWeight.normal,
+                                                        color: isStatus ? c.white :c.grey_8),
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                                // UIHelper.titleTextStyle(finYearStr + " ( $durationStr )", isStatus ? c.white : c.grey_8, 10, false, true),
                                                 Expanded(
                                                   child: Container(
-                                                      padding: EdgeInsets.all(5.0),
+                                                      padding: EdgeInsets.all(0),
                                                       child: Center(
                                                           child: UIHelper.titleTextStyle("\u{20B9} " + Utils().getDemadAmount(taxData[index], selectedTaxTypeData[key_taxtypeid].toString()),
-                                                              isStatus ? c.white : c.black, 12, false, false))),
+                                                              isStatus ? c.white : c.grey_10, 12, false, false))),
                                                 ),
                                               ],
                                             ))
@@ -707,8 +719,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            UIHelper.titleTextStyle("${'demand'.tr()} : \u{20B9} ${mainList[mainIndex][s.key_tax_total]}", c.black, 11, false, false),
-            UIHelper.titleTextStyle("${'advance'.tr()} : \u{20B9} ${Utils().getTaxAdvance(mainList[mainIndex], selectedTaxTypeData['taxtypeid'].toString())}", c.black, 11, false, false),
+            UIHelper.titleTextStyle("${'demand'.tr()} : \u{20B9} ${mainList[mainIndex][s.key_tax_total]}", c.grey_10, 12, false, false),
+            UIHelper.titleTextStyle("${'advance'.tr()} : \u{20B9} ${Utils().getTaxAdvance(mainList[mainIndex], selectedTaxTypeData['taxtypeid'].toString())}", c.grey_10, 12, false, false),
           ],
         ),
         UIHelper.verticalSpaceSmall,
@@ -896,9 +908,36 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
           Align(
               alignment: Alignment.centerLeft,
               child: Container(
+                alignment: Alignment.center,
                   margin: EdgeInsets.only(top: 10, left: 20, right: 20),
                   padding: EdgeInsets.all(5),
-                  child: UIHelper.titleTextStyle("${'total_amount_to_pay'.tr()} : \u{20B9}$main_totalAmount", c.white, 12, true, true))),
+                  child: RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "${'total_amount_to_pay'.tr()} : ",
+                          style: TextStyle(
+                              decoration: TextDecoration.none,
+                              color: c.white,
+                              fontSize: 11,
+                              fontWeight:
+                              FontWeight.bold), //<-- SEE HERE
+                        ),
+                        TextSpan(
+                          text: "\u{20B9} $main_totalAmount",
+                          style: TextStyle(
+                              decoration: TextDecoration.none,
+                              color: c.white,
+                              fontSize: 14,
+                              fontWeight:
+                              FontWeight.bold), //<-- SEE HERE
+                        ),
+                      ],
+                    ),
+                  ),
+                  ),),
+                  // child: UIHelper.titleTextStyle("${'total_amount_to_pay'.tr()} : \u{20B9} $main_totalAmount", c.white, 12, true, true))),
           Align(
               alignment: Alignment.centerRight,
               child: InkWell(
@@ -1043,7 +1082,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
         street = (mainList[mainIndex]['doorno'] ?? '') + ", " + (selectedLang == 'en' ? (mainList[mainIndex]["street_name"] ?? '') : (mainList[mainIndex]["street_name"] ?? ''));
         break;
       case '6':
-        street = (mainList[mainIndex][s.key_localbody_name] ?? '') + ", " + (mainList[mainIndex][s.key_bname] ?? '');
+        street = selectedLang == 'en' ? (mainList[mainIndex]["street_name_en"] ?? '') : (mainList[mainIndex]["street_name_ta"] ?? '');
         break;
     }
     return street;
@@ -1081,6 +1120,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
         backgroundColor: c.full_transparent,
         builder: (BuildContext bc) {
           return StatefulBuilder(builder: (BuildContext context, StateSetter mystate) {
+            _isKeyboardFocused = MediaQuery.of(context).viewInsets.bottom > 0;
             return Wrap(
               children: <Widget>[
                 Container(
@@ -1091,12 +1131,12 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                         Container(
                             margin: EdgeInsets.only(top: 20, bottom: 10),
                             child: Text(('payment_mode'.tr().toString() + (selectedLang == 'en' ? paymentType[0][key_paymenttype_en] : paymentType[0][key_paymenttype_ta])),
-                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold))),
+                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold))),
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Container(
                               margin: EdgeInsets.only(top: 5, left: 20, bottom: 5),
-                              child: Text('select_payment_gateway'.tr().toString(), style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: c.black))),
+                              child: Text('select_payment_gateway'.tr().toString(), style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.black))),
                         ),
                         Container(
                             child: AnimationLimiter(
@@ -1158,7 +1198,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                           alignment: Alignment.centerLeft,
                           child: Container(
                               margin: EdgeInsets.only(top: 10, left: 20, bottom: 5),
-                              child: Text('enter_the_details'.tr().toString(), style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: c.black))),
+                              child: Text('enter_the_details'.tr().toString(), style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.black))),
                         ),
                         Container(
                           margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
@@ -1214,6 +1254,9 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                               ),
                             ),
                           ),
+                        ),
+                        SizedBox(
+                          height: _isKeyboardFocused ? Screen.height(context) * 0.36 : 0,
                         )
                       ],
                     )),
@@ -1225,7 +1268,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
 
   Widget addInputFormControl(String nameField, String hintText, String fieldType) {
     return FormBuilderTextField(
-      style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_9),
+      style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.w400, color: c.grey_9),
       name: nameField,
       controller: fieldType == key_mobile_number
           ? mobileTextController
@@ -1237,7 +1280,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
       onChanged: (value) {},
       decoration: InputDecoration(
         labelText: hintText,
-        labelStyle: TextStyle(fontSize: 11.0, fontWeight: FontWeight.w600, color: c.grey_7),
+        labelStyle: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w600, color: c.grey_7),
         filled: true,
         fillColor: Colors.white,
         enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
