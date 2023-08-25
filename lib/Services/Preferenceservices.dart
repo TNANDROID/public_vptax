@@ -45,6 +45,7 @@ class PreferenceService {
     GatewayList = [];
     addedTaxPayList = [];
     taxCollectionDetailsList = [];
+    TransactionList = [];
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
   }

@@ -164,5 +164,8 @@
   "receipt": "Receipt",
   "please_check_tran_history": "Please Check Transaction Status for more Details",
   "please_enter_valid_number": "Please Enter Valid Number",
-  "please_enter_valid_email": "Please Enter Valid Email"
+  "please_enter_valid_email": "Please Enter Valid Email",
+  "total_assessment": "Total Assessment :",
+  "pending_assessment_transaction": "Transaction Pending :",
+  "transaction_warning_hint": "Previous transaction pending. Please check Transaction History for more Details"
 }

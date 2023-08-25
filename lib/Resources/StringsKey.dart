@@ -127,6 +127,8 @@ String key_transaction_id = "transaction_id";
 String key_transaction_date = "req_transaction_date_display";
 String key_res_paid_amount = "res_paid_amount";
 String key_receipt_content = "receipt_content";
+String key_total_assesment = "no_of_assessment";
+String key_pending_assessment = "no_of_pending_assessment";
 
 // ************************** Service Key Strings ************************** //
 

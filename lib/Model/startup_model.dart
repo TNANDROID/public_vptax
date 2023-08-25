@@ -119,7 +119,6 @@ class StartUpViewModel extends BaseViewModel {
       List res_jsonArray = [];
       if (status == key_success && response_value == key_success) {
         res_jsonArray = response[key_data];
-        print("response_TaxType>>>>>>" + res_jsonArray.toString());
       } else {
         Utils().showAlert(context, ContentType.warning, response_value.toString());
       }
@@ -153,7 +152,6 @@ class StartUpViewModel extends BaseViewModel {
       List res_jsonArray = [];
       if (status == key_success && response_value == key_success) {
         res_jsonArray = response[key_data];
-        print("response_FinYear>>>>>>" + res_jsonArray.toString());
       } else {
         Utils().showAlert(context, ContentType.warning, response_value.toString());
       }
@@ -165,7 +163,6 @@ class StartUpViewModel extends BaseViewModel {
       List res_jsonArray = [];
       if (status == key_success && response_value == key_success) {
         res_jsonArray = response[key_data];
-        print("response_PaymentTypeList>>>>>>" + res_jsonArray.toString());
       } else {
         Utils().showAlert(context, ContentType.warning, response_value.toString());
       }
@@ -177,7 +174,6 @@ class StartUpViewModel extends BaseViewModel {
       List res_jsonArray = [];
       if (status == key_success && response_value == key_success) {
         res_jsonArray = response[key_data];
-        print("response_GatewayList>>>>>>" + res_jsonArray.toString());
       } else {
         Utils().showAlert(context, ContentType.warning, response_value.toString());
       }
@@ -189,8 +185,9 @@ class StartUpViewModel extends BaseViewModel {
       List res_jsonArray = [];
       preferencesService.taxCollectionDetailsList = [];
       if (status == key_success && response_value == key_success) {
+        var tot_ass = response[key_total_assesment];
+        var pen_ass = response[key_pending_assessment];
         res_jsonArray = response[key_data_set];
-        print("response_TaxCollectionDetails1>>>>>>" + res_jsonArray.toString());
         for (int i = 0; i < res_jsonArray.length; i++) {
           res_jsonArray[i][key_ASSESSMENT_DETAILS].forEach((item) {
             item[key_tax_total] = 0.00;
@@ -211,8 +208,12 @@ class StartUpViewModel extends BaseViewModel {
         print("response_TaxCollectionDetails2>>>>>>" + taxCollectionDetailsList.toString());
 
         preferencesService.taxCollectionDetailsList = taxCollectionDetailsList;
+        preferencesService.setUserInfo(key_total_assesment, tot_ass.toString());
+        preferencesService.setUserInfo(key_pending_assessment, pen_ass.toString());
       } else {
         preferencesService.taxCollectionDetailsList = [];
+        preferencesService.setUserInfo(key_total_assesment, '');
+        preferencesService.setUserInfo(key_pending_assessment, '');
         Utils().showAlert(context, ContentType.warning, response_value.toString());
       }
     } else if (type == "CollectionPaymentTokenList") {
@@ -233,8 +234,6 @@ class StartUpViewModel extends BaseViewModel {
       var response_value = response[key_response];
       if (status == key_success && response_value == key_success) {
         dynamic pay_params = response['pay_params'];
-        print("response_CollectionPaymentTokenList>>>>>>" + response_value.toString());
-
         return pay_params;
       } else if (response_value == key_fail) {
         Utils().showAlert(context, ContentType.warning, response[key_message].toString());

@@ -62,6 +62,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
   //int Double
   double main_totalAmount = 0.00;
   int main_count = 0;
+  int totalAssessment = 0;
+  int pendingAssessment = 0;
 
   ScrollController controller_scroll = ScrollController();
 
@@ -175,6 +177,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                     children: [
                       UIHelper.verticalSpaceSmall,
                       addToPayWidget(),
+                      assetCountWidget(),
                       Expanded(
                         child: SingleChildScrollView(
                             controller: controller_scroll,
@@ -850,6 +853,59 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
       ],
     );
   }
+  Widget assetCountWidget() {
+    return Visibility(
+        visible: mainList.isNotEmpty,
+        child: Container(
+      margin: EdgeInsets.only(top: 10, left: 20, right: 20,bottom: 10),
+      decoration: UIHelper.GradientContainer(20, 20, 20, 20, [c.subscription_type_red_color, c.subscription_type_red_color],  intwid: 0),
+      child: Container(
+        margin: EdgeInsets.only( left: 5,bottom: 3),
+        decoration: UIHelper.roundedBorderWithColor(20, 20, 20, 20,c.white),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 5,),
+            Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.all(5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                UIHelper.titleTextStyle("total_assessment".tr().toString(), c.grey_10, 11, true, true),
+                UIHelper.titleTextStyle(" $totalAssessment", c.grey_10, 14, true, true),
+              ],),
+            ) ,
+            SizedBox(height: 5,),
+            Visibility(
+              visible: pendingAssessment>0,
+              child: Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.all(5),
+                margin: EdgeInsets.only(top: 5,),
+                decoration: UIHelper.GradientContainer(0, 0, 18, 18, [c.red_new_light, c.red_new_light],  intwid: 0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                      UIHelper.titleTextStyle("pending_assessment_transaction".tr().toString(), c.grey_10, 11, true, true),
+                      UIHelper.titleTextStyle(" $totalAssessment", c.grey_10, 14, true, true),
+                    ],),
+                    SizedBox(height: 5,),
+                    UIHelper.titleTextStyle("transaction_warning_hint".tr().toString(), c.subscription_type_red_color, 13, true, true),
+                    SizedBox(height: 5,),
+                  ],
+                ),
+              ),
+            ) ,
+          ],
+        ),
+      ),
+    ));
+  }
 
   Widget addInputDropdownField() {
     return FormBuilderDropdown(
@@ -911,31 +967,13 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                 alignment: Alignment.center,
                   margin: EdgeInsets.only(top: 10, left: 20, right: 20),
                   padding: EdgeInsets.all(5),
-                  child: RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: "${'total_amount_to_pay'.tr()} : ",
-                          style: TextStyle(
-                              decoration: TextDecoration.none,
-                              color: c.white,
-                              fontSize: 11,
-                              fontWeight:
-                              FontWeight.bold), //<-- SEE HERE
-                        ),
-                        TextSpan(
-                          text: "\u{20B9} $main_totalAmount",
-                          style: TextStyle(
-                              decoration: TextDecoration.none,
-                              color: c.white,
-                              fontSize: 14,
-                              fontWeight:
-                              FontWeight.bold), //<-- SEE HERE
-                        ),
-                      ],
-                    ),
-                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      UIHelper.titleTextStyle("${'total_amount_to_pay'.tr()} : ", c.white, 11, true, true),
+                      UIHelper.titleTextStyle("\u{20B9} $main_totalAmount", c.white, 14, true, true),
+                    ],),
                   ),),
                   // child: UIHelper.titleTextStyle("${'total_amount_to_pay'.tr()} : \u{20B9} $main_totalAmount", c.white, 12, true, true))),
           Align(
@@ -966,9 +1004,11 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
     return s;
   }
 
-  void filterDataList() {
+  Future<void> filterDataList() async {
     sampleDataList.clear();
     sampleDataList = preferencesService.taxCollectionDetailsList;
+    totalAssessment = int.parse(await preferencesService.getUserInfo(key_total_assesment));
+    pendingAssessment = int.parse(await preferencesService.getUserInfo(key_pending_assessment));
     main_count = 0;
 
     mainList.clear();
