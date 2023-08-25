@@ -269,70 +269,101 @@ class _CheckTransactionState extends State<CheckTransaction> {
           ),
           child: SizedBox(
             height: 150,
-            child: Container(
-              margin: EdgeInsets.only(left: Screen.width(context) * 0.15),
-              padding: EdgeInsets.all(10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        "${"transaction_id".tr().toString()} :",
-                        style: TextStyle(fontSize: 12, color: c.black),
-                      ),
-                      Text(
-                        transID,
-                        style: TextStyle(fontSize: 12, color: c.text_color),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "${"transaction_date".tr().toString()} :",
-                        style: TextStyle(fontSize: 12, color: c.black),
-                      ),
-                      Text(
-                        transDate,
-                        style: TextStyle(fontSize: 12, color: c.text_color),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "${"transaction_amount".tr().toString()} :",
-                        style: TextStyle(fontSize: 12, color: c.black),
-                      ),
-                      Text(
-                        transAmount,
-                        style: TextStyle(fontSize: 12, color: c.text_color),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Visibility(
-                        visible: status == 'FAILED' ? false : true,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            checkReceiptStatus(status, transID, selectLang, taxTypeID, context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            fixedSize: Size(130, 30),
-                            backgroundColor: cardColorPrimary,
-                          ),
-                          child: Text(
-                            status == 'SUCCESS' ? 'download_receipt'.tr() : 'check_status'.tr(),
-                            style: TextStyle(fontSize: selectLang == 'ta' ? 10 : 12, color: c.text_color, fontWeight: FontWeight.w600),
-                          ),
+            child: Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(left: Screen.width(context) * 0.15),
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              "${"transaction_id".tr().toString()} :",
+                              style: TextStyle(fontSize: 12, color: c.black),
+                            ),
+                            Text(
+                              transID,
+                              style: TextStyle(fontSize: 12, color: c.text_color),
+                            ),
+                          ],
                         ),
+                        Row(
+                          children: [
+                            Text(
+                              "${"transaction_date".tr().toString()} :",
+                              style: TextStyle(fontSize: 12, color: c.black),
+                            ),
+                            Text(
+                              transDate,
+                              style: TextStyle(fontSize: 12, color: c.text_color),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "${"transaction_amount".tr().toString()} :",
+                              style: TextStyle(fontSize: 12, color: c.black),
+                            ),
+                            Text(
+                              transAmount,
+                              style: TextStyle(fontSize: 12, color: c.text_color),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: status == 'FAILED' ? MainAxisAlignment.end : MainAxisAlignment.spaceBetween,
+                        children: [
+                          status == 'FAILED'
+                              ? SizedBox(
+                                  width: 150,
+                                  height: 30,
+                                )
+                              : ElevatedButton(
+                                  onPressed: () {
+                                    checkReceiptStatus(status, transID, selectLang, taxTypeID, context);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    fixedSize: Size(160, 30),
+                                    backgroundColor: cardColorPrimary,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      status == 'SUCCESS'
+                                          ? Icon(
+                                              Icons.download_rounded,
+                                              color: c.white,
+                                              size: selectLang == 'ta' ? 16 : 18,
+                                            )
+                                          : SizedBox(),
+                                      Text(
+                                        status == 'SUCCESS' ? 'download_receipt'.tr() : 'check_status'.tr(),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(fontSize: selectLang == 'ta' ? 10 : 12, color: c.white, fontWeight: FontWeight.w600),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                        ],
                       ),
                       Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Container(
                             decoration: status == 'FAILED'
@@ -364,9 +395,9 @@ class _CheckTransactionState extends State<CheckTransaction> {
                         ],
                       )
                     ],
-                  )
-                ],
-              ),
+                  ),
+                )
+              ],
             ),
           ),
         ),

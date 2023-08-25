@@ -1,7 +1,5 @@
 // ignore_for_file: unused_local_variable, non_constant_identifier_names, file_names, camel_case_types, prefer_typing_uninitialized_variables, prefer_const_constructors_in_immutables, use_key_in_widget_constructors, avoid_print, library_prefixes, prefer_const_constructors, prefer_interpolation_to_compose_strings, use_build_context_synchronously, avoid_unnecessary_containers, no_leading_underscores_for_local_identifiers
 
-import 'dart:convert';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,7 +11,6 @@ import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagepath;
-import 'package:public_vptax/Resources/StringsKey.dart' as s;
 import 'package:public_vptax/Services/Apiservices.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
@@ -48,14 +45,10 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    _rightToLeftAnimController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1300));
+    _rightToLeftAnimController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1300));
 
-    _rightToLeftAnimation = Tween<Offset>(
-            begin: otpFlag ? Offset.zero : Offset(1.0, 0.0),
-            end: const Offset(0.0, 0.0))
-        .animate(CurvedAnimation(
-            parent: _rightToLeftAnimController, curve: Curves.easeInOut));
+    _rightToLeftAnimation =
+        Tween<Offset>(begin: otpFlag ? Offset.zero : Offset(1.0, 0.0), end: const Offset(0.0, 0.0)).animate(CurvedAnimation(parent: _rightToLeftAnimController, curve: Curves.easeInOut));
   }
 
   @override
@@ -145,9 +138,7 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
                     children: [
                       Container(
                         alignment: Alignment.centerLeft,
-                        margin: EdgeInsets.only(
-                            top: Screen.width(context) * 0.07,
-                            left: Screen.width(context) * 0.07),
+                        margin: EdgeInsets.only(top: Screen.width(context) * 0.07, left: Screen.width(context) * 0.07),
                         child: InkWell(
                           onTap: () {
                             onBackpress();
@@ -163,13 +154,10 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
                           visible: !otpFlag,
                           child: Container(
                             clipBehavior: Clip.antiAliasWithSaveLayer,
-                            margin: EdgeInsets.only(
-                                top: Screen.height(context) * 0.02),
+                            margin: EdgeInsets.only(top: Screen.height(context) * 0.02),
                             width: Screen.width(context) - 150,
                             height: Screen.width(context) - 150,
-                            decoration:
-                                UIHelper.roundedBorderWithColorWithShadow(
-                                    30.0, c.white, c.white),
+                            decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
                             child: ClipRect(
                               child: SizedBox(
                                 height: Screen.width(context) - 50,
@@ -185,13 +173,10 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
                           visible: otpFlag,
                           child: Container(
                             clipBehavior: Clip.antiAliasWithSaveLayer,
-                            margin: EdgeInsets.only(
-                                top: Screen.height(context) * 0.02),
+                            margin: EdgeInsets.only(top: Screen.height(context) * 0.02),
                             width: Screen.width(context) - 150,
                             height: Screen.width(context) - 150,
-                            decoration:
-                                UIHelper.roundedBorderWithColorWithShadow(
-                                    30.0, c.white, c.white),
+                            decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
                             child: ClipRect(
                               child: SizedBox(
                                 height: Screen.width(context) - 50,
@@ -211,8 +196,7 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
                             ),
                           )),
                       Container(
-                        margin:
-                            EdgeInsets.only(top: Screen.height(context) * 0.05),
+                        margin: EdgeInsets.only(top: Screen.height(context) * 0.05),
                         child: Text(
                           'signIN'.tr().toString(),
                           style: TextStyle(
@@ -232,12 +216,10 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
                   Positioned(
                     bottom: 0,
                     child: Container(
-                        margin: EdgeInsets.only(
-                            bottom: Screen.height(context) * 0.02),
+                        margin: EdgeInsets.only(bottom: Screen.height(context) * 0.02),
                         width: Screen.width(context) - 50,
                         height: Screen.width(context) - 50,
-                        decoration: UIHelper.roundedBorderWithColorWithShadow(
-                            30.0, c.white, c.white),
+                        decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -264,16 +246,11 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
                                   ],
                                   decoration: InputDecoration(
                                     labelText: 'Mobile Number',
-                                    labelStyle: TextStyle(
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black),
+                                    labelStyle: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.black),
                                     hintText: 'Mobile Number',
                                     hintStyle: TextStyle(fontSize: 16),
-                                    enabledBorder: UIHelper.getInputBorder(1,
-                                        borderColor: c.grey_7),
-                                    focusedBorder: UIHelper.getInputBorder(1,
-                                        borderColor: c.grey_7),
+                                    enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
+                                    focusedBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
                                     filled: true,
                                     contentPadding: EdgeInsets.all(16),
                                     fillColor: c.inputGrey,
@@ -289,8 +266,7 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
                               child: Column(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 15, horizontal: 10),
+                                    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                                     child: OTPTextField(
                                       onChanged: (pin) {
                                         print("Changed: " + pin);
@@ -343,9 +319,7 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
                               child: Container(
                                 alignment: Alignment.center,
                                 child: Text(
-                                  otpFlag
-                                      ? 'verifyOTP'.tr().toString()
-                                      : 'getOTP'.tr().toString(),
+                                  otpFlag ? 'verifyOTP'.tr().toString() : 'getOTP'.tr().toString(),
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -368,14 +342,10 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
   // *************************************** API CALL  *************************************** //
 
   Future<void> verifyOTP() async {
-    String mobile= preferencesService.getUserInfo(key_mobile_number).toString();
-    String lan= preferencesService.getUserInfo("lang").toString();
+    String mobile = preferencesService.getUserInfo(key_mobile_number).toString();
+    String lan = preferencesService.getUserInfo("lang").toString();
     print("mobile>>" + mobile);
     print("lan>>" + mobile);
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-             Home(isLogin: true)));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Home(isLogin: true)));
   }
 }

@@ -89,10 +89,10 @@ class _HomeState extends State<Home> {
     List s_list = [
       {'service_id': 0, 'service_name': 'check_your_dues', 'img_path': imagePath.due4},
       {'service_id': 1, 'service_name': 'quickPay', 'img_path': imagePath.quick_pay1},
-      {'service_id': 2, 'service_name': 'view_receipt_details', 'img_path': imagePath.download_receipt},
-      {'service_id': 3, 'service_name': 'know_about_your_village', 'img_path': imagePath.village},
-      {'service_id': 4, 'service_name': 'village_development_works', 'img_path': imagePath.village_development},
-      {'service_id': 5, 'service_name': 'check_transaction_status', 'img_path': imagePath.check_transaction_status},
+      {'service_id': 2, 'service_name': 'check_transaction_status', 'img_path': imagePath.check_transaction_status},
+      {'service_id': 3, 'service_name': 'view_receipt_details', 'img_path': imagePath.download_receipt},
+      {'service_id': 4, 'service_name': 'know_about_your_village', 'img_path': imagePath.village},
+      {'service_id': 5, 'service_name': 'village_development_works', 'img_path': imagePath.village_development},
     ];
     servicesList.clear();
     servicesList.addAll(s_list);
@@ -432,15 +432,14 @@ class _HomeState extends State<Home> {
                                                     flag: "2",
                                                   )));
                                     } else if (selected_index == 2) {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => ViewReceipt()));
-                                    } else if (selected_index == 3) {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => KYVDashboard()));
-                                    } else if (selected_index == 4) {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => Villagedevelopment()));
-                                    } else if (selected_index == 5) {
                                       _settingModalBottomSheet(context);
+                                    } else if (selected_index == 3) {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => ViewReceipt()));
+                                    } else if (selected_index == 4) {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => KYVDashboard()));
+                                    } else if (selected_index == 5) {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => Villagedevelopment()));
                                     }
-
                                     setState(() {});
                                   },
                                   child: Container(
@@ -643,17 +642,34 @@ class _HomeState extends State<Home> {
                             utils.closeKeypad(context);
                             // mobileController.text = "9876543210";
                             mobileController.text = "9875235654";
-                            bool resFlag = await transactionModel.getTransactionStatus(context, mobileController.text, emailController.text);
-                            if (resFlag) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => CheckTransaction(
-                                            mobileNumber: mobileController.text,
-                                            emailID: emailController.text,
-                                          )));
+                            bool validationFlag = false;
+                            if (flagMobileActive) {
+                              if (utils.isNumberValid(mobileController.text)) {
+                                validationFlag = true;
+                              } else {
+                                utils.showAlert(context, ContentType.fail, "please_enter_valid_number".tr());
+                              }
                             } else {
-                              utils.showAlert(context, ContentType.fail, 'message');
+                              if (utils.isEmailValid(emailController.text)) {
+                                validationFlag = true;
+                              } else {
+                                utils.showAlert(context, ContentType.fail, "please_enter_valid_email".tr());
+                              }
+                            }
+                            if (validationFlag) {
+                              bool resFlag = await transactionModel.getTransactionStatus(context, mobileController.text, emailController.text);
+                              if (resFlag) {
+                                Navigator.pop(context);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => CheckTransaction(
+                                              mobileNumber: mobileController.text,
+                                              emailID: emailController.text,
+                                            )));
+                              } else {
+                                utils.showAlert(context, ContentType.fail, 'No transaction Found');
+                              }
                             }
                           },
                         ))

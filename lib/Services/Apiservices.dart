@@ -9,10 +9,6 @@ import 'package:public_vptax/Utils/utils.dart';
 class ApiServices {
   Utils utils = Utils();
   PreferenceService preferencesService = locator<PreferenceService>();
-  dynamic header = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-  };
 
   // local
   String mainURL = "http://10.163.19.137:8090/vptax/project/webservices/vptax_services_online.php";
@@ -30,24 +26,43 @@ class ApiServices {
   /**********************************************/
 
   Future mainServiceFunction(dynamic jsonRequest) async {
-    HttpClient _client = HttpClient(context: await Utils().globalContext);
-    _client.badCertificateCallback = (X509Certificate cert, String host, int port) => false;
+    IOClient _ioClient = await ioclientCertificate();
 
-    IOClient _ioClient = new IOClient(_client);
+    String key = preferencesService.userPassKey;
 
-    Map<String, String> header = {
-      "Content-Type": "application/json",
-    };
-    print("Header>>>>>>" + header.toString());
-    var response = await _ioClient.post(Uri.parse(mainURL), body: json.encode(jsonRequest), headers: header);
+    String userName = preferencesService.userName;
+
+    String jsonString = jsonEncode(jsonRequest);
+
+    String headerSignature = utils.generateHmacSha256(jsonString, key, true);
+
+    String header_token = utils.jwt_Encode(key, userName, headerSignature);
+
+    Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer $header_token"};
+
+    var response = await _ioClient.post(Uri.parse(mainURL), body: jsonString, headers: header);
 
     print("response>>>>>>" + response.toString());
     var mainData;
+
     if (response.statusCode == 200) {
       var data = response.body;
-      var jsonData = jsonDecode(data);
-      mainData = jsonData[key_main_data];
-      print("response>>>>>>" + mainData.toString());
+
+      String? authorizationHeader = response.headers['authorization'];
+
+      String? token = authorizationHeader?.split(' ')[1];
+
+      print("Online_Worklist Authorization -  $token");
+
+      String responceSignature = utils.jwt_Decode(key, token!);
+
+      String responceData = utils.generateHmacSha256(data, key, false);
+
+      if (responceSignature == responceData) {
+        var jsonData = jsonDecode(data);
+        mainData = jsonData[key_main_data];
+        print("response>>>>>>" + mainData.toString());
+      }
       return mainData;
     }
   }
