@@ -193,7 +193,6 @@ Widget _workdetails(BuildContext context){
                       setState(() {
                         cardvisibility=true;
                         card();
-                        workitems[0]['name'].toString();
                       });
                     },
                     child: CustomPaint(
@@ -242,7 +241,6 @@ Widget _workdetails(BuildContext context){
                       setState(() {
                         cardvisibility=true;
                         card();
-                        print("Not Started>>>>");
                       });
                     },
                     child: CustomPaint(
@@ -401,7 +399,7 @@ Widget card() {
             return Container(
               margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
               decoration: UIHelper.roundedBorderWithColorWithShadow(
-                  25,c.white,c.white,borderColor: Colors.transparent,borderWidth: 0),
+                  25,c.need_improvement1,c.need_improvement1,borderColor: Colors.transparent,borderWidth: 0),
               child: AnimationConfiguration.staggeredList(
                 position: index,
                 duration: const Duration(milliseconds: 800),
@@ -575,7 +573,7 @@ Widget card() {
                 shrinkWrap: true,
                 itemCount: 1,
                 itemBuilder: (context,index) {
-                 Color itemColor=c.unsatisfied1;
+                 Color itemColor=c.need_improvement1;
                   // final item = villagelist[mainIndex][key_workdetails][index];
                   return Container(
                     child: AnimationConfiguration.staggeredList(
@@ -588,7 +586,7 @@ Widget card() {
                               margin: EdgeInsets.fromLTRB(15, 10, 15, 15),
                               padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
                               decoration: BoxDecoration(
-                                  color: itemColor,
+                                  // color: itemColor,
                                   borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(20),
                                     topRight: Radius.circular(20),

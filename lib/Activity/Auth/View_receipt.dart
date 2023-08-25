@@ -414,7 +414,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                     Expanded(
                                       flex: 2,
                                       child: Container(
-                                        padding: EdgeInsets.only(top: 5),
+                                          padding: EdgeInsets.only(top: 5,left: 10,bottom: 3),
                                         height:25,
                                         width:45,
                                         decoration: BoxDecoration(
@@ -426,8 +426,8 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                             bottomLeft: Radius.circular(10),
                                           ),
                                         ),
-                                        child: Padding(
-                                          padding: EdgeInsets.only(top: 5,left: 10,bottom: 5),
+                                        child:Align(
+                                          alignment: Alignment.centerLeft,
                                           child: TextFormField(
                                             controller: assessmentController,
                                             inputFormatters: <TextInputFormatter>[
@@ -442,7 +442,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                               fontSize: 12,
                                             ),
                                           ),
-                                        ),
+                                        )
                                       ),
                                     ),
                                   ],
@@ -482,25 +482,26 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                               bottomLeft: Radius.circular(10),
                                             ),
                                           ),
-                                          child: Padding(
-                                            padding: EdgeInsets.only(top: 5,left: 3),
-                                            child: TextFormField(
-                                              focusNode: FocusNode(
-                                                  canRequestFocus: false
+                                            child:Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: TextFormField(
+                                                focusNode: FocusNode(
+                                                    canRequestFocus: false
+                                                ),
+                                                controller: receiptController,
+                                                inputFormatters: <TextInputFormatter>[
+                                                  FilteringTextInputFormatter.digitsOnly,
+                                                ],
+                                                keyboardType: TextInputType.number,
+                                                decoration: const InputDecoration(
+                                                    border:InputBorder.none
+                                                ),
+                                                style: TextStyle(
+                                                    fontSize: 12
+                                                ),
+                                                // textAlign: TextAlign.justify,
                                               ),
-                                              controller: receiptController,
-                                              inputFormatters: <TextInputFormatter>[
-                                                FilteringTextInputFormatter.digitsOnly,
-                                              ],
-                                              keyboardType: TextInputType.number,
-                                              decoration: const InputDecoration(
-                                                  border:InputBorder.none
-                                              ),
-                                              style: TextStyle(
-                                                  fontSize: 12
-                                              ),
-                                            ),
-                                          ),
+                                            )
                                         ))
                                   ],
                                 ),
