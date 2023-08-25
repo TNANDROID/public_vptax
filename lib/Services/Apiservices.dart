@@ -38,12 +38,9 @@ class ApiServices {
 
     String header_token = utils.jwt_Encode(key, userName, headerSignature);
 
-    Map<String, String> header = {"Content-Type": "application/json", "Authorization": "Bearer $header_token"};
+    var header = {"Content-Type": "application/json", "Authorization": "Bearer $header_token"};
 
     var response = await _ioClient.post(Uri.parse(mainURL), body: jsonString, headers: header);
-
-    print("response>>>>>>" + response.toString());
-    var mainData;
 
     if (response.statusCode == 200) {
       var data = response.body;
@@ -52,18 +49,15 @@ class ApiServices {
 
       String? token = authorizationHeader?.split(' ')[1];
 
-      print("Online_Worklist Authorization -  $token");
-
       String responceSignature = utils.jwt_Decode(key, token!);
 
       String responceData = utils.generateHmacSha256(data, key, false);
-
       if (responceSignature == responceData) {
         var jsonData = jsonDecode(data);
-        mainData = jsonData[key_main_data];
-        print("response>>>>>>" + mainData.toString());
+        return jsonData;
       }
-      return mainData;
+
+      return false;
     }
   }
   /**********************************************/
