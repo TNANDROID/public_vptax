@@ -67,7 +67,8 @@ class UIHelper {
   }
 
 //Container Style Provider with shadow
-  static BoxDecoration roundedBorderWithColorWithShadow(double radius, Color backgroundColor, Color backgroundColor2, {Color borderColor = Colors.transparent, double borderWidth = 1}) {
+  static BoxDecoration roundedBorderWithColorWithShadow(double radius, Color backgroundColor, Color backgroundColor2,
+      {Color borderColor = Colors.transparent, double borderWidth = 1, stop1 = 0.0, double stop2 = 0.1}) {
     return BoxDecoration(
         borderRadius: BorderRadius.circular(radius),
         border: Border.all(width: borderWidth, color: borderColor),
@@ -78,7 +79,7 @@ class UIHelper {
             ],
             begin: const FractionalOffset(0.0, 0.0),
             end: const FractionalOffset(1.0, 0.0),
-            stops: [0.0, 1.0],
+            stops: [stop1, stop2],
             tileMode: TileMode.clamp),
         boxShadow: [
           BoxShadow(
