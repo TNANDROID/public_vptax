@@ -74,7 +74,6 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
   bool _isKeyboardFocused = false;
 
-
   @override
   void initState() {
     super.initState();
@@ -206,7 +205,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                               ],
                             )),
                       ),
-                      Visibility(visible: islogin != "yes"|| !widget.isHome, child: payWidget())
+                      Visibility(visible: islogin != "yes" || !widget.isHome, child: payWidget())
                     ],
                   ));
             },
@@ -566,10 +565,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                                 Expanded(
                                                   child: Text(
                                                     finYearStr + " ( $durationStr )",
-                                                    style: TextStyle(
-                                                        fontSize: 10,
-                                                        fontWeight: FontWeight.normal,
-                                                        color: isStatus ? c.white :c.grey_8),
+                                                    style: TextStyle(fontSize: 10, fontWeight: FontWeight.normal, color: isStatus ? c.white : c.grey_8),
                                                     overflow: TextOverflow.ellipsis,
                                                   ),
                                                 ),
@@ -853,58 +849,71 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
       ],
     );
   }
+
   Widget assetCountWidget() {
     return Visibility(
         visible: mainList.isNotEmpty,
         child: Container(
-      margin: EdgeInsets.only(top: 5, left: 20, right: 20,bottom: 15),
-      decoration: UIHelper.GradientContainer(20, 20, 20, 20, [c.subscription_type_red_color, c.subscription_type_red_color],  intwid: 0),
-      child: Container(
-        margin: EdgeInsets.only( left: 5,bottom: 3),
-        decoration: UIHelper.roundedBorderWithColor(20, 20, 20, 20,c.white),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: 5,),
-            Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.all(5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                UIHelper.titleTextStyle("total_assessment".tr().toString(), c.grey_10, 11, true, true),
-                UIHelper.titleTextStyle(" $totalAssessment", c.grey_10, 14, true, true),
-              ],),
-            ) ,
-            SizedBox(height: 5,),
-            Visibility(
-              visible: pendingAssessment>0,
-              child: Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.all(5),
-                margin: EdgeInsets.only(top: 5,),
-                decoration: UIHelper.GradientContainer(0, 0, 18, 18, [c.red_new_light, c.red_new_light],  intwid: 0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                      UIHelper.titleTextStyle("pending_assessment_transaction".tr().toString(), c.grey_10, 11, true, true),
-                      UIHelper.titleTextStyle(" $pendingAssessment", c.grey_10, 14, true, true),
-                    ],),
-                    SizedBox(height: 5,),
-                    UIHelper.titleTextStyle("transaction_warning_hint".tr().toString(), c.subscription_type_red_color, 13, true, true),
-                    SizedBox(height: 5,),
-                  ],
+          margin: EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 15),
+          decoration: UIHelper.GradientContainer(20, 20, 20, 20, [c.subscription_type_red_color, c.subscription_type_red_color], intwid: 0),
+          child: Container(
+            margin: EdgeInsets.only(left: 5, bottom: 3),
+            decoration: UIHelper.roundedBorderWithColor(20, 20, 20, 20, c.white),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 5,
                 ),
-              ),
-            ) ,
-          ],
-        ),
-      ),
-    ));
+                Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.all(5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      UIHelper.titleTextStyle("total_assessment".tr().toString(), c.grey_10, 11, true, true),
+                      UIHelper.titleTextStyle(" $totalAssessment", c.grey_10, 14, true, true),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Visibility(
+                  visible: pendingAssessment > 0,
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.all(5),
+                    margin: EdgeInsets.only(
+                      top: 5,
+                    ),
+                    decoration: UIHelper.GradientContainer(0, 0, 18, 18, [c.red_new_light, c.red_new_light], intwid: 0),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            UIHelper.titleTextStyle("pending_assessment_transaction".tr().toString(), c.grey_10, 11, true, true),
+                            UIHelper.titleTextStyle(" $pendingAssessment", c.grey_10, 14, true, true),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        UIHelper.titleTextStyle("transaction_warning_hint".tr().toString(), c.subscription_type_red_color, 13, true, true),
+                        SizedBox(
+                          height: 5,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 
   Widget addInputDropdownField() {
@@ -962,20 +971,22 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
       child: Column(
         children: [
           Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                alignment: Alignment.center,
-                  margin: EdgeInsets.only(top: 10, left: 20, right: 20),
-                  padding: EdgeInsets.all(5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      UIHelper.titleTextStyle("${'total_amount_to_pay'.tr()} : ", c.white, 11, true, true),
-                      UIHelper.titleTextStyle("\u{20B9} $main_totalAmount", c.white, 14, true, true),
-                    ],),
-                  ),),
-                  // child: UIHelper.titleTextStyle("${'total_amount_to_pay'.tr()} : \u{20B9} $main_totalAmount", c.white, 12, true, true))),
+            alignment: Alignment.centerLeft,
+            child: Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+              padding: EdgeInsets.all(5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  UIHelper.titleTextStyle("${'total_amount_to_pay'.tr()} : ", c.white, 11, true, true),
+                  UIHelper.titleTextStyle("\u{20B9} $main_totalAmount", c.white, 14, true, true),
+                ],
+              ),
+            ),
+          ),
+          // child: UIHelper.titleTextStyle("${'total_amount_to_pay'.tr()} : \u{20B9} $main_totalAmount", c.white, 12, true, true))),
           Align(
               alignment: Alignment.centerRight,
               child: InkWell(
@@ -1417,6 +1428,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
         s.key_dcode: finalList[0][s.key_dcode].toString(),
         s.key_bcode: finalList[0][s.key_bcode].toString(),
         s.key_pvcode: finalList[0][s.key_lbcode].toString(),
+        if (finalList[0][s.key_taxtypeid].toString() == "4") s.key_fin_year: finalList[0][s.key_financialyear].toString(),
         s.key_assessment_no: finalList[0][s.key_assessment_no].toString(),
         s.key_paymenttypeid: 5,
         s.key_name: nameTextController.text,
