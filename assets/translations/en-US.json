@@ -40,6 +40,7 @@
   "services": "Services",
   "view_receipt_details": "View Receipt Details And  Download Your Receipts",
   "check_your_dues": "Check Your Dues",
+  "check_your_dues_title": "Check Your Dues",
   "download_receipt": "Download Receipt",
   "select_taxtype": "Select Tax Type",
   "propertyTax": "Property Tax",
@@ -167,5 +168,6 @@
   "please_enter_valid_email": "Please Enter Valid Email",
   "total_assessment": "Total Assessment :",
   "pending_assessment_transaction": "Transaction Pending :",
+  "auto_date_time": "Please enable autodate time settings",
   "transaction_warning_hint": "Previous transaction pending. Please check Transaction History for more Details"
 }

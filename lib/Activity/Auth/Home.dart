@@ -79,6 +79,13 @@ class _HomeState extends State<Home> {
     });
   }
 
+  void dispose() {
+    super.dispose();
+
+    mobileController.dispose();
+    emailController.dispose();
+  }
+
   Future<void> initialize() async {
     index_val = -1;
     selected_index = -1;
@@ -420,6 +427,7 @@ class _HomeState extends State<Home> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) => TaxCollectionView(
+                                                      appbarTitle: 'check_your_dues_title',
                                                       flag: "2",
                                                     )));
                                       }
@@ -428,6 +436,7 @@ class _HomeState extends State<Home> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => TaxCollectionView(
+                                                    appbarTitle: 'quickPay',
                                                     flag: "2",
                                                   )));
                                     } else if (selected_index == 2) {
@@ -639,16 +648,16 @@ class _HomeState extends State<Home> {
                           ),
                           onTap: () async {
                             utils.closeKeypad(context);
-                            // mobileController.text = "9876543210";
-                            mobileController.text = "9875235654";
                             bool validationFlag = false;
                             if (flagMobileActive) {
+                              mobileController.text = "9875235654";
                               if (utils.isNumberValid(mobileController.text)) {
                                 validationFlag = true;
                               } else {
                                 utils.showAlert(context, ContentType.fail, "please_enter_valid_number".tr());
                               }
                             } else {
+                              emailController.text = 'test@gmail.com';
                               if (utils.isEmailValid(emailController.text)) {
                                 validationFlag = true;
                               } else {

@@ -125,17 +125,21 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
     mobile_widget = islogin == "yes" ? await preferencesService.getUserInfo("mobile_number") : widget.mobile;
     taxTypeList = preferencesService.taxTypeList;
     selectTaxtype = selectedTaxTypeData['taxtypeid'].toString();
-    if (widget.isHome) {
-      await getTaxDetails();
-    }
-    filterDataList();
+    // if (widget.isHome) {
+    // }
+    await getTaxDetails();
+    await filterDataList();
+
     setState(() {});
   }
 
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
+    _controller.dispose();
+    mobileTextController.dispose();
+    emailTextController.dispose();
+    nameTextController.dispose();
   }
 
   @override
@@ -852,7 +856,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
 
   Widget assetCountWidget() {
     return Visibility(
-        visible: mainList.isNotEmpty,
+        visible: totalAssessment > 0,
         child: Container(
           margin: EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 15),
           decoration: UIHelper.GradientContainer(20, 20, 20, 20, [c.subscription_type_red_color, c.subscription_type_red_color], intwid: 0),
@@ -902,7 +906,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                         SizedBox(
                           height: 5,
                         ),
-                        UIHelper.titleTextStyle("transaction_warning_hint".tr().toString(), c.subscription_type_red_color, 13, true, true),
+                        UIHelper.titleTextStyle("transaction_warning_hint".tr().toString(), c.subscription_type_red_color, 11, true, true),
                         SizedBox(
                           height: 5,
                         ),

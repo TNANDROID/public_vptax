@@ -25,10 +25,10 @@ import 'dart:ui' as ui;
 import '../Activity/Auth/Home.dart';
 import '../Activity/Auth/Pdf_Viewer.dart';
 import '../Model/startup_model.dart';
-import '../Model/transaction_model.dart';
 import '../Resources/StringsKey.dart';
 import 'ContentInfo.dart';
 import '../../Services/Apiservices.dart';
+import 'package:datetime_setting/datetime_setting.dart';
 
 class Utils {
   PreferenceService preferencesService = locator<PreferenceService>();
@@ -44,6 +44,19 @@ class Utils {
       print('No internet!');
     }
     return online;
+  }
+
+  Future<bool> isAutoDatetimeisEnable() async {
+    bool isAutoDatetimeisEnable = false;
+
+    if (Platform.isAndroid) {
+      bool timeAuto = await DatetimeSetting.timeIsAuto();
+      bool timezoneAuto = await DatetimeSetting.timeZoneIsAuto();
+      timezoneAuto && timeAuto ? isAutoDatetimeisEnable = true : isAutoDatetimeisEnable = false;
+    } else if (Platform.isIOS) {
+      isAutoDatetimeisEnable = true;
+    }
+    return isAutoDatetimeisEnable;
   }
 
   bool isPasswordValid(value) {
@@ -147,7 +160,7 @@ class Utils {
   }
 
   Future<void> showAlert(BuildContext mcontext, ContentType contentType, String message,
-      {String? title, String? btnCount, String? btnmsg, var receiptList, String? file_path, String? mobile, String? email, double? titleFontSize, double? messageFontSize}) async {
+      {String? title, String? btnCount, String? btnText, String? btnmsg, var receiptList, String? file_path, String? mobile, String? email, double? titleFontSize, double? messageFontSize}) async {
     await showDialog<void>(
       context: mcontext,
       barrierDismissible: btnCount != null ? false : true, // user must tap button!
@@ -162,7 +175,7 @@ class Utils {
 
         return WillPopScope(
             onWillPop: () async {
-              return false;
+              return btnCount != null ? false : true;
             },
             child: Center(
               child: Container(
@@ -244,17 +257,17 @@ class Utils {
                         onTap: () async {
                           Navigator.of(context).pop();
                           if (btnmsg == 'payment') {
-                            getReceipt(mcontext, receiptList);
+                            getReceipt(mcontext, receiptList, 'payment');
                           } else if (btnmsg == 'receipt') {
                             openFilePath(file_path!);
-                          }else if (btnmsg == 'canceled') {
+                          } else if (btnmsg == 'canceled') {
                             Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => Home(
-                                      isLogin: false,
-                                    )),
-                                    (route) => false);
+                                          isLogin: false,
+                                        )),
+                                (route) => false);
                           }
                         },
                         child: Container(
@@ -282,18 +295,18 @@ class Utils {
                               onPressed: () async {
                                 if (btnmsg == 'payment') {
                                   Navigator.of(context).pop();
-                                  getReceipt(mcontext, receiptList);
+                                  getReceipt(mcontext, receiptList, 'payment');
                                 } else if (btnmsg == 'receipt') {
                                   Navigator.of(context).pop();
                                   openFilePath(file_path!);
-                                }else if (btnmsg == 'canceled') {
+                                } else if (btnmsg == 'canceled') {
                                   Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => Home(
-                                            isLogin: false,
-                                          )),
-                                          (route) => false);
+                                                isLogin: false,
+                                              )),
+                                      (route) => false);
                                 } else {
                                   performAction(btnmsg ?? '', context);
                                 }
@@ -308,7 +321,7 @@ class Utils {
                                 ),
                               ),
                               child: Text(
-                                btnmsg == 'payment' ? 'View Receipt' : 'OK',
+                                btnmsg == 'payment' ? 'View Receipt' : btnText ?? 'OK',
                                 style: TextStyle(color: contentInfo.color, fontSize: 11),
                               ),
                             ),
@@ -348,7 +361,7 @@ class Utils {
     );
   }
 
-  Future<void> getReceipt(BuildContext mcontext, receiptList) async {
+  Future<void> getReceipt(BuildContext mcontext, receiptList, String setFlag) async {
     showProgress(mcontext, 1);
     String selectedLang = await preferencesService.getUserInfo("lang");
     var receiptRequestData = {
@@ -375,7 +388,7 @@ class Utils {
         MaterialPageRoute(
             builder: (context) => PDF_Viewer(
                   pdfBytes: pdf,
-                  flag: 'payment',
+                  flag: setFlag,
                 )),
       );
     } else {
@@ -388,11 +401,9 @@ class Utils {
   }
 
   performAction(String type, BuildContext context) async {
-    const MethodChannel channel = MethodChannel('open_settings');
+    const MethodChannel channel = OptionalMethodChannel('open_settings');
+    Navigator.of(context).pop();
     switch (type) {
-      case 'ok':
-        Navigator.of(context).pop();
-
       case 'appSetting':
         openAppSettings();
 
@@ -407,9 +418,6 @@ class Utils {
 
       case 'wifi':
         await channel.invokeMethod('openSettings', 'wifi');
-
-      default:
-        Navigator.of(context).pop();
     }
   }
 
@@ -597,9 +605,9 @@ class Utils {
 
   Future<void> apiCalls(BuildContext context) async {
     try {
-      await StartUpViewModel().getOpenServiceList("District",context);
-      await StartUpViewModel().getOpenServiceList("Block",context);
-      await StartUpViewModel().getOpenServiceList("Village",context);
+      await StartUpViewModel().getOpenServiceList("District", context);
+      await StartUpViewModel().getOpenServiceList("Block", context);
+      await StartUpViewModel().getOpenServiceList("Village", context);
       await StartUpViewModel().getMainServiceList("TaxType", context: context);
       await StartUpViewModel().getMainServiceList("FinYear", context: context);
       await StartUpViewModel().getMainServiceList("PaymentTypeList", dcode: "1", bcode: "1", pvcode: "1", context: context);
@@ -618,7 +626,7 @@ class Utils {
     // String payDetails = '{"atomTokenId": "15000000411719", "merchId": "8952", "emailId": "sd@gmail.com", "mobileNumber": "9698547875", "returnUrl": "$returnUrl"}';
     Map payDetails = {key_atomTokenId: atomTokenId, key_merchId: merchId, key_emailId: emailId, key_mobileNumber: mobileNumber, key_returnUrl: returnUrl};
     print("request>>" + json.encode(payDetails));
-    Navigator.push(mcontext, MaterialPageRoute(builder: (context) => AtomPaynetsView("uat", json.encode(payDetails), mcontext,emailId,mobileNumber)));
+    Navigator.push(mcontext, MaterialPageRoute(builder: (context) => AtomPaynetsView("uat", json.encode(payDetails), mcontext, emailId, mobileNumber)));
   }
 
   String getDemadAmount(taxData, String taxTypeId) {

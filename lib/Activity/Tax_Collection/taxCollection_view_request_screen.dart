@@ -23,7 +23,8 @@ import '../../Utils/ContentInfo.dart';
 class TaxCollectionView extends StatefulWidget {
   final selectedTaxTypeData;
   final flag;
-  TaxCollectionView({Key? key, this.selectedTaxTypeData, this.flag});
+  final appbarTitle;
+  TaxCollectionView({Key? key, this.selectedTaxTypeData, this.flag, this.appbarTitle});
 
   @override
   _TaxCollectionViewState createState() => _TaxCollectionViewState();
@@ -66,13 +67,15 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
 
   @override
   Widget build(BuildContext context) {
+    String title = widget.appbarTitle ?? 'check_your_dues_title';
+
     return Scaffold(
         appBar: AppBar(
           backgroundColor: c.colorPrimary,
           centerTitle: true,
           elevation: 2,
           title: Text(
-            'quickPay'.tr().toString(),
+            title.tr().toString(),
             style: TextStyle(fontSize: 14),
           ),
         ),
