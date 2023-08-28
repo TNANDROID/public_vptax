@@ -1,17 +1,19 @@
-import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:public_vptax/Layout/customclip.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
+import 'package:public_vptax/Model/startup_model.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
+import 'package:public_vptax/Utils/utils.dart';
+import 'package:stacked/stacked.dart';
+
 import '../../Layout/Read_more_or_less.dart';
 import '../../Resources/StringsKey.dart';
 
@@ -22,9 +24,13 @@ class Villagedevelopment extends StatefulWidget {
 
 class _VillagedevelopmentState extends State<Villagedevelopment> {
   PreferenceService preferencesService = locator<PreferenceService>();
+  String selectedLang = "";
+  String selectedDistrict = "";
+  String selectedBlock = "";
+  String selectedVillage = "";
   String selectedFinYear = "";
+
   final _controller = ScrollController();
-  bool flag = true;
   bool cardvisibility = false;
   int selectedIndex = 0;
   List worklist = [];
@@ -50,13 +56,9 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
       if (_controller.position.atEdge) {
         bool isTop = _controller.position.pixels == 0;
         if (isTop) {
-          setState(() {
-            flag = true;
-          });
+          setState(() {});
         } else {
-          setState(() {
-            flag = false;
-          });
+          setState(() {});
         }
       }
     });
@@ -64,47 +66,118 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
     print("worklist values>>>>" + worklist.toString());
   }
 
-  Widget addInputDropdownField() {
+  //Dropdown Input Field Widget
+  Widget addInputDropdownField(int index, String inputHint, String fieldName, StartUpViewModel model) {
     List dropList = [];
-    dropList = preferencesService.finYearList;
+    String keyCode = "";
+    String titleText = "";
+    String titleTextTamil = "";
+    String initValue = "";
+
+    if (index == 1) {
+      dropList = preferencesService.districtList;
+      dropList.sort((a, b) {
+        return a[selectedLang == 'en' ? key_dname : key_dname_ta].compareTo(b[selectedLang == 'en' ? key_dname : key_dname_ta]);
+      });
+      keyCode = key_dcode;
+      titleText = key_dname;
+      titleTextTamil = key_dname_ta;
+      initValue = selectedDistrict;
+    } else if (index == 2) {
+      dropList = model.selectedBlockList;
+      dropList.sort((a, b) {
+        return a[selectedLang == 'en' ? key_bname : key_bname_ta].compareTo(b[selectedLang == 'en' ? key_bname : key_bname_ta]);
+      });
+      keyCode = key_bcode;
+      titleText = key_bname;
+      titleTextTamil = key_bname_ta;
+      initValue = selectedBlock;
+    } else if (index == 3) {
+      dropList = model.selectedVillageList;
+      dropList.sort((a, b) {
+        return a[selectedLang == 'en' ? key_pvname : key_pvname_ta].compareTo(b[selectedLang == 'en' ? key_pvname : key_pvname_ta]);
+      });
+      keyCode = key_pvcode;
+      titleText = key_pvname;
+      titleTextTamil = key_pvname_ta;
+      initValue = selectedVillage;
+    } else if (index == 4) {
+      dropList = preferencesService.finYearList;
+      keyCode = key_fin_year;
+      titleText = key_fin_year;
+      titleTextTamil = key_fin_year;
+      initValue = selectedFinYear;
+    } else {
+      print("End.....");
+    }
     return FormBuilderDropdown(
       decoration: InputDecoration(
+        labelText: inputHint,
+        constraints: BoxConstraints(maxHeight: 35),
         floatingLabelBehavior: FloatingLabelBehavior.never,
-        labelText: 'financialYear'.tr().toString(),
         labelStyle: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_7),
         filled: true,
-        constraints: BoxConstraints(maxHeight: 30),
         fillColor: Colors.white,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: c.white, width: 20.0),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(width: 20.0, color: c.white),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(width: 20.0),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        errorStyle: TextStyle(fontSize: 10),
-        contentPadding: EdgeInsets.only(left: 10, top: 5),
+        enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7, radius: 5),
+        focusedBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7, radius: 5),
+        focusedErrorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
+        errorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
+        errorStyle: const TextStyle(fontSize: 10),
+        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6), // Optional: Adjust padding
       ),
-      name: 'financial_year',
-      initialValue: selectedFinYear,
-      iconSize: 27,
+      name: fieldName,
+      initialValue: initValue,
       autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: FormBuilderValidators.compose([
+        FormBuilderValidators.required(errorText: "$inputHint ${'isEmpty'.tr()}"),
+      ]),
       items: dropList
           .map((item) => DropdownMenuItem(
-                value: item[key_fin_year],
+                value: item[keyCode],
                 child: Text(
-                  item[key_fin_year].toString(),
-                  style: TextStyle(fontSize: 11.0, fontWeight: FontWeight.w400, color: c.grey_9),
+                  selectedLang == "en" ? item[titleText].toString() : item[titleTextTamil].toString(),
+                  style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.text_color),
                 ),
               ))
           .toList(),
       onChanged: (value) async {
-        selectedFinYear = value.toString();
+        Utils().showProgress(context, 1);
+        if (index == 1) {
+          model.selectedBlockList.clear();
+          model.selectedVillageList.clear();
+          selectedDistrict = value.toString();
+          selectedBlock = "";
+          selectedVillage = "";
+          Future.delayed(Duration(milliseconds: 500), () {
+            model.loadUIBlock(selectedDistrict);
+            setState(() {});
+            Utils().hideProgress(context);
+          });
+        } else if (index == 2) {
+          model.selectedVillageList.clear();
+          selectedVillage = "";
+          selectedBlock = value.toString();
+          Future.delayed(Duration(milliseconds: 500), () {
+            model.loadUIVillage(selectedDistrict, selectedBlock);
+
+            setState(() {});
+            Utils().hideProgress(context);
+          });
+        } else if (index == 3) {
+          selectedVillage = value.toString();
+          Future.delayed(Duration(milliseconds: 200), () {
+            Utils().hideProgress(context);
+          });
+        } else if (index == 4) {
+          selectedFinYear = value.toString();
+          Future.delayed(Duration(milliseconds: 200), () {
+            Utils().hideProgress(context);
+          });
+        } else {
+          debugPrint("End.....");
+        }
+
+        setState(() {});
       },
     );
   }
@@ -112,77 +185,61 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: c.colorPrimary,
-          centerTitle: true,
-          elevation: 2,
-          title: Container(
-            child: Text(
-              'work_details'.tr().toString(),
-              style: TextStyle(fontSize: 14),
-            ),
+      appBar: AppBar(
+        backgroundColor: c.colorPrimary,
+        centerTitle: true,
+        elevation: 2,
+        title: Container(
+          child: Text(
+            'work_details'.tr().toString(),
+            style: TextStyle(fontSize: 14),
           ),
         ),
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Container(
-            padding: EdgeInsets.only(top: 15, left: 10, right: 10, bottom: 10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.only(top: 15, left: 15, right: 25, bottom: 10),
-                  decoration: UIHelper.roundedBorderWithColorWithShadow(12, c.grey_out, c.grey_out, borderColor: c.grey_out, borderWidth: 0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          'select_finyear'.tr().toString(),
-                          style: TextStyle(fontSize: 12, color: c.grey_10),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: addInputDropdownField(),
-                      )
-                    ],
-                  ),
+      ),
+      body: ViewModelBuilder<StartUpViewModel>.reactive(
+          onViewModelReady: (model) async {},
+          builder: (context, model, child) {
+            return SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Container(
+                padding: EdgeInsets.all(15),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        UIHelper.verticalSpaceSmall,
+                        Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                          Expanded(flex: 2, child: addInputDropdownField(1, 'districtName'.tr().toString(), "district", model)),
+                          UIHelper.horizontalSpaceSmall,
+                          Expanded(flex: 2, child: model.selectedBlockList.isNotEmpty ? addInputDropdownField(2, 'blockName'.tr().toString(), "block", model) : SizedBox()),
+                        ]),
+                        UIHelper.verticalSpaceSmall,
+                        Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                          Expanded(flex: 2, child: model.selectedVillageList.isNotEmpty ? addInputDropdownField(3, 'villageName'.tr().toString(), "village", model) : SizedBox()),
+                          UIHelper.horizontalSpaceSmall,
+                          Expanded(flex: 2, child: model.selectedVillageList.isNotEmpty ? addInputDropdownField(4, 'financialYear'.tr().toString(), "finYear", model) : SizedBox()),
+                        ]),
+                        UIHelper.verticalSpaceSmall,
+                      ],
+                    ),
+                    _workListType(context),
+                    UIHelper.verticalSpaceMedium,
+                    Visibility(visible: cardvisibility, child: workDetailsWidget()),
+                  ],
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  // padding: EdgeInsets.only(top: 5),
-                  margin: EdgeInsets.only(top: 25),
-                  // decoration: UIHelper.roundedBorderWithColorWithShadow(0,c.grey_out, c.grey_out ,borderWidth: 0),
-                  child: _workdetails(context),
-                ),
-                Container(
-                  padding: EdgeInsets.only(
-                    top: 15,
-                    left: 5,
-                    right: 5,
-                  ),
-                  // child:Text(workitems[i][])),
-                  child: Text(
-                    'work_details'.tr().toString(),
-                    style: TextStyle(color: c.primary_text_color2),
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: card(),
-                ),
-              ],
-            ),
-          ),
-        ));
+              ),
+            );
+          },
+          viewModelBuilder: () => StartUpViewModel()),
+    );
   }
 
-  Widget _workdetails(BuildContext context) {
+  Widget _workListType(BuildContext context) {
     return Container(
-        transform: Matrix4.translationValues(0.0, -20.0, 0.0),
         height: 58,
-        decoration: UIHelper.roundedBorderWithColor(0, 0, 0, 0, c.colorPrimaryDark, borderWidth: 1.5),
+        decoration: UIHelper.roundedBorderWithColor(0, 0, 0, 0, c.colorPrimary, borderWidth: 1.5),
         width: Screen.width(context),
         child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -192,7 +249,6 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
               return Container(
                   decoration: BoxDecoration(
                     color: c.white,
-                    //  border: Border.all(color: c.colorPrimaryDark, width: 1.5)
                   ),
                   child: Row(children: [
                     InkWell(
@@ -200,7 +256,6 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
                         selectedIndex = rowIndex;
                         setState(() {
                           cardvisibility = true;
-                          card();
                         });
                       },
                       child: Container(
@@ -218,16 +273,7 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
                                   decoration: selectedIndex == rowIndex
                                       ? UIHelper.roundedBorderWithColorWithShadow(0, c.colorPrimary, c.colorPrimary)
                                       : UIHelper.roundedBorderWithColorWithShadow(0, c.white, c.white),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        workitems[0]['name'].toString() + "\n 10",
-                                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 11, color: selectedIndex == rowIndex ? c.white : c.primary_text_color2),
-                                      ),
-                                    ],
-                                  )
-                                  // color: c.need_improvement,
-                                  ),
+                                  child: UIHelper.titleTextStyle(workitems[rowIndex]['name'].toString() + "\n 10", selectedIndex == rowIndex ? c.white : c.primary_text_color2, 10, false, true)),
                             ),
                           )),
                     )
@@ -235,24 +281,16 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
             }));
   }
 
-  Widget card() {
-    return Visibility(
-      visible: cardvisibility,
-      child: Container(
-          margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+  Widget workDetailsWidget() {
+    return Column(
+      children: [
+        UIHelper.titleTextStyle('work_details'.tr().toString(), c.primary_text_color2, 14, false, true),
+        Container(
           child: ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: items.length,
             itemBuilder: (BuildContext context, int index) {
-              // Color itemColor = index % 2 == 0 ? c.dark_pink : c.need_improvement;
-              Color itemColor = c.colorPrimary;
-              ListTile(
-                leading: Text('${index + 1}'), // Display serial number
-                title: Text(
-                  items[index],
-                ),
-              );
               return Container(
                 margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
                 decoration: UIHelper.roundedBorderWithColorWithShadow(25, c.need_improvement1, c.need_improvement1, borderColor: Colors.transparent, borderWidth: 0),
@@ -265,158 +303,122 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
                         child: Column(
                       children: [
                         Stack(children: [
-                          Container(
-                            height: 120,
-                            padding: EdgeInsets.only(left: 8),
-                            decoration: UIHelper.roundedBorderWithColorWithShadow(25, c.white, c.white, borderColor: Colors.transparent, borderWidth: 0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                    flex: 1,
-                                    child: Container(
+                          GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  if (showFlag.contains(index)) {
+                                    showFlag.remove(index);
+                                  } else {
+                                    showFlag.add(index);
+                                  }
+                                });
+                              },
+                              child: Container(
+                                height: 110,
+                                padding: EdgeInsets.only(left: 8),
+                                decoration: UIHelper.roundedBorderWithColorWithShadow(25, c.white, c.white, borderColor: Colors.transparent, borderWidth: 0),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 50,
                                       decoration: BoxDecoration(color: c.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(25))),
                                       child: Text(
                                         items[index],
                                         textAlign: TextAlign.center,
                                       ),
-                                    )),
-                                Expanded(
-                                    flex: 3,
-                                    child: Container(
-                                        decoration: BoxDecoration(color: itemColor, borderRadius: BorderRadius.only(topRight: Radius.circular(20), bottomRight: Radius.circular(25))),
-                                        child: Stack(
-                                          children: [
-                                            Container(
-                                              margin: EdgeInsets.only(top: 8),
-                                              transform: Matrix4.translationValues(-10, 0, 0),
-                                              alignment: Alignment.topLeft,
-                                              child: Image.asset(
-                                                imagePath.rightarrow,
-                                                height: 30,
-                                                width: 35,
-                                                color: c.white,
-                                              ),
-                                            ),
-                                            Container(
-                                              margin: EdgeInsets.only(top: 30, left: 15),
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Text(
-                                                      'habitation_name'.tr().toString(),
-                                                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.white),
-                                                      overflow: TextOverflow.clip,
-                                                      maxLines: 1,
-                                                      softWrap: true,
-                                                    ),
+                                    ),
+                                    Expanded(
+                                        child: Container(
+                                            decoration: BoxDecoration(color: c.colorPrimary, borderRadius: BorderRadius.only(topRight: Radius.circular(20), bottomRight: Radius.circular(25))),
+                                            child: Stack(
+                                              children: [
+                                                Container(
+                                                  margin: EdgeInsets.only(top: 8),
+                                                  transform: Matrix4.translationValues(-10, 0, 0),
+                                                  alignment: Alignment.topLeft,
+                                                  child: Image.asset(
+                                                    imagePath.rightarrow,
+                                                    height: 25,
+                                                    width: 30,
+                                                    color: c.white,
                                                   ),
-                                                  Expanded(
-                                                    flex: 0,
-                                                    child: Text(
-                                                      ' : ',
-                                                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.white),
-                                                      overflow: TextOverflow.clip,
-                                                      maxLines: 1,
-                                                      softWrap: true,
-                                                    ),
+                                                ),
+                                                Container(
+                                                  margin: EdgeInsets.only(top: 30, left: 15, right: 10),
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Row(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          UIHelper.titleTextStyle('Scheme Name : ', c.white, 12, false, false),
+                                                          UIHelper.titleTextStyle('MGNREGS', c.white, 12, true, false),
+                                                        ],
+                                                      ),
+                                                      UIHelper.verticalSpaceSmall,
+                                                      Row(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          UIHelper.titleTextStyle('Work Type Name : ', c.white, 12, false, false),
+                                                          Expanded(child: UIHelper.titleTextStyle('Library Building Repair and Toilet Construction', c.white, 12, true, false)),
+                                                        ],
+                                                      ),
+                                                    ],
                                                   ),
-                                                  Expanded(
-                                                      flex: 1,
-                                                      child: Container(
-                                                        child: Text(
-                                                          "Angambakkam",
-                                                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: c.white),
-                                                        ),
-                                                      ))
-                                                ],
-                                              ),
-                                            ),
-                                            Container(
-                                                margin: EdgeInsets.only(top: 55, left: 15),
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Expanded(
-                                                      flex: 1,
-                                                      child: Text(
-                                                        "Work Type Name",
-                                                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.white),
-                                                        overflow: TextOverflow.clip,
-                                                        maxLines: 1,
-                                                        softWrap: true,
-                                                      ),
-                                                    ),
-                                                    Expanded(
-                                                      flex: 0,
-                                                      child: Text(
-                                                        ' : ',
-                                                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.white),
-                                                        overflow: TextOverflow.clip,
-                                                        maxLines: 1,
-                                                        softWrap: true,
-                                                      ),
-                                                    ),
-                                                    Expanded(
-                                                      flex: 1,
-                                                      child: Container(
-                                                        margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                                        child: ExpandableText(
-                                                          'New Housing Work Scheme for PMAY',
-                                                          trimLines: 2,
-                                                          txtcolor: "1",
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: EdgeInsets.only(right: 5),
-                                                      child: InkWell(
-                                                        child: Image.asset(
-                                                          imagePath.downarrow,
-                                                          height: 18,
-                                                          width: 18,
-                                                          color: c.white,
-                                                        ),
-                                                        // child:  showFlag.contains(index)?Image.asset(imagePath.downarrow,height: 18,width: 18,color: c.white,),
-                                                        onTap: () {
-                                                          setState(() {
-                                                            if (showFlag.contains(index)) {
-                                                              showFlag.remove(index);
-                                                            } else {
-                                                              showFlag.add(index);
-                                                            }
-                                                          });
-                                                          print("Work Type name tapped");
-                                                        },
-                                                      ),
-                                                    )
-                                                  ],
-                                                )),
-                                          ],
-                                        ))),
-                              ],
-                            ),
-                          ),
+                                                ),
+                                                Container(
+                                                    margin: EdgeInsets.only(right: 5, bottom: 5),
+                                                    alignment: Alignment.bottomRight,
+                                                    child: Icon(
+                                                      showFlag.contains(index) ? Icons.expand_less_outlined : Icons.expand_more_outlined,
+                                                      color: c.white,
+                                                    )),
+                                              ],
+                                            ))),
+                                  ],
+                                ),
+                              )),
                           Container(
                             margin: EdgeInsets.all(10.0),
                             color: c.full_transparent,
                           ),
                         ]),
-                        card_design(context, index)
+                        expandedCardWidget(context, index)
                       ],
                     )),
                   ),
                 ),
               );
             },
-          )),
+          ),
+        )
+      ],
     );
   }
 
-  Widget card_design(BuildContext context, int index) {
+  Widget keyValueRowWidget(String key, String value) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(flex: 1, child: UIHelper.titleTextStyle(key, c.grey_8, 12, false, false)),
+            Expanded(flex: 0, child: UIHelper.titleTextStyle(":", c.grey_8, 12, false, false)),
+            UIHelper.horizontalSpaceSmall,
+            Expanded(
+              flex: 1,
+              child: ExpandableText(value, trimLines: 2, txtcolor: "2"),
+            ),
+          ],
+        ),
+        UIHelper.verticalSpaceSmall
+      ],
+    );
+  }
+
+  Widget expandedCardWidget(BuildContext context, int index) {
     return Visibility(
       visible: showFlag.contains(index),
       child: AnimationLimiter(
@@ -426,8 +428,6 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
         shrinkWrap: true,
         itemCount: 1,
         itemBuilder: (context, index) {
-          Color itemColor = c.need_improvement1;
-          // final item = villagelist[mainIndex][key_workdetails][index];
           return Container(
             child: AnimationConfiguration.staggeredList(
               position: index,
@@ -436,253 +436,16 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
                 horizontalOffset: 200.0,
                 child: FlipAnimation(
                   child: Container(
-                      margin: EdgeInsets.fromLTRB(15, 10, 15, 15),
-                      padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
-                      decoration: BoxDecoration(
-                          // color: itemColor,
-                          borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
-                        bottomLeft: Radius.circular(20),
-                        bottomRight: Radius.circular(20),
-                      )),
+                      margin: EdgeInsets.all(15),
                       child: Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  'work_id'.tr().toString(),
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: c.grey_8),
-                                  overflow: TextOverflow.clip,
-                                  maxLines: 2,
-                                  softWrap: true,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 0,
-                                child: Text(
-                                  ' : ',
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.grey_8),
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: true,
-                                ),
-                              ),
-                              UIHelper.horizontalSpaceSmall,
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  "123456",
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: c.grey_8),
-                                  overflow: TextOverflow.clip,
-                                  maxLines: 1,
-                                  softWrap: true,
-                                ),
-                              ),
-                            ],
-                          ),
-                          UIHelper.verticalSpaceSmall,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  'scheme_group_name'.tr().toString(),
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.grey_8),
-                                  overflow: TextOverflow.clip,
-                                  maxLines: 2,
-                                  softWrap: true,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 0,
-                                child: Text(
-                                  ' : ',
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.grey_8),
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: true,
-                                ),
-                              ),
-                              UIHelper.horizontalSpaceSmall,
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                  child: ExpandableText(
-                                    'New Housing Work Scheme for PMAY,Housing Scheme Under',
-                                    trimLines: 2,
-                                    txtcolor: "2",
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          UIHelper.verticalSpaceSmall,
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  'financial_year'.tr().toString(),
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: c.grey_8),
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: true,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 0,
-                                child: Text(
-                                  ' : ',
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.grey_8),
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: true,
-                                ),
-                              ),
-                              UIHelper.horizontalSpaceSmall,
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  "2021-2022",
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: c.grey_8),
-                                  overflow: TextOverflow.clip,
-                                ),
-                              ),
-                            ],
-                          ),
-                          UIHelper.verticalSpaceSmall,
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  'as_value'.tr().toString(),
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: c.grey_8),
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: true,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 0,
-                                child: Text(
-                                  ' : ',
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.grey_8),
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: true,
-                                ),
-                              ),
-                              UIHelper.horizontalSpaceSmall,
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  "100000",
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: c.grey_8),
-                                  overflow: TextOverflow.clip,
-                                ),
-                              ),
-                            ],
-                          ),
-                          UIHelper.verticalSpaceSmall,
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  'scheme_name'.tr().toString(),
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: c.grey_8),
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: true,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 0,
-                                child: Text(
-                                  ' : ',
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.grey_8),
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: true,
-                                ),
-                              ),
-                              UIHelper.horizontalSpaceSmall,
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  "PMAY",
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: c.grey_8),
-                                  overflow: TextOverflow.clip,
-                                ),
-                              ),
-                            ],
-                          ),
-                          UIHelper.verticalSpaceSmall,
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  'amount_spent_so_far'.tr().toString(),
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: c.grey_8),
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: true,
-                                  maxLines: 3,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 0,
-                                child: Text(
-                                  ' : ',
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.grey_8),
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: true,
-                                ),
-                              ),
-                              UIHelper.horizontalSpaceSmall,
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  "50000",
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: c.grey_8),
-                                  overflow: TextOverflow.clip,
-                                ),
-                              ),
-                            ],
-                          ),
-                          UIHelper.verticalSpaceSmall,
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  'status'.tr().toString(),
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: c.grey_8),
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: true,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 0,
-                                child: Text(
-                                  ' : ',
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.grey_8),
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: true,
-                                ),
-                              ),
-                              UIHelper.horizontalSpaceSmall,
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  "Completed",
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: c.grey_8),
-                                  overflow: TextOverflow.clip,
-                                ),
-                              ),
-                            ],
-                          ),
+                          keyValueRowWidget('work_id'.tr().toString(), "123456"),
+                          keyValueRowWidget('scheme_group_name'.tr().toString(), "New Housing Work Scheme for PMAY,Housing Scheme Under"),
+                          keyValueRowWidget('financial_year'.tr().toString(), "2021-2022"),
+                          keyValueRowWidget('as_value'.tr().toString(), "100000"),
+                          keyValueRowWidget('scheme_name'.tr().toString(), "PMAY"),
+                          keyValueRowWidget('amount_spent_so_far'.tr().toString(), "50000"),
+                          keyValueRowWidget('status'.tr().toString(), "Completed"),
                         ],
                       )),
                 ),

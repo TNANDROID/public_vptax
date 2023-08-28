@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -74,7 +76,6 @@ class StartUpViewModel extends BaseViewModel {
         "noInternet".tr().toString(),
       );
     }
-
 
     print("response>>" + response.toString());
     if (type == "District") {
@@ -261,5 +262,35 @@ class StartUpViewModel extends BaseViewModel {
       }
     }
     setBusy(false);
+  }
+
+  //Get Receipt List
+  Future receiptRelatedMainService(BuildContext context, dynamic requestJson) async {
+    dynamic requestData = {key_data_content: requestJson};
+    List resJsonArray = [];
+    if (await Utils().isOnline()) {
+      try {
+        var response = await apiServices.mainServiceFunction(requestData);
+        var status = response[key_status].toString();
+        var responseValue = response[key_response].toString();
+
+        if (status == key_success && responseValue == key_success) {
+          resJsonArray = response[key_data];
+          return resJsonArray;
+        } else {
+          return responseValue;
+        }
+      } catch (error) {
+        print('error (${error.toString()}) has been caught');
+      }
+    } else {
+      Utils().showAlert(
+        context,
+        ContentType.fail,
+        "noInternet".tr().toString(),
+      );
+    }
+
+    return resJsonArray;
   }
 }

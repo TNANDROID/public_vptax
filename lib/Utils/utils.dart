@@ -257,7 +257,8 @@ class Utils {
                         onTap: () async {
                           Navigator.of(context).pop();
                           if (btnmsg == 'payment') {
-                            getReceipt(mcontext, receiptList, 'payment');
+                            String selectedLang = await preferencesService.getUserInfo("lang");
+                            getReceipt(mcontext, receiptList, 'payment', selectedLang);
                           } else if (btnmsg == 'receipt') {
                             openFilePath(file_path!);
                           } else if (btnmsg == 'canceled') {
@@ -294,8 +295,9 @@ class Utils {
                             child: ElevatedButton(
                               onPressed: () async {
                                 if (btnmsg == 'payment') {
+                                  String selectedLang = await preferencesService.getUserInfo("lang");
                                   Navigator.of(context).pop();
-                                  getReceipt(mcontext, receiptList, 'payment');
+                                  getReceipt(mcontext, receiptList, 'payment', selectedLang);
                                 } else if (btnmsg == 'receipt') {
                                   Navigator.of(context).pop();
                                   openFilePath(file_path!);
@@ -361,9 +363,8 @@ class Utils {
     );
   }
 
-  Future<void> getReceipt(BuildContext mcontext, receiptList, String setFlag) async {
+  Future<void> getReceipt(BuildContext mcontext, receiptList, String setFlag, String language) async {
     showProgress(mcontext, 1);
-    String selectedLang = await preferencesService.getUserInfo("lang");
     var receiptRequestData = {
       key_service_id: service_key_GetReceipt,
       key_receipt_id: receiptList[key_receipt_id].toString(),
@@ -373,10 +374,9 @@ class Utils {
       key_dcode: receiptList[key_dcode].toString(),
       key_bcode: receiptList[key_bcode].toString(),
       key_pvcode: receiptList[key_lbcode].toString(),
-      key_language_name: selectedLang
+      key_language_name: language
     };
     var GetReceiptList = {key_data_content: receiptRequestData};
-
     var response = await ApiServices().mainServiceFunction(GetReceiptList);
     print('response>>: ${response}');
     hideProgress(mcontext);
@@ -545,7 +545,7 @@ class Utils {
 
     DateTime currentTime = DateTime.now();
 
-    DateTime expirationTime = currentTime.add(const Duration(seconds: 20));
+    DateTime expirationTime = currentTime.add(const Duration(minutes: 20));
 
     String exp = (expirationTime.millisecondsSinceEpoch / 1000).toString();
 

@@ -40,13 +40,16 @@ class _ViewReceiptState extends State<ViewReceipt> {
   String selectedvillage = "";
   String selectedTaxType = "";
   bool invalidReceiptNumber = false;
-  bool listvisbility = false;
+  List<dynamic> receiptList = [];
+  bool noDataFound = false;
   String finalOTP = '';
   Uint8List? pdf;
   String selectedLang = "";
   PreferenceService preferencesService = locator<PreferenceService>();
   final scrollController = ScrollController();
   OtpFieldController OTPcontroller = OtpFieldController();
+  TextEditingController assessmentController = TextEditingController();
+  TextEditingController receiptController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -135,7 +138,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
           .toList(),
       onChanged: (value) async {
         Utils().showProgress(context, 1);
-        listvisbility = false;
         if (index == 0) {
           selectedTaxType = value.toString();
           Utils().hideProgress(context);
@@ -178,32 +180,51 @@ class _ViewReceiptState extends State<ViewReceipt> {
 
 //Text Input Field Widget
   Widget addInputFormControl(String nameField) {
+    bool isEnabled = false;
+    if (nameField == "assessment_no") {
+      if (receiptController.text.isEmpty || receiptController.text == null) {
+        isEnabled = true;
+      }
+    } else {
+      if (assessmentController.text.isEmpty || assessmentController.text == null) {
+        isEnabled = true;
+      }
+    }
     return FormBuilderTextField(
       style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_9),
       name: nameField,
       autocorrect: false,
-      enabled: true,
+      enabled: isEnabled,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       onChanged: (value) {
+        if (nameField == "assessment_no") {
+          assessmentController.text = value.toString();
+        } else {
+          receiptController.text = value.toString();
+        }
+        setState(() {});
         Validate();
       },
       decoration: InputDecoration(
         floatingLabelBehavior: FloatingLabelBehavior.never,
         labelStyle: TextStyle(fontSize: 10.0, fontWeight: FontWeight.w400, color: c.grey_7),
         filled: true,
-        fillColor: c.white,
+        fillColor: isEnabled ? c.white : c.grey_2,
         enabledBorder: UIHelper.getInputBorder(0, borderColor: c.white, radius: 20),
+        disabledBorder: UIHelper.getInputBorder(0, borderColor: c.grey_5, radius: 20),
         focusedBorder: UIHelper.getInputBorder(0, borderColor: c.white, radius: 20),
         focusedErrorBorder: UIHelper.getInputBorder(0, borderColor: Colors.red, radius: 20),
         errorBorder: UIHelper.getInputBorder(0, borderColor: Colors.red, radius: 20),
         errorStyle: TextStyle(fontSize: 10),
         contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 10), // Optional: Adjust padding
       ),
-      inputFormatters: [
-        FilteringTextInputFormatter.digitsOnly,
-        LengthLimitingTextInputFormatter(10),
-      ],
-      keyboardType: TextInputType.number,
+      inputFormatters: nameField == "assessment_no"
+          ? [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(10),
+            ]
+          : [CustomInputFormatter()],
+      keyboardType: nameField == "assessment_no" ? TextInputType.number : TextInputType.text,
     );
   }
 
@@ -243,20 +264,20 @@ class _ViewReceiptState extends State<ViewReceipt> {
           child: FormBuilder(
               key: _formKey,
               child: Column(children: [
-                headingWithDropdownWidget('taxType', addInputDropdownField(0, 'select_taxtype'.tr().toString(), "tax_type", model)),
+                headingWithDropdownWidget('taxType', addInputDropdownField(0, 'select_taxtype'.tr().toString(), "taxtypeid", model)),
                 UIHelper.verticalSpaceSmall,
-                headingWithDropdownWidget('district', addInputDropdownField(1, 'select_District'.tr().toString(), "district", model)),
+                headingWithDropdownWidget('district', addInputDropdownField(1, 'select_District'.tr().toString(), "dcode", model)),
                 UIHelper.verticalSpaceSmall,
-                if (model.selectedBlockList.isNotEmpty) headingWithDropdownWidget('block', addInputDropdownField(2, 'select_Block'.tr().toString(), "block", model)),
+                if (model.selectedBlockList.isNotEmpty) headingWithDropdownWidget('block', addInputDropdownField(2, 'select_Block'.tr().toString(), "bcode", model)),
                 if (model.selectedBlockList.isNotEmpty) UIHelper.verticalSpaceSmall,
-                if (model.selectedVillageList.isNotEmpty) headingWithDropdownWidget('villagePanchayat', addInputDropdownField(3, 'select_VillagePanchayat'.tr().toString(), "villagePanchayat", model)),
+                if (model.selectedVillageList.isNotEmpty) headingWithDropdownWidget('villagePanchayat', addInputDropdownField(3, 'select_VillagePanchayat'.tr().toString(), "pvcode", model)),
                 if (model.selectedVillageList.isNotEmpty) UIHelper.verticalSpaceSmall,
                 if (selectedvillage.isNotEmpty)
                   Container(
                       decoration: UIHelper.roundedBorderWithColorWithShadow(15, c.need_improvement2, c.need_improvement2, borderColor: Colors.transparent, borderWidth: 5),
                       padding: EdgeInsets.only(top: 15, bottom: 10, left: 10, right: 10),
                       child: Column(children: [
-                        headingWithDropdownWidget('assesmentNumber', addInputFormControl("assesmentNumber")),
+                        headingWithDropdownWidget('assesmentNumber', addInputFormControl("assessment_no")),
                         UIHelper.verticalSpaceSmall,
                         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                           Text(
@@ -265,7 +286,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                           )
                         ]),
                         UIHelper.verticalSpaceSmall,
-                        headingWithDropdownWidget('receiptno', addInputFormControl("receiptno")),
+                        headingWithDropdownWidget('receiptno', addInputFormControl("receipt_no")),
                         UIHelper.verticalSpaceSmall,
                         invalidReceiptNumber
                             ? UIHelper.titleTextStyle('receiptno'.tr().toString() + "/" + 'assesmentNumber'.tr().toString() + " " + 'isEmpty'.tr().toString(), c.red, 10, false, false)
@@ -277,21 +298,33 @@ class _ViewReceiptState extends State<ViewReceipt> {
         child: TextButton(
           child: Padding(padding: EdgeInsets.only(left: 5, right: 5), child: Text("submit".tr().toString(), style: TextStyle(color: c.white, fontSize: 13))),
           style: TextButton.styleFrom(fixedSize: const Size(130, 20), shape: StadiumBorder(), backgroundColor: c.colorPrimary),
-          onPressed: () {
-            setState(() {
-              Validate();
-              if (_formKey.currentState!.saveAndValidate() && !invalidReceiptNumber) {
-                listvisbility = true;
+          onPressed: () async {
+            Validate();
+            if (_formKey.currentState!.saveAndValidate() && !invalidReceiptNumber) {
+              Map<String, dynamic> postParams = Map.from(_formKey.currentState!.value);
+              postParams['service_id'] = "ReceiptBillDetails";
+              postParams['language_name'] = selectedLang;
+              postParams.removeWhere((key, value) {
+                return value == null || (value is String && value.isEmpty);
+              });
+              Utils().showProgress(context, 1);
+              var response = await model.receiptRelatedMainService(context, postParams);
+              if (response == "FAIL") {
+                noDataFound = true;
               } else {
-                listvisbility = false;
+                noDataFound = false;
+                receiptList = response;
               }
-              setState(() {});
-              scrollController.animateTo(
-                400,
-                duration: Duration(milliseconds: 500),
-                curve: Curves.linearToEaseOut,
-              );
-            });
+
+              Utils().hideProgress(context);
+            }
+            setState(() {});
+            scrollController.animateTo(
+              400,
+              duration: Duration(milliseconds: 500),
+              curve: Curves.linearToEaseOut,
+            );
+            setState(() {});
           },
         ),
       ),
@@ -299,7 +332,9 @@ class _ViewReceiptState extends State<ViewReceipt> {
   }
 
   ///This [widget] Used for Doownload Receipt container.
-  Widget getReceiptDownloadWidget(String title) {
+  Widget getReceiptDownloadWidget(BuildContext context, String title, dynamic sendData, String language) {
+    sendData[key_receipt_id] = sendData['receiptid'];
+    sendData[key_state_code] = sendData['statecode'];
     return InkWell(
       child: Stack(
         children: [
@@ -321,57 +356,63 @@ class _ViewReceiptState extends State<ViewReceipt> {
         ],
       ),
       onTap: () {
-        _settingModalBottomSheet(context);
+        utils.getReceipt(context, sendData, 'paymentReceipt', language);
       },
     );
   }
 
   ///This [widget] Used for set of [getReceiptDownloadWidget] are used.
-  Widget listview() {
-    return Visibility(
-      visible: listvisbility,
-      child: Container(
-          transform: Matrix4.translationValues(-5.0, -100.0, 10.0),
-          padding: EdgeInsets.only(left: 22, right: 22),
-          child: AnimationLimiter(
-            child: ListView.builder(
-              physics: const AlwaysScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: 1,
-              itemBuilder: (BuildContext context, int index) {
-                return AnimationConfiguration.staggeredList(
-                  position: index,
-                  duration: const Duration(milliseconds: 800),
-                  child: SlideAnimation(
-                    horizontalOffset: 200.0,
-                    child: FlipAnimation(
-                        child: Stack(children: [
-                      Container(
-                        height: 220,
-                        decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.colorAccentlight, c.white, stop1: 0.25, stop2: 0.1),
-                        child: Center(
-                            child: Container(
-                                margin: EdgeInsets.all(10.0),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      'receiptno'.tr().toString() + " - 123456",
-                                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: c.primary_text_color2),
-                                    ),
-                                    UIHelper.verticalSpaceMedium,
-                                    getReceiptDownloadWidget('download_tamil'.tr().toString() + "\n" + 'tamil_1'.tr().toString()),
-                                    UIHelper.verticalSpaceMedium,
-                                    getReceiptDownloadWidget('download_english'.tr().toString() + "\n" + 'english_1'.tr().toString()),
-                                  ],
-                                ))),
+  Widget listview(BuildContext context) {
+    return receiptList.length > 0
+        ? Container(
+            transform: Matrix4.translationValues(-5.0, -100.0, 10.0),
+            padding: EdgeInsets.only(left: 22, right: 22),
+            child: AnimationLimiter(
+              child: ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: receiptList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Column(children: [
+                    AnimationConfiguration.staggeredList(
+                      position: index,
+                      duration: const Duration(milliseconds: 800),
+                      child: SlideAnimation(
+                        horizontalOffset: 200.0,
+                        child: FlipAnimation(
+                            child: Stack(children: [
+                          Container(
+                            height: 220,
+                            decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.colorAccentlight, c.white, stop1: 0.25, stop2: 0.1),
+                            child: Center(
+                                child: Container(
+                                    margin: EdgeInsets.all(10.0),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          'receiptno'.tr().toString() + " - " + receiptList[index]['receiptid'].toString(),
+                                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: c.primary_text_color2),
+                                        ),
+                                        UIHelper.verticalSpaceMedium,
+                                        getReceiptDownloadWidget(context, 'download_tamil'.tr().toString() + "\n" + 'tamil_1'.tr().toString(), receiptList[index], "ta"),
+                                        UIHelper.verticalSpaceMedium,
+                                        getReceiptDownloadWidget(context, 'download_english'.tr().toString() + "\n" + 'english_1'.tr().toString(), receiptList[index], "en"),
+                                      ],
+                                    ))),
+                          ),
+                        ])),
                       ),
-                    ])),
-                  ),
-                );
-              },
+                    ),
+                    UIHelper.verticalSpaceSmall
+                  ]);
+                },
+              ),
             ),
-          )),
-    );
+          )
+        : noDataFound
+            ? Container(
+                transform: Matrix4.translationValues(-5.0, -100.0, 10.0), padding: EdgeInsets.only(left: 22, right: 22), child: UIHelper.titleTextStyle('no_record', c.text_color, 12, true, true))
+            : SizedBox();
   }
 
   /// Main Build Widget of this class
@@ -399,7 +440,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                     scrollDirection: Axis.vertical,
                     child: Container(
                         child: Column(
-                      children: [formField(context, model), listview()],
+                      children: [formField(context, model), listview(context)],
                     )));
               },
               viewModelBuilder: () => StartUpViewModel()),
@@ -410,7 +451,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
     _formKey.currentState!.saveAndValidate();
     Map<String, dynamic> postParams = Map.from(_formKey.currentState!.value);
 
-    if ((postParams['assesmentNumber'] == null || postParams['assesmentNumber'] == "") && (postParams['receiptno'] == null || postParams['receiptno'] == "")) {
+    if ((postParams['assessment_no'] == null || postParams['assessment_no'] == "") && (postParams['receipt_no'] == null || postParams['receipt_no'] == "")) {
       invalidReceiptNumber = true;
     } else {
       invalidReceiptNumber = false;
@@ -531,5 +572,21 @@ class _ViewReceiptState extends State<ViewReceipt> {
       var pdftoString = userData[s.key_json_data];
       pdf = const Base64Codec().decode(pdftoString['pdf_string']);
     }
+  }
+}
+
+class CustomInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    // Create a pattern that matches digits, hyphens, and slashes
+    final RegExp validCharacters = RegExp(r'[0-9\-/]+');
+
+    // Use the pattern to filter the new input value
+    final String filteredValue = validCharacters.allMatches(newValue.text).map((e) => e.group(0)).join();
+
+    return TextEditingValue(
+      text: filteredValue,
+      selection: TextSelection.collapsed(offset: filteredValue.length),
+    );
   }
 }
