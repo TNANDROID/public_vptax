@@ -29,6 +29,8 @@ class StartUpViewModel extends BaseViewModel {
   List<dynamic> GatewayList = [];
   List<dynamic> taxCollectionDetailsList = [];
 
+  bool responceFlag_TaxCollectionDetails = false;
+
   Future<void> loadUIBlock(String value) async {
     selectedBlockList.clear();
     for (var item in preferencesService.blockList) {
@@ -198,6 +200,7 @@ class StartUpViewModel extends BaseViewModel {
       GatewayList = res_jsonArray;
       preferencesService.GatewayList = GatewayList.toList();
     } else if (type == "TaxCollectionDetails") {
+      responceFlag_TaxCollectionDetails = true;
       preferencesService.setUserInfo(key_total_assesment, "0");
       preferencesService.setUserInfo(key_pending_assessment, "0");
       var status = response[key_status];
@@ -231,10 +234,11 @@ class StartUpViewModel extends BaseViewModel {
         preferencesService.setUserInfo(key_total_assesment, tot_ass.toString());
         preferencesService.setUserInfo(key_pending_assessment, pen_ass.toString());
       } else {
+        responceFlag_TaxCollectionDetails = false;
         preferencesService.taxCollectionDetailsList = [];
         preferencesService.setUserInfo(key_total_assesment, "0");
         preferencesService.setUserInfo(key_pending_assessment, "0");
-        Utils().showAlert(context, ContentType.warning, response_value.toString());
+        Utils().showAlert(context, ContentType.warning, response[key_message].toString() ?? response_value.toString());
       }
     } else if (type == "CollectionPaymentTokenList") {
       /* response={

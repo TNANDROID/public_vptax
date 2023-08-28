@@ -120,14 +120,13 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
 
   Future<void> initialize() async {
     selectedLang = await preferencesService.getUserInfo("lang");
-    print("asdasd $selectedLang");
     islogin = await preferencesService.getUserInfo(s.key_isLogin);
     mobile_widget = islogin == "yes" ? await preferencesService.getUserInfo("mobile_number") : widget.mobile;
     taxTypeList = preferencesService.taxTypeList;
     selectTaxtype = selectedTaxTypeData['taxtypeid'].toString();
-    // if (widget.isHome) {
-    // }
-    await getTaxDetails();
+    if (widget.isHome) {
+      await getTaxDetails();
+    }
     await filterDataList();
 
     setState(() {});

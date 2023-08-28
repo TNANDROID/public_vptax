@@ -522,19 +522,24 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
 
             await StartUpViewModel()
                 .getMainServiceList("TaxCollectionDetails", requestDataValue: request, context: context, taxType: selectedTaxTypeData[key_taxtypeid].toString(), lang: selectedLang);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => TaxCollectionDetailsView(
-                          selectedTaxTypeData: selectedTaxTypeData,
-                          isTaxDropDown: selectedEntryType == 1 ? true : false,
-                          isHome: false,
-                          dcode: selectedDistrict,
-                          bcode: selectedBlock,
-                          pvcode: selectedVillage,
-                          mobile: etTextController.text,
-                          selectedEntryType: selectedEntryType,
-                        ))).then((value) => {});
+
+            int totalAssessment = int.parse(await preferencesService.getUserInfo(key_total_assesment));
+            if (totalAssessment > 0) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => TaxCollectionDetailsView(
+                            selectedTaxTypeData: selectedTaxTypeData,
+                            isTaxDropDown: selectedEntryType == 1 ? true : false,
+                            isHome: false,
+                            dcode: selectedDistrict,
+                            bcode: selectedBlock,
+                            pvcode: selectedVillage,
+                            mobile: etTextController.text,
+                            selectedEntryType: selectedEntryType,
+                          )));
+            }
+
             // throw ('000');
           } catch (error) {
             print('error (${error.toString()}) has been caught');
