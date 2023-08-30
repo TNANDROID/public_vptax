@@ -268,9 +268,7 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
                                   Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                                     child: OTPTextField(
-                                      onChanged: (pin) {
-                                        print("Changed: " + pin);
-                                      },
+                                      onChanged: (pin) {},
                                       onCompleted: (pin) {
                                         utils.closeKeypad(context);
                                         finalOTP = pin;
@@ -344,8 +342,6 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
   Future<void> verifyOTP() async {
     String mobile = preferencesService.getUserInfo(key_mobile_number).toString();
     String lan = preferencesService.getUserInfo("lang").toString();
-    print("mobile>>" + mobile);
-    print("lan>>" + mobile);
     Navigator.push(context, MaterialPageRoute(builder: (context) => Home(isLogin: true)));
   }
 }

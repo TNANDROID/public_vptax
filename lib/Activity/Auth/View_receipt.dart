@@ -80,7 +80,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
       titleText = key_dname;
       titleTextTamil = key_dname_ta;
       initValue = selectedDistrict;
-      print("district value>>>>" + initValue.toString());
     } else if (index == 2) {
       dropList = model.selectedBlockList;
       dropList.sort((a, b) {
@@ -492,8 +491,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
   //                             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
   //                             child: OTPTextField(
   //                               onChanged: (pin) {
-  //                                 print("Changed: " + pin);
-  //                               },
+  //                              },
   //                               onCompleted: (pin) {
   //                                 utils.closeKeypad(context);
   //                                 finalOTP = pin;

@@ -63,14 +63,13 @@ class StartUpViewModel extends BaseViewModel {
     } else {
       requestData = {key_service_id: service_key_village_list_all};
     }
-    print("requestData>>" + jsonEncode(requestData));
     if (await Utils().isOnline()) {
       try {
         Utils().showProgress(context, 1);
         response = await apiServices.openServiceFunction(requestData);
         Utils().hideProgress(context);
       } catch (error) {
-        print('error (${error.toString()}) has been caught');
+        debugPrint('error (${error.toString()}) has been caught');
         Utils().hideProgress(context);
       }
     } else {
@@ -81,7 +80,6 @@ class StartUpViewModel extends BaseViewModel {
       );
     }
 
-    print("response>>" + response.toString());
     if (type == "District") {
       districtList = response;
       preferencesService.districtList = districtList.toList();
@@ -99,41 +97,20 @@ class StartUpViewModel extends BaseViewModel {
       {String dcode = "1", String bcode = "1", String pvcode = "1", String taxType = "1", String lang = "en", dynamic requestDataValue, required BuildContext context}) async {
     setBusy(true);
     dynamic requestData = {};
-    var response;
     if (type == "TaxType") {
-      dynamic request = {key_service_id: service_key_TaxTypeList};
-      requestData = {key_data_content: request};
+      requestData = {key_service_id: service_key_TaxTypeList};
     } else if (type == "FinYear") {
-      dynamic request = {key_service_id: service_key_FinYearList};
-      requestData = {key_data_content: request};
+      requestData = {key_service_id: service_key_FinYearList};
     } else if (type == "PaymentTypeList") {
-      dynamic request = {key_service_id: service_key_PaymentTypeList, key_dcode: dcode, key_bcode: bcode, key_pvcode: pvcode};
-      requestData = {key_data_content: request};
+      requestData = {key_service_id: service_key_PaymentTypeList, key_dcode: dcode, key_bcode: bcode, key_pvcode: pvcode};
     } else if (type == "GatewayList") {
-      dynamic request = {key_service_id: service_key_GatewayList};
-      requestData = {key_data_content: request};
+      requestData = {key_service_id: service_key_GatewayList};
     } else if (type == "TaxCollectionDetails") {
-      requestData = {key_data_content: requestDataValue};
+      requestData = requestDataValue;
     } else if (type == "CollectionPaymentTokenList") {
-      requestData = {key_data_content: requestDataValue};
+      requestData = requestDataValue;
     }
-    print("requestData>>" + requestData.toString());
-    if (await Utils().isOnline()) {
-      try {
-        Utils().showProgress(context, 1);
-        response = await apiServices.mainServiceFunction(requestData);
-        Utils().hideProgress(context);
-      } catch (error) {
-        print('error (${error.toString()}) has been caught');
-        Utils().hideProgress(context);
-      }
-    } else {
-      Utils().showAlert(
-        context,
-        ContentType.fail,
-        "noInternet".tr().toString(),
-      );
-    }
+    var response = await mainServicesAPIcall(context, requestData);
 
     if (type == "TaxType") {
       var status = response[key_status];
@@ -230,8 +207,6 @@ class StartUpViewModel extends BaseViewModel {
           }
         }
 
-        print("response_TaxCollectionDetails2>>>>>>" + taxCollectionDetailsList.toString());
-
         preferencesService.taxCollectionDetailsList = taxCollectionDetailsList;
         preferencesService.setUserInfo(key_total_assesment, tot_ass.toString());
         preferencesService.setUserInfo(key_pending_assessment, pen_ass.toString());
@@ -285,7 +260,7 @@ class StartUpViewModel extends BaseViewModel {
           return responseValue;
         }
       } catch (error) {
-        print('error (${error.toString()}) has been caught');
+        debugPrint('error (${error.toString()}) has been caught');
       }
     } else {
       Utils().showAlert(
@@ -296,17 +271,15 @@ class StartUpViewModel extends BaseViewModel {
     }
   }
 
+  /// This Function used by Get Transaction Status
   Future<bool> getTransactionStatus(BuildContext context, String mobileNo, String email) async {
     bool flag = false;
     dynamic requestData = {key_service_id: service_key_TransactionHistory, key_mobile_no: mobileNo, key_email_id: email};
     try {
       Utils().showProgress(context, 1);
       var response = await mainServicesAPIcall(context, requestData);
-      List resJsonArray = [];
       if (response[key_status] == key_success && response[key_response] == key_success) {
-        resJsonArray = response[key_data];
-
-        preferencesService.TransactionList = resJsonArray;
+        preferencesService.TransactionList = response[key_data];
         if (preferencesService.TransactionList.isNotEmpty) {
           flag = true;
         }
@@ -316,12 +289,13 @@ class StartUpViewModel extends BaseViewModel {
 
       Utils().hideProgress(context);
     } catch (error) {
-      print('error (${error.toString()}) has been caught');
+      debugPrint('error (${error.toString()}) has been caught');
       Utils().hideProgress(context);
     }
     return flag;
   }
 
+  /// This Function used by Get Receipt PDF
   Future getReceipt(BuildContext context, receiptList, String setFlag, String language) async {
     Utils().showProgress(context, 1);
     var requestData = {
@@ -336,8 +310,6 @@ class StartUpViewModel extends BaseViewModel {
       key_language_name: language
     };
     var response = await mainServicesAPIcall(context, requestData);
-
-    print('response>>: ${response}');
     Utils().hideProgress(context);
     if (response[key_status] == key_success && response[key_response] == key_success) {
       var receiptResponce = response[key_data];

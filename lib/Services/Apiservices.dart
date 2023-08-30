@@ -41,7 +41,6 @@ class ApiServices {
     var header = {"Content-Type": "application/json", "Authorization": "Bearer $header_token"};
 
     var response = await _ioClient.post(Uri.parse(mainURL), body: jsonString, headers: header);
-    print("response>>" + response.toString());
     if (response.statusCode == 200) {
       var data = response.body;
 
@@ -54,7 +53,6 @@ class ApiServices {
       String responceData = utils.generateHmacSha256(data, key, false);
       if (responceSignature == responceData) {
         var jsonData = jsonDecode(data);
-        print("response>>" + jsonData.toString());
         return jsonData;
       }
 
@@ -69,12 +67,9 @@ class ApiServices {
     IOClient _ioClient = await ioclientCertificate();
 
     var response = await _ioClient.post(Uri.parse(openURL), body: json.encode(jsonRequest));
-    print("response>>" + response.toString());
-
     if (response.statusCode == 200) {
       var data = response.body;
       var jsonData = jsonDecode(data);
-      print("response>>" + jsonData.toString());
       var status = jsonData[key_status];
 
       var response_value = jsonData[key_response];

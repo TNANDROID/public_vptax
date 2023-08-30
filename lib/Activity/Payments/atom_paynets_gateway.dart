@@ -114,9 +114,7 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
                 final merchId = values[2]!.replaceAll('merchId=', "");
 
                 var returnData = {"encData": "$encData", "merchId": "$merchId"};
-                print("split--------------$returnData");
-                print("encData--------------$encData");
-                print("merchId--------------$merchId");
+
                 // const platform = MethodChannel('flutter.dev/NDPSAESLibrary');
                 //
                 // try {

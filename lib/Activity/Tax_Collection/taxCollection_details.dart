@@ -444,7 +444,6 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
         }
       }
     }
-    print(taxData.toString());
     dynamic calcOfHeight = taxData.length / 2;
     int roundedValueOfHeight = calcOfHeight.ceil();
     int swmHeight = swmData.length * 30;
@@ -490,12 +489,9 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                           if (i >= index) {
                                             if (taxData[i][s.key_flag] == true) {
                                               taxData[i][s.key_flag] = false;
-                                              print("Tot>>${mainList[mainIndex][s.key_tax_total]}");
                                               mainList[mainIndex][s.key_tax_total] =
                                                   mainList[mainIndex][s.key_tax_total] - double.parse(Utils().getDemadAmount(taxData[i], selectedTaxTypeData['taxtypeid'].toString()));
 
-                                              print("Tot>>${Utils().getDemadAmount(taxData[i], selectedTaxTypeData['taxtypeid'].toString())}");
-                                              print("Tot${mainList[mainIndex][s.key_tax_total]}");
                                               mainList[mainIndex][s.key_tax_pay] =
                                                   getTotal(mainList[mainIndex][s.key_tax_total], double.parse(Utils().getTaxAdvance(mainList[mainIndex], selectedTaxTypeData['taxtypeid'].toString())));
                                             }
@@ -506,7 +502,6 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                         }
                                       } else {
                                         taxData[index][s.key_flag] = true;
-                                        print('key_demand: ${Utils().getTaxAdvance(mainList[mainIndex], selectedTaxTypeData['taxtypeid'].toString())}');
                                         mainList[mainIndex][s.key_tax_total] =
                                             mainList[mainIndex][s.key_tax_total] + double.parse(Utils().getDemadAmount(taxData[index], selectedTaxTypeData['taxtypeid'].toString()));
                                         mainList[mainIndex][s.key_tax_pay] =
@@ -1425,9 +1420,6 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
 
       String demand_id = Utils().getPaymentTokenDemandId(taxType);
 
-      print('demand_id ####: ${demand_id}');
-      print('property_demand_id ####: ${property_demand_id}');
-
       List Assessment_Details = [
         {
           s.key_assessment_no: finalList[0][s.key_assessment_no].toString(),
@@ -1453,10 +1445,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
         s.key_payment_gateway: selected_id,
         'assessment_demand_list': assessment_demand_list,
       };
-      print("request Params>>$request");
       dynamic pay_params =
           await StartUpViewModel().getMainServiceList("CollectionPaymentTokenList", requestDataValue: request, context: context, taxType: finalList[0][s.key_taxtypeid].toString(), lang: selectedLang);
-      print("response_pay_params>>>>>>$pay_params");
       String transaction_unique_id = Utils().decodeBase64(pay_params['a'].toString());
       String atomTokenId = Utils().decodeBase64(pay_params['b'].toString());
       String req_payment_amount = Utils().decodeBase64(pay_params['c'].toString());
@@ -1464,14 +1454,12 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
       String public_transaction_mobile_no = Utils().decodeBase64(pay_params['e'].toString());
       String txmStartTime = Utils().decodeBase64(pay_params['f'].toString());
       String merchId = Utils().decodeBase64(pay_params['g'].toString());
-      print(
-          "response_pay_params>>>>>> transaction_unique_id= $transaction_unique_id atomTokenId= $atomTokenId req_payment_amount= $req_payment_amount public_transaction_email_id= $public_transaction_email_id public_transaction_mobile_no= $public_transaction_mobile_no txmStartTime= $txmStartTime merchId= $merchId");
 
       await Utils().openNdpsPG(context, atomTokenId, merchId, public_transaction_email_id, public_transaction_mobile_no);
 
       // throw ('000');
     } catch (error) {
-      print('error (${error.toString()}) has been caught');
+      debugPrint('error (${error.toString()}) has been caught');
     }
   }
 }

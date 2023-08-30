@@ -199,7 +199,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
       titleTextTamil = key_fin_year;
       initValue = selectedFinYear;
     } else {
-      print("End.....");
+      debugPrint("End.....");
     }
     return FormBuilderDropdown(
       style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w600, color: c.grey_10),
@@ -267,7 +267,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
             Utils().hideProgress(context);
           });
         } else {
-          print("End of the Statement......");
+          debugPrint("End of the Statement......");
         }
 
         setState(() {});
@@ -435,7 +435,6 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
         onTap: () {
           selectedTaxTypeData = data;
           selectedTaxType = selectedTaxTypeData[key_taxtypeid];
-          print(selectedTaxType);
           selectedTaxType == 1
               ? selectedIndex = 1
               : selectedTaxType == 2
@@ -445,8 +444,6 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                       : selectedTaxType == 5
                           ? selectedIndex = 4
                           : selectedIndex = 5;
-          print(selectedIndex);
-          print("index" + index.toString());
           setState(() {});
         },
         child: Container(
@@ -542,7 +539,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
 
             // throw ('000');
           } catch (error) {
-            print('error (${error.toString()}) has been caught');
+            debugPrint('error (${error.toString()}) has been caught');
           }
         }
       } else {

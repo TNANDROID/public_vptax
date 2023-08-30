@@ -554,8 +554,6 @@ class _CheckTransactionState extends State<CheckTransaction> {
                   )),
         );
       } else {
-        print('response>>: ${response[key_message]}');
-
         Utils().showAlert(context, ContentType.help, '${response[key_message]}');
         await model.getTransactionStatus(context, widget.mobileNumber, widget.emailID);
         initialize();

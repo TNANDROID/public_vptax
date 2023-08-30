@@ -99,8 +99,6 @@ class _HomeState extends State<Home> {
     taxTypeList.clear();
     taxTypeList = preferencesService.taxTypeList;
     islogin = await preferencesService.getUserInfo(key_isLogin);
-    print("islogin>>" + islogin.toString());
-    print("tax>>" + taxTypeList.toString());
     setState(() {
       if (selectedLang != null && selectedLang != "" && selectedLang == "en") {
         context.setLocale(Locale('en', 'US'));
@@ -186,8 +184,6 @@ class _HomeState extends State<Home> {
                             await preferencesService.setUserInfo(key_isLogin, 'yes');
                             await preferencesService.setUserInfo(key_mobile_number, '9875235654');
                             islogin = "yes";
-                            print("islogin>>" + islogin.toString());
-                            print("login successful");
                             setState(() {});
                           },
                           child: Text(
@@ -400,7 +396,6 @@ class _HomeState extends State<Home> {
                                     selected_index = index;
                                     if (selected_index == 0) {
                                       if (islogin == "yes") {
-                                        print(islogin);
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -488,9 +483,7 @@ class _HomeState extends State<Home> {
 
   String getServiceName(String name) {
     String s = "";
-    print(name);
     s = name.tr().toString();
-    print(s);
     return s;
   }
 

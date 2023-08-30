@@ -38,10 +38,8 @@ class Utils {
     try {
       final result = await InternetAddress.lookup('example.com');
       online = result.isNotEmpty && result[0].rawAddress.isNotEmpty;
-      print('Connection Available!');
     } on SocketException catch (_) {
       online = false;
-      print('No internet!');
     }
     return online;
   }
@@ -423,7 +421,6 @@ class Utils {
 
     final encrypter = encrypt.Encrypter(encrypt.AES(key, mode: encrypt.AESMode.cbc, padding: 'PKCS7'));
     final decrypted = encrypter.decrypt(encrypt.Encrypted.from64(dateList[0]), iv: iv);
-    print("Final Result: $decrypted");
 
     return decrypted;
   }
@@ -535,7 +532,7 @@ class Utils {
 
     token = jwt.sign(SecretKey(secretKey));
 
-    print('Signed token: Bearer $token\n');
+    debugPrint('Signed token: Bearer $token\n');
 
     return token;
   }
@@ -574,7 +571,7 @@ class Utils {
 
       signature = utf8.decode(bytes);
     } on Exception catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
 
     return signature;
@@ -591,7 +588,7 @@ class Utils {
       await StartUpViewModel().getMainServiceList("GatewayList", context: context);
       // throw ('000');
     } catch (error) {
-      print('error (${error.toString()}) has been caught');
+      debugPrint('error (${error.toString()}) has been caught');
     }
   }
 
@@ -602,7 +599,6 @@ class Utils {
 
     // String payDetails = '{"atomTokenId": "15000000411719", "merchId": "8952", "emailId": "sd@gmail.com", "mobileNumber": "9698547875", "returnUrl": "$returnUrl"}';
     Map payDetails = {key_atomTokenId: atomTokenId, key_merchId: merchId, key_emailId: emailId, key_mobileNumber: mobileNumber, key_returnUrl: returnUrl};
-    print("request>>" + json.encode(payDetails));
     Navigator.push(mcontext, MaterialPageRoute(builder: (context) => AtomPaynetsView("uat", json.encode(payDetails), mcontext, emailId, mobileNumber)));
   }
 

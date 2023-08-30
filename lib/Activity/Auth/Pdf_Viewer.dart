@@ -90,7 +90,6 @@ class _PDF_ViewerState extends State<PDF_Viewer> {
       var androidInfo = await DeviceInfoPlugin().androidInfo;
       var sdkInt = androidInfo.version.sdkInt;
       if (sdkInt >= 30) {
-        print("sdk version $sdkInt");
         status = await Permission.manageExternalStorage.request();
         if (status != PermissionStatus.granted) {
           await showAppSettings(context, 'storage_permission'.tr().toString());
@@ -98,7 +97,6 @@ class _PDF_ViewerState extends State<PDF_Viewer> {
           flag = true;
         }
       } else {
-        print("sdk version $sdkInt");
         status = await Permission.storage.request();
         if (status != PermissionStatus.granted) {
           await showAppSettings(context, 'storage_permission'.tr().toString());
@@ -112,8 +110,6 @@ class _PDF_ViewerState extends State<PDF_Viewer> {
       throw Exception('Unsupported platform');
     }
 
-    print("Permission Status $flag");
-
     if (flag) {
       Directory? downloadDirectory;
 
@@ -124,11 +120,9 @@ class _PDF_ViewerState extends State<PDF_Viewer> {
         }
       } else if (Platform.isIOS) {
         downloadDirectory = await getApplicationDocumentsDirectory();
-        print("IOS - $downloadDirectory");
       }
 
       downloadDirectory ??= await getApplicationDocumentsDirectory();
-      print("ANDROID 2 - $downloadDirectory");
 
       String downloadsPath = downloadDirectory.path;
 
@@ -140,7 +134,6 @@ class _PDF_ViewerState extends State<PDF_Viewer> {
       try {
         setPDFDirectory(downloadsDir, pdfBytes);
       } catch (e) {
-        print('Error writing PDF to file: $e');
         return;
       }
     }
@@ -183,8 +176,7 @@ class _PDF_ViewerState extends State<PDF_Viewer> {
 
       await AwesomeNotifications().setListeners(
         onActionReceivedMethod: (receivedAction) {
-          print("<<<<<<<<<<<<<< Notification Tapped >>>>>>>>>>>>>>>");
-          _openFilePath(payload);
+   _openFilePath(payload);
 
           // if (receivedAction.buttonKeyPressed == "view") {
           //   _openFilePath(payload);
@@ -217,13 +209,11 @@ class _PDF_ViewerState extends State<PDF_Viewer> {
 
   void setPDFDirectory(Directory downloadsDir, Uint8List pdfBytes) async {
     String fileName;
-    print('pdfFile.path: ${downloadsDir.path}');
 
     fileName = "Tax Receipt_${DateFormat('dd-MM-yyyy_HH-mm-ss').format(DateTime.now())}";
     // Save the PDF bytes to a file in the downloads folder
     File pdfFile = File('${downloadsDir.path}/$fileName.pdf');
     await pdfFile.writeAsBytes(pdfBytes);
-    print('pdfFile.path: ${pdfFile.path}');
     Utils().showAlert(context, ContentType.success, 'download_receipt_success'.tr().toString(), btnCount: "1", btnmsg: 'receipt', file_path: pdfFile.path);
   }
 }

@@ -33,7 +33,6 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
   final _controller = ScrollController();
   bool cardvisibility = false;
   int selectedIndex = 0;
-  List worklist = [];
   final List items = [
     '01',
     '02',
@@ -62,8 +61,6 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
         }
       }
     });
-    worklist.addAll(workitems);
-    print("worklist values>>>>" + worklist.toString());
   }
 
   //Dropdown Input Field Widget
@@ -108,7 +105,7 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
       titleTextTamil = key_fin_year;
       initValue = selectedFinYear;
     } else {
-      print("End.....");
+      debugPrint("End.....");
     }
     return FormBuilderDropdown(
       decoration: InputDecoration(
