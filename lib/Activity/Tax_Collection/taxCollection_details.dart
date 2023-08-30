@@ -136,9 +136,6 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
   void dispose() {
     super.dispose();
     _controller.dispose();
-    mobileTextController.dispose();
-    emailTextController.dispose();
-    nameTextController.dispose();
   }
 
   @override
@@ -377,59 +374,55 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              UIHelper.titleTextStyle(('computerRegisterNumber'.tr().toString() + " : " + (mainList[mainIndex][s.key_assessment_id].toString() ?? "")), clr, 12, false, true),
+              UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${mainList[mainIndex][s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
               UIHelper.verticalSpaceTiny,
-              UIHelper.titleTextStyle(('building_licence_number'.tr().toString() + " : " + (mainList[mainIndex][s.key_building_licence_no].toString() ?? "")), clr, 12, false, true),
+              UIHelper.titleTextStyle(("${'building_licence_number'.tr()} : ${mainList[mainIndex][s.key_building_licence_no].toString() ?? ""}"), clr, 12, false, true),
               UIHelper.verticalSpaceTiny,
-              UIHelper.titleTextStyle(('assesment_number'.tr().toString() + " : " + (mainList[mainIndex][s.key_assessment_no].toString() ?? "")), clr, 12, false, true),
+              UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${mainList[mainIndex][s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
             ],
           )
         : selectedTaxTypeData[s.key_taxtypeid] == 2
             ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  UIHelper.titleTextStyle(('computerRegisterNumber'.tr().toString() + " : " + (mainList[mainIndex][s.key_assessment_id].toString() ?? "")), clr, 12, false, true),
+                  UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${mainList[mainIndex][s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
                   UIHelper.verticalSpaceTiny,
-                  UIHelper.titleTextStyle(('water_connection_number'.tr().toString() + " : " + (mainList[mainIndex][s.key_assessment_no].toString() ?? "")), clr, 12, false, true)
+                  UIHelper.titleTextStyle(("${'water_connection_number'.tr()} : ${mainList[mainIndex][s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true)
                 ],
               )
             : selectedTaxTypeData[s.key_taxtypeid] == 4
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      UIHelper.titleTextStyle(('computerRegisterNumber'.tr().toString() + " : " + (mainList[mainIndex][s.key_assessment_id].toString() ?? "")), clr, 12, false, true),
+                      UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${mainList[mainIndex][s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
                       UIHelper.verticalSpaceTiny,
-                      UIHelper.titleTextStyle(('financialYear'.tr().toString() + " : " + (mainList[mainIndex]['financialyear'].toString() ?? "")), clr, 12, false, true),
+                      UIHelper.titleTextStyle(("${'financialYear'.tr()} : ${mainList[mainIndex]['financialyear'].toString() ?? ""}"), clr, 12, false, true),
                       UIHelper.verticalSpaceTiny,
-                      UIHelper.titleTextStyle(('assesment_number'.tr().toString() + " : " + (mainList[mainIndex][s.key_assessment_no].toString() ?? "")), clr, 12, false, true),
+                      UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${mainList[mainIndex][s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
                     ],
                   )
                 : selectedTaxTypeData[s.key_taxtypeid] == 5
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          UIHelper.titleTextStyle(('computerRegisterNumber'.tr().toString() + " : " + (mainList[mainIndex][s.key_assessment_id].toString() ?? "")), clr, 12, false, true),
+                          UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${mainList[mainIndex][s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
                           UIHelper.verticalSpaceTiny,
-                          UIHelper.titleTextStyle(('lease_number'.tr().toString() + " : " + (mainList[mainIndex][s.key_assessment_no].toString() ?? "")), clr, 12, false, true),
+                          UIHelper.titleTextStyle(("${'lease_number'.tr()} : ${mainList[mainIndex][s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
                           UIHelper.verticalSpaceTiny,
-                          UIHelper.titleTextStyle(('lease_state'.tr().toString() + " : " + (mainList[mainIndex]['lease_statename'].toString() ?? "")), clr, 12, false, true),
+                          UIHelper.titleTextStyle(("${'lease_state'.tr()} : ${mainList[mainIndex]['lease_statename'].toString() ?? ""}"), clr, 12, false, true),
                           UIHelper.verticalSpaceTiny,
-                          UIHelper.titleTextStyle(('lease_district'.tr().toString() + " : " + (mainList[mainIndex]['lease_districtname'].toString() ?? "")), clr, 12, false, true),
+                          UIHelper.titleTextStyle(("${'lease_district'.tr()} : ${mainList[mainIndex]['lease_districtname'].toString() ?? ""}"), clr, 12, false, true),
                           UIHelper.verticalSpaceTiny,
                           UIHelper.titleTextStyle(
-                              ('lease_duration'.tr().toString() + " : " + (mainList[mainIndex]['from_date'].toString() ?? "") + " - " + (mainList[mainIndex]['to_date'].toString() ?? "")),
-                              clr,
-                              12,
-                              false,
-                              true),
+                              ("${'lease_duration'.tr()} : ${mainList[mainIndex]['from_date'].toString() ?? ""} - ${mainList[mainIndex]['to_date'].toString() ?? ""}"), clr, 12, false, true),
                         ],
                       )
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          UIHelper.titleTextStyle(('computerRegisterNumber'.tr().toString() + " : " + (mainList[mainIndex][s.key_assessment_id].toString() ?? "")), clr, 12, false, true),
+                          UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${mainList[mainIndex][s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
                           UIHelper.verticalSpaceTiny,
-                          UIHelper.titleTextStyle(('traders_code'.tr().toString() + " : " + (mainList[mainIndex][s.key_assessment_no].toString() ?? "")), clr, 12, false, true)
+                          UIHelper.titleTextStyle(("${'traders_code'.tr()} : ${mainList[mainIndex][s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true)
                         ],
                       );
   }
@@ -567,7 +560,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                               children: [
                                                 Expanded(
                                                   child: Text(
-                                                    finYearStr + " ( $durationStr )",
+                                                    "$finYearStr ( $durationStr )",
                                                     style: TextStyle(fontSize: 10, fontWeight: FontWeight.normal, color: isStatus ? c.white : c.grey_8),
                                                     overflow: TextOverflow.ellipsis,
                                                   ),
@@ -577,7 +570,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                                   child: Container(
                                                       padding: EdgeInsets.all(0),
                                                       child: Center(
-                                                          child: UIHelper.titleTextStyle("\u{20B9} " + Utils().getDemadAmount(taxData[index], selectedTaxTypeData[key_taxtypeid].toString()),
+                                                          child: UIHelper.titleTextStyle("\u{20B9} ${Utils().getDemadAmount(taxData[index], selectedTaxTypeData[key_taxtypeid].toString())}",
                                                               isStatus ? c.white : c.grey_10, 12, false, false))),
                                                 ),
                                               ],
@@ -1408,17 +1401,37 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
 
     try {
       dynamic request = {};
-      List<String> property_demand_id = [];
+
+      String taxType = finalList[0][s.key_taxtypeid].toString();
+      var property_demand_id = [];
+
       for (var data in finalList[0][s.key_DEMAND_DETAILS]) {
         if (data[s.key_flag] == true) {
-          property_demand_id.add(Utils().getDemandId(data, finalList[0][s.key_taxtypeid].toString()));
+          if (taxType == "2") {
+            String demandId = Utils().getDemandId(data, taxType);
+            String amountToPay = data[key_watercharges];
+
+            Map<String, String> details = {
+              key_demand_id: demandId,
+              key_amount_to_pay: amountToPay,
+            };
+
+            property_demand_id.add(details);
+          } else {
+            property_demand_id.add(Utils().getDemandId(data, taxType));
+          }
         }
       }
+
+      String demand_id = Utils().getPaymentTokenDemandId(taxType);
+
+      print('demand_id ####: ${demand_id}');
+      print('property_demand_id ####: ${property_demand_id}');
 
       List Assessment_Details = [
         {
           s.key_assessment_no: finalList[0][s.key_assessment_no].toString(),
-          'property_demand_id': property_demand_id,
+          demand_id: property_demand_id,
         }
       ];
       dynamic assessment_demand_list = {
@@ -1440,10 +1453,10 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
         s.key_payment_gateway: selected_id,
         'assessment_demand_list': assessment_demand_list,
       };
-      print("request>>" + request.toString());
+      print("request Params>>$request");
       dynamic pay_params =
           await StartUpViewModel().getMainServiceList("CollectionPaymentTokenList", requestDataValue: request, context: context, taxType: finalList[0][s.key_taxtypeid].toString(), lang: selectedLang);
-      print("response_pay_params>>>>>>" + pay_params.toString());
+      print("response_pay_params>>>>>>$pay_params");
       String transaction_unique_id = Utils().decodeBase64(pay_params['a'].toString());
       String atomTokenId = Utils().decodeBase64(pay_params['b'].toString());
       String req_payment_amount = Utils().decodeBase64(pay_params['c'].toString());
@@ -1451,21 +1464,8 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
       String public_transaction_mobile_no = Utils().decodeBase64(pay_params['e'].toString());
       String txmStartTime = Utils().decodeBase64(pay_params['f'].toString());
       String merchId = Utils().decodeBase64(pay_params['g'].toString());
-      print("response_pay_params>>>>>>" +
-          " transaction_unique_id= " +
-          transaction_unique_id +
-          " atomTokenId= " +
-          atomTokenId +
-          " req_payment_amount= " +
-          req_payment_amount +
-          " public_transaction_email_id= " +
-          public_transaction_email_id +
-          " public_transaction_mobile_no= " +
-          public_transaction_mobile_no +
-          " txmStartTime= " +
-          txmStartTime +
-          " merchId= " +
-          merchId);
+      print(
+          "response_pay_params>>>>>> transaction_unique_id= $transaction_unique_id atomTokenId= $atomTokenId req_payment_amount= $req_payment_amount public_transaction_email_id= $public_transaction_email_id public_transaction_mobile_no= $public_transaction_mobile_no txmStartTime= $txmStartTime merchId= $merchId");
 
       await Utils().openNdpsPG(context, atomTokenId, merchId, public_transaction_email_id, public_transaction_mobile_no);
 

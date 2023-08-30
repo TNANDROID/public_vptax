@@ -74,32 +74,8 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
     ));
 
     _topAnimationController.forward();*/
-    preferencesService.setUserInfo(key_isLogin,'no');
-    Future.delayed(
-      const Duration(seconds: 2, milliseconds: 350),
-      () {
-        Navigator.of(context).push(
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => Home(isLogin: true),
-            transitionDuration: const Duration(seconds: 2),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              // Slide transition
-              const begin = Offset(1.0, 0.0); // Start position
-              const end = Offset.zero; // End position
-              const curve = Curves.easeInOut; // Transition curve
-
-              var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-              var offsetAnimation = animation.drive(tween);
-
-              return SlideTransition(
-                position: offsetAnimation,
-                child: child,
-              );
-            },
-          ),
-        );
-      },
-    );
+    preferencesService.setUserInfo(key_isLogin, 'no');
+    initialize();
   }
 
   // *************************** Future Functionality  *************************** //
@@ -201,33 +177,31 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
 
               //  ****************** App Name  ****************** //
 
-             /* SlideTransition(
+              /* SlideTransition(
                 position: _topAnimation,
                 child: */
-                Column(children: [
-                  UIHelper.verticalSpaceSmall,
-                  Image.asset(
-                    imagepath.tamilnadu_logo,
-                    height: 80,
-                    width: 80,
+              Column(children: [
+                UIHelper.verticalSpaceSmall,
+                Image.asset(
+                  imagepath.tamilnadu_logo,
+                  height: 80,
+                  width: 80,
+                ),
+                UIHelper.verticalSpaceSmall,
+                Text(
+                  'gov_tamilnadu'.tr().toString(),
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                    color: c.text_color,
+                    fontStyle: FontStyle.normal,
+                    decorationStyle: TextDecorationStyle.wavy,
                   ),
-                  UIHelper.verticalSpaceSmall,
-                  Text(
-                    'gov_tamilnadu'.tr().toString(),
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                      color: c.text_color,
-                      fontStyle: FontStyle.normal,
-                      decorationStyle: TextDecorationStyle.wavy,
-                    ),
-                  ),
-                ]),
+                ),
+              ]),
               // ),
               UIHelper.verticalSpaceSmall,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Image.asset(
                   imagepath.logo,
                   fit: BoxFit.cover,
@@ -340,7 +314,9 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
               await Utils().apiCalls(context);
               preferencesService.taxTypeList.isNotEmpty
                   ? Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => TaxCollectionView(flag: "2",),
+                      builder: (context) => TaxCollectionView(
+                        flag: "2",
+                      ),
                     ))
                   : utils.showAlert(
                       context,
@@ -379,6 +355,38 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+  Future<void> initialize() async {
+    if (await utils.isOnline()) {
+      Future.delayed(
+        const Duration(seconds: 2, milliseconds: 350),
+        () {
+          Navigator.of(context).push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) => Home(isLogin: true),
+              transitionDuration: const Duration(seconds: 2),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                // Slide transition
+                const begin = Offset(1.0, 0.0); // Start position
+                const end = Offset.zero; // End position
+                const curve = Curves.easeInOut; // Transition curve
+
+                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                var offsetAnimation = animation.drive(tween);
+
+                return SlideTransition(
+                  position: offsetAnimation,
+                  child: child,
+                );
+              },
+            ),
+          );
+        },
+      );
+    } else {
+      utils.showAlert(context, ContentType.fail, 'No Internet');
+    }
   }
 
   // *************************** Future Functionality  *************************** //

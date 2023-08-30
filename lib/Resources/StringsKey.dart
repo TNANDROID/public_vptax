@@ -130,6 +130,9 @@ String key_res_paid_amount = "res_paid_amount";
 String key_receipt_content = "receipt_content";
 String key_total_assesment = "no_of_assessment";
 String key_pending_assessment = "no_of_pending_assessment";
+String key_watercharges = "watercharges";
+String key_demand_id = "demand_id";
+String key_amount_to_pay = "amount_to_pay";
 
 // ************************** Service Key Strings ************************** //
 

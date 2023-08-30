@@ -653,6 +653,30 @@ class Utils {
     return amount;
   }
 
+  String getPaymentTokenDemandId(String taxTypeId) {
+    String id = '';
+
+    switch (taxTypeId) {
+      case '1':
+        id = 'property_demand_id';
+        break;
+      case '2':
+        id = 'water_demand_details';
+        break;
+      case '4':
+        id = 'professional_demand_id';
+        break;
+      case '5':
+        id = 'non_demand_id';
+        break;
+      case '6':
+        id = 'trade_demand_id';
+        break;
+    }
+
+    return id;
+  }
+
   String getDemandId(taxData, String taxTypeId) {
     String demandId = "";
     switch (taxTypeId) {
