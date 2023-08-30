@@ -1,28 +1,25 @@
 // ignore_for_file: file_names
 
 import 'dart:async';
-import 'dart:convert';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:otp_text_field/otp_field.dart';
-import 'package:otp_text_field/style.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
-import 'package:public_vptax/Resources/StringsKey.dart' as s;
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/utils.dart';
 import 'package:stacked/stacked.dart';
+
 import '../../Model/startup_model.dart';
 import '../../Resources/StringsKey.dart';
 import '../../Services/Apiservices.dart';
-import '../../Utils/ContentInfo.dart';
 
 class ViewReceipt extends StatefulWidget {
   @override
@@ -33,6 +30,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
   @override
   Utils utils = Utils();
   ApiServices apiServices = ApiServices();
+  PreferenceService preferencesService = locator<PreferenceService>();
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
   String selectedDistrict = "";
@@ -42,14 +40,14 @@ class _ViewReceiptState extends State<ViewReceipt> {
   bool invalidReceiptNumber = false;
   List<dynamic> receiptList = [];
   bool noDataFound = false;
+
   String finalOTP = '';
-  Uint8List? pdf;
   String selectedLang = "";
-  PreferenceService preferencesService = locator<PreferenceService>();
   final scrollController = ScrollController();
-  OtpFieldController OTPcontroller = OtpFieldController();
+//  OtpFieldController OTPcontroller = OtpFieldController();
   TextEditingController assessmentController = TextEditingController();
   TextEditingController receiptController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -173,7 +171,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
             Utils().hideProgress(context);
           });
         } else {
-          print("End of the Statement......");
+          debugPrint("End of the Statement......");
         }
 
         setState(() {});
@@ -239,10 +237,11 @@ class _ViewReceiptState extends State<ViewReceipt> {
         Expanded(
           flex: 1,
           child: Text(
-            title.tr().toString() + " : ",
+            title.tr().toString(),
             style: TextStyle(fontSize: 12, color: c.grey_10),
           ),
         ),
+        Expanded(flex: 0, child: Text(":  ", style: TextStyle(fontSize: 12, color: c.grey_10))),
         Expanded(flex: 2, child: dropdownWidget),
       ],
     );
@@ -462,120 +461,92 @@ class _ViewReceiptState extends State<ViewReceipt> {
     setState(() {});
   }
 
-  void _settingModalBottomSheet(context) {
-    showModalBottomSheet(
-        context: context,
-        backgroundColor: c.full_transparent,
-        builder: (BuildContext bc) {
-          return Wrap(
-            children: <Widget>[
-              Container(
-                  alignment: Alignment.center,
-                  height: MediaQuery.of(context).size.height * 3 / 4,
-                  decoration: UIHelper.GradientContainer(30.0, 30, 0, 0, [c.white, c.white]),
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.only(top: 15),
-                        alignment: Alignment.center,
-                        child: Text("Enter  OTP"),
-                      ),
-                      Visibility(
-                        visible: true,
-                        child: Column(
-                          children: [
-                            Padding(
-                              // padding:EdgeInsets.all(25),
-                              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
-                              child: OTPTextField(
-                                onChanged: (pin) {
-                                  print("Changed: " + pin);
-                                },
-                                onCompleted: (pin) {
-                                  utils.closeKeypad(context);
-                                  finalOTP = pin;
-                                },
-                                width: 250,
-                                controller: OTPcontroller,
-                                length: 6,
-                                fieldStyle: FieldStyle.box,
-                                fieldWidth: 35,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                          height: 40,
-                          padding: EdgeInsets.all(5),
-                          margin: EdgeInsets.only(left: 0, right: 10, bottom: 15, top: 5),
-                          decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.colorAccentlight, c.colorAccentlight, borderColor: Colors.transparent, borderWidth: 0),
-                          child: InkWell(
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 5, top: 5, bottom: 5, right: 5),
-                              child: Text(
-                                'verifyOTP'.tr().toString(),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: c.white,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 13,
-                                  decorationStyle: TextDecorationStyle.wavy,
-                                ),
-                              ),
-                            ),
-                            onTap: () async {
-                              if (await utils.isOnline()) {
-                                if (finalOTP.isNotEmpty) {
-                                  Navigator.pop(context);
-                                  utils.showAlert(context, ContentType.success, "Receipt Downloaded Successfully");
-                                } else {
-                                  utils.showAlert(context, ContentType.warning, "Please Enter A Valid OTP");
-                                }
-                              } else {
-                                utils.showAlert(
-                                  context,
-                                  ContentType.fail,
-                                  "noInternet".tr().toString(),
-                                );
-                              }
-                            },
-                          )),
-                    ],
-                  )),
-            ],
-          );
-        });
-  }
-
-  Future<void> get_PDF() async {
-    utils.showProgress(context, 1);
-
-    Map jsonRequest = {
-      s.key_service_id: "get_pdf",
-      "work_id": "7815241",
-      "inspection_id": "162890",
-    };
-    Map encrypted_request = {
-      s.key_user_name: "9595959595",
-      s.key_data_content: jsonRequest,
-    };
-    print("getPDF_request_encrpt>>" + encrypted_request.toString());
-    var response = await apiServices.mainServiceFunction(encrypted_request);
-
-    utils.hideProgress(context);
-
-    String data = response.body;
-    var userData = jsonDecode(data);
-    var status = userData[s.key_status];
-    var response_value = userData[s.key_response];
-
-    if (status == s.key_ok && response_value == s.key_ok) {
-      var pdftoString = userData[s.key_json_data];
-      pdf = const Base64Codec().decode(pdftoString['pdf_string']);
-    }
-  }
+  // void _settingModalBottomSheet(context) {
+  //   showModalBottomSheet(
+  //       context: context,
+  //       backgroundColor: c.full_transparent,
+  //       builder: (BuildContext bc) {
+  //         return Wrap(
+  //           children: <Widget>[
+  //             Container(
+  //                 alignment: Alignment.center,
+  //                 height: MediaQuery.of(context).size.height * 3 / 4,
+  //                 decoration: UIHelper.GradientContainer(30.0, 30, 0, 0, [c.white, c.white]),
+  //                 child: Column(
+  //                   children: [
+  //                     Container(
+  //                       padding: EdgeInsets.only(top: 15),
+  //                       alignment: Alignment.center,
+  //                       child: Text("Enter  OTP"),
+  //                     ),
+  //                     Visibility(
+  //                       visible: true,
+  //                       child: Column(
+  //                         children: [
+  //                           Padding(
+  //                             // padding:EdgeInsets.all(25),
+  //                             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
+  //                             child: OTPTextField(
+  //                               onChanged: (pin) {
+  //                                 print("Changed: " + pin);
+  //                               },
+  //                               onCompleted: (pin) {
+  //                                 utils.closeKeypad(context);
+  //                                 finalOTP = pin;
+  //                               },
+  //                               width: 250,
+  //                               controller: OTPcontroller,
+  //                               length: 6,
+  //                               fieldStyle: FieldStyle.box,
+  //                               fieldWidth: 35,
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                     Container(
+  //                         height: 40,
+  //                         padding: EdgeInsets.all(5),
+  //                         margin: EdgeInsets.only(left: 0, right: 10, bottom: 15, top: 5),
+  //                         decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.colorAccentlight, c.colorAccentlight, borderColor: Colors.transparent, borderWidth: 0),
+  //                         child: InkWell(
+  //                           child: Padding(
+  //                             padding: EdgeInsets.only(left: 5, top: 5, bottom: 5, right: 5),
+  //                             child: Text(
+  //                               'verifyOTP'.tr().toString(),
+  //                               textAlign: TextAlign.center,
+  //                               overflow: TextOverflow.ellipsis,
+  //                               style: TextStyle(
+  //                                 color: c.white,
+  //                                 fontWeight: FontWeight.w500,
+  //                                 fontSize: 13,
+  //                                 decorationStyle: TextDecorationStyle.wavy,
+  //                               ),
+  //                             ),
+  //                           ),
+  //                           onTap: () async {
+  //                             if (await utils.isOnline()) {
+  //                               if (finalOTP.isNotEmpty) {
+  //                                 Navigator.pop(context);
+  //                                 utils.showAlert(context, ContentType.success, "Receipt Downloaded Successfully");
+  //                               } else {
+  //                                 utils.showAlert(context, ContentType.warning, "Please Enter A Valid OTP");
+  //                               }
+  //                             } else {
+  //                               utils.showAlert(
+  //                                 context,
+  //                                 ContentType.fail,
+  //                                 "noInternet".tr().toString(),
+  //                               );
+  //                             }
+  //                           },
+  //                         )),
+  //                   ],
+  //                 )),
+  //           ],
+  //         );
+  //       });
+  // }
 }
 
 class CustomInputFormatter extends TextInputFormatter {

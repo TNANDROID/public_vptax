@@ -68,7 +68,7 @@ class UIHelper {
 
 //Container Style Provider with shadow
   static BoxDecoration roundedBorderWithColorWithShadow(double radius, Color backgroundColor, Color backgroundColor2,
-      {Color borderColor = Colors.transparent, double borderWidth = 1, stop1 = 0.0, double stop2 = 0.1}) {
+      {Color borderColor = Colors.transparent, double borderWidth = 1, stop1 = 0.0, double stop2 = 0.7}) {
     return BoxDecoration(
         borderRadius: BorderRadius.circular(radius),
         border: Border.all(width: borderWidth, color: borderColor),

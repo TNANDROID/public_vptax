@@ -39,10 +39,6 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
   final _key = UniqueKey();
   late WebViewController _controller;
   var transactionResult = "";
-  final String requestHashKey = 'KEY1234567234'; //mandatory
-  final String _responsehashKey = 'KEYRESP123657234'; //mandatory
-  final String requestEncryptionKey = 'A4476C2062FFA58980DC8F79EB6A799E'; //mandatory
-  final String _responseDecryptionKey = '75AEF0FA1B94B3C10D4F5B268F757F11'; //mandatory
   final Completer<WebViewController> _controllerCompleter = Completer<WebViewController>();
 
   PreferenceService preferencesService = locator<PreferenceService>();
@@ -185,11 +181,11 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
 
   closeWebView(context, transactionResult, ContentType type) async {
     Navigator.pop(context);
-    if (type == ContentType.success ) {
-      Utils().showAlert(mcontext, type, "$transactionResult", btnCount: "1", btnmsg: 'payment',receiptList:receiptList);
-    }else{
-      String msg="$transactionResult \n Please Check Transaction History for more Details";
-      Utils().showAlert(mcontext, type, msg, btnCount: "1",btnmsg: 'canceled');
+    if (type == ContentType.success) {
+      Utils().showAlert(mcontext, type, "$transactionResult", btnCount: "1", btnmsg: 'payment', receiptList: receiptList);
+    } else {
+      String msg = "$transactionResult \n Please Check Transaction History for more Details";
+      Utils().showAlert(mcontext, type, msg, btnCount: "1", btnmsg: 'canceled');
     }
   }
 
@@ -212,8 +208,7 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
                   onPressed: () {
                     Navigator.pop(context);
                     Navigator.of(context).pop();
-                    Utils().showAlert(context, ContentType.fail, "Transaction cancelled!",btnmsg: 'canceled',
-                        mobile: widget.mobileNumber,email:widget.emailId); // Close current window
+                    Utils().showAlert(context, ContentType.fail, "Transaction cancelled!", btnmsg: 'canceled', mobile: widget.mobileNumber, email: widget.emailId); // Close current window
                     // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Transaction Status = Transaction cancelled")));
                   },
                   child: const Text('Yes'),
@@ -222,7 +217,6 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
             ));
     return Future.value(true);
   }
-
 
   Future<String> getPaymentStatus(BuildContext context, encData, String merchId) async {
     var responceMessage = '';

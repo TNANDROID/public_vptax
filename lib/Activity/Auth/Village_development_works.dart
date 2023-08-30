@@ -137,6 +137,7 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
                 child: Text(
                   selectedLang == "en" ? item[titleText].toString() : item[titleTextTamil].toString(),
                   style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.text_color),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ))
           .toList(),

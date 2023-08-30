@@ -2,33 +2,26 @@
 
 import 'dart:io';
 import 'dart:ui';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:public_vptax/Activity/Auth/View_receipt.dart';
 import 'package:public_vptax/Activity/Transaction/CheckTransaction.dart';
-import 'package:public_vptax/Layout/customgradientbutton.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Model/transaction_model.dart';
-import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
+import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Utils/ContentInfo.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../Services/Preferenceservices.dart';
 import '../../Services/locator.dart';
 import '../../Utils/utils.dart';
 import '../About_Village/know_your_village.dart';
 import '../Tax_Collection/taxCollection_details.dart';
 import '../Tax_Collection/taxCollection_view_request_screen.dart';
-import 'Download_receipt.dart';
-import 'Splash.dart';
 import 'Village_development_works.dart';
 
 class Home extends StatefulWidget {
@@ -286,7 +279,7 @@ class _HomeState extends State<Home> {
                   children: [
                     Container(
                       height: MediaQuery.of(context).size.width * 0.3,
-                      margin: EdgeInsets.only(left: 15),
+                      margin: EdgeInsets.only(left: 15, right: 15),
                       child: ScrollConfiguration(
                           behavior: ScrollConfiguration.of(context).copyWith(
                             dragDevices: {
@@ -328,15 +321,13 @@ class _HomeState extends State<Home> {
                                   setState(() {});
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+                                  width: Screen.width(context) / 3.3,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       Container(
-                                        decoration: i == index_val
-                                            ? UIHelper.circleWithColorWithShadow(360, c.colorAccentverylight, c.colorPrimaryDark)
-                                            : UIHelper.circleWithColorWithShadow(360, c.white, c.white),
+                                        decoration: UIHelper.circleWithColorWithShadow(360, c.white, c.white),
                                         alignment: Alignment.center,
                                         margin: EdgeInsets.only(top: 0),
                                         padding: EdgeInsets.all(10),
@@ -346,9 +337,9 @@ class _HomeState extends State<Home> {
                                           width: (MediaQuery.of(context).size.height / 4) / 4,
                                         ),
                                       ),
+                                      UIHelper.verticalSpaceSmall,
                                       Container(
                                         alignment: Alignment.center,
-                                        margin: EdgeInsets.all(10),
                                         child: Text(
                                           selectedLang == 'en' ? taxTypeList[i][key_taxtypedesc_en] : taxTypeList[i][key_taxtypedesc_ta],
                                           style: TextStyle(fontSize: 12, color: c.grey_9),
@@ -362,42 +353,22 @@ class _HomeState extends State<Home> {
                             },
                           )),
                     ),
-                    Visibility(
-                        visible: !flag,
-                        child: InkWell(
-                          onTap: () {
-                            _controller.animateTo(500, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
-                          },
-                          child: Container(
-                            alignment: Alignment.centerLeft,
-                            transform: Matrix4.translationValues(8.0, -80.0, 0.0),
-                            color: c.full_transparent,
-                            margin: EdgeInsets.only(top: 0, right: 10),
-                            child: Image.asset(
-                              imagePath.left_arrow,
-                              height: 25,
-                              color: c.grey_9,
-                            ),
-                          ),
-                        )),
-                    Visibility(
-                        visible: flag,
-                        child: InkWell(
-                          onTap: () {
-                            _controller.animateTo(500, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
-                          },
-                          child: Container(
-                            alignment: Alignment.centerRight,
-                            transform: Matrix4.translationValues(8.0, -80.0, 0.0),
-                            color: c.full_transparent,
-                            margin: EdgeInsets.only(top: 0, right: 10),
-                            child: Image.asset(
-                              imagePath.right_arrow,
-                              height: 25,
-                              color: c.grey_9,
-                            ),
-                          ),
-                        ))
+                    InkWell(
+                      onTap: () {
+                        _controller.animateTo(500, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+                      },
+                      child: Container(
+                        alignment: flag ? Alignment.centerRight : Alignment.centerLeft,
+                        transform: flag ? Matrix4.translationValues(13.0, -80.0, 0.0) : Matrix4.translationValues(2.0, -80.0, 0.0),
+                        color: c.full_transparent,
+                        margin: EdgeInsets.only(top: 0, right: 10),
+                        child: Image.asset(
+                          flag ? imagePath.right_arrow : imagePath.left_arrow,
+                          height: 25,
+                          color: c.grey_9,
+                        ),
+                      ),
+                    )
                   ],
                 ),
                 Container(
@@ -473,9 +444,7 @@ class _HomeState extends State<Home> {
                                     width: (Screen.height(context) / 2) - 10,
                                     alignment: Alignment.center,
                                     margin: EdgeInsets.all(10),
-                                    decoration: index == selected_index
-                                        ? UIHelper.roundedBorderWithColorWithShadow(5, c.colorAccentverylight, c.colorPrimaryDark, borderWidth: 0)
-                                        : UIHelper.roundedBorderWithColorWithShadow(5, c.need_improvement2, c.need_improvement2, borderWidth: 0),
+                                    decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.need_improvement2, c.need_improvement2, borderWidth: 0),
                                     child: Column(
                                       children: [
                                         Container(
@@ -495,7 +464,7 @@ class _HomeState extends State<Home> {
                                           margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
                                           child: Text(
                                             getServiceName(servicesList[index][key_service_name]),
-                                            style: TextStyle(fontSize: 11, height: 1.5, color: index == selected_index ? c.white : c.grey_9),
+                                            style: TextStyle(fontSize: 11, height: 1.5, color: c.grey_9),
                                             textAlign: TextAlign.center,
                                           ),
                                         ),
