@@ -11,7 +11,7 @@ import 'package:public_vptax/Activity/Auth/View_receipt.dart';
 import 'package:public_vptax/Activity/Transaction/CheckTransaction.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
-import 'package:public_vptax/Model/transaction_model.dart';
+import 'package:public_vptax/Model/startup_model.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 import 'package:public_vptax/Resources/StringsKey.dart';
@@ -49,7 +49,7 @@ class _HomeState extends State<Home> {
   TextEditingController mobileController = TextEditingController();
   TextEditingController emailController = TextEditingController();
 
-  final TransactionModel transactionModel = TransactionModel();
+  StartUpViewModel model = StartUpViewModel();
 
   @override
   void initState() {
@@ -652,7 +652,7 @@ class _HomeState extends State<Home> {
                               }
                             }
                             if (validationFlag) {
-                              bool resFlag = await transactionModel.getTransactionStatus(context, mobileController.text, emailController.text);
+                              bool resFlag = await model.getTransactionStatus(context, mobileController.text, emailController.text);
                               if (resFlag) {
                                 Navigator.pop(context);
                                 Navigator.push(

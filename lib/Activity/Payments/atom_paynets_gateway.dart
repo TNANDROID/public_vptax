@@ -7,6 +7,7 @@ import 'package:crypto/crypto.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:public_vptax/Model/startup_model.dart';
 import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Utils/utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -31,6 +32,7 @@ class AtomPaynetsView extends StatefulWidget {
 
 class AtomPaynetsViewState extends State<AtomPaynetsView> {
   ApiServices apiServices = locator<ApiServices>();
+  StartUpViewModel model = StartUpViewModel();
   String selectedLang = "";
 
   final mode;
@@ -221,32 +223,15 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
   Future<String> getPaymentStatus(BuildContext context, encData, String merchId) async {
     var responceMessage = '';
     var requestData = {key_service_id: service_key_SaveCollectionList, key_merchId_server_side: merchId, key_encdata_server_side: encData};
-
-    var PaymentStatusList = {key_data_content: requestData};
-
-    if (await Utils().isOnline()) {
-      try {
-        var response = await apiServices.mainServiceFunction(PaymentStatusList);
-        print('response>>: ${response}');
-
-        if (response[key_status] == key_success && response[key_response] == key_success) {
-          var receiptResponce = response[key_data];
-          if (receiptResponce[key_status] == key_success && receiptResponce[key_response] == key_success) {
-            var receiptDetails = receiptResponce[key_data];
-            receiptList = [];
-            receiptList = receiptDetails;
-            responceMessage = response[key_message];
-          }
-        }
-      } catch (error) {
-        print('error (${error.toString()}) has been caught');
-      }
+    var response = await model.mainServicesAPIcall(context, requestData);
+    if (response == key_fail) {
+      receiptList = [];
     } else {
-      Utils().showAlert(
-        context,
-        ContentType.fail,
-        "noInternet".tr().toString(),
-      );
+      var receiptResponce = response[key_data];
+      if (receiptResponce[key_status] == key_success && receiptResponce[key_response] == key_success) {
+        receiptList = receiptResponce[key_data];
+        responceMessage = response[key_message];
+      }
     }
     return responceMessage;
   }

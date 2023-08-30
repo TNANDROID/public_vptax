@@ -80,7 +80,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
       titleText = key_dname;
       titleTextTamil = key_dname_ta;
       initValue = selectedDistrict;
-      print("district value>>>>"+initValue.toString());
+      print("district value>>>>" + initValue.toString());
     } else if (index == 2) {
       dropList = model.selectedBlockList;
       dropList.sort((a, b) {
@@ -143,7 +143,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
         if (index == 0) {
           selectedTaxType = value.toString();
           Utils().hideProgress(context);
-          selectedDistrict=" ";
+          selectedDistrict = " ";
           model.selectedBlockList.clear();
           model.selectedVillageList.clear();
         } else if (index == 1) {
@@ -315,13 +315,13 @@ class _ViewReceiptState extends State<ViewReceipt> {
                 return value == null || (value is String && value.isEmpty);
               });
               Utils().showProgress(context, 1);
-              var response = await model.receiptRelatedMainService(context, postParams);
+              var response = await model.mainServicesAPIcall(context, postParams);
               if (response == "FAIL") {
                 receiptList = [];
                 noDataFound = true;
               } else {
                 noDataFound = false;
-                receiptList = response;
+                receiptList = response[key_data];
               }
 
               Utils().hideProgress(context);
@@ -340,7 +340,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
   }
 
   ///This [widget] Used for Doownload Receipt container.
-  Widget getReceiptDownloadWidget(BuildContext context, String title, dynamic sendData, String language) {
+  Widget getReceiptDownloadWidget(BuildContext context, String title, dynamic sendData, String language, StartUpViewModel model) {
     sendData[key_receipt_id] = sendData['receiptid'];
     sendData[key_state_code] = sendData['statecode'];
     return InkWell(
@@ -364,13 +364,13 @@ class _ViewReceiptState extends State<ViewReceipt> {
         ],
       ),
       onTap: () {
-        utils.getReceipt(context, sendData, 'paymentReceipt', language);
+        model.getReceipt(context, sendData, 'paymentReceipt', language);
       },
     );
   }
 
   ///This [widget] Used for set of [getReceiptDownloadWidget] are used.
-  Widget listview(BuildContext context) {
+  Widget listview(BuildContext context, StartUpViewModel model) {
     return receiptList.length > 0
         ? Container(
             transform: Matrix4.translationValues(-5.0, -100.0, 10.0),
@@ -400,9 +400,9 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                         UIHelper.titleTextStyle('receiptno'.tr().toString(), c.primary_text_color, 12, false, true),
                                         UIHelper.titleTextStyle(receiptList[index]['receipt_no'].toString(), c.text_color, 12, true, true),
                                         UIHelper.verticalSpaceMedium,
-                                        getReceiptDownloadWidget(context, 'download_tamil'.tr().toString() + "\n" + 'tamil_1'.tr().toString(), receiptList[index], "ta"),
+                                        getReceiptDownloadWidget(context, 'download_tamil'.tr().toString() + "\n" + 'tamil_1'.tr().toString(), receiptList[index], "ta", model),
                                         UIHelper.verticalSpaceMedium,
-                                        getReceiptDownloadWidget(context, 'download_english'.tr().toString() + "\n" + 'english_1'.tr().toString(), receiptList[index], "en"),
+                                        getReceiptDownloadWidget(context, 'download_english'.tr().toString() + "\n" + 'english_1'.tr().toString(), receiptList[index], "en", model),
                                       ],
                                     ))),
                           ),
@@ -446,7 +446,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                     scrollDirection: Axis.vertical,
                     child: Container(
                         child: Column(
-                      children: [formField(context, model), listview(context)],
+                      children: [formField(context, model), listview(context, model)],
                     )));
               },
               viewModelBuilder: () => StartUpViewModel()),

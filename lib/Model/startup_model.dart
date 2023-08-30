@@ -1,9 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:public_vptax/Activity/Auth/Pdf_Viewer.dart';
 import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Services/Apiservices.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
@@ -268,10 +270,9 @@ class StartUpViewModel extends BaseViewModel {
     setBusy(false);
   }
 
-  //Get Receipt List
-  Future receiptRelatedMainService(BuildContext context, dynamic requestJson) async {
+  //Main Service API Call
+  Future mainServicesAPIcall(BuildContext context, dynamic requestJson) async {
     dynamic requestData = {key_data_content: requestJson};
-    List resJsonArray = [];
     if (await Utils().isOnline()) {
       try {
         var response = await apiServices.mainServiceFunction(requestData);
@@ -279,8 +280,7 @@ class StartUpViewModel extends BaseViewModel {
         var responseValue = response[key_response].toString();
 
         if (status == key_success && responseValue == key_success) {
-          resJsonArray = response[key_data];
-          return resJsonArray;
+          return response;
         } else {
           return responseValue;
         }
@@ -294,7 +294,64 @@ class StartUpViewModel extends BaseViewModel {
         "noInternet".tr().toString(),
       );
     }
+  }
 
-    return resJsonArray;
+  Future<bool> getTransactionStatus(BuildContext context, String mobileNo, String email) async {
+    bool flag = false;
+    dynamic requestData = {key_service_id: service_key_TransactionHistory, key_mobile_no: mobileNo, key_email_id: email};
+    try {
+      Utils().showProgress(context, 1);
+      var response = await mainServicesAPIcall(context, requestData);
+      List resJsonArray = [];
+      if (response[key_status] == key_success && response[key_response] == key_success) {
+        resJsonArray = response[key_data];
+
+        preferencesService.TransactionList = resJsonArray;
+        if (preferencesService.TransactionList.isNotEmpty) {
+          flag = true;
+        }
+      } else {
+        Utils().showAlert(context, ContentType.warning, response[key_response].toString());
+      }
+
+      Utils().hideProgress(context);
+    } catch (error) {
+      print('error (${error.toString()}) has been caught');
+      Utils().hideProgress(context);
+    }
+    return flag;
+  }
+
+  Future getReceipt(BuildContext context, receiptList, String setFlag, String language) async {
+    Utils().showProgress(context, 1);
+    var requestData = {
+      key_service_id: service_key_GetReceipt,
+      key_receipt_id: receiptList[key_receipt_id].toString(),
+      key_receipt_no: receiptList[key_receipt_no].toString(),
+      key_taxtypeid: receiptList[key_taxtypeid].toString(),
+      key_state_code: receiptList[key_state_code].toString(),
+      key_dcode: receiptList[key_dcode].toString(),
+      key_bcode: receiptList[key_bcode].toString(),
+      key_pvcode: receiptList[key_lbcode].toString(),
+      key_language_name: language
+    };
+    var response = await mainServicesAPIcall(context, requestData);
+
+    print('response>>: ${response}');
+    Utils().hideProgress(context);
+    if (response[key_status] == key_success && response[key_response] == key_success) {
+      var receiptResponce = response[key_data];
+      var pdftoString = receiptResponce[key_receipt_content];
+      Uint8List? pdf = const Base64Codec().decode(pdftoString);
+      Navigator.of(context).push(
+        MaterialPageRoute(
+            builder: (context) => PDF_Viewer(
+                  pdfBytes: pdf,
+                  flag: setFlag,
+                )),
+      );
+    } else {
+      Utils().showAlert(context, ContentType.fail, response[key_message]);
+    }
   }
 }

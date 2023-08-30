@@ -268,7 +268,7 @@ class Utils {
                           Navigator.of(context).pop();
                           if (btnmsg == 'payment') {
                             String selectedLang = await preferencesService.getUserInfo("lang");
-                            getReceipt(mcontext, receiptList, 'payment', selectedLang);
+                            await StartUpViewModel().getReceipt(mcontext, receiptList, 'payment', selectedLang);
                           } else if (btnmsg == 'receipt') {
                             openFilePath(file_path!);
                           } else if (btnmsg == 'canceled') {
@@ -307,7 +307,7 @@ class Utils {
                                 if (btnmsg == 'payment') {
                                   String selectedLang = await preferencesService.getUserInfo("lang");
                                   Navigator.of(context).pop();
-                                  getReceipt(mcontext, receiptList, 'payment', selectedLang);
+                                  await StartUpViewModel().getReceipt(mcontext, receiptList, 'payment', selectedLang);
                                 } else if (btnmsg == 'receipt') {
                                   Navigator.of(context).pop();
                                   openFilePath(file_path!);
@@ -371,39 +371,6 @@ class Utils {
             ));
       },
     );
-  }
-
-  Future<void> getReceipt(BuildContext mcontext, receiptList, String setFlag, String language) async {
-    showProgress(mcontext, 1);
-    var receiptRequestData = {
-      key_service_id: service_key_GetReceipt,
-      key_receipt_id: receiptList[key_receipt_id].toString(),
-      key_receipt_no: receiptList[key_receipt_no].toString(),
-      key_taxtypeid: receiptList[key_taxtypeid].toString(),
-      key_state_code: receiptList[key_state_code].toString(),
-      key_dcode: receiptList[key_dcode].toString(),
-      key_bcode: receiptList[key_bcode].toString(),
-      key_pvcode: receiptList[key_lbcode].toString(),
-      key_language_name: language
-    };
-    var GetReceiptList = {key_data_content: receiptRequestData};
-    var response = await ApiServices().mainServiceFunction(GetReceiptList);
-    print('response>>: ${response}');
-    hideProgress(mcontext);
-    if (response[key_status] == key_success && response[key_response] == key_success) {
-      var receiptResponce = response[key_data];
-      var pdftoString = receiptResponce[key_receipt_content];
-      Uint8List? pdf = const Base64Codec().decode(pdftoString);
-      Navigator.of(mcontext).push(
-        MaterialPageRoute(
-            builder: (context) => PDF_Viewer(
-                  pdfBytes: pdf,
-                  flag: setFlag,
-                )),
-      );
-    } else {
-      Utils().showAlert(mcontext, ContentType.fail, response[key_message]);
-    }
   }
 
   void openFilePath(String path) async {
