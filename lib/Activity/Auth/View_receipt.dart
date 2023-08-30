@@ -80,6 +80,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
       titleText = key_dname;
       titleTextTamil = key_dname_ta;
       initValue = selectedDistrict;
+      print("district value>>>>"+initValue.toString());
     } else if (index == 2) {
       dropList = model.selectedBlockList;
       dropList.sort((a, b) {
@@ -142,6 +143,9 @@ class _ViewReceiptState extends State<ViewReceipt> {
         if (index == 0) {
           selectedTaxType = value.toString();
           Utils().hideProgress(context);
+          selectedDistrict=" ";
+          model.selectedBlockList.clear();
+          model.selectedVillageList.clear();
         } else if (index == 1) {
           model.selectedBlockList.clear();
           model.selectedVillageList.clear();
