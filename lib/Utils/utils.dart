@@ -4,8 +4,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'dart:ui' as ui;
+
 import 'package:crypto/crypto.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:datetime_setting/datetime_setting.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
@@ -14,21 +17,18 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:open_file/open_file.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:public_vptax/Services/atom_paynets_service.dart';
-import 'package:public_vptax/Services/Preferenceservices.dart';
-import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
-import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
+import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
+import 'package:public_vptax/Services/Preferenceservices.dart';
+import 'package:public_vptax/Services/atom_paynets_service.dart';
+import 'package:public_vptax/Services/locator.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:ui' as ui;
+
 import '../Activity/Auth/Home.dart';
-import '../Layout/Pdf_Viewer.dart';
 import '../Model/startup_model.dart';
 import '../Resources/StringsKey.dart';
 import 'ContentInfo.dart';
-import '../../Services/Apiservices.dart';
-import 'package:datetime_setting/datetime_setting.dart';
 
 class Utils {
   PreferenceService preferencesService = locator<PreferenceService>();
