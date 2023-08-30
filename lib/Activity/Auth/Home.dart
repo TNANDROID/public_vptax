@@ -329,7 +329,6 @@ class _HomeState extends State<Home> {
                                 },
                                 child: Container(
                                   padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-                                  // decoration: i == index_val ?UIHelper.circleWithColorWithShadow(360,c.colorAccentverylight,c.colorPrimaryDark):UIHelper.circleWithColorWithShadow(360,c.white,c.white),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -352,7 +351,7 @@ class _HomeState extends State<Home> {
                                         margin: EdgeInsets.all(10),
                                         child: Text(
                                           selectedLang == 'en' ? taxTypeList[i][key_taxtypedesc_en] : taxTypeList[i][key_taxtypedesc_ta],
-                                          style: TextStyle(fontSize: 12, height: 1.5, color: c.grey_9),
+                                          style: TextStyle(fontSize: 12, color: c.grey_9),
                                           textAlign: TextAlign.center,
                                         ),
                                       ),
@@ -364,13 +363,32 @@ class _HomeState extends State<Home> {
                           )),
                     ),
                     Visibility(
+                        visible: !flag,
+                        child: InkWell(
+                          onTap: () {
+                            _controller.animateTo(500, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+                          },
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            transform: Matrix4.translationValues(8.0, -80.0, 0.0),
+                            color: c.full_transparent,
+                            margin: EdgeInsets.only(top: 0, right: 10),
+                            child: Image.asset(
+                              imagePath.left_arrow,
+                              height: 25,
+                              color: c.grey_9,
+                            ),
+                          ),
+                        )),
+                    Visibility(
                         visible: flag,
                         child: InkWell(
                           onTap: () {
                             _controller.animateTo(500, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
                           },
                           child: Container(
-                            alignment: Alignment.bottomRight,
+                            alignment: Alignment.centerRight,
+                            transform: Matrix4.translationValues(8.0, -80.0, 0.0),
                             color: c.full_transparent,
                             margin: EdgeInsets.only(top: 0, right: 10),
                             child: Image.asset(

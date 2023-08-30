@@ -112,10 +112,10 @@ class _ViewReceiptState extends State<ViewReceipt> {
         labelStyle: TextStyle(fontSize: 10.0, fontWeight: FontWeight.w400, color: c.grey_7),
         filled: true,
         fillColor: c.need_improvement2,
-        enabledBorder: UIHelper.getInputBorder(0, borderColor: c.full_transparent, radius: 20),
-        focusedBorder: UIHelper.getInputBorder(0, borderColor: c.full_transparent, radius: 20),
-        focusedErrorBorder: UIHelper.getInputBorder(0, borderColor: Colors.red, radius: 20),
-        errorBorder: UIHelper.getInputBorder(0, borderColor: Colors.red, radius: 20),
+        enabledBorder: UIHelper.getInputBorder(0, borderColor: c.full_transparent, radius: 40),
+        focusedBorder: UIHelper.getInputBorder(0, borderColor: c.full_transparent, radius: 40),
+        focusedErrorBorder: UIHelper.getInputBorder(0, borderColor: Colors.red, radius: 40),
+        errorBorder: UIHelper.getInputBorder(0, borderColor: Colors.red, radius: 40),
         errorStyle: TextStyle(fontSize: 10),
         contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 10), // Optional: Adjust padding
       ),
@@ -138,6 +138,9 @@ class _ViewReceiptState extends State<ViewReceipt> {
           .toList(),
       onChanged: (value) async {
         Utils().showProgress(context, 1);
+        receiptController.text = "";
+        assessmentController.text = "";
+        _formKey.currentState!.patchValue({'assessment_no': "", 'receiptno': ""});
         if (index == 0) {
           selectedTaxType = value.toString();
           Utils().hideProgress(context);
@@ -209,6 +212,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
         floatingLabelBehavior: FloatingLabelBehavior.never,
         labelStyle: TextStyle(fontSize: 10.0, fontWeight: FontWeight.w400, color: c.grey_7),
         filled: true,
+        constraints: BoxConstraints(maxHeight: 35),
         fillColor: isEnabled ? c.white : c.grey_2,
         enabledBorder: UIHelper.getInputBorder(0, borderColor: c.white, radius: 20),
         disabledBorder: UIHelper.getInputBorder(0, borderColor: c.grey_5, radius: 20),
@@ -286,7 +290,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                           )
                         ]),
                         UIHelper.verticalSpaceSmall,
-                        headingWithDropdownWidget('receiptno', addInputFormControl("receipt_no")),
+                        headingWithDropdownWidget('receiptno', addInputFormControl("receiptno")),
                         UIHelper.verticalSpaceSmall,
                         invalidReceiptNumber
                             ? UIHelper.titleTextStyle('receiptno'.tr().toString() + "/" + 'assesmentNumber'.tr().toString() + " " + 'isEmpty'.tr().toString(), c.red, 10, false, false)
@@ -310,6 +314,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
               Utils().showProgress(context, 1);
               var response = await model.receiptRelatedMainService(context, postParams);
               if (response == "FAIL") {
+                receiptList = [];
                 noDataFound = true;
               } else {
                 noDataFound = false;
@@ -345,12 +350,12 @@ class _ViewReceiptState extends State<ViewReceipt> {
               decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.white, c.white, borderColor: c.full_transparent, borderWidth: 0),
               child: Center(child: UIHelper.titleTextStyle(title, c.text_color, 12, false, true))),
           Container(
-            transform: Matrix4.translationValues(-15, 15, 0),
+            transform: Matrix4.translationValues(-12, 18, 0),
             decoration: UIHelper.circleWithColorWithShadow(300, c.white, c.white),
             child: Image.asset(
               imagePath.download_img,
-              height: 30,
-              width: 30,
+              height: 24,
+              width: 24,
             ),
           )
         ],
@@ -389,10 +394,8 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                     margin: EdgeInsets.all(10.0),
                                     child: Column(
                                       children: [
-                                        Text(
-                                          'receiptno'.tr().toString() + " - " + receiptList[index]['receiptid'].toString(),
-                                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: c.primary_text_color2),
-                                        ),
+                                        UIHelper.titleTextStyle('receiptno'.tr().toString(), c.primary_text_color, 12, false, true),
+                                        UIHelper.titleTextStyle(receiptList[index]['receipt_no'].toString(), c.text_color, 12, true, true),
                                         UIHelper.verticalSpaceMedium,
                                         getReceiptDownloadWidget(context, 'download_tamil'.tr().toString() + "\n" + 'tamil_1'.tr().toString(), receiptList[index], "ta"),
                                         UIHelper.verticalSpaceMedium,
@@ -451,7 +454,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
     _formKey.currentState!.saveAndValidate();
     Map<String, dynamic> postParams = Map.from(_formKey.currentState!.value);
 
-    if ((postParams['assessment_no'] == null || postParams['assessment_no'] == "") && (postParams['receipt_no'] == null || postParams['receipt_no'] == "")) {
+    if ((postParams['assessment_no'] == null || postParams['assessment_no'] == "") && (postParams['receiptno'] == null || postParams['receiptno'] == "")) {
       invalidReceiptNumber = true;
     } else {
       invalidReceiptNumber = false;
