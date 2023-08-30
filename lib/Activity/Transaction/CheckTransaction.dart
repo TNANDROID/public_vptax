@@ -5,6 +5,8 @@ import 'dart:typed_data';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart';
@@ -32,16 +34,21 @@ class _CheckTransactionState extends State<CheckTransaction> {
   final TransactionModel transactionModel = TransactionModel();
   PreferenceService preferencesService = locator<PreferenceService>();
   ApiServices apiServices = locator<ApiServices>();
-  String selectedLang = "";
 
-  List mainList = [];
   List successList = [];
   List failureList = [];
   List pendingList = [];
+  List defaultWorklist = [];
+
+  Iterable filteredWorklist = [];
 
   int statusFlag = 0;
 
+  String _searchQuery = '';
   String selectLang = '';
+
+  bool searchEnable = false;
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
@@ -49,8 +56,18 @@ class _CheckTransactionState extends State<CheckTransaction> {
     initialize();
   }
 
+  onSearchQueryChanged() {
+    _searchQuery = searchController.text.toLowerCase();
+
+    filteredWorklist = defaultWorklist.where((item) {
+      final trans_id = item[key_transaction_id].toString();
+      return trans_id.contains(_searchQuery);
+    });
+    setState(() {});
+  }
+
   Future<void> initialize() async {
-    mainList = preferencesService.TransactionList;
+    defaultWorklist = preferencesService.TransactionList;
     selectLang = await preferencesService.getUserInfo('lang');
     FilterList();
 
@@ -91,57 +108,109 @@ class _CheckTransactionState extends State<CheckTransaction> {
           children: [
             SingleChildScrollView(
                 child: Container(
-              margin: EdgeInsets.only(top: Screen.width(context) * 0.2),
+              margin: EdgeInsets.only(top: Screen.width(context) * 0.35),
               child: ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: statusFlag == 0
-                      ? mainList.length
-                      : statusFlag == 1
-                          ? successList.length
-                          : statusFlag == 2
-                              ? pendingList.length
-                              : failureList.length,
+                  itemCount: searchEnable ? filteredWorklist.length : defaultWorklist.length,
                   itemBuilder: (context, mainIndex) {
-                    var item = statusFlag == 0
-                        ? mainList[mainIndex]
-                        : statusFlag == 1
-                            ? successList[mainIndex]
-                            : statusFlag == 2
-                                ? pendingList[mainIndex]
-                                : failureList[mainIndex];
+                    var item = searchEnable ? filteredWorklist.elementAt(mainIndex) : defaultWorklist[mainIndex];
                     return Container(
                       margin: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                       child: buildTransactionStatusCard(item),
                     );
                   }),
             )),
-            SizedBox(
-              width: Screen.width(context) * 0.95,
-              height: 75,
-              child: Card(
-                elevation: 5,
-                shadowColor: c.black,
-                color: c.white,
-                margin: EdgeInsets.all(15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+            Positioned(
+              top: Screen.width(context) * 0.15,
+              child: SizedBox(
+                width: Screen.width(context) * 0.95,
+                height: 75,
+                child: Card(
+                  elevation: 5,
+                  shadowColor: c.black,
+                  color: c.white,
+                  margin: EdgeInsets.all(15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: FormBuilderTextField(
+                        onChanged: (value) {
+                          if (value == '') {
+                            searchEnable = false;
+                          }
+                          setState(() {});
+                        },
+                        name: 'search',
+                        controller: searchController,
+                        keyboardType: TextInputType.number,
+                        textAlign: TextAlign.left,
+                        decoration: InputDecoration(
+                          hintText: 'transaction_id'.tr(),
+                          hintStyle: TextStyle(fontSize: 11),
+                          filled: true,
+                          contentPadding: EdgeInsets.all(10),
+                          focusedBorder: UIHelper.getInputBorder(0, borderColor: c.white, radius: 20),
+                          enabledBorder: UIHelper.getInputBorder(0, borderColor: c.white, radius: 20),
+                          fillColor: c.white,
+                        ),
+                        style: TextStyle(fontSize: 13),
+                      )),
+                      IconButton(
+                        icon: Icon(
+                          Icons.search,
+                          color: c.helpBlue,
+                        ),
+                        onPressed: () {
+                          Utils().hideSoftKeyBoard(context);
+                          if (searchController.text.isNotEmpty) {
+                            searchEnable = true;
+                            onSearchQueryChanged();
+                          } else {
+                            searchEnable = false;
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-                child: Row(
-                  children: [
-                    TabBar('Success', () {
-                      statusFlag = 1;
-                      setState(() {});
-                    }, statusFlag == 1 ? true : false),
-                    TabBar('Pending', () {
-                      statusFlag = 2;
-                      setState(() {});
-                    }, statusFlag == 2 ? true : false),
-                    TabBar('Failed', () {
-                      statusFlag = 3;
-                      setState(() {});
-                    }, statusFlag == 3 ? true : false)
-                  ],
+              ),
+            ),
+            Positioned(
+              top: 0,
+              child: SizedBox(
+                width: Screen.width(context) * 0.95,
+                height: 75,
+                child: Card(
+                  elevation: 5,
+                  shadowColor: c.black,
+                  color: c.white,
+                  margin: EdgeInsets.all(15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    children: [
+                      TabBar('Success', () {
+                        statusFlag = 1;
+                        defaultWorklist = successList;
+                        setState(() {});
+                      }, statusFlag == 1 ? true : false),
+                      TabBar('Pending', () {
+                        defaultWorklist = pendingList;
+                        statusFlag = 2;
+                        setState(() {});
+                      }, statusFlag == 2 ? true : false),
+                      TabBar('Failed', () {
+                        defaultWorklist = failureList;
+                        statusFlag = 3;
+                        setState(() {});
+                      }, statusFlag == 3 ? true : false)
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -253,7 +322,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
     } else {
       cardColorPrimary = c.red_new;
       cardColorSecondary = c.red_new_light;
-      cardColorPrimaryDark = c.failureRed;
+      cardColorPrimaryDark = c.red_new_dark;
       headerText = "failed".tr();
     }
 
@@ -447,7 +516,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
     failureList = [];
     pendingList = [];
 
-    for (var item in mainList) {
+    for (var item in defaultWorklist) {
       var transactionStatus = item[key_transaction_status] ?? '';
 
       if (transactionStatus == "SUCCESS") {
@@ -471,6 +540,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
     };
 
     var GetRequestDataList = {key_data_content: requestData};
+    print('GetRequestDataList: ${GetRequestDataList}');
 
     var response = await apiServices.mainServiceFunction(GetRequestDataList);
     print('response>>: ${response}');

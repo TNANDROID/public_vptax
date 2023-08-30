@@ -39,6 +39,7 @@ Color text_color = Color(0xFF1E4175);
 Color bg = Color(0xFFF5F5F5);
 Color full_transparent = Color(0xFF00FF0000);
 Color grey_4 = Color(0xFFdddbda);
+Color red_new_dark = Color.fromARGB(255, 146, 0, 37);
 Color red_new = Color(0xFFDE0239);
 Color red_new_light = Color.fromARGB(255, 255, 233, 233);
 Color light_green = Color(0xFFf3fff3);

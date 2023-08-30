@@ -160,7 +160,17 @@ class Utils {
   }
 
   Future<void> showAlert(BuildContext mcontext, ContentType contentType, String message,
-      {String? title, String? btnCount, String? btnText, String? btnmsg, var receiptList, String? file_path, String? mobile, String? email, double? titleFontSize, double? messageFontSize}) async {
+      {String? title,
+      String? btnCount,
+      String? btnText,
+      String? btnmsg,
+      var receiptList,
+      String? file_path,
+      String? mobile,
+      String? email,
+      double? titleFontSize,
+      double? messageFontSize,
+      String? mode}) async {
     await showDialog<void>(
       context: mcontext,
       barrierDismissible: btnCount != null ? false : true, // user must tap button!
@@ -233,7 +243,7 @@ class Utils {
                     Positioned(
                       top: 25,
                       child: Text(
-                        title ?? contentInfo.title,
+                        mode == "payment_success" ? '' : title ?? contentInfo.title,
                         style: UIHelper.textDecoration(titleFontSize ?? 14, c.white, bold: true),
                       ),
                     ),
