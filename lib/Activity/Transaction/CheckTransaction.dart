@@ -20,7 +20,7 @@ import '../../Resources/StringsKey.dart';
 import '../../Services/Apiservices.dart';
 import '../../Services/Preferenceservices.dart';
 import '../../Services/locator.dart';
-import '../Auth/Pdf_Viewer.dart';
+import '../../Layout/Pdf_Viewer.dart';
 
 class CheckTransaction extends StatefulWidget {
   final mobileNumber;

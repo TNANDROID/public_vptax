@@ -5,7 +5,7 @@ import 'dart:typed_data';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:public_vptax/Activity/Auth/Pdf_Viewer.dart';
+import 'package:public_vptax/Layout/Pdf_Viewer.dart';
 import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Services/Apiservices.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';

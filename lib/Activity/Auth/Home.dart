@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:public_vptax/Activity/Auth/View_receipt.dart';
+import 'package:public_vptax/Activity/Transaction/View_receipt.dart';
 import 'package:public_vptax/Activity/Transaction/CheckTransaction.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
@@ -22,7 +22,7 @@ import '../../Utils/utils.dart';
 import '../About_Village/know_your_village.dart';
 import '../Tax_Collection/taxCollection_details.dart';
 import '../Tax_Collection/taxCollection_view_request_screen.dart';
-import 'Village_development_works.dart';
+import '../About_Village/Village_development_works.dart';
 
 class Home extends StatefulWidget {
   final isLogin;
