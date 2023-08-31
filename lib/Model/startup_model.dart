@@ -253,7 +253,8 @@ class StartUpViewModel extends BaseViewModel {
         var response = await apiServices.mainServiceFunction(requestData);
         var status = response[key_status].toString();
         var responseValue = response[key_response].toString();
-
+        print("requestData>>$requestData");
+        print("response>>$response");
         if (status == key_success && responseValue == key_success) {
           return response;
         } else {

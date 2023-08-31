@@ -278,6 +278,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
   Widget radioButtonWidget(int index, String title) {
     return GestureDetector(
         onTap: () {
+          etTextController.text = '';
           selectedTaxType > 0 ? selectedEntryType = index : Utils().showAlert(context, ContentType.warning, 'select_taxtype'.tr().toString());
 
           setState(() {});

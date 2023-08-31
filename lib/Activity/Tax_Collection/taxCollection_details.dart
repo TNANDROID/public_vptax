@@ -1393,6 +1393,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
   }*/
   Future<void> getPaymentToken(List selList, int selected_id) async {
     List finalList = selList;
+    Utils().showProgress(context, 1);
 
     try {
       dynamic request = {};
@@ -1447,6 +1448,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
       };
       dynamic pay_params =
           await StartUpViewModel().getMainServiceList("CollectionPaymentTokenList", requestDataValue: request, context: context, taxType: finalList[0][s.key_taxtypeid].toString(), lang: selectedLang);
+     Utils().hideProgress(context);
       String transaction_unique_id = Utils().decodeBase64(pay_params['a'].toString());
       String atomTokenId = Utils().decodeBase64(pay_params['b'].toString());
       String req_payment_amount = Utils().decodeBase64(pay_params['c'].toString());
@@ -1459,6 +1461,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
 
       // throw ('000');
     } catch (error) {
+      Utils().hideProgress(context);
       debugPrint('error (${error.toString()}) has been caught');
     }
   }
