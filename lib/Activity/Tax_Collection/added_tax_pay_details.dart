@@ -7,6 +7,7 @@ import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
+import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
 import 'package:stacked/stacked.dart';
 import '../../Layout/ui_helper.dart';
@@ -219,7 +220,10 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
                                                   Align(
                                                       alignment: Alignment.centerRight,
                                                       child: InkWell(
-                                                          onTap: () {},
+                                                          onTap: () {
+                                                            dynamic selectedSendData = mainDataList[index];
+                                                            Utils().settingModalBottomSheet(context, [selectedSendData]);
+                                                          },
                                                           child: Container(
                                                               decoration: UIHelper.GradientContainer(5, 5, 5, 5, [c.account_status_green_color, c.account_status_green_color]),
                                                               padding: EdgeInsets.all(8),

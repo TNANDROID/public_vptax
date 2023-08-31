@@ -135,6 +135,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
               )))
           .toList(),
       onChanged: (value) async {
+        receiptList.clear();
         Utils().showProgress(context, 1);
         receiptController.text = "";
         assessmentController.text = "";
@@ -188,39 +189,26 @@ class _ViewReceiptState extends State<ViewReceipt> {
     );
   }
 
-//Text Input Field Widget
+  //Text Input Field Widget
   Widget addInputFormControl(String nameField) {
-    bool isEnabled = false;
-    if (nameField == "assessment_no") {
-      if (receiptController.text.isEmpty || receiptController.text == null) {
-        isEnabled = true;
-      }
-    } else {
-      if (assessmentController.text.isEmpty || assessmentController.text == null) {
-        isEnabled = true;
-      }
-    }
-    return FormBuilderTextField(
+    return TextField(
       style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_9),
-      name: nameField,
-      autocorrect: false,
-      enabled: isEnabled,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      onChanged: (value) {
+      onChanged: (text) {
+        receiptList.clear();
         if (nameField == "assessment_no") {
-          assessmentController.text = value.toString();
+          receiptController.text = "";
         } else {
-          receiptController.text = value.toString();
+          assessmentController.text = "";
         }
-        setState(() {});
-        Validate();
+        validateForm();
       },
+      controller: nameField == "assessment_no" ? assessmentController : receiptController,
       decoration: InputDecoration(
         floatingLabelBehavior: FloatingLabelBehavior.never,
         labelStyle: TextStyle(fontSize: 10.0, fontWeight: FontWeight.w400, color: c.grey_7),
         filled: true,
         constraints: BoxConstraints(maxHeight: 35),
-        fillColor: isEnabled ? c.white : c.grey_2,
+        fillColor: c.white,
         enabledBorder: UIHelper.getInputBorder(0, borderColor: c.white, radius: 20),
         disabledBorder: UIHelper.getInputBorder(0, borderColor: c.grey_5, radius: 20),
         focusedBorder: UIHelper.getInputBorder(0, borderColor: c.white, radius: 20),
@@ -311,17 +299,21 @@ class _ViewReceiptState extends State<ViewReceipt> {
           child: Padding(padding: EdgeInsets.only(left: 5, right: 5), child: Text("submit".tr().toString(), style: TextStyle(color: c.white, fontSize: 13))),
           style: TextButton.styleFrom(fixedSize: const Size(130, 20), shape: StadiumBorder(), backgroundColor: c.colorPrimary),
           onPressed: () async {
-            Validate();
+            validateForm();
             if (_formKey.currentState!.saveAndValidate() && !invalidReceiptNumber) {
               Map<String, dynamic> postParams = Map.from(_formKey.currentState!.value);
               postParams['service_id'] = "ReceiptBillDetails";
               postParams['language_name'] = selectedLang;
+              postParams['assessment_no'] = assessmentController.text;
+              postParams['receipt_no'] = receiptController.text;
+              print("Ra--->>>>>$postParams");
               postParams.removeWhere((key, value) {
                 return value == null || (value is String && value.isEmpty);
               });
+              print("Ra---)))))))$postParams");
               Utils().showProgress(context, 1);
               var response = await model.mainServicesAPIcall(context, postParams);
-              if (response == "FAIL") {
+              if (response == key_fail) {
                 receiptList = [];
                 noDataFound = true;
               } else {
@@ -458,11 +450,11 @@ class _ViewReceiptState extends State<ViewReceipt> {
         ));
   }
 
-  Validate() {
+  validateForm() {
     _formKey.currentState!.saveAndValidate();
     Map<String, dynamic> postParams = Map.from(_formKey.currentState!.value);
 
-    if ((postParams['assessment_no'] == null || postParams['assessment_no'] == "") && (postParams['receipt_no'] == null || postParams['receipt_no'] == "")) {
+    if ((assessmentController.text == "") && (receiptController.text == "")) {
       invalidReceiptNumber = true;
     } else {
       invalidReceiptNumber = false;
