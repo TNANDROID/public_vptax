@@ -13,7 +13,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:open_file/open_file.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -24,11 +27,15 @@ import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/atom_paynets_service.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../Resources/StringsKey.dart' as s;
 
 import '../Activity/Auth/Home.dart';
+import '../Layout/customgradientbutton.dart';
 import '../Model/startup_model.dart';
 import '../Resources/StringsKey.dart';
 import 'ContentInfo.dart';
+import 'package:public_vptax/Layout/screen_size.dart';
+
 
 class Utils {
   PreferenceService preferencesService = locator<PreferenceService>();
@@ -696,5 +703,303 @@ class Utils {
 
     // taxData[rowIndex][s.key_demand].toString();
     return amount;
+  }
+
+
+  TextEditingController nameTextController = TextEditingController();
+  TextEditingController mobileTextController = TextEditingController();
+  TextEditingController emailTextController = TextEditingController();
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
+  bool _isKeyboardFocused = false;
+  Future<void> settingModalBottomSheet(BuildContext mcontext, List finalList) async {
+    int selected_id = -1;
+    nameTextController.text = '';
+    mobileTextController.text = '';
+    emailTextController.text = '';
+    String selectedLang = await preferencesService.getUserInfo("lang");
+    List list = preferencesService.GatewayList;
+    List paymentType = preferencesService.PaymentTypeList;
+    return showModalBottomSheet(
+        context: mcontext,
+        isScrollControlled: true,
+        backgroundColor: c.full_transparent,
+        builder: (BuildContext bc) {
+          return StatefulBuilder(builder: (BuildContext context, StateSetter mystate) {
+            _isKeyboardFocused = MediaQuery.of(context).viewInsets.bottom > 0;
+            return Wrap(
+              children: <Widget>[
+                Container(
+                    decoration: UIHelper.GradientContainer(50.0, 50, 0, 0, [c.white, c.white]),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                            margin: EdgeInsets.only(top: 20, bottom: 10),
+                            child: Text(('payment_mode'.tr().toString() + (selectedLang == 'en' ? paymentType[0][key_paymenttype_en] : paymentType[0][key_paymenttype_ta])),
+                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold))),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                              margin: EdgeInsets.only(top: 5, left: 20, bottom: 5),
+                              child: Text('select_payment_gateway'.tr().toString(), style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.black))),
+                        ),
+                        Container(
+                            child: AnimationLimiter(
+                                child: ListView.builder(
+                                    physics: const AlwaysScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: list.length,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      return AnimationConfiguration.staggeredList(
+                                          position: index,
+                                          duration: const Duration(milliseconds: 800),
+                                          child: SlideAnimation(
+                                            horizontalOffset: 200.0,
+                                            child: FlipAnimation(
+                                              child: Padding(
+                                                  padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      mystate(() {
+                                                        selected_id = list[index][key_gateway_id];
+                                                      });
+                                                    },
+                                                    child: Row(
+                                                      children: [
+                                                        Align(
+                                                          alignment: Alignment.centerLeft,
+                                                          child: selected_id == list[index][key_gateway_id]
+                                                              ? Image.asset(
+                                                            imagePath.tick,
+                                                            color: c.account_status_green_color,
+                                                            height: 25,
+                                                            width: 25,
+                                                          )
+                                                              : Image.asset(
+                                                            imagePath.unchecked,
+                                                            color: c.grey_9,
+                                                            height: 25,
+                                                            width: 25,
+                                                          ),
+                                                        ),
+                                                        IconButton(
+                                                            onPressed: () {},
+                                                            icon: Image.asset(
+                                                              imagePath.payment_gateway,
+                                                              height: 25,
+                                                              width: 25,
+                                                            )),
+                                                        Text(
+                                                          list[index][key_gateway_name],
+                                                          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 12, color: c.grey_9),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )),
+                                            ),
+                                          ));
+                                    }))),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                              margin: EdgeInsets.only(top: 10, left: 20, bottom: 5),
+                              child: Text('enter_the_details'.tr().toString(), style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.black))),
+                        ),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                          child: FormBuilder(
+                              key: _formKey,
+                              child: Column(
+                                children: [
+                                  addInputFormControl('name', 'name'.tr().toString(), key_name),
+                                  UIHelper.verticalSpaceSmall,
+                                  addInputFormControl('mobile', 'mobileNumber'.tr().toString(), key_mobile_number),
+                                  UIHelper.verticalSpaceSmall,
+                                  addInputFormControl('email', 'emailAddress'.tr().toString(), key_email),
+                                  UIHelper.verticalSpaceSmall,
+                                ],
+                              )),
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            margin: EdgeInsets.only(left: 5, right: 20, bottom: 20),
+                            /*margin: EdgeInsets.only(left: 5, right: 20),
+                      padding: EdgeInsets.only(bottom: 30, right: 10),*/
+                            child: CustomGradientButton(
+                              onPressed: () async {
+                                if (selected_id > 0) {
+                                  nameTextController.text = 'Test';
+                                  mobileTextController.text = '9875235654';
+                                  emailTextController.text = 'test@gmail.com';
+                                  if (_formKey.currentState!.saveAndValidate()) {
+                                    Map<String, dynamic> postParams = Map.from(_formKey.currentState!.value);
+                                    postParams.removeWhere((key, value) => value == null);
+                                    Navigator.of(context).pop();
+                                    getPaymentToken(mcontext,finalList, selected_id,selectedLang);
+                                  }
+                                } else {
+                                  Utils().showAlert(context, ContentType.fail, 'select_anyOne_gateway'.tr().toString());
+                                  // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('select_anyOne_gateway'.tr().toString())));
+                                }
+                              },
+                              width: 120,
+                              height: 40,
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "CONTINUE",
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: _isKeyboardFocused ? Screen.height(context) * 0.36 : 0,
+                        )
+                      ],
+                    )),
+              ],
+            );
+          });
+        });
+  }
+
+  Widget addInputFormControl(String nameField, String hintText, String fieldType) {
+    return FormBuilderTextField(
+      style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.w400, color: c.grey_9),
+      name: nameField,
+      controller: fieldType == key_mobile_number
+          ? mobileTextController
+          : fieldType == key_name
+          ? nameTextController
+          : emailTextController,
+      autocorrect: false,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      onChanged: (value) {},
+      decoration: InputDecoration(
+        labelText: hintText,
+        labelStyle: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w600, color: c.grey_7),
+        filled: true,
+        fillColor: Colors.white,
+        enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
+        focusedBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
+        focusedErrorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
+        errorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
+        errorStyle: TextStyle(fontSize: 10),
+        contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12), // Optional: Adjust padding
+      ),
+      validator: fieldType == key_mobile_number
+          ? ((value) {
+        if (value == "" || value == null) {
+          return "$hintText ${'isEmpty'.tr()}";
+        }
+        if (!Utils().isNumberValid(value)) {
+          return "$hintText ${'isInvalid'.tr()}";
+        }
+        return null;
+      })
+          : fieldType == key_email
+          ? ((value) {
+        if (value == "" || value == null) {
+          return "$hintText ${'isEmpty'.tr()}";
+        }
+        if (!Utils().isEmailValid(value)) {
+          return "$hintText ${'isInvalid'.tr()}";
+        }
+        return null;
+      })
+          : FormBuilderValidators.compose([
+        FormBuilderValidators.required(errorText: "$hintText ${'isEmpty'.tr()}"),
+      ]),
+      inputFormatters: fieldType == key_mobile_number
+          ? [
+        FilteringTextInputFormatter.digitsOnly,
+        LengthLimitingTextInputFormatter(10),
+      ]
+          : [],
+      keyboardType: fieldType == key_mobile_number || fieldType == key_number ? TextInputType.number : TextInputType.text,
+    );
+  }
+
+  Future<void> getPaymentToken(BuildContext context,List selList, int selected_id,String selectedLang) async {
+    List finalList = selList;
+    Utils().showProgress(context, 1);
+
+    try {
+      dynamic request = {};
+
+      String taxType = finalList[0][s.key_taxtypeid].toString();
+      var property_demand_id = [];
+
+      for (var data in finalList[0][s.key_DEMAND_DETAILS]) {
+        if (data[s.key_flag] == true) {
+          if (taxType == "2") {
+            String demandId = Utils().getDemandId(data, taxType);
+            String amountToPay = data[key_watercharges];
+
+            Map<String, String> details = {
+              key_demand_id: demandId,
+              key_amount_to_pay: amountToPay,
+            };
+
+            property_demand_id.add(details);
+          } else {
+            property_demand_id.add(Utils().getDemandId(data, taxType));
+          }
+        }
+      }
+
+      String demand_id = Utils().getPaymentTokenDemandId(taxType);
+
+      List Assessment_Details = [
+        {
+          s.key_assessment_no: finalList[0][s.key_assessment_no].toString(),
+          demand_id: property_demand_id,
+        }
+      ];
+      dynamic assessment_demand_list = {
+        'Assessment_Details': Assessment_Details,
+      };
+      request = {
+        s.key_service_id: s.service_key_CollectionPaymentTokenList,
+        s.key_language_name: selectedLang,
+        s.key_taxtypeid: finalList[0][s.key_taxtypeid].toString(),
+        s.key_dcode: finalList[0][s.key_dcode].toString(),
+        s.key_bcode: finalList[0][s.key_bcode].toString(),
+        s.key_pvcode: finalList[0][s.key_lbcode].toString(),
+        if (finalList[0][s.key_taxtypeid].toString() == "4") s.key_fin_year: finalList[0][s.key_financialyear].toString(),
+        s.key_assessment_no: finalList[0][s.key_assessment_no].toString(),
+        s.key_paymenttypeid: 5,
+        s.key_name: nameTextController.text,
+        s.key_mobile_no: mobileTextController.text,
+        s.key_email_id: emailTextController.text,
+        s.key_payment_gateway: selected_id,
+        'assessment_demand_list': assessment_demand_list,
+      };
+      dynamic pay_params =
+      await StartUpViewModel().getMainServiceList("CollectionPaymentTokenList", requestDataValue: request, context: context, taxType: finalList[0][s.key_taxtypeid].toString(), lang: selectedLang);
+      Utils().hideProgress(context);
+      String transaction_unique_id = Utils().decodeBase64(pay_params['a'].toString());
+      String atomTokenId = Utils().decodeBase64(pay_params['b'].toString());
+      String req_payment_amount = Utils().decodeBase64(pay_params['c'].toString());
+      String public_transaction_email_id = Utils().decodeBase64(pay_params['d'].toString());
+      String public_transaction_mobile_no = Utils().decodeBase64(pay_params['e'].toString());
+      String txmStartTime = Utils().decodeBase64(pay_params['f'].toString());
+      String merchId = Utils().decodeBase64(pay_params['g'].toString());
+
+      await Utils().openNdpsPG(context, atomTokenId, merchId, public_transaction_email_id, public_transaction_mobile_no);
+
+      // throw ('000');
+    } catch (error) {
+      Utils().hideProgress(context);
+      debugPrint('error (${error.toString()}) has been caught');
+    }
   }
 }
