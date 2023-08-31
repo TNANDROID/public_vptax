@@ -138,20 +138,26 @@ class _ViewReceiptState extends State<ViewReceipt> {
         Utils().showProgress(context, 1);
         receiptController.text = "";
         assessmentController.text = "";
-        _formKey.currentState!.patchValue({'assessment_no': "", 'receiptno': ""});
+        _formKey.currentState!.patchValue({'assessment_no': "", 'receipt_no': ""});
         if (index == 0) {
-          selectedTaxType = value.toString();
-          Utils().hideProgress(context);
-          selectedDistrict = " ";
+          selectedDistrict = "";
+          selectedTaxType = "";
+          _formKey.currentState!.patchValue({'dcode': "", 'bcode': "", 'pvcode': ""});
           model.selectedBlockList.clear();
           model.selectedVillageList.clear();
+          Future.delayed(Duration(milliseconds: 500), () {
+            selectedTaxType = value.toString();
+
+            setState(() {});
+            Utils().hideProgress(context);
+          });
         } else if (index == 1) {
           model.selectedBlockList.clear();
           model.selectedVillageList.clear();
           selectedDistrict = value.toString();
           selectedBlock = "";
           selectedvillage = "";
-          _formKey.currentState!.patchValue({'block': "", 'village': ""});
+          _formKey.currentState!.patchValue({'bcode': "", 'pvcode': ""});
           Future.delayed(Duration(milliseconds: 500), () {
             model.loadUIBlock(selectedDistrict);
             setState(() {});
@@ -160,7 +166,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
         } else if (index == 2) {
           selectedBlock = value.toString();
           selectedvillage = "";
-          _formKey.currentState!.patchValue({'village': ""});
+          _formKey.currentState!.patchValue({'pvcode': ""});
           model.selectedVillageList.clear();
           Future.delayed(Duration(milliseconds: 500), () {
             model.loadUIVillage(selectedDistrict, selectedBlock);
@@ -272,8 +278,8 @@ class _ViewReceiptState extends State<ViewReceipt> {
               child: Column(children: [
                 headingWithDropdownWidget('taxType', addInputDropdownField(0, 'select_taxtype'.tr().toString(), "taxtypeid", model)),
                 UIHelper.verticalSpaceSmall,
-                headingWithDropdownWidget('district', addInputDropdownField(1, 'select_District'.tr().toString(), "dcode", model)),
-                UIHelper.verticalSpaceSmall,
+                if (selectedTaxType.isNotEmpty) headingWithDropdownWidget('district', addInputDropdownField(1, 'select_District'.tr().toString(), "dcode", model)),
+                if (selectedTaxType.isNotEmpty) UIHelper.verticalSpaceSmall,
                 if (model.selectedBlockList.isNotEmpty) headingWithDropdownWidget('block', addInputDropdownField(2, 'select_Block'.tr().toString(), "bcode", model)),
                 if (model.selectedBlockList.isNotEmpty) UIHelper.verticalSpaceSmall,
                 if (model.selectedVillageList.isNotEmpty) headingWithDropdownWidget('villagePanchayat', addInputDropdownField(3, 'select_VillagePanchayat'.tr().toString(), "pvcode", model)),
@@ -292,7 +298,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                           )
                         ]),
                         UIHelper.verticalSpaceSmall,
-                        headingWithDropdownWidget('receiptno', addInputFormControl("receiptno")),
+                        headingWithDropdownWidget('receiptno', addInputFormControl("receipt_no")),
                         UIHelper.verticalSpaceSmall,
                         invalidReceiptNumber
                             ? UIHelper.titleTextStyle('receiptno'.tr().toString() + "/" + 'assesmentNumber'.tr().toString() + " " + 'isEmpty'.tr().toString(), c.red, 10, false, false)
@@ -456,7 +462,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
     _formKey.currentState!.saveAndValidate();
     Map<String, dynamic> postParams = Map.from(_formKey.currentState!.value);
 
-    if ((postParams['assessment_no'] == null || postParams['assessment_no'] == "") && (postParams['receiptno'] == null || postParams['receiptno'] == "")) {
+    if ((postParams['assessment_no'] == null || postParams['assessment_no'] == "") && (postParams['receipt_no'] == null || postParams['receipt_no'] == "")) {
       invalidReceiptNumber = true;
     } else {
       invalidReceiptNumber = false;
