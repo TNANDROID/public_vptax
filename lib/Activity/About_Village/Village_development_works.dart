@@ -41,7 +41,6 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
     '05',
   ];
   List workitems = [
-    {'id': 0, 'name': 'total_works'.tr().toString()},
     {'id': 1, 'name': 'not_started_work'.tr().toString()},
     {'id': 2, 'name': 'work_in_progress'.tr().toString()},
     {'id': 3, 'name': 'completed_work'.tr().toString()},
@@ -249,48 +248,39 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
   }
 
   Widget _workListType(BuildContext context) {
-    return Container(
-        height: 58,
-        decoration: UIHelper.roundedBorderWithColor(0, 0, 0, 0, c.colorPrimary, borderWidth: 1),
-        width: Screen.width(context),
-        child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: workitems.length,
-            itemBuilder: (context, rowIndex) {
-              int cnvasIndex = selectedIndex - 1;
-              return Container(
-                  decoration: BoxDecoration(
-                    color: c.white,
+    return Card(
+        elevation: 5,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Container(
+          width: Screen.width(context) * 0.9,
+          height: 50,
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+          child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: workitems.length,
+              itemBuilder: (context, rowIndex) {
+                return InkWell(
+                  onTap: () {
+                    selectedIndex = rowIndex;
+                    setState(() {
+                      cardvisibility = true;
+                    });
+                  },
+                  child: ClipPath(
+                    clipper: RightTriangleClipper(),
+                    child: Container(
+                        width: 150,
+                        height: 58,
+                        padding: EdgeInsets.only(top: 10, left: 0, right: 20),
+                        decoration:
+                            selectedIndex == rowIndex ? UIHelper.roundedBorderWithColorWithShadow(20, c.colorPrimary, c.colorPrimary) : UIHelper.roundedBorderWithColorWithShadow(20, c.white, c.white),
+                        child: UIHelper.titleTextStyle(workitems[rowIndex]['name'].toString() + "\n 10", selectedIndex == rowIndex ? c.white : c.primary_text_color2, 10, false, true)),
                   ),
-                  child: Row(children: [
-                    InkWell(
-                      onTap: () {
-                        selectedIndex = rowIndex;
-                        setState(() {
-                          cardvisibility = true;
-                        });
-                      },
-                      child: Container(
-                          width: 150,
-                          height: 58,
-                          color: cnvasIndex == rowIndex ? c.colorPrimary : c.white,
-                          child: CustomPaint(
-                            foregroundPainter: BorderPainter(),
-                            child: ClipPath(
-                              clipper: RightTriangleClipper(),
-                              child: Container(
-                                  width: 150,
-                                  height: 58,
-                                  padding: EdgeInsets.only(top: 10, left: 0, right: 20),
-                                  decoration: selectedIndex == rowIndex
-                                      ? UIHelper.roundedBorderWithColorWithShadow(0, c.colorPrimary, c.colorPrimary)
-                                      : UIHelper.roundedBorderWithColorWithShadow(0, c.white, c.white),
-                                  child: UIHelper.titleTextStyle(workitems[rowIndex]['name'].toString() + "\n 10", selectedIndex == rowIndex ? c.white : c.primary_text_color2, 10, false, true)),
-                            ),
-                          )),
-                    )
-                  ]));
-            }));
+                );
+              }),
+        ));
   }
 
   Widget workDetailsWidget() {
