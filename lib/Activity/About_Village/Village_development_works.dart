@@ -41,6 +41,7 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
     '05',
   ];
   List workitems = [
+    {'id': 0, 'name': 'total_works'.tr().toString()},
     {'id': 1, 'name': 'not_started_work'.tr().toString()},
     {'id': 2, 'name': 'work_in_progress'.tr().toString()},
     {'id': 3, 'name': 'completed_work'.tr().toString()},
@@ -173,7 +174,6 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
         } else {
           debugPrint("End.....");
         }
-
         setState(() {});
       },
     );
@@ -188,7 +188,7 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
         elevation: 2,
         title: Container(
           child: Text(
-            'work_details'.tr().toString(),
+            'village_development_works_title'.tr().toString(),
             style: TextStyle(fontSize: 14),
           ),
         ),
@@ -248,39 +248,73 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
   }
 
   Widget _workListType(BuildContext context) {
-    return Card(
-        elevation: 5,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Container(
-          width: Screen.width(context) * 0.9,
-          height: 50,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-          child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: workitems.length,
-              itemBuilder: (context, rowIndex) {
-                return InkWell(
+    return Column(
+      children: [
+        InkWell(
+            onTap: () {
+              selectedIndex = 0;
+              setState(() {});
+            },
+            child: Container(
+              width: Screen.width(context),
+              height: 40,
+              decoration: UIHelper.roundedBorderWithColor(20, 20, 0, 0, selectedIndex == 0 ? c.text_color : c.need_improvement),
+              child: Center(child: UIHelper.titleTextStyle(workitems[0]['name'].toString() + "\n 30", selectedIndex == 0 ? c.white : c.text_color, 10, true, true)),
+            )),
+        Container(
+          width: Screen.width(context),
+          decoration: UIHelper.roundedBorderWithColor(0, 0, 0, 0, selectedIndex == 2 ? c.text_color : c.need_improvement1, borderWidth: 0),
+          child: Row(children: [
+            Expanded(
+                flex: 2,
+                child: ClipPath(
+                  clipper: RightTriangleClipper(),
+                  child: InkWell(
+                      onTap: () {
+                        selectedIndex = 1;
+                        setState(() {});
+                      },
+                      child: Container(
+                          height: 40,
+                          decoration: UIHelper.roundedBorderWithColorWithShadow(0, selectedIndex == 1 ? c.text_color : c.need_improvement1, selectedIndex == 1 ? c.text_color : c.need_improvement1),
+                          child: Center(child: UIHelper.titleTextStyle(workitems[1]['name'].toString() + "\n 10", selectedIndex == 1 ? c.white : c.black, 8, false, true)))),
+                )),
+            Expanded(
+              flex: 2,
+              child: InkWell(
                   onTap: () {
-                    selectedIndex = rowIndex;
-                    setState(() {
-                      cardvisibility = true;
-                    });
+                    selectedIndex = 2;
+                    setState(() {});
                   },
-                  child: ClipPath(
-                    clipper: RightTriangleClipper(),
-                    child: Container(
-                        width: 150,
-                        height: 58,
-                        padding: EdgeInsets.only(top: 10, left: 0, right: 20),
-                        decoration:
-                            selectedIndex == rowIndex ? UIHelper.roundedBorderWithColorWithShadow(20, c.colorPrimary, c.colorPrimary) : UIHelper.roundedBorderWithColorWithShadow(20, c.white, c.white),
-                        child: UIHelper.titleTextStyle(workitems[rowIndex]['name'].toString() + "\n 10", selectedIndex == rowIndex ? c.white : c.primary_text_color2, 10, false, true)),
-                  ),
-                );
-              }),
-        ));
+                  child: Container(
+                      height: 40,
+                      decoration: UIHelper.roundedBorderWithColor(0, 0, 0, 0, selectedIndex == 2 ? c.text_color : c.need_improvement1),
+                      child: Center(child: UIHelper.titleTextStyle(workitems[2]['name'].toString() + "\n 10", selectedIndex == 2 ? c.white : c.black, 8, false, true)))),
+            ),
+            Expanded(
+                flex: 2,
+                child: Transform.rotate(
+                    angle: 180 * 3.1415927 / 180,
+                    child: ClipPath(
+                        clipper: RightTriangleClipper(),
+                        child: InkWell(
+                          onTap: () {
+                            selectedIndex = 3;
+                            setState(() {});
+                          },
+                          child: Container(
+                              height: 40,
+                              decoration:
+                                  UIHelper.roundedBorderWithColorWithShadow(0, selectedIndex == 3 ? c.text_color : c.need_improvement1, selectedIndex == 3 ? c.text_color : c.need_improvement1),
+                              child: Center(
+                                  child: Transform.rotate(
+                                      angle: 180 * 3.1415927 / 180,
+                                      child: UIHelper.titleTextStyle(workitems[3]['name'].toString() + "\n 10", selectedIndex == 3 ? c.white : c.black, 8, false, true)))),
+                        )))),
+          ]),
+        ),
+      ],
+    );
   }
 
   Widget workDetailsWidget() {

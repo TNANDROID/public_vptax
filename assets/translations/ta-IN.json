@@ -127,7 +127,7 @@
   "select_all_field": "அனைத்து விவரங்களையும் நிரப்பவும்",
   "payment_mode": "கட்டண முறை : ",
   "select_payment_gateway": "கட்டண நுழைவாயிலைத் தேர்ந்தெடுக்கவும்",
-  "payment_transaction_history": "கொடுப்பனவு பரிவர்த்தனை வரலாறு",
+  "payment_transaction_history": "கட்டண பரிவர்த்தனை வரலாறு",
   "get_status": "நிலையைப் பெறு",
   "transaction_history": "கொடுக்கல் வாங்கல் வரலாறு",
   "work_details": "வேலை விவரங்கள்",
@@ -170,5 +170,6 @@
   "pending_assessment_transaction": "நிலுவையில் உள்ள பரிவர்த்தனை :",
   "auto_date_time": "தானியங்கு நேர அமைப்புகளை இயக்கவும்",
   "payment_msg": "உங்களது பணம் வரவு செய்யப்பட்டுவிட்டது",
-  "transaction_warning_hint": "முந்தைய பரிவர்த்தனை நிலுவையில் உள்ளது. மேலும் விவரங்களுக்கு பரிவர்த்தனை வரலாற்றைப் பார்க்கவும்"
+  "transaction_warning_hint": "முந்தைய பரிவர்த்தனை நிலுவையில் உள்ளது. மேலும் விவரங்களுக்கு பரிவர்த்தனை வரலாற்றைப் பார்க்கவும்",
+  "village_development_works_title": "கிராம வளர்ச்சி பணி "
 }

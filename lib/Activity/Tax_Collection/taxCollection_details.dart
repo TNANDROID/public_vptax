@@ -47,6 +47,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
 
   PreferenceService preferencesService = locator<PreferenceService>();
 
+  bool isSelectAll = false;
   //Strings
   String selectedLang = "";
   String selectTaxtype = "";
@@ -68,7 +69,6 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
   ScrollController controller_scroll = ScrollController();
 
   var selectedTaxTypeData;
-
 
   @override
   void initState() {
@@ -451,6 +451,53 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Visibility(
+                visible: taxData.length > 1,
+                child: GestureDetector(
+                    onTap: () {
+                      if (isSelectAll) {
+                        isSelectAll = false;
+                        for (var item in taxData) {
+                          item[s.key_flag] = false;
+                        }
+                      } else {
+                        isSelectAll = true;
+                        for (var item in taxData) {
+                          item[s.key_flag] = true;
+                        }
+                      }
+
+                      double totAmt = 0;
+                      for (var item in taxData) {
+                        if (item[s.key_flag] == true) {
+                          totAmt = totAmt + double.parse(Utils().getDemadAmount(item, selectedTaxTypeData['taxtypeid'].toString()));
+                        }
+                      }
+                      mainList[mainIndex][s.key_tax_total] = totAmt;
+                      mainList[mainIndex][s.key_tax_pay] =
+                          getTotal(mainList[mainIndex][s.key_tax_total], double.parse(Utils().getTaxAdvance(mainList[mainIndex], selectedTaxTypeData['taxtypeid'].toString())));
+
+                      main_totalAmount = 0;
+                      for (int i = 0; i < mainList.length; i++) {
+                        main_totalAmount = main_totalAmount + mainList[i][s.key_tax_pay] + mainList[i][s.key_swm_pay];
+                      }
+                      setState(() {});
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        UIHelper.titleTextStyle("Select All", c.text_color, 12, false, true),
+                        UIHelper.horizontalSpaceSmall,
+                        Image.asset(
+                          isSelectAll ? imagePath.tick : imagePath.unchecked,
+                          color: isSelectAll ? c.account_status_green_color : c.text_color,
+                          height: 20,
+                          width: 20,
+                        ),
+                        UIHelper.horizontalSpaceSmall,
+                      ],
+                    ))),
+            UIHelper.verticalSpaceSmall,
+            Visibility(
                 visible: taxData.isNotEmpty,
                 child: Container(
                     height: roundedValueOfHeight * 72,
@@ -508,6 +555,13 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                     }
                                   } else {
                                     Utils().showAlert(context, ContentType.fail, 'pay_previous'.tr().toString());
+                                  }
+
+                                  int countActiveItems = taxData.where((item) => item[s.key_flag] == true).length;
+                                  if (countActiveItems == taxData.length) {
+                                    isSelectAll = true;
+                                  } else {
+                                    isSelectAll = false;
                                   }
 
                                   setState(() {
@@ -1143,6 +1197,4 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
     }
     return flag;
   }
-
-
 }

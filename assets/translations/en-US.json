@@ -170,5 +170,6 @@
   "pending_assessment_transaction": "Transaction Pending :",
   "auto_date_time": "Please enable autodate time settings",
   "payment_msg": "Your Payment Received",
-  "transaction_warning_hint": "Previous transaction pending. Please check Transaction History for more Details"
+  "transaction_warning_hint": "Previous transaction pending. Please check Transaction History for more Details",
+  "village_development_works_title": "Village Development Works"
 }
