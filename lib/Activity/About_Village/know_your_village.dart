@@ -88,7 +88,7 @@ class _KYVDashboardState extends State<KYVDashboard> {
                             child: Column(
                             children: [
                               UIHelper.verticalSpaceLarge,
-                              Image.asset(imagepath.waitingImg, fit: BoxFit.contain, height: Screen.width(context) / 2, width: Screen.width(context) / 2),
+                              Image.asset(imagepath.waiting1, fit: BoxFit.contain, height: Screen.width(context) / 3, width: Screen.width(context) / 3),
                               UIHelper.verticalSpaceMedium,
                               UIHelper.titleTextStyle('waiting_input'.tr().toString(), c.text_color, 12, true, true)
                             ],

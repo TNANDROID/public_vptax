@@ -46,6 +46,7 @@ String waitingImg = "assets/images/waiting.png";
 String download_img = "assets/images/download_2.png";
 String rightarrow = "assets/images/rightarrow.png";
 String downarrow = "assets/images/downarrow.png";
+String waiting1 = "assets/images/waiting1.png";
 
 String help = 'assets/images/help.svg';
 String failure = 'assets/images/failure.svg';

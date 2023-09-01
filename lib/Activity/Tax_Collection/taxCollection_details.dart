@@ -468,7 +468,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                             } else {
                               finYearStr = taxData[index][key_fin_year];
                             }
-                            String durationStr = taxData[index][key_installment_group_name];
+                            String durationStr = taxData[index][key_installment_group_name].toString().trim();
                             bool isStatus = false;
                             if (taxData[index][s.key_flag] == true) {
                               isStatus = true;
