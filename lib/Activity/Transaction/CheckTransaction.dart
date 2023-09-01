@@ -93,7 +93,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
                   transform: Matrix4.translationValues(-30.0, 0.0, 0.0),
                   alignment: Alignment.center,
                   child: Text(
-                    'transaction_history'.tr().toString(),
+                    'payment_transaction_history'.tr().toString(),
                     style: const TextStyle(fontSize: 15),
                   ),
                 ),

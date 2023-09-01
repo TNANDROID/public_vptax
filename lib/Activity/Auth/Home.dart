@@ -20,6 +20,7 @@ import '../../Services/Preferenceservices.dart';
 import '../../Services/locator.dart';
 import '../../Utils/utils.dart';
 import '../About_Village/know_your_village.dart';
+import '../Tax_Collection/YourTaxDetails.dart';
 import '../Tax_Collection/taxCollection_details.dart';
 import '../Tax_Collection/taxCollection_view_request_screen.dart';
 import '../About_Village/Village_development_works.dart';
@@ -86,12 +87,13 @@ class _HomeState extends State<Home> {
     selectedLang = await preferencesService.getUserInfo("lang");
     widget.isLogin == true ? await Utils().apiCalls(context) : null;
     List s_list = [
-      {'service_id': 0, 'service_name': 'check_your_dues', 'img_path': imagePath.due4},
-      {'service_id': 1, 'service_name': 'quickPay', 'img_path': imagePath.quick_pay1},
-      {'service_id': 2, 'service_name': 'check_transaction_status', 'img_path': imagePath.check_transaction_status},
-      {'service_id': 3, 'service_name': 'view_receipt_details', 'img_path': imagePath.download_receipt},
-      {'service_id': 4, 'service_name': 'know_about_your_village', 'img_path': imagePath.village},
-      {'service_id': 5, 'service_name': 'village_development_works', 'img_path': imagePath.village_development},
+      {'service_id': 0, 'service_name': 'your_tax_details', 'img_path': imagePath.search1},
+      {'service_id': 1, 'service_name': 'check_your_dues', 'img_path': imagePath.due4},
+      {'service_id': 2, 'service_name': 'quickPay', 'img_path': imagePath.quick_pay1},
+      {'service_id': 3, 'service_name': 'payment_transaction_history', 'img_path': imagePath.transaction_history},
+      {'service_id': 4, 'service_name': 'view_receipt_details', 'img_path': imagePath.download_receipt},
+      {'service_id': 5, 'service_name': 'know_about_your_village', 'img_path': imagePath.village},
+      {'service_id': 6, 'service_name': 'village_development_works', 'img_path': imagePath.village_development},
     ];
     servicesList.clear();
     servicesList.addAll(s_list);
@@ -393,8 +395,16 @@ class _HomeState extends State<Home> {
                               child: FadeInAnimation(
                                 child: InkWell(
                                   onTap: () async {
-                                    selected_index = index;
+                                    selected_index = servicesList[index][key_service_id];
                                     if (selected_index == 0) {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (_) => YourTaxDetails(
+                                                mobile: islogin == "yes"? preferencesService.getUserInfo(key_mobile_number):"",
+                                              )));
+                                    }
+                                    else if (selected_index == 1) {
                                       if (islogin == "yes") {
                                         Navigator.push(
                                             context,
@@ -415,7 +425,8 @@ class _HomeState extends State<Home> {
                                                       flag: "2",
                                                     )));
                                       }
-                                    } else if (selected_index == 1) {
+                                    }
+                                    else if (selected_index == 2) {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -423,13 +434,13 @@ class _HomeState extends State<Home> {
                                                     appbarTitle: 'quickPay',
                                                     flag: "2",
                                                   )));
-                                    } else if (selected_index == 2) {
-                                      _settingModalBottomSheet(context);
                                     } else if (selected_index == 3) {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => ViewReceipt()));
+                                      _settingModalBottomSheet(context);
                                     } else if (selected_index == 4) {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => KYVDashboard()));
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => ViewReceipt()));
                                     } else if (selected_index == 5) {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => KYVDashboard()));
+                                    } else if (selected_index == 6) {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => Villagedevelopment()));
                                     }
                                     setState(() {});

@@ -47,6 +47,14 @@ String download_img = "assets/images/download_2.png";
 String rightarrow = "assets/images/rightarrow.png";
 String downarrow = "assets/images/downarrow.png";
 String waiting1 = "assets/images/waiting1.png";
+String tax_public_icon = "assets/images/tax_public_icon.png";
+String tax_img = "assets/images/tax_img.png";
+String tax_logo = "assets/images/tax_logo.png";
+String transaction_history = "assets/images/transaction_history.png";
+String submit = "assets/images/submit.png";
+String all = "assets/images/all.png";
+String search = "assets/images/search.png";
+String search1 = "assets/images/search1.png";
 
 String help = 'assets/images/help.svg';
 String failure = 'assets/images/failure.svg';

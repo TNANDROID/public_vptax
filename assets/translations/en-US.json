@@ -129,7 +129,6 @@
   "select_payment_gateway": "Select Payment Gateway",
   "payment_transaction_history": "Payment Transaction History",
   "get_status": "Get Status",
-  "transaction_history": "Transaction History",
   "work_details": "Work Details",
   "select_finyear": "Select Financial Year",
   "transaction_id": "Transaction ID",
@@ -171,5 +170,7 @@
   "auto_date_time": "Please enable autodate time settings",
   "payment_msg": "Your Payment Received",
   "transaction_warning_hint": "Previous transaction pending. Please check Transaction History for more Details",
-  "village_development_works_title": "Village Development Works"
+  "village_development_works_title": "Village Development Works",
+  "your_tax_details": "To Know About Your Tax Details",
+  "tax_details_yours": "Your Tax Details"
 }

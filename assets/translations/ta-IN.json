@@ -129,7 +129,6 @@
   "select_payment_gateway": "கட்டண நுழைவாயிலைத் தேர்ந்தெடுக்கவும்",
   "payment_transaction_history": "கட்டண பரிவர்த்தனை வரலாறு",
   "get_status": "நிலையைப் பெறு",
-  "transaction_history": "கொடுக்கல் வாங்கல் வரலாறு",
   "work_details": "வேலை விவரங்கள்",
   "select_finyear": "நிதி ஆண்டைத் தேர்ந்தெடுக்கவும்",
   "transaction_id": "பரிவர்த்தனை எண்",
@@ -171,5 +170,7 @@
   "auto_date_time": "தானியங்கு நேர அமைப்புகளை இயக்கவும்",
   "payment_msg": "உங்களது பணம் வரவு செய்யப்பட்டுவிட்டது",
   "transaction_warning_hint": "முந்தைய பரிவர்த்தனை நிலுவையில் உள்ளது. மேலும் விவரங்களுக்கு பரிவர்த்தனை வரலாற்றைப் பார்க்கவும்",
-  "village_development_works_title": "கிராம வளர்ச்சி பணி "
+  "village_development_works_title": "கிராம வளர்ச்சி பணிகள்",
+  "your_tax_details": "உங்கள் வரி விவரங்களைப் பற்றி தெரிந்து கொள்ள",
+  "tax_details_yours": "உங்கள் வரி விவரங்கள்"
 }

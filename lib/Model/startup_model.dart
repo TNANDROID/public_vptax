@@ -279,6 +279,7 @@ class StartUpViewModel extends BaseViewModel {
     try {
       Utils().showProgress(context, 1);
       var response = await mainServicesAPIcall(context, requestData);
+      Utils().hideProgress(context);
       if (response[key_status] == key_success && response[key_response] == key_success) {
         preferencesService.TransactionList = response[key_data];
         if (preferencesService.TransactionList.isNotEmpty) {
@@ -288,7 +289,6 @@ class StartUpViewModel extends BaseViewModel {
         Utils().showAlert(context, ContentType.warning, response[key_response].toString());
       }
 
-      Utils().hideProgress(context);
     } catch (error) {
       debugPrint('error (${error.toString()}) has been caught');
       Utils().hideProgress(context);
