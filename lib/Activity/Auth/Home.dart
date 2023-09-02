@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:public_vptax/Activity/Tax_Collection/AllYourTaxDetails.dart';
 import 'package:public_vptax/Activity/Transaction/View_receipt.dart';
 import 'package:public_vptax/Activity/Transaction/CheckTransaction.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
@@ -20,7 +21,6 @@ import '../../Services/Preferenceservices.dart';
 import '../../Services/locator.dart';
 import '../../Utils/utils.dart';
 import '../About_Village/know_your_village.dart';
-import '../Tax_Collection/YourTaxDetails.dart';
 import '../Tax_Collection/taxCollection_details.dart';
 import '../Tax_Collection/taxCollection_view_request_screen.dart';
 import '../About_Village/Village_development_works.dart';
@@ -397,12 +397,17 @@ class _HomeState extends State<Home> {
                                   onTap: () async {
                                     selected_index = servicesList[index][key_service_id];
                                     if (selected_index == 0) {
+
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (_) => YourTaxDetails(
+                                              builder: (_) => AllYourTaxDetails(
+                                                isTaxDropDown: true,
+                                                isHome: true,
                                                 mobile: islogin == "yes"? preferencesService.getUserInfo(key_mobile_number):"",
+                                                selectedEntryType: 1,
                                               )));
+
                                     }
                                     else if (selected_index == 1) {
                                       if (islogin == "yes") {

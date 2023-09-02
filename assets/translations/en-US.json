@@ -88,7 +88,7 @@
   "download": "Download",
   "select_language": "Select Language for downloading receipt",
   "enter_receipt": "Please enter receipt number",
-  "enter_mobile_number": "Please enter mobile number",
+  "enter_mobile_number": "Please enter valid mobile number",
   "demand_selected": "Demand Selected",
   "advance_amount": "Advance Available",
   "swm_charges": "SWM Charges",
