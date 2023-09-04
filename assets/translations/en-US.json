@@ -171,6 +171,11 @@
   "payment_msg": "Your Payment Received",
   "transaction_warning_hint": "Previous transaction pending. Please check Transaction History for more Details",
   "village_development_works_title": "Village Development Works",
-  "your_tax_details": "To Know About Your Tax Details",
-  "tax_details_yours": "Your Tax Details"
+  "your_tax_details": "View your tax details and make payments",
+  "tax_details_yours": "Your Tax Details",
+  "property_hint": "Previous transaction for property tax is pending. See transaction history for more details",
+  "water_hint": "Previous transaction for water tax is pending. See transaction history for more details",
+  "professional_hint": "Previous transaction for professional tax is pending. See transaction history for more details",
+  "non_hint": "Previous transaction for non tax is pending. See transaction history for more details",
+  "trade_hint": "Previous transaction for trade license tax is pending. See transaction history for more details"
 }

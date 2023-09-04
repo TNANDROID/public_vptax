@@ -74,7 +74,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
     ));
 
     _topAnimationController.forward();*/
-    preferencesService.setUserInfo(key_isLogin, 'no');
+    // preferencesService.setUserInfo(key_isLogin, 'no');
     initialize();
   }
 

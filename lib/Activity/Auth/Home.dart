@@ -87,8 +87,8 @@ class _HomeState extends State<Home> {
     selectedLang = await preferencesService.getUserInfo("lang");
     widget.isLogin == true ? await Utils().apiCalls(context) : null;
     List s_list = [
-      {'service_id': 0, 'service_name': 'your_tax_details', 'img_path': imagePath.search1},
-      {'service_id': 1, 'service_name': 'check_your_dues', 'img_path': imagePath.due4},
+      {'service_id': 0, 'service_name': 'your_tax_details', 'img_path': imagePath.due4},
+      // {'service_id': 1, 'service_name': 'check_your_dues', 'img_path': imagePath.due4},
       {'service_id': 2, 'service_name': 'quickPay', 'img_path': imagePath.quick_pay1},
       {'service_id': 3, 'service_name': 'payment_transaction_history', 'img_path': imagePath.transaction_history},
       {'service_id': 4, 'service_name': 'view_receipt_details', 'img_path': imagePath.download_receipt},
@@ -100,7 +100,9 @@ class _HomeState extends State<Home> {
 
     taxTypeList.clear();
     taxTypeList = preferencesService.taxTypeList;
-    islogin = await preferencesService.getUserInfo(key_isLogin);
+    String pre_isLogin=await preferencesService.getUserInfo(key_isLogin);
+    islogin = pre_isLogin != null  && pre_isLogin != ""?pre_isLogin:"no";
+    print(islogin);
     setState(() {
       if (selectedLang != null && selectedLang != "" && selectedLang == "en") {
         context.setLocale(Locale('en', 'US'));
@@ -404,7 +406,6 @@ class _HomeState extends State<Home> {
                                               builder: (_) => AllYourTaxDetails(
                                                 isTaxDropDown: true,
                                                 isHome: true,
-                                                mobile: islogin == "yes"? preferencesService.getUserInfo(key_mobile_number):"",
                                                 selectedEntryType: 1,
                                               )));
 
@@ -607,9 +608,16 @@ class _HomeState extends State<Home> {
                           badge(
                             context,
                             flagMobileActive,
-                            () => {utils.closeKeypad(context), FocusScope.of(context).unfocus(), flagMobileActive = !flagMobileActive, setState(() {})},
+                                () => {
+                              utils.closeKeypad(context),
+                              FocusScope.of(context).unfocus(),
+                              if (flagMobileActive) flagMobileActive = flagMobileActive else flagMobileActive = !flagMobileActive,
+                              setState(() {})
+                            },
                           ),
-                          badge(context, !flagMobileActive, () => {FocusScope.of(context).unfocus(), flagMobileActive = !flagMobileActive, setState(() {})}, isMobileActive: false)
+                          badge(context, !flagMobileActive,
+                                  () => {FocusScope.of(context).unfocus(), if (!flagMobileActive) flagMobileActive = flagMobileActive else flagMobileActive = !flagMobileActive, setState(() {})},
+                              isMobileActive: false)
                         ],
                       ),
                     ),
