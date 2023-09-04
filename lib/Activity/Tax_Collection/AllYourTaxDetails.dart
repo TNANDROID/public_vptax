@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:grouped_list/grouped_list.dart';
 import 'package:public_vptax/Activity/Tax_Collection/added_tax_pay_details.dart';
 import 'package:public_vptax/Layout/customclip.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
@@ -16,6 +15,7 @@ import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:public_vptax/Utils/utils.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
+import 'package:sticky_grouped_list/sticky_grouped_list.dart';
 import '../../Layout/customgradientbutton.dart';
 import '../../Resources/StringsKey.dart' as s;
 import 'package:public_vptax/Services/Preferenceservices.dart';
@@ -226,49 +226,50 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                       UIHelper.verticalSpaceSmall,
                       addToPayWidget(),
                       assetCountWidget(),
-                      Expanded(
-                        child: SingleChildScrollView(
-                            controller: controller_scroll,
-                            scrollDirection: Axis.vertical,
-                            child: Column(
-                              children: [
-                                Visibility(
-                                  visible: mainList.isNotEmpty,
-                                  child:GroupedListView<dynamic, String>(
-                                    elements: mainList,
-                                    groupBy: (element) => element[key_taxtypeid],
-                                    useStickyGroupSeparators: true,
-                                    groupSeparatorBuilder: (String groupByValue) => Text(groupByValue),
-                                    indexedItemBuilder: (context, dynamic element,mainIndex) => Column(
+                      Visibility(
+                        visible: mainList.isNotEmpty,
+                        child: Expanded(
+                            child:StickyGroupedListView<dynamic, String>(
+                              elements: mainList,
+                              shrinkWrap: true,
+                              groupBy: (element) => element[key_taxtypeid].toString(),
+                              groupSeparatorBuilder: (element) => Container(
+                                width: MediaQuery.of(context).size.width,
+                                color: c.primary_text_color2,
+                                padding: EdgeInsets.all(10),
+                                child: Text(
+                                  element[key_taxtypeid],
+                                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.normal, color: c.grey_8),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              indexedItemBuilder: (context, dynamic element,mainIndex) => Column(
+                                children: [
+                                  headerCardUIWidget(mainIndex),
+                                  UIHelper.verticalSpaceMedium,
+                                ],
+                              ),
+                              itemComparator: (item1, item2) => item1[key_assessment_no].compareTo(item2[key_assessment_no]), // optional
+                            )
+                          /* child: ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: mainList.length,
+                                  itemBuilder: (context, mainIndex) {
+                                    return Column(
                                       children: [
                                         headerCardUIWidget(mainIndex),
                                         UIHelper.verticalSpaceMedium,
                                       ],
-                                    ),
-                                    itemComparator: (item1, item2) => item1[key_assessment_no].compareTo(item2[key_assessment_no]), // optional
-                                    floatingHeader: true, // optional
-                                    order: GroupedListOrder.ASC, // optional
-                                  )
-                                 /* child: ListView.builder(
-                                      shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      itemCount: mainList.length,
-                                      itemBuilder: (context, mainIndex) {
-                                        return Column(
-                                          children: [
-                                            headerCardUIWidget(mainIndex),
-                                            UIHelper.verticalSpaceMedium,
-                                          ],
-                                        );
-                                      }),*/
-                                ),
-                                Visibility(
-                                  visible: mainList.isEmpty,
-                                  child: Center(child: Container(margin: EdgeInsets.only(top: 100), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true))),
-                                )
-                              ],
-                            )),
+                                    );
+                                  }),*/
+                        ),
                       ),
+              Visibility(
+              visible: mainList.isEmpty,
+              child: Expanded(
+               child: Center(child: Container(margin: EdgeInsets.only(top: 100), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true))),
+              )),
                       Visibility(visible:/*!widget.isHome*/true, child: payWidget())
                     ],
                   ));
