@@ -177,5 +177,8 @@
   "water_hint": "Previous transaction for water tax is pending. See transaction history for more details",
   "professional_hint": "Previous transaction for professional tax is pending. See transaction history for more details",
   "non_hint": "Previous transaction for non tax is pending. See transaction history for more details",
-  "trade_hint": "Previous transaction for trade license tax is pending. See transaction history for more details"
+  "trade_hint": "Previous transaction for trade license tax is pending. See transaction history for more details",
+  "selected_to_pay": "Selected amount to pay",
+  "total": "Total to pay",
+  "selected": "Selected to pay"
 }

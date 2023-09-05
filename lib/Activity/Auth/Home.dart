@@ -83,7 +83,6 @@ class _HomeState extends State<Home> {
   Future<void> initialize() async {
     index_val = -1;
     selected_index = -1;
-    langText = 'தமிழ்';
     selectedLang = await preferencesService.getUserInfo("lang");
     widget.isLogin == true ? await Utils().apiCalls(context) : null;
     List s_list = [
@@ -106,9 +105,11 @@ class _HomeState extends State<Home> {
     setState(() {
       if (selectedLang != null && selectedLang != "" && selectedLang == "en") {
         context.setLocale(Locale('en', 'US'));
+        langText = 'English';
       } else {
         preferencesService.setUserInfo("lang", "ta");
         context.setLocale(Locale('ta', 'IN'));
+        langText = 'தமிழ்';
       }
     });
   }
@@ -405,7 +406,7 @@ class _HomeState extends State<Home> {
                                           MaterialPageRoute(
                                               builder: (_) => AllYourTaxDetails(
                                                 isTaxDropDown: true,
-                                                isHome: true,
+                                                isHome: false,
                                                 selectedEntryType: 1,
                                               )));
 
