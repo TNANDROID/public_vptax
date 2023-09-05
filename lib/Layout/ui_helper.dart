@@ -29,14 +29,10 @@ class UIHelper {
   }
 
 // Text and Style Provider
-  static Widget titleTextStyle(String title, Color clr, double fntsize, bool isBold, bool isCenterAliignment) {
+  static Widget titleTextStyle(String title, Color clr, double fntsize, bool isBold, bool isCenterAliignment, {bool isUnderline = false}) {
     return Text(
       title.tr().toString(),
-      style: TextStyle(
-          color: clr,
-          fontSize: fntsize,
-          decoration: title == "swmUserCharges".tr().toString() ? TextDecoration.underline : TextDecoration.none,
-          fontWeight: isBold ? FontWeight.bold : FontWeight.normal),
+      style: TextStyle(color: clr, fontSize: fntsize, decoration: isUnderline ? TextDecoration.underline : TextDecoration.none, fontWeight: isBold ? FontWeight.bold : FontWeight.normal),
       textAlign: isCenterAliignment
           ? TextAlign.center
           : title.contains("\u{20B9}")

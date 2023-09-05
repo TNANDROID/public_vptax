@@ -31,6 +31,7 @@ Color need_improvement1 = Color(0xFFD2E9FF);
 Color dot_light_screen_lite = Color(0xFFC4DDFA);
 Color inputGrey = Color(0xFFeeecec);
 Color need_improvement2 = Color(0xFFEDF3FA);
+Color need_improvement3 = Color.fromARGB(255, 149, 199, 247);
 Color blueAccent = Color(0xFFd6f9ff);
 Color sky_blue = Color(0xFF61BEE1);
 Color helpBlue = Color(0xff3282B8);
