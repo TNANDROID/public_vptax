@@ -15,8 +15,8 @@ class PopulationView extends StatefulWidget {
 class _PopulationViewState extends State<PopulationView> {
   List selectedIndexes = [];
   List colourList = [
-    {"c1": Color(0xFF614385), "c2": Color(0xFF516395)},
-    {"c1": Color(0xFF09203F), "c2": Color(0xFF537895)}
+    {"c1": Color(0xFFFFECD2), "c2": Color(0xFFFFDDE1)},
+    {"c1": Color(0xFFFFDDE1), "c2": Color(0xFFE8DAEF)}
   ];
   List<dynamic> numberPopulationList = [
     {"title": "Number of Population", "total": "1000", "male": "600", "female": "400"},
@@ -71,18 +71,16 @@ class _PopulationViewState extends State<PopulationView> {
   Widget customCardDesign(int index, String title, String Value) {
     dynamic selectedColorData = colourList[index % colourList.length];
     return Column(children: [
-      Opacity(
-          opacity: 0.7, // Set the desired opacity here
-          child: Container(
-            decoration: UIHelper.roundedBorderWithColorWithShadow(15, selectedColorData['c1'], selectedColorData['c2']),
-            height: 85,
-            width: Screen.width(context) / 3.8,
-            child: Row(children: [
-              Expanded(
-                child: UIHelper.titleTextStyle(title, c.white, 12, true, true),
-              ),
-            ]),
-          )),
+      Container(
+        decoration: UIHelper.roundedBorderWithColorWithShadow(15, selectedColorData['c1'], selectedColorData['c2']),
+        height: 85,
+        width: Screen.width(context) / 3.8,
+        child: Row(children: [
+          Expanded(
+            child: UIHelper.titleTextStyle(title, c.text_color, 12, true, true),
+          ),
+        ]),
+      ),
       Container(
         transform: Matrix4.translationValues(0.0, -20.0, 0.0),
         decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.white, c.white, borderColor: selectedColorData['c2'], borderWidth: 2),
@@ -90,7 +88,7 @@ class _PopulationViewState extends State<PopulationView> {
         width: Screen.width(context) / 4.8,
         child: Row(children: [
           Expanded(
-            child: UIHelper.titleTextStyle(Value, selectedColorData['c1'], 12, true, true),
+            child: UIHelper.titleTextStyle(Value, c.black, 12, true, true),
           ),
         ]),
       )

@@ -106,7 +106,7 @@ class _KYVDashboardState extends State<KYVDashboard> {
     if (selectedLang == "en") {
       address = selectedDistrict[key_dname] + ", " + selectedBlock[key_bname] + ", " + selectedVillage[key_pvname] + ".";
     } else {
-      address = selectedDistrict[key_dname_ta] + ", " + selectedBlock[key_bname_ta] + ", " + selectedVillage[key_pvname_ta] + ".";
+      address = selectedDistrict[key_dname_ta] + ", " + selectedBlock[key_bname_ta].toString().trimRight() + ", " + selectedVillage[key_pvname_ta] + ".";
     }
     return Stack(children: [
       Container(
@@ -163,7 +163,7 @@ class _KYVDashboardState extends State<KYVDashboard> {
     if (index == 1) {
       dropList = preferencesService.districtList;
       dropList.sort((a, b) {
-        return a[selectedLang=='en'?key_dname:key_dname_ta].compareTo(b[selectedLang=='en'?key_dname:key_dname_ta]);
+        return a[selectedLang == 'en' ? key_dname : key_dname_ta].compareTo(b[selectedLang == 'en' ? key_dname : key_dname_ta]);
       });
       titleText = key_dname;
       titleTextTamil = key_dname_ta;
@@ -171,7 +171,7 @@ class _KYVDashboardState extends State<KYVDashboard> {
     } else if (index == 2) {
       dropList = model.selectedBlockList;
       dropList.sort((a, b) {
-        return a[selectedLang=='en'?key_bname:key_bname_ta].compareTo(b[selectedLang=='en'?key_bname:key_bname_ta]);
+        return a[selectedLang == 'en' ? key_bname : key_bname_ta].compareTo(b[selectedLang == 'en' ? key_bname : key_bname_ta]);
       });
       titleText = key_bname;
       titleTextTamil = key_bname_ta;
@@ -179,7 +179,7 @@ class _KYVDashboardState extends State<KYVDashboard> {
     } else if (index == 3) {
       dropList = model.selectedVillageList;
       dropList.sort((a, b) {
-        return a[selectedLang=='en'?key_pvname:key_pvname_ta].compareTo(b[selectedLang=='en'?key_pvname:key_pvname_ta]);
+        return a[selectedLang == 'en' ? key_pvname : key_pvname_ta].compareTo(b[selectedLang == 'en' ? key_pvname : key_pvname_ta]);
       });
       titleText = key_pvname;
       titleTextTamil = key_pvname_ta;
@@ -214,6 +214,7 @@ class _KYVDashboardState extends State<KYVDashboard> {
                 child: Text(
                   selectedLang == "en" ? item[titleText].toString() : item[titleTextTamil].toString(),
                   style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.text_color),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ))
           .toList(),

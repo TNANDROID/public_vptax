@@ -35,19 +35,15 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
 
   final _controller = ScrollController();
   bool cardvisibility = false;
-  int selectedIndex = 0;
-  final List items = [
-    '01',
-    '02',
-    '03',
-    '04',
-    '05',
-  ];
+  int selectedIndex = 1;
+
+  List colourList = [c.text_color, c.need_improvement3, c.white];
+
   List workitems = [
     {'id': 0, 'name': 'total_works'.tr().toString()},
     {'id': 1, 'name': 'not_started_work'.tr().toString()},
     {'id': 2, 'name': 'work_in_progress'.tr().toString()},
-    {'id': 3, 'name': 'completed_work'.tr().toString()},
+    {'id': 3, 'name': 'completed_work'.tr().toString()}
   ];
   List showFlag = [];
 
@@ -72,7 +68,7 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
     if (selectedLang == "en") {
       address = selectedDistrict[key_dname] + ", " + selectedBlock[key_bname] + ", " + selectedVillage[key_pvname] + ". ( " + selectedFinYear[key_fin_year] + " )";
     } else {
-      address = selectedDistrict[key_dname_ta] + ", " + selectedBlock[key_bname_ta] + ", " + selectedVillage[key_pvname_ta] + ". ( " + selectedFinYear[key_fin_year] + " )";
+      address = selectedDistrict[key_dname_ta] + ", " + selectedBlock[key_bname_ta].toString().trimRight() + ", " + selectedVillage[key_pvname_ta] + ". ( " + selectedFinYear[key_fin_year] + " )";
     }
     return Stack(children: [
       Container(
@@ -285,13 +281,13 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
                           child: Column(
                           children: [
                             UIHelper.verticalSpaceLarge,
-                            Image.asset(imagePath.waitingImg, fit: BoxFit.contain, height: Screen.width(context) / 2, width: Screen.width(context) / 2),
+                            Image.asset(imagePath.waiting1, fit: BoxFit.contain, height: Screen.width(context) / 2, width: Screen.width(context) / 2),
                             UIHelper.verticalSpaceMedium,
                             UIHelper.titleTextStyle('waiting_input'.tr().toString(), c.text_color, 12, true, true)
                           ],
                         )),
                   UIHelper.verticalSpaceSmall,
-                  UIHelper.titleTextStyle(workitems[selectedIndex]['name'].toString(), c.primary_text_color2, 12, false, true),
+                  Visibility(visible: selectedFinYear.isNotEmpty, child: UIHelper.titleTextStyle(workitems[selectedIndex]['name'].toString(), c.primary_text_color2, 12, false, true)),
                   Expanded(
                       child: SingleChildScrollView(
                           scrollDirection: Axis.vertical,
@@ -309,14 +305,67 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
     );
   }
 
+  Widget rightArrowContainerWiget(int index) {
+    return Container(
+      decoration: UIHelper.roundedBorderWithColor(
+          index == 1 ? 10 : 0,
+          0,
+          index == 1 ? 10 : 0,
+          0,
+          selectedIndex == index
+              ? colourList[1]
+              : selectedIndex == index + 1
+                  ? colourList[0]
+                  : colourList[2],
+          borderWidth: 0),
+      child: InkWell(
+          onTap: () {
+            selectedIndex = index;
+            setState(() {});
+          },
+          child: Row(
+            children: [
+              Container(
+                  height: 60,
+                  width: Screen.width(context) / 3.6,
+                  decoration: UIHelper.roundedBorderWithColor(
+                      index == 1 ? 10 : 0,
+                      0,
+                      index == 1 ? 10 : 0,
+                      0,
+                      selectedIndex == index
+                          ? colourList[0]
+                          : selectedIndex == index + 1
+                              ? colourList[2]
+                              : colourList[1]),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      UIHelper.titleTextStyle(workitems[index]['name'].toString(), selectedIndex == index ? c.white : c.black, 9, false, true),
+                      UIHelper.titleTextStyle("10", selectedIndex == index ? c.white : c.black, 10, true, true)
+                    ],
+                  )),
+              Container(
+                  transform: Matrix4.translationValues(-1.0, 0.0, 0.0),
+                  height: 60,
+                  width: 15,
+                  child: Image.asset(imagePath.rightarrow,
+                      color: selectedIndex == index
+                          ? colourList[0]
+                          : selectedIndex == index + 1
+                              ? colourList[2]
+                              : colourList[1],
+                      fit: BoxFit.fill))
+            ],
+          )),
+    );
+  }
+
   Widget _workListType(BuildContext context) {
     return Column(
       children: [
         InkWell(
-            onTap: () {
-              selectedIndex = workitems[0]['id'];
-              setState(() {});
-            },
+            onTap: () {},
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -324,6 +373,7 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
                 UIHelper.titleTextStyle(" : 30", c.text_color, 14, true, false),
               ],
             )),
+        UIHelper.verticalSpaceSmall,
         Container(
           height: 60,
           width: Screen.width(context),
@@ -331,48 +381,8 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
           decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.white, c.white, borderWidth: 0),
           child: Row(
             children: [
-              Container(
-                decoration: UIHelper.roundedBorderWithColor(10, 0, 10, 0, c.need_improvement3, borderWidth: 0),
-                child: InkWell(
-                    onTap: () {
-                      selectedIndex = workitems[1]['id'];
-                      setState(() {});
-                    },
-                    child: Row(
-                      children: [
-                        Container(
-                            height: 60,
-                            width: Screen.width(context) / 3.6,
-                            decoration: UIHelper.roundedBorderWithColor(10, 0, 10, 0, c.text_color),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [UIHelper.titleTextStyle(workitems[1]['name'].toString(), c.white, 9, false, true), UIHelper.titleTextStyle("10", c.white, 10, true, true)],
-                            )),
-                        Container(transform: Matrix4.translationValues(-1.0, 0.0, 0.0), height: 60, width: 15, child: Image.asset(imagePath.rightarrow, color: c.text_color, fit: BoxFit.fill))
-                      ],
-                    )),
-              ),
-              Container(
-                decoration: UIHelper.roundedBorderWithColor(0, 0, 0, 0, c.white, borderWidth: 0),
-                child: InkWell(
-                    onTap: () {
-                      selectedIndex = workitems[2]['id'];
-                      setState(() {});
-                    },
-                    child: Row(
-                      children: [
-                        Container(
-                            height: 60,
-                            width: Screen.width(context) / 3.6,
-                            decoration: UIHelper.roundedBorderWithColor(0, 0, 0, 0, c.need_improvement3),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [UIHelper.titleTextStyle(workitems[2]['name'].toString(), c.white, 9, false, true), UIHelper.titleTextStyle("10", c.white, 10, true, true)],
-                            )),
-                        Container(transform: Matrix4.translationValues(-1.0, 0.0, 0.0), height: 60, width: 15, child: Image.asset(imagePath.rightarrow, color: c.need_improvement3, fit: BoxFit.fill))
-                      ],
-                    )),
-              ),
+              rightArrowContainerWiget(1),
+              rightArrowContainerWiget(2),
               Expanded(
                 child: InkWell(
                     onTap: () {
@@ -381,10 +391,22 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
                     },
                     child: Container(
                         height: 60,
-                        decoration: UIHelper.roundedBorderWithColor(0, 10, 0, 10, c.white),
+                        decoration: UIHelper.roundedBorderWithColor(
+                            0,
+                            10,
+                            0,
+                            10,
+                            selectedIndex == 3
+                                ? colourList[0]
+                                : selectedIndex == 1
+                                    ? colourList[2]
+                                    : colourList[1]),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [UIHelper.titleTextStyle(workitems[3]['name'].toString(), c.black, 9, false, true), UIHelper.titleTextStyle("10", c.black, 10, true, true)],
+                          children: [
+                            UIHelper.titleTextStyle(workitems[3]['name'].toString(), selectedIndex == 3 ? c.white : c.black, 9, false, true),
+                            UIHelper.titleTextStyle("10", selectedIndex == 3 ? c.white : c.black, 10, true, true)
+                          ],
                         ))),
               )
             ],
@@ -401,8 +423,9 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
         child: ListView.builder(
           physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          itemCount: items.length,
+          itemCount: 5,
           itemBuilder: (BuildContext context, int index) {
+            int siNo = index + 1;
             return AnimationConfiguration.staggeredList(
                 position: index,
                 duration: const Duration(milliseconds: 800),
@@ -435,7 +458,7 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
                                               width: 50,
                                               decoration: BoxDecoration(color: c.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(25))),
                                               child: Text(
-                                                items[index],
+                                                siNo.toString().length == 1 ? "0$siNo" : "$siNo",
                                                 textAlign: TextAlign.center,
                                               ),
                                             ),
