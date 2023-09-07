@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings
+
 import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -53,13 +55,15 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
     _controller.addListener(() {
       if (_controller.position.atEdge) {
         bool isTop = _controller.position.pixels == 0;
-        if (isTop) {
-          setState(() {});
-        } else {
-          setState(() {});
-        }
+        setState(() {});
       }
     });
+    initialize();
+  }
+
+  Future<void> initialize() async {
+    selectedLang = await preferencesService.getUserInfo("lang");
+    setState(() {});
   }
 
 //Custom Card Design
@@ -68,7 +72,14 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
     if (selectedLang == "en") {
       address = selectedDistrict[key_dname] + ", " + selectedBlock[key_bname] + ", " + selectedVillage[key_pvname] + ". ( " + selectedFinYear[key_fin_year] + " )";
     } else {
-      address = selectedDistrict[key_dname_ta] + ", " + selectedBlock[key_bname_ta].toString().trimRight() + ", " + selectedVillage[key_pvname_ta] + ". ( " + selectedFinYear[key_fin_year] + " )";
+      address = selectedDistrict[key_dname_ta].toString().trimRight() +
+          ", " +
+          selectedBlock[key_bname_ta].toString().trimRight() +
+          ", " +
+          selectedVillage[key_pvname_ta].toString().trimRight() +
+          ". ( " +
+          selectedFinYear[key_fin_year] +
+          " )";
     }
     return Stack(children: [
       Container(
@@ -90,7 +101,6 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
               color: c.colorPrimary,
             ),
             SizedBox(width: Screen.width(context) / 1.5, child: Text(address, overflow: TextOverflow.visible, style: TextStyle(color: c.text_color, fontSize: 10, fontWeight: FontWeight.normal))),
-            // UIHelper.titleTextStyle(address, c.text_color, 12, true, true),
           ]),
         ),
         Positioned(
@@ -118,7 +128,6 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
   //Dropdown Input Field Widget
   Widget addInputDropdownField(int index, String inputHint, String fieldName, StartUpViewModel model) {
     List dropList = [];
-    String keyCode = "";
     String titleText = "";
     String titleTextTamil = "";
     dynamic initValue = {};
@@ -128,7 +137,6 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
       dropList.sort((a, b) {
         return a[selectedLang == 'en' ? key_dname : key_dname_ta].compareTo(b[selectedLang == 'en' ? key_dname : key_dname_ta]);
       });
-      keyCode = key_dcode;
       titleText = key_dname;
       titleTextTamil = key_dname_ta;
       initValue = selectedDistrict;
@@ -137,7 +145,6 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
       dropList.sort((a, b) {
         return a[selectedLang == 'en' ? key_bname : key_bname_ta].compareTo(b[selectedLang == 'en' ? key_bname : key_bname_ta]);
       });
-      keyCode = key_bcode;
       titleText = key_bname;
       titleTextTamil = key_bname_ta;
       initValue = selectedBlock;
@@ -146,13 +153,11 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
       dropList.sort((a, b) {
         return a[selectedLang == 'en' ? key_pvname : key_pvname_ta].compareTo(b[selectedLang == 'en' ? key_pvname : key_pvname_ta]);
       });
-      keyCode = key_pvcode;
       titleText = key_pvname;
       titleTextTamil = key_pvname_ta;
       initValue = selectedVillage;
     } else if (index == 4) {
       dropList = preferencesService.finYearList;
-      keyCode = key_fin_year;
       titleText = key_fin_year;
       titleTextTamil = key_fin_year;
       initValue = selectedFinYear;
@@ -487,7 +492,7 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
                                                               Row(
                                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                                 children: [
-                                                                  UIHelper.titleTextStyle('Scheme Name : ', c.white, 12, false, false),
+                                                                  UIHelper.titleTextStyle('scheme_name'.toString().tr() + ' : ', c.white, 12, false, false),
                                                                   UIHelper.titleTextStyle('MGNREGS', c.white, 12, true, false),
                                                                 ],
                                                               ),
@@ -495,7 +500,7 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
                                                               Row(
                                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                                 children: [
-                                                                  UIHelper.titleTextStyle('Work Type Name : ', c.white, 12, false, false),
+                                                                  UIHelper.titleTextStyle('work_type_name'.toString().tr() + ' : ', c.white, 12, false, false),
                                                                   Expanded(child: UIHelper.titleTextStyle('Library Building Repair and Toilet Construction', c.white, 12, true, false)),
                                                                 ],
                                                               ),

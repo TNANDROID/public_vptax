@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
@@ -12,7 +14,6 @@ class habitationView extends StatefulWidget {
 }
 
 class _habitationViewState extends State<habitationView> {
-  List selectedIndexes = [];
   List<dynamic> mainPopulationList = [
     {"title": "Number of Habitations", "value": "8"},
     {"title": "Number of Streets", "value": "5"},

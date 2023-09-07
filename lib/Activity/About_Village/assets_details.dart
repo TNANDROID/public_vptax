@@ -13,7 +13,6 @@ class AssetDetailsView extends StatefulWidget {
 }
 
 class _AssetDetailsViewState extends State<AssetDetailsView> {
-  List imageUrl = ["assets/images/lamp.png", "assets/images/waterTank.png", "assets/images/road.png"];
   List<Color> colorsList = [c.followers, c.followingBg, c.red_new];
   List workdetailsList = [
     {"title": "Number Of EB Connection", "value": "0"},

@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_interpolation_to_compose_strings
 
 import 'dart:math';
 
@@ -48,6 +48,7 @@ class _KYVDashboardState extends State<KYVDashboard> {
 
   Future<void> initialize() async {
     selectedLang = await preferencesService.getUserInfo("lang");
+    setState(() {});
   }
 
   @override
@@ -106,7 +107,7 @@ class _KYVDashboardState extends State<KYVDashboard> {
     if (selectedLang == "en") {
       address = selectedDistrict[key_dname] + ", " + selectedBlock[key_bname] + ", " + selectedVillage[key_pvname] + ".";
     } else {
-      address = selectedDistrict[key_dname_ta] + ", " + selectedBlock[key_bname_ta].toString().trimRight() + ", " + selectedVillage[key_pvname_ta] + ".";
+      address = selectedDistrict[key_dname_ta].toString().trimRight() + ", " + selectedBlock[key_bname_ta].toString().trimRight() + ", " + selectedVillage[key_pvname_ta].toString().trimRight() + ".";
     }
     return Stack(children: [
       Container(
