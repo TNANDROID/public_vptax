@@ -101,7 +101,8 @@ class _HomeState extends State<Home> {
     taxTypeList.clear();
     taxTypeList = preferencesService.taxTypeList;
     String pre_isLogin = await preferencesService.getUserInfo(key_isLogin);
-    islogin = pre_isLogin != "" ? pre_isLogin : "no";
+    // islogin = pre_isLogin != "" ? pre_isLogin : "no";
+    islogin = "Gone";
     print(islogin);
     setState(() {
       if (selectedLang != "" && selectedLang == "en") {

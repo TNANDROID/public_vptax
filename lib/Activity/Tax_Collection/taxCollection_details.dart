@@ -116,6 +116,17 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
         // }
       }
     }
+
+    totalAmountToPay=0.00;
+    if (mainList.isNotEmpty) {
+      for (var data in mainList) {
+        if(data[key_no_of_demand_available] >0){
+          for (var demanData in data[s.key_DEMAND_DETAILS]) {
+            totalAmountToPay = totalAmountToPay + double.parse(Utils().getDemadAmount(demanData, data[key_taxtypeid].toString()));
+          }
+        }
+      }
+    }
     main_totalAmount = 0.00;
     for (int i = 0; i < mainList.length; i++) {
       main_totalAmount = main_totalAmount + mainList[i][s.key_tax_pay] + mainList[i][s.key_swm_pay];
@@ -466,7 +477,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Visibility(
-                visible: taxData.length > 1,
+                visible: taxData.isNotEmpty,
                 child:Row(
                   children: [
                     Container(
@@ -599,12 +610,12 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                       main_totalAmount = main_totalAmount + mainList[i][s.key_tax_pay] + mainList[i][s.key_swm_pay];
                                     }*/
                                     if (islogin == "yes" && widget.isHome) {
-                                      preferencesService.addedTaxPayList.removeWhere((element) => element[key_assessment_id].toString() == mainList[mainIndex][key_assessment_id].toString());
                                       dynamic selectedDemandDetails = mainList[mainIndex];
                                       List selectedDemandDetailsList = selectedDemandDetails[key_DEMAND_DETAILS];
                                       bool hasActiveFlag = selectedDemandDetailsList.any((json) => json[key_flag] == true);
 
                                       if (hasActiveFlag) {
+                                        preferencesService.addedTaxPayList.removeWhere((element) => element[key_assessment_id].toString() == mainList[mainIndex][key_assessment_id].toString());
                                         preferencesService.addedTaxPayList.add(selectedDemandDetails);
                                       }
 
@@ -1244,16 +1255,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
       }
     }
 
-    totalAmountToPay=0.00;
-    if (mainList.isNotEmpty) {
-      for (var data in mainList) {
-        if(data[key_no_of_demand_available] >0){
-          for (var demanData in data[s.key_DEMAND_DETAILS]) {
-            totalAmountToPay = totalAmountToPay + double.parse(Utils().getDemadAmount(demanData, data[key_taxtypeid].toString()));
-          }
-        }
-      }
-    }
+
     getCount();
 
 /*

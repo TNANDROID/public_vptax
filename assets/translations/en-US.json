@@ -34,7 +34,7 @@
   "financialYear": "Financial Year",
   "lesseeNumber": "Lessee Number",
   "tradeNumber": "Trade Number",
-  "computerRegisterNumber": "E - tax Number",
+  "computerRegisterNumber": "Computer Generated Number",
   "tryAnotherWay": "Try Another Way",
   "userName": "User Name",
   "services": "Services",
@@ -103,8 +103,8 @@
   "new": "To file a new ",
   "new2": "",
   "userPassKey": "userPassKey",
-  "via_mobileNumber": "To view the tax details linked to the phone number",
-  "via_e_taxNumber": "To view the tax details by entering E-tax number",
+  "via_mobileNumber": "To view the tax details linked with the phone number",
+  "via_e_taxNumber": "To view the tax details by entering computer generated number",
   "via_assessNumber": "To view the tax details by entering assessment number",
   "do_you_want_to_exit_an_app": "Do you want to exit an app?",
   "exit_app": "Exit",
@@ -169,7 +169,7 @@
   "total_assessment": "Total Assessment :",
   "pending_assessment_transaction": "Transaction Pending :",
   "auto_date_time": "Please enable autodate time settings",
-  "payment_msg": "Your Payment Received",
+  "payment_msg": "Your Payment Received Successfully",
   "transaction_warning_hint": "Previous transaction pending. Please check Transaction History for more Details",
   "village_development_works_title": "Village Development Works",
   "your_tax_details": "View your tax details and make payments",
@@ -181,5 +181,7 @@
   "trade_hint": "Previous transaction for trade license tax is pending. See transaction history for more details",
   "selected_to_pay": "Selected amount to pay",
   "total": "Total to pay",
-  "selected": "Selected to pay"
+  "selected": "Selected to pay",
+  "pending_payment": "Pending payment",
+  "work_type_name": "Work Type Name"
 }

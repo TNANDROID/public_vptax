@@ -182,7 +182,7 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
   closeWebView(context, transactionResult, ContentType type) async {
     Navigator.pop(context);
     if (type == ContentType.success) {
-      Utils().showAlert(mcontext, type, "$transactionResult", btnCount: "1", btnmsg: 'payment', receiptList: receiptList);
+      Utils().showAlert(mcontext, type,/*"$transactionResult"*/'payment_msg'.tr().toString(), btnCount: "1", btnmsg: 'payment', receiptList: receiptList,mode: 'payment_success');
     } else {
       String msg = "$transactionResult \n Please Check Transaction History for more Details";
       Utils().showAlert(mcontext, type, msg, btnCount: "1", btnmsg: 'canceled');
