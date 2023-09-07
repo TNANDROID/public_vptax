@@ -363,8 +363,10 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                           indexedItemBuilder: (context, dynamic element, mainIndex) => Container(
                               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                               child: AnimatedContainer(
+                                padding: EdgeInsets.only(bottom: 5),
                                 duration: const Duration(milliseconds: 500),
                                 child: Container(
+                                  padding: EdgeInsets.only(bottom: 5),
                                   width: Screen.width(context),
                                   decoration: BoxDecoration(color: c.blue_new, borderRadius: BorderRadius.circular(20)),
                                   child: Stack(
@@ -386,17 +388,22 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                             child: StreamBuilder<Object>(
                                                 stream: null,
                                                 builder: (context, snapshot) {
-                                                  return Column(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      Container(
-                                                          padding: EdgeInsets.fromLTRB(15, 15, 5, 15),
-                                                          decoration: BoxDecoration(color: c.white, borderRadius: BorderRadius.circular(20)),
-                                                          width: Screen.width(context) - 40,
-                                                          child: headerCardUIWidget(mainIndex)),
-                                                    ],
-                                                  );
+                                                  return Container(
+                                                      padding: EdgeInsets.fromLTRB(15, 15, 5, 15),
+                                                      decoration: BoxDecoration(
+                                                        color: c.white,
+                                                        borderRadius: BorderRadius.circular(20),
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: Colors.grey.withOpacity(0.5), // Shadow color
+                                                            spreadRadius: 3, // Spread radius
+                                                            blurRadius: 5, // Blur radius
+                                                            offset: Offset(3, 3), // Offset from the top-left corner
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      width: Screen.width(context) - 40,
+                                                      child: headerCardUIWidget(mainIndex));
                                                 }),
                                           ),
                                         ],
