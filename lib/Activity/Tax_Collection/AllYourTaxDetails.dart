@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:grouped_list/grouped_list.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Model/startup_model.dart';
@@ -12,7 +13,6 @@ import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:public_vptax/Utils/utils.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
-import 'package:sticky_grouped_list/sticky_grouped_list.dart';
 import '../../Resources/StringsKey.dart' as s;
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
@@ -29,7 +29,8 @@ class AllYourTaxDetails extends StatefulWidget {
   final pvcode;
   final isTaxDropDown;
   final selectedEntryType;
-  AllYourTaxDetails({Key? key, this.selectedTaxTypeData, this.isHome, this.dcode, this.bcode, this.pvcode, this.isTaxDropDown, this.selectedEntryType});
+  final mobile;
+  AllYourTaxDetails({Key? key, this.selectedTaxTypeData, this.isHome, this.dcode, this.bcode, this.pvcode, this.isTaxDropDown, this.selectedEntryType, this.mobile});
 
   @override
   _AllYourTaxDetailsState createState() => _AllYourTaxDetailsState();
@@ -76,7 +77,6 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
   double totalAmountToPay = 0.00;
 
   bool numIsLoading = false;
-  bool dropdownVisible = false;
 
   ScrollController controller_scroll = ScrollController();
 
@@ -139,11 +139,9 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
     selectedLang = await preferencesService.getUserInfo("lang");
     islogin = await preferencesService.getUserInfo(s.key_isLogin);
     mobile_widget = islogin == "yes" ? await preferencesService.getUserInfo("mobile_number") : "";
-
-    if (islogin == "yes") {
-      await getTaxDetails();
-      await filterDataList();
-    }
+    etTextController.text = widget.mobile;
+    await getTaxDetails();
+    await filterDataList();
     setState(() {});
   }
 
@@ -196,17 +194,11 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                           children: [
                             Expanded(
                               child: Container(
-                                margin: EdgeInsets.symmetric(horizontal: dropdownVisible ? 0 : 20),
-                                padding: EdgeInsets.symmetric(horizontal: dropdownVisible ? 0 : 20),
+                                margin: EdgeInsets.symmetric(horizontal: 0),
+                                padding: EdgeInsets.symmetric(horizontal: 0),
                                 child: TextFormField(
                                   controller: etTextController,
-                                  onChanged: (value) {
-                                    if (etTextController.text.length < 10) {
-                                      dropdownVisible = false;
-                                      mainList = [];
-                                      setState(() {});
-                                    }
-                                  },
+                                  onChanged: (value) {},
                                   decoration: InputDecoration(
                                     constraints: BoxConstraints(maxHeight: 40),
                                     contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
@@ -222,7 +214,6 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                               await getTaxDetails();
                                               await filterDataList();
                                               numIsLoading = false;
-                                              dropdownVisible = true;
                                               setState(() {});
                                             } else {
                                               Utils().showAlert(context, ContentType.warning, 'enter_mobile_number'.tr().toString(), btnCount: "1", btnmsg: "ok");
@@ -257,84 +248,105 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                 ),
                               ),
                             ),
-                            Visibility(
-                              visible: dropdownVisible,
-                              child: Expanded(
-                                child: Container(
-                                  margin: EdgeInsets.only(left: 15),
-                                  decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.white, c.white),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                          width: 40,
-                                          height: 40,
-                                          padding: EdgeInsets.all(5),
-                                          decoration: UIHelper.roundedBorderWithColor(5, 5, 5, 5, c.colorPrimary),
-                                          child: Image.asset(
-                                            selectedTaxTypeData[key_img_path].toString(),
-                                            fit: BoxFit.contain,
-                                            height: 15,
-                                            width: 15,
-                                          )),
-                                      UIHelper.horizontalSpaceSmall,
-                                      Container(width: 110, margin: EdgeInsets.only(left: 5), child: addInputDropdownField()),
-                                    ],
-                                  ),
+                            Expanded(
+                              child: Container(
+                                margin: EdgeInsets.only(left: 15),
+                                decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.white, c.white),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                        width: 30,
+                                        height: 30,
+                                        padding: EdgeInsets.all(5),
+                                        decoration: UIHelper.roundedBorderWithColor(5, 5, 5, 5, c.colorPrimary),
+                                        child: Image.asset(
+                                          selectedTaxTypeData[key_img_path].toString(),
+                                          fit: BoxFit.contain,
+                                          height: 15,
+                                          width: 15,
+                                        )),
+                                    UIHelper.horizontalSpaceSmall,
+                                    Container(width: 100, margin: EdgeInsets.only(left: 5), child: addInputDropdownField()),
+                                  ],
                                 ),
                               ),
                             ),
                           ],
                         ),
                       ),
-
-                      // Visibility(
-                      //   visible: islogin != "yes",
-                      //   child: Container(
-                      //     margin: EdgeInsets.fromLTRB(20, 20, 20, 10),
-                      //     child: Row(
-                      //       mainAxisAlignment: MainAxisAlignment.start,
-                      //       crossAxisAlignment: CrossAxisAlignment.center,
-                      //       children: [
-                      //         SizedBox(
-                      //           width: MediaQuery.of(context).size.width / 1.5,
-                      //           child: addInputFormControl('mobile', 'mobileNumber'.tr().toString(), key_mobile_number),
-                      //         ),
-                      //         UIHelper.horizontalSpaceSmall,
-                      //         InkWell(
-                      //           onTap: () async {
-                      //             etTextController.text = "9875235654";
-                      //             if (etTextController.text != "" && Utils().isNumberValid(etTextController.text)) {
-                      //               await getTaxDetails();
-                      //               await filterDataList();
-                      //               setState(() {});
-                      //             } else {
-                      //               Utils().showAlert(context, ContentType.warning, 'enter_mobile_number'.tr().toString(), btnCount: "1", btnmsg: "ok");
-                      //             }
-                      //           },
-                      //           child: Image.asset(
-                      //             imagePath.submit,
-                      //             height: 35,
-                      //             width: 35,
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
-                      // UIHelper.verticalSpaceSmall,
-                      // addToPayWidget(),
-                      // assetCountWidget(),
+                      Container(
+                        margin: EdgeInsets.only(top: 5, left: 20, right: 20),
+                        decoration: UIHelper.GradientContainer(20, 20, 20, 20, [c.subscription_type_red_color, c.subscription_type_red_color], intwid: 0),
+                        child: Container(
+                          margin: EdgeInsets.only(left: 5, bottom: 3),
+                          decoration: UIHelper.roundedBorderWithColor(20, 20, 20, 20, c.white),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Container(
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.all(5),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        UIHelper.titleTextStyle("total_assessment".tr().toString(), c.grey_10, 10, true, true),
+                                        UIHelper.titleTextStyle(" $totalAllAssessment", c.grey_10, 14, true, true),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Visibility(
+                                visible: pendingAllAssessment > 0,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  padding: EdgeInsets.all(5),
+                                  margin: EdgeInsets.only(
+                                    top: 5,
+                                  ),
+                                  decoration: UIHelper.GradientContainer(0, 0, 18, 18, [c.red_new_light, c.red_new_light], intwid: 0),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          UIHelper.titleTextStyle("pending_assessment_transaction".tr().toString(), c.grey_10, 11, true, true),
+                                          UIHelper.titleTextStyle(" $pendingAllAssessment", c.grey_10, 14, true, true),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      UIHelper.titleTextStyle(getWarningHint(), c.subscription_type_red_color, 10, true, true),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                       Visibility(
                         visible: mainList.isNotEmpty,
                         child: Expanded(
-                            child: StickyGroupedListView<dynamic, String>(
+                            child: GroupedListView<dynamic, String>(
                           elements: mainList,
+                          useStickyGroupSeparators: true,
                           shrinkWrap: true,
                           groupBy: (element) => element[key_taxtypeid].toString(),
                           groupSeparatorBuilder: (element) => stickyHeader(element),
                           indexedItemBuilder: (context, dynamic element, mainIndex) => Container(
                               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                              margin: EdgeInsets.symmetric(vertical: 5),
                               child: AnimatedContainer(
                                 duration: const Duration(milliseconds: 500),
                                 child: Container(
@@ -448,109 +460,81 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
     );
   }
 
-  Widget stickyHeader(var element) {
-    var TaxList = {
-      '1': 'Property Tax',
-      '2': 'Water Tax',
-      '4': 'Professional Tax',
-      '5': 'Non Tax',
-      '6': 'Trade Licence',
-    };
+  Widget stickyHeader(var taxTypeId) {
+    var TaxList = preferencesService.taxTypeList;
 
-    String taxTypeId = element[key_taxtypeid];
-
-    String TaxHeader = TaxList[taxTypeId].toString();
+    String TaxHeader = '';
+    String Taximgpath = '';
+    for (var list in TaxList) {
+      if (list[key_taxtypeid].toString() == taxTypeId) {
+        TaxHeader = selectedLang == 'en' ? list[key_taxtypedesc_en] : list[key_taxtypedesc_ta];
+        Taximgpath = list[key_img_path];
+      }
+    }
 
     String totalTaxCount = '';
-    int pendingTaxCount = 0;
 
     switch (taxTypeId) {
       case '1':
         totalTaxCount = totalAssessment_property.toString();
-        pendingTaxCount = pendingAssessment_property;
         break;
       case '2':
         totalTaxCount = totalAssessment_water.toString();
-        pendingTaxCount = pendingAssessment_water;
         break;
       case '4':
         totalTaxCount = totalAssessment_professional.toString();
-        pendingTaxCount = pendingAssessment_professional;
         break;
       case '5':
         totalTaxCount = totalAssessment_non.toString();
-        pendingTaxCount = pendingAssessment_non;
         break;
       case '6':
         totalTaxCount = totalAssessment_trade.toString();
-        pendingTaxCount = pendingAssessment_trade;
         break;
       default:
         break;
     }
 
     return Container(
-      height: pendingTaxCount > 0 ? 130 : 60,
-      margin: EdgeInsets.only(top: 5, left: 20, right: 20),
-      decoration: UIHelper.GradientContainer(20, 20, 20, 20, [c.subscription_type_red_color, c.subscription_type_red_color], intwid: 0),
-      child: Container(
-        margin: EdgeInsets.only(left: 5, bottom: 3),
-        decoration: UIHelper.roundedBorderWithColor(20, 20, 20, 20, c.white),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 5,
-            ),
-            Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.all(5),
-              child: Column(
-                children: [
-                  UIHelper.titleTextStyle(TaxHeader, c.text_color, 12, true, true),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      UIHelper.titleTextStyle("total_assessment".tr().toString(), c.grey_10, 10, true, true),
-                      UIHelper.titleTextStyle(" $totalTaxCount", c.grey_10, 14, true, true),
-                    ],
+      padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+      width: MediaQuery.of(context).size.width,
+      color: c.need_improvement2,
+      child: Stack(
+        alignment: Alignment.centerLeft,
+        children: [
+          Container(
+            margin: EdgeInsets.only(left: 10),
+            width: MediaQuery.of(context).size.width / 2,
+            padding: EdgeInsets.only(left: 50, right: 20, top: 10, bottom: 10),
+            decoration: UIHelper.roundedBorderWithColor(20, 20, 20, 20, c.primary_text_color2),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                UIHelper.titleTextStyle(TaxHeader, c.white, 12, true, false),
+                Container(
+                  width: 20,
+                  height: 20,
+                  padding: EdgeInsets.all(2),
+                  decoration: BoxDecoration(border: Border.all(width: 2, color: c.white), borderRadius: BorderRadius.circular(20)),
+                  child: Center(
+                    child: UIHelper.titleTextStyle(totalTaxCount, c.white, 12, true, false),
                   ),
-                ],
+                )
+              ],
+            ),
+          ),
+          Container(
+            decoration: UIHelper.circleWithColorWithShadow(0, c.yello, c.unsatisfied1, borderColor: c.white, borderWidth: 2),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset(
+                Taximgpath,
+                fit: BoxFit.contain,
+                height: 30,
+                width: 30,
               ),
             ),
-            Visibility(
-              visible: pendingTaxCount > 0,
-              child: Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.all(5),
-                margin: EdgeInsets.only(
-                  top: 5,
-                ),
-                decoration: UIHelper.GradientContainer(0, 0, 18, 18, [c.red_new_light, c.red_new_light], intwid: 0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        UIHelper.titleTextStyle("pending_assessment_transaction".tr().toString(), c.grey_10, 11, true, true),
-                        UIHelper.titleTextStyle(" $pendingTaxCount", c.grey_10, 14, true, true),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    UIHelper.titleTextStyle(getWarningHint(), c.subscription_type_red_color, 10, true, true),
-                    SizedBox(
-                      height: 5,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -762,7 +746,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                     Expanded(
                       child: GestureDetector(
                           onTap: () {
-                            if (!getFlagStatus(mainList[mainIndex][key_assessment_id].toString())) {
+                            if (!getFlagStatus(mainList[mainIndex][key_assessment_id].toString()) || islogin == "yes") {
                               if (isSelectAll.contains(mainIndex)) {
                                 isSelectAll.remove(mainIndex);
                                 for (var item in taxData) {
@@ -840,32 +824,36 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
 
                             return GestureDetector(
                                 onTap: () {
-                                  if (index == 0 || taxData[index - 1][s.key_flag] == true) {
-                                    if (taxData[index][s.key_flag] == true) {
-                                      for (int i = 0; i < taxData.length; i++) {
-                                        if (i >= index) {
-                                          if (taxData[i][s.key_flag] == true) {
-                                            taxData[i][s.key_flag] = false;
-                                            mainList[mainIndex][s.key_tax_total] =
-                                                mainList[mainIndex][s.key_tax_total] - double.parse(Utils().getDemadAmount(taxData[i], mainList[mainIndex][key_taxtypeid].toString()));
+                                  if (!getFlagStatus(mainList[mainIndex][key_assessment_id].toString()) || islogin == "yes") {
+                                    if (index == 0 || taxData[index - 1][s.key_flag] == true) {
+                                      if (taxData[index][s.key_flag] == true) {
+                                        for (int i = 0; i < taxData.length; i++) {
+                                          if (i >= index) {
+                                            if (taxData[i][s.key_flag] == true) {
+                                              taxData[i][s.key_flag] = false;
+                                              mainList[mainIndex][s.key_tax_total] =
+                                                  mainList[mainIndex][s.key_tax_total] - double.parse(Utils().getDemadAmount(taxData[i], mainList[mainIndex][key_taxtypeid].toString()));
 
-                                            mainList[mainIndex][s.key_tax_pay] =
-                                                getTotal(mainList[mainIndex][s.key_tax_total], double.parse(Utils().getTaxAdvance(mainList[mainIndex], mainList[mainIndex][key_taxtypeid].toString())));
-                                          }
-                                          if (taxData[0][s.key_flag] == false) {
-                                            preferencesService.setUserInfo(key_isChecked, "");
+                                              mainList[mainIndex][s.key_tax_pay] = getTotal(
+                                                  mainList[mainIndex][s.key_tax_total], double.parse(Utils().getTaxAdvance(mainList[mainIndex], mainList[mainIndex][key_taxtypeid].toString())));
+                                            }
+                                            if (taxData[0][s.key_flag] == false) {
+                                              preferencesService.setUserInfo(key_isChecked, "");
+                                            }
                                           }
                                         }
+                                      } else {
+                                        taxData[index][s.key_flag] = true;
+                                        mainList[mainIndex][s.key_tax_total] =
+                                            mainList[mainIndex][s.key_tax_total] + double.parse(Utils().getDemadAmount(taxData[index], mainList[mainIndex][key_taxtypeid].toString()));
+                                        mainList[mainIndex][s.key_tax_pay] =
+                                            getTotal(mainList[mainIndex][s.key_tax_total], double.parse(Utils().getTaxAdvance(mainList[mainIndex], mainList[mainIndex][key_taxtypeid].toString())));
                                       }
                                     } else {
-                                      taxData[index][s.key_flag] = true;
-                                      mainList[mainIndex][s.key_tax_total] =
-                                          mainList[mainIndex][s.key_tax_total] + double.parse(Utils().getDemadAmount(taxData[index], mainList[mainIndex][key_taxtypeid].toString()));
-                                      mainList[mainIndex][s.key_tax_pay] =
-                                          getTotal(mainList[mainIndex][s.key_tax_total], double.parse(Utils().getTaxAdvance(mainList[mainIndex], mainList[mainIndex][key_taxtypeid].toString())));
+                                      Utils().showAlert(context, ContentType.fail, 'pay_pending_year'.tr().toString());
                                     }
                                   } else {
-                                    Utils().showAlert(context, ContentType.fail, 'pay_pending_year'.tr().toString());
+                                    Utils().showAlert(context, ContentType.fail, 'pay_previous'.tr().toString());
                                   }
 
                                   int countActiveItems = taxData.where((item) => item[s.key_flag] == true).length;
@@ -1003,24 +991,28 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                                     side: BorderSide(width: 1, color: c.grey_6),
                                                     value: swmData[rowIndex][s.key_flag],
                                                     onChanged: (v) {
-                                                      if (rowIndex == 0 || swmData[rowIndex - 1][s.key_flag] == true) {
-                                                        if (swmData[rowIndex][s.key_flag] == true) {
-                                                          for (int i = 0; i < swmData.length; i++) {
-                                                            if (i >= rowIndex) {
-                                                              swmData[i][s.key_flag] = false;
-                                                              mainList[mainIndex][s.key_swm_total] = mainList[mainIndex][s.key_swm_total] -
-                                                                  double.parse(Utils().getDemadAmount(swmData[i], mainList[mainIndex][key_taxtypeid].toString()));
-                                                              mainList[mainIndex][s.key_swm_pay] = getTotal(mainList[mainIndex][s.key_swm_total], mainList[mainIndex][s.key_swm_available_advance]);
+                                                      if (!getFlagStatus(mainList[mainIndex][key_assessment_id].toString()) || islogin == "yes") {
+                                                        if (rowIndex == 0 || swmData[rowIndex - 1][s.key_flag] == true) {
+                                                          if (swmData[rowIndex][s.key_flag] == true) {
+                                                            for (int i = 0; i < swmData.length; i++) {
+                                                              if (i >= rowIndex) {
+                                                                swmData[i][s.key_flag] = false;
+                                                                mainList[mainIndex][s.key_swm_total] = mainList[mainIndex][s.key_swm_total] -
+                                                                    double.parse(Utils().getDemadAmount(swmData[i], mainList[mainIndex][key_taxtypeid].toString()));
+                                                                mainList[mainIndex][s.key_swm_pay] = getTotal(mainList[mainIndex][s.key_swm_total], mainList[mainIndex][s.key_swm_available_advance]);
+                                                              }
                                                             }
+                                                          } else {
+                                                            swmData[rowIndex][s.key_flag] = true;
+                                                            mainList[mainIndex][s.key_swm_total] = mainList[mainIndex][s.key_swm_total] +
+                                                                double.parse(Utils().getDemadAmount(swmData[rowIndex], mainList[mainIndex][key_taxtypeid].toString()));
+                                                            mainList[mainIndex][s.key_swm_pay] = getTotal(mainList[mainIndex][s.key_swm_total], mainList[mainIndex][s.key_swm_available_advance]);
                                                           }
                                                         } else {
-                                                          swmData[rowIndex][s.key_flag] = true;
-                                                          mainList[mainIndex][s.key_swm_total] = mainList[mainIndex][s.key_swm_total] +
-                                                              double.parse(Utils().getDemadAmount(swmData[rowIndex], mainList[mainIndex][key_taxtypeid].toString()));
-                                                          mainList[mainIndex][s.key_swm_pay] = getTotal(mainList[mainIndex][s.key_swm_total], mainList[mainIndex][s.key_swm_available_advance]);
+                                                          Utils().showAlert(context, ContentType.fail, 'pay_pending_year'.tr().toString());
                                                         }
                                                       } else {
-                                                        Utils().showAlert(context, ContentType.fail, 'pay_pending_year'.tr().toString());
+                                                        Utils().showAlert(context, ContentType.fail, 'pay_previous'.tr().toString());
                                                       }
 
                                                       setState(() {

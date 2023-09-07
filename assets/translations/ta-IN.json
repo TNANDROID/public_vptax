@@ -129,6 +129,7 @@
   "select_payment_gateway": "கட்டண நுழைவாயிலைத் தேர்ந்தெடுக்கவும்",
   "payment_transaction_history": "கட்டண பரிவர்த்தனை வரலாறு",
   "get_status": "நிலையைப் பெறு",
+  "get_tax_details": "வரி விவரங்களைப் பெறுங்கள்",
   "work_details": "வேலை விவரங்கள்",
   "select_finyear": "நிதி ஆண்டைத் தேர்ந்தெடுக்கவும்",
   "transaction_id": "பரிவர்த்தனை எண்",

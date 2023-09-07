@@ -73,6 +73,7 @@ class _HomeState extends State<Home> {
     });
   }
 
+  @override
   void dispose() {
     super.dispose();
 
@@ -99,11 +100,11 @@ class _HomeState extends State<Home> {
 
     taxTypeList.clear();
     taxTypeList = preferencesService.taxTypeList;
-    String pre_isLogin=await preferencesService.getUserInfo(key_isLogin);
-    islogin = pre_isLogin != null  && pre_isLogin != ""?pre_isLogin:"no";
+    String pre_isLogin = await preferencesService.getUserInfo(key_isLogin);
+    islogin = pre_isLogin != "" ? pre_isLogin : "no";
     print(islogin);
     setState(() {
-      if (selectedLang != null && selectedLang != "" && selectedLang == "en") {
+      if (selectedLang != "" && selectedLang == "en") {
         context.setLocale(Locale('en', 'US'));
         langText = 'English';
       } else {
@@ -321,7 +322,7 @@ class _HomeState extends State<Home> {
 
                                   setState(() {});
                                 },
-                                child: Container(
+                                child: SizedBox(
                                   width: Screen.width(context) / 3.3,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -400,18 +401,8 @@ class _HomeState extends State<Home> {
                                   onTap: () async {
                                     selected_index = servicesList[index][key_service_id];
                                     if (selected_index == 0) {
-
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (_) => AllYourTaxDetails(
-                                                isTaxDropDown: true,
-                                                isHome: false,
-                                                selectedEntryType: 1,
-                                              )));
-
-                                    }
-                                    else if (selected_index == 1) {
+                                      _settingModalBottomSheet(context, false);
+                                    } else if (selected_index == 1) {
                                       if (islogin == "yes") {
                                         Navigator.push(
                                             context,
@@ -432,8 +423,7 @@ class _HomeState extends State<Home> {
                                                       flag: "2",
                                                     )));
                                       }
-                                    }
-                                    else if (selected_index == 2) {
+                                    } else if (selected_index == 2) {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -442,7 +432,7 @@ class _HomeState extends State<Home> {
                                                     flag: "2",
                                                   )));
                                     } else if (selected_index == 3) {
-                                      _settingModalBottomSheet(context);
+                                      _settingModalBottomSheet(context, true);
                                     } else if (selected_index == 4) {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => ViewReceipt()));
                                     } else if (selected_index == 5) {
@@ -579,7 +569,7 @@ class _HomeState extends State<Home> {
     // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Splash()), (route) => false);
   }
 
-  void _settingModalBottomSheet(context) {
+  void _settingModalBottomSheet(BuildContext context, bool isCheckTransaction) {
     mobileController.text = '';
     emailController.text = '';
     showModalBottomSheet(
@@ -596,30 +586,35 @@ class _HomeState extends State<Home> {
                       margin: EdgeInsets.only(left: 20),
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'payment_transaction_history'.tr().toString(),
+                        isCheckTransaction ? 'payment_transaction_history'.tr().toString() : 'your_tax_details'.tr(),
                         style: TextStyle(color: c.text_color, fontWeight: FontWeight.w500, fontSize: 15, decorationStyle: TextDecorationStyle.wavy),
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(left: 20),
-                      alignment: Alignment.centerLeft,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          badge(
-                            context,
-                            flagMobileActive,
-                                () => {
-                              utils.closeKeypad(context),
-                              FocusScope.of(context).unfocus(),
-                              if (flagMobileActive) flagMobileActive = flagMobileActive else flagMobileActive = !flagMobileActive,
-                              setState(() {})
-                            },
-                          ),
-                          badge(context, !flagMobileActive,
-                                  () => {FocusScope.of(context).unfocus(), if (!flagMobileActive) flagMobileActive = flagMobileActive else flagMobileActive = !flagMobileActive, setState(() {})},
-                              isMobileActive: false)
-                        ],
+                    Visibility(
+                      visible: isCheckTransaction,
+                      child: Container(
+                        margin: EdgeInsets.only(left: 20),
+                        alignment: Alignment.centerLeft,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            badge(
+                              context,
+                              flagMobileActive,
+                              () => {
+                                utils.closeKeypad(context),
+                                FocusScope.of(context).unfocus(),
+                                if (flagMobileActive) flagMobileActive = flagMobileActive else flagMobileActive = !flagMobileActive,
+                                setState(() {})
+                              },
+                            ),
+                            isCheckTransaction
+                                ? badge(context, !flagMobileActive,
+                                    () => {FocusScope.of(context).unfocus(), if (!flagMobileActive) flagMobileActive = flagMobileActive else flagMobileActive = !flagMobileActive, setState(() {})},
+                                    isMobileActive: false)
+                                : SizedBox()
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -633,9 +628,9 @@ class _HomeState extends State<Home> {
                         ],
                       ),
                     ),
-                    UIHelper.verticalSpaceSmall,
-                    UIHelper.verticalSpaceSmall,
-                    UIHelper.verticalSpaceSmall,
+                    isCheckTransaction ? UIHelper.verticalSpaceSmall : SizedBox(),
+                    isCheckTransaction ? UIHelper.verticalSpaceSmall : SizedBox(),
+                    isCheckTransaction ? UIHelper.verticalSpaceSmall : SizedBox(),
                     Container(
                         width: Screen.width(context) * 0.8,
                         alignment: Alignment.center,
@@ -645,7 +640,7 @@ class _HomeState extends State<Home> {
                         child: InkWell(
                           child: Center(
                             child: Text(
-                              'get_status'.tr().toString(),
+                              isCheckTransaction ? 'get_status'.tr().toString() : 'get_tax_details'.tr(),
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(color: c.white, fontWeight: FontWeight.w500, fontSize: 11, decorationStyle: TextDecorationStyle.wavy),
@@ -670,18 +665,31 @@ class _HomeState extends State<Home> {
                               }
                             }
                             if (validationFlag) {
-                              bool resFlag = await model.getTransactionStatus(context, mobileController.text, emailController.text);
-                              if (resFlag) {
+                              if (!isCheckTransaction) {
                                 Navigator.pop(context);
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => CheckTransaction(
-                                              mobileNumber: mobileController.text,
-                                              emailID: emailController.text,
+                                        builder: (_) => AllYourTaxDetails(
+                                              isTaxDropDown: true,
+                                              isHome: false,
+                                              selectedEntryType: 1,
+                                              mobile: mobileController.text,
                                             )));
                               } else {
-                                utils.showAlert(context, ContentType.fail, 'No transaction Found');
+                                bool resFlag = await model.getTransactionStatus(context, mobileController.text, emailController.text);
+                                if (resFlag) {
+                                  Navigator.pop(context);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => CheckTransaction(
+                                                mobileNumber: mobileController.text,
+                                                emailID: emailController.text,
+                                              )));
+                                } else {
+                                  utils.showAlert(context, ContentType.fail, 'No transaction Found');
+                                }
                               }
                             }
                           },
