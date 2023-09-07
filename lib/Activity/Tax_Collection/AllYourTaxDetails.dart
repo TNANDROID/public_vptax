@@ -207,7 +207,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                 margin: EdgeInsets.symmetric(horizontal: 0),
                                 padding: EdgeInsets.symmetric(horizontal: 0),
                                 child: TextFormField(
-                                  style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold,color: c.grey_9),
+                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: c.grey_9),
                                   controller: etTextController,
                                   onChanged: (value) {},
                                   decoration: InputDecoration(
@@ -286,9 +286,9 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                         ),
                       ),
                       Visibility(
-                        visible: selectedTaxTypeData[s.key_taxtypeid].toString() =="0" ||  pendingAssessment > 0,
+                        visible: selectedTaxTypeData[s.key_taxtypeid].toString() == "0" || pendingAssessment > 0,
                         child: Container(
-                          margin: EdgeInsets.only(top: 5, left: 20, right: 20,bottom: 10),
+                          margin: EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 10),
                           decoration: UIHelper.GradientContainer(20, 20, 20, 20, [c.subscription_type_red_color, c.subscription_type_red_color], intwid: 0),
                           child: Container(
                             margin: EdgeInsets.only(left: 5, bottom: 3),
@@ -391,7 +391,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
                                                       Container(
-                                                          padding: EdgeInsets.fromLTRB(15,15,5,15),
+                                                          padding: EdgeInsets.fromLTRB(15, 15, 5, 15),
                                                           decoration: BoxDecoration(color: c.white, borderRadius: BorderRadius.circular(20)),
                                                           width: Screen.width(context) - 40,
                                                           child: headerCardUIWidget(mainIndex)),
@@ -535,22 +535,22 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
       ),
     );*/
     return Container(
-      margin:EdgeInsets.only(top: 0),
+      margin: EdgeInsets.only(top: 0),
       padding: EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 0),
-      child:  Container(
-        margin: EdgeInsets.only(left: MediaQuery.of(context).size.width/4,right: MediaQuery.of(context).size.width/4),
+      child: Container(
+        margin: EdgeInsets.only(left: MediaQuery.of(context).size.width / 4, right: MediaQuery.of(context).size.width / 4),
         padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
         decoration: UIHelper.roundedBorderWithColor(20, 20, 20, 20, c.primary_text_color2),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Expanded(child: UIHelper.titleTextStyle(TaxHeader/*+" ( "+totalTaxCount+" )"*/, c.white, 12, true, true)),
+            Expanded(child: UIHelper.titleTextStyle(TaxHeader /*+" ( "+totalTaxCount+" )"*/, c.white, 12, true, true)),
             Container(
               width: 25,
               height: 25,
               padding: EdgeInsets.all(4),
-              decoration: BoxDecoration(color:c.white,border: Border.all(width: 1, color: c.white), borderRadius: BorderRadius.circular(20)),
+              decoration: BoxDecoration(color: c.white, border: Border.all(width: 1, color: c.white), borderRadius: BorderRadius.circular(20)),
               child: Center(
                 child: UIHelper.titleTextStyle(totalTaxCount, c.grey_10, 12, true, false),
               ),
@@ -641,17 +641,17 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
             Visibility(
               visible: getTotalToPay(mainIndex) == "0.0",
               child: Positioned(
-              right: 0,
-              child: Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.white, c.white),
-                  child: Image.asset(
-                    getTaxImage(mainIndex),
-                    fit: BoxFit.contain,
-                    height: 40,
-                    width: 40,
-                  )),
-            ),
+                right: 0,
+                child: Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.white, c.white),
+                    child: Image.asset(
+                      getTaxImage(mainIndex),
+                      fit: BoxFit.contain,
+                      height: 40,
+                      width: 40,
+                    )),
+              ),
             ),
             Visibility(
               visible: getTotalToPay(mainIndex) != "0.0",
@@ -679,38 +679,35 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                       double swmtotAmt = 0.00;
                       for (var item in mainList[mainIndex][key_DEMAND_DETAILS]) {
                         if (item[s.key_flag] == true) {
-
                           if (item[s.key_taxtypeid].toString() == "1") {
                             if (item[s.key_taxtypeid].toString() == mainList[mainIndex][s.key_taxtypeid].toString()) {
                               totAmt = totAmt + double.parse(Utils().getDemadAmount(item, mainList[mainIndex][key_taxtypeid].toString()));
                             } else {
-                              swmtotAmt = swmtotAmt + double.parse(Utils().getDemadAmount(item, mainList[mainIndex][key_taxtypeid].toString()));                          }
+                              swmtotAmt = swmtotAmt + double.parse(Utils().getDemadAmount(item, mainList[mainIndex][key_taxtypeid].toString()));
+                            }
                           } else {
-                            totAmt = totAmt + double.parse(Utils().getDemadAmount(item, mainList[mainIndex][key_taxtypeid].toString()));                        }
-
+                            totAmt = totAmt + double.parse(Utils().getDemadAmount(item, mainList[mainIndex][key_taxtypeid].toString()));
+                          }
                         }
                       }
                       mainList[mainIndex][s.key_tax_total] = totAmt;
-                      mainList[mainIndex][s.key_tax_pay] =
-                          getTotal(mainList[mainIndex][s.key_tax_total], double.parse(Utils().getTaxAdvance(mainList[mainIndex], mainList[mainIndex][key_taxtypeid])));
+                      mainList[mainIndex][s.key_tax_pay] = getTotal(mainList[mainIndex][s.key_tax_total], double.parse(Utils().getTaxAdvance(mainList[mainIndex], mainList[mainIndex][key_taxtypeid])));
 
-                        if (mainList[mainIndex][s.key_taxtypeid].toString() == "1") {
-                          mainList[mainIndex][s.key_swm_total] = swmtotAmt;
-                          mainList[mainIndex][s.key_swm_pay] = getTotal(
-                              mainList[mainIndex][s.key_swm_total], double.parse(
-                              mainList[mainIndex][s.key_swm_available_advance].toString()));
-                        }
+                      if (mainList[mainIndex][s.key_taxtypeid].toString() == "1") {
+                        mainList[mainIndex][s.key_swm_total] = swmtotAmt;
+                        mainList[mainIndex][s.key_swm_pay] = getTotal(mainList[mainIndex][s.key_swm_total], double.parse(mainList[mainIndex][s.key_swm_available_advance].toString()));
+                      }
                       getCount();
                       setState(() {});
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        UIHelper.titleTextStyle("Select All", c.text_color, 12, false, true),
+                        UIHelper.titleTextStyle("Select All asdas", c.text_color, 12, false, true),
                         UIHelper.horizontalSpaceSmall,
                         Image.asset(
-                          isSelectAll.contains(mainIndex) ? imagePath.tick : imagePath.unchecked,
-                          color: isSelectAll.contains(mainIndex) ? c.account_status_green_color : c.text_color,
+                          getImageString(mainIndex) ? imagePath.tick : imagePath.unchecked,
+                          color: getImageString(mainIndex) ? c.account_status_green_color : c.text_color,
                           height: 20,
                           width: 20,
                         ),
@@ -733,6 +730,19 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
     );
   }
 
+  getImageString(int mainIndex) {
+    if (mainList[mainIndex][s.key_no_of_demand_available] > 0) {
+      for (var item in mainList[mainIndex][s.key_DEMAND_DETAILS]) {
+        if (item[s.key_flag] == true) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }
+    return false;
+  }
+
   Widget taxWiseReturnDataWidget(int mainIndex, Color clr) {
     return mainList[mainIndex][key_taxtypeid].toString() == "1"
         ? Column(
@@ -743,7 +753,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
               UIHelper.titleTextStyle(("${'building_licence_number'.tr()} : ${mainList[mainIndex][s.key_building_licence_no].toString() ?? ""}"), clr, 12, false, true),
               UIHelper.verticalSpaceTiny,
               UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${mainList[mainIndex][s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
-             UIHelper.verticalSpaceTiny,
+              UIHelper.verticalSpaceTiny,
               UIHelper.titleTextStyle(("${'pending_payment'.tr()} : \u{20B9} ${getTotalToPay(mainIndex)}"), c.grey_10, 12, true, true),
             ],
           )
@@ -755,7 +765,8 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                   UIHelper.verticalSpaceTiny,
                   UIHelper.titleTextStyle(("${'water_connection_number'.tr()} : ${mainList[mainIndex][s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
                   UIHelper.verticalSpaceTiny,
-                  UIHelper.titleTextStyle(("${'pending_payment'.tr()} : \u{20B9} ${getTotalToPay(mainIndex)}"), c.grey_10, 12, true, true),                ],
+                  UIHelper.titleTextStyle(("${'pending_payment'.tr()} : \u{20B9} ${getTotalToPay(mainIndex)}"), c.grey_10, 12, true, true),
+                ],
               )
             : mainList[mainIndex][key_taxtypeid].toString() == "4"
                 ? Column(
@@ -767,7 +778,8 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                       UIHelper.verticalSpaceTiny,
                       UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${mainList[mainIndex][s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
                       UIHelper.verticalSpaceTiny,
-                      UIHelper.titleTextStyle(("${'pending_payment'.tr()} : \u{20B9} ${getTotalToPay(mainIndex)}"), c.grey_10, 12, true, true),                    ],
+                      UIHelper.titleTextStyle(("${'pending_payment'.tr()} : \u{20B9} ${getTotalToPay(mainIndex)}"), c.grey_10, 12, true, true),
+                    ],
                   )
                 : mainList[mainIndex][key_taxtypeid].toString() == "5"
                     ? Column(
@@ -784,7 +796,8 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                           UIHelper.titleTextStyle(
                               ("${'lease_duration'.tr()} : ${mainList[mainIndex]['from_date'].toString() ?? ""} - ${mainList[mainIndex]['to_date'].toString() ?? ""}"), clr, 12, false, true),
                           UIHelper.verticalSpaceTiny,
-                          UIHelper.titleTextStyle(("${'pending_payment'.tr()} : \u{20B9} ${getTotalToPay(mainIndex)}"), c.grey_10, 12, true, true),                        ],
+                          UIHelper.titleTextStyle(("${'pending_payment'.tr()} : \u{20B9} ${getTotalToPay(mainIndex)}"), c.grey_10, 12, true, true),
+                        ],
                       )
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -793,7 +806,8 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                           UIHelper.verticalSpaceTiny,
                           UIHelper.titleTextStyle(("${'traders_code'.tr()} : ${mainList[mainIndex][s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
                           UIHelper.verticalSpaceTiny,
-                          UIHelper.titleTextStyle(("${'pending_payment'.tr()} : \u{20B9} ${getTotalToPay(mainIndex)}"), c.grey_10, 12, true, true),                        ],
+                          UIHelper.titleTextStyle(("${'pending_payment'.tr()} : \u{20B9} ${getTotalToPay(mainIndex)}"), c.grey_10, 12, true, true),
+                        ],
                       );
   }
 
@@ -1113,7 +1127,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                                       }
 
                                                       setState(() {
-                                                         dynamic selectedDemandDetails = mainList[mainIndex];
+                                                        dynamic selectedDemandDetails = mainList[mainIndex];
                                                         List selectedDemandDetailsList = selectedDemandDetails[key_DEMAND_DETAILS];
                                                         bool hasActiveFlag = selectedDemandDetailsList.any((json) => json[key_flag] == true);
 
@@ -1587,7 +1601,6 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
       }
     }
     print("mainList>>$mainList");
-
 
     getCount();
 
