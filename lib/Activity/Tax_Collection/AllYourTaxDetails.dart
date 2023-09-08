@@ -569,6 +569,23 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
   }
 
   Widget headerCardUIWidget(int mainIndex) {
+    List demandList = mainList[mainIndex][s.key_DEMAND_DETAILS] ?? [];
+    List taxData = [];
+    List swmData = [];
+    if (demandList.isNotEmpty) {
+      for (int i = 0; i < demandList.length; i++) {
+        if (mainList[mainIndex][key_taxtypeid].toString() == "1") {
+          if (demandList[i][s.key_taxtypeid].toString() == mainList[mainIndex][key_taxtypeid].toString()) {
+            taxData.add(demandList[i]);
+          } else {
+            swmData.add(demandList[i]);
+          }
+        } else {
+          taxData.add(demandList[i]);
+        }
+      }
+    }
+
     return Column(
       children: [
         Stack(
@@ -662,66 +679,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
             ),
             Visibility(
               visible: getTotalToPay(mainIndex) != "0.0",
-              child: Positioned(
-                right: 0,
-                child: GestureDetector(
-                    onTap: () {
-                      if (!getFlagStatus(mainList[mainIndex][key_assessment_id].toString()) || islogin == "yes") {
-                        if (isSelectAll.contains(mainIndex)) {
-                          isSelectAll.remove(mainIndex);
-                          for (var item in mainList[mainIndex][key_DEMAND_DETAILS]) {
-                            item[s.key_flag] = false;
-                          }
-                        } else {
-                          isSelectAll.add(mainIndex);
-                          for (var item in mainList[mainIndex][key_DEMAND_DETAILS]) {
-                            item[s.key_flag] = true;
-                          }
-                        }
-                      } else {
-                        Utils().showAlert(context, ContentType.fail, 'pay_previous'.tr().toString());
-                      }
-
-                      double totAmt = 0.00;
-                      double swmtotAmt = 0.00;
-                      for (var item in mainList[mainIndex][key_DEMAND_DETAILS]) {
-                        if (item[s.key_flag] == true) {
-                          if (item[s.key_taxtypeid].toString() == "1") {
-                            if (item[s.key_taxtypeid].toString() == mainList[mainIndex][s.key_taxtypeid].toString()) {
-                              totAmt = totAmt + double.parse(Utils().getDemadAmount(item, mainList[mainIndex][key_taxtypeid].toString()));
-                            } else {
-                              swmtotAmt = swmtotAmt + double.parse(Utils().getDemadAmount(item, mainList[mainIndex][key_taxtypeid].toString()));
-                            }
-                          } else {
-                            totAmt = totAmt + double.parse(Utils().getDemadAmount(item, mainList[mainIndex][key_taxtypeid].toString()));
-                          }
-                        }
-                      }
-                      mainList[mainIndex][s.key_tax_total] = totAmt;
-                      mainList[mainIndex][s.key_tax_pay] = getTotal(mainList[mainIndex][s.key_tax_total], double.parse(Utils().getTaxAdvance(mainList[mainIndex], mainList[mainIndex][key_taxtypeid])));
-
-                      if (mainList[mainIndex][s.key_taxtypeid].toString() == "1") {
-                        mainList[mainIndex][s.key_swm_total] = swmtotAmt;
-                        mainList[mainIndex][s.key_swm_pay] = getTotal(mainList[mainIndex][s.key_swm_total], double.parse(mainList[mainIndex][s.key_swm_available_advance].toString()));
-                      }
-                      getCount();
-                      setState(() {});
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        UIHelper.titleTextStyle("Select All asdas", c.text_color, 12, false, true),
-                        UIHelper.horizontalSpaceSmall,
-                        Image.asset(
-                          getImageString(mainIndex) ? imagePath.tick : imagePath.unchecked,
-                          color: getImageString(mainIndex) ? c.account_status_green_color : c.text_color,
-                          height: 20,
-                          width: 20,
-                        ),
-                        UIHelper.horizontalSpaceSmall,
-                      ],
-                    )),
-              ),
+              child: Positioned(right: 0, child: selectAllWidget('select_To_Pay', mainIndex, taxData)),
             ),
           ],
         ),
@@ -730,24 +688,61 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
           curve: Curves.linear,
           child: Visibility(
             visible: isShowFlag.contains(mainIndex),
-            child: propertyTaxCollectionWidget(mainIndex),
+            child: propertyTaxCollectionWidget(mainIndex, taxData, swmData),
           ),
         ),
       ],
     );
   }
 
-  getImageString(int mainIndex) {
-    if (mainList[mainIndex][s.key_no_of_demand_available] > 0) {
-      for (var item in mainList[mainIndex][s.key_DEMAND_DETAILS]) {
-        if (item[s.key_flag] == true) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    }
-    return false;
+  Widget selectAllWidget(String title, int mainIndex, List taxData) {
+    return GestureDetector(
+        onTap: () {
+          if (!getFlagStatus(mainList[mainIndex][key_assessment_id].toString()) || islogin == "yes") {
+            if (isSelectAll.contains(mainIndex)) {
+              isSelectAll.remove(mainIndex);
+              for (var item in taxData) {
+                item[s.key_flag] = false;
+              }
+            } else {
+              isSelectAll.add(mainIndex);
+              for (var item in taxData) {
+                item[s.key_flag] = true;
+              }
+            }
+          } else {
+            Utils().showAlert(context, ContentType.fail, 'pay_previous'.tr().toString());
+          }
+
+          double totAmt = 0;
+          for (var item in taxData) {
+            if (item[s.key_flag] == true) {
+              totAmt = totAmt + double.parse(Utils().getDemadAmount(item, mainList[mainIndex][key_taxtypeid].toString()));
+            }
+          }
+          mainList[mainIndex][s.key_tax_total] = totAmt;
+          mainList[mainIndex][s.key_tax_pay] = getTotal(mainList[mainIndex][s.key_tax_total], double.parse(Utils().getTaxAdvance(mainList[mainIndex], mainList[mainIndex][key_taxtypeid])));
+
+          main_totalAmount = 0;
+          for (int i = 0; i < mainList.length; i++) {
+            main_totalAmount = main_totalAmount + mainList[i][s.key_tax_pay] + mainList[i][s.key_swm_pay];
+          }
+          setState(() {});
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            UIHelper.titleTextStyle(title.toString().tr(), c.text_color, 12, false, true),
+            UIHelper.horizontalSpaceSmall,
+            Image.asset(
+              isSelectAll.contains(mainIndex) ? imagePath.tick : imagePath.unchecked,
+              color: isSelectAll.contains(mainIndex) ? c.account_status_green_color : c.text_color,
+              height: 20,
+              width: 20,
+            ),
+            UIHelper.horizontalSpaceSmall,
+          ],
+        ));
   }
 
   Widget taxWiseReturnDataWidget(int mainIndex, Color clr) {
@@ -818,31 +813,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                       );
   }
 
-  Widget propertyTaxCollectionWidget(int mainIndex) {
-    List demandList = mainList[mainIndex][s.key_DEMAND_DETAILS] ?? [];
-    List taxData = [];
-    List swmData = [];
-    if (demandList.isNotEmpty) {
-      for (int i = 0; i < demandList.length; i++) {
-        if (mainList[mainIndex][key_taxtypeid].toString() == "1") {
-          if (demandList[i][s.key_taxtypeid].toString() == mainList[mainIndex][key_taxtypeid].toString()) {
-            taxData.add(demandList[i]);
-          } else {
-            swmData.add(demandList[i]);
-          }
-        } else {
-          taxData.add(demandList[i]);
-        }
-      }
-    }
-
-    int countActiveItems = taxData.where((item) => item[s.key_flag] == true).length;
-    if (countActiveItems == taxData.length) {
-      isSelectAll.add(mainIndex);
-    } else {
-      isSelectAll.remove(mainIndex);
-    }
-
+  Widget propertyTaxCollectionWidget(int mainIndex, List taxData, List swmData) {
     dynamic calcOfHeight = taxData.length / 2;
     int roundedValueOfHeight = calcOfHeight.ceil();
     int swmHeight = swmData.length * 30;
@@ -861,56 +832,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                         margin: EdgeInsets.only(left: 15),
                         alignment: Alignment.centerLeft,
                         child: UIHelper.titleTextStyle("${'total'.tr()} : \u{20B9} ${getTotalToPay(mainIndex)}", c.grey_10, 12, false, false)),
-                    Expanded(
-                      child: GestureDetector(
-                          onTap: () {
-                            if (!getFlagStatus(mainList[mainIndex][key_assessment_id].toString()) || islogin == "yes") {
-                              if (isSelectAll.contains(mainIndex)) {
-                                isSelectAll.remove(mainIndex);
-                                for (var item in taxData) {
-                                  item[s.key_flag] = false;
-                                }
-                              } else {
-                                isSelectAll.add(mainIndex);
-                                for (var item in taxData) {
-                                  item[s.key_flag] = true;
-                                }
-                              }
-                            } else {
-                              Utils().showAlert(context, ContentType.fail, 'pay_previous'.tr().toString());
-                            }
-
-                            double totAmt = 0;
-                            for (var item in taxData) {
-                              if (item[s.key_flag] == true) {
-                                totAmt = totAmt + double.parse(Utils().getDemadAmount(item, mainList[mainIndex][key_taxtypeid].toString()));
-                              }
-                            }
-                            mainList[mainIndex][s.key_tax_total] = totAmt;
-                            mainList[mainIndex][s.key_tax_pay] =
-                                getTotal(mainList[mainIndex][s.key_tax_total], double.parse(Utils().getTaxAdvance(mainList[mainIndex], mainList[mainIndex][key_taxtypeid])));
-
-                            main_totalAmount = 0;
-                            for (int i = 0; i < mainList.length; i++) {
-                              main_totalAmount = main_totalAmount + mainList[i][s.key_tax_pay] + mainList[i][s.key_swm_pay];
-                            }
-                            setState(() {});
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              UIHelper.titleTextStyle("Select All", c.text_color, 12, false, true),
-                              UIHelper.horizontalSpaceSmall,
-                              Image.asset(
-                                isSelectAll.contains(mainIndex) ? imagePath.tick : imagePath.unchecked,
-                                color: isSelectAll.contains(mainIndex) ? c.account_status_green_color : c.text_color,
-                                height: 20,
-                                width: 20,
-                              ),
-                              UIHelper.horizontalSpaceSmall,
-                            ],
-                          )),
-                    )
+                    Expanded(child: selectAllWidget('select_All', mainIndex, taxData))
                   ],
                 )),
             UIHelper.verticalSpaceSmall,
@@ -973,14 +895,13 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                   } else {
                                     Utils().showAlert(context, ContentType.fail, 'pay_previous'.tr().toString());
                                   }
-
                                   int countActiveItems = taxData.where((item) => item[s.key_flag] == true).length;
+
                                   if (countActiveItems == taxData.length) {
                                     isSelectAll.add(mainIndex);
                                   } else {
                                     isSelectAll.remove(mainIndex);
                                   }
-
                                   setState(() {
                                     dynamic selectedDemandDetails = mainList[mainIndex];
                                     List selectedDemandDetailsList = selectedDemandDetails[key_DEMAND_DETAILS];
