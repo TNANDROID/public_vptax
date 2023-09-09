@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:public_vptax/Activity/Auth/Splash.dart';
 import 'package:public_vptax/Activity/Tax_Collection/AllYourTaxDetails.dart';
 import 'package:public_vptax/Activity/Transaction/View_receipt.dart';
 import 'package:public_vptax/Activity/Transaction/CheckTransaction.dart';
@@ -85,7 +86,7 @@ class _HomeState extends State<Home> {
     index_val = -1;
     selected_index = -1;
     selectedLang = await preferencesService.getUserInfo("lang");
-    widget.isLogin == true ? await Utils().apiCalls(context) : null;
+    await Utils().apiCalls(context);
     List s_list = [
       {'service_id': 0, 'service_name': 'your_tax_details', 'img_path': imagePath.due4},
       // {'service_id': 1, 'service_name': 'check_your_dues', 'img_path': imagePath.due4},
@@ -206,7 +207,7 @@ class _HomeState extends State<Home> {
                     Positioned(
                       right: 15,
                       child: Visibility(
-                        visible: islogin == "yes",
+                        visible: true,
                         child: InkWell(
                           onTap: () {
                             logout();
@@ -562,12 +563,12 @@ class _HomeState extends State<Home> {
 
   void logout() {
     preferencesService.cleanAllPreferences();
-    if (Platform.isAndroid) {
-      SystemNavigator.pop();
-    } else if (Platform.isIOS) {
-      exit(0);
-    }
-    // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Splash()), (route) => false);
+    // if (Platform.isAndroid) {
+    //   SystemNavigator.pop();
+    // } else if (Platform.isIOS) {
+    //   exit(0);
+    // }
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Splash()), (route) => false);
   }
 
   void _settingModalBottomSheet(BuildContext context, bool isCheckTransaction) {

@@ -4,51 +4,49 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
+import 'package:public_vptax/Activity/Auth/Home.dart';
+import 'package:public_vptax/Layout/custom_otp_field.dart';
 import 'package:public_vptax/Layout/customgradientbutton.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagepath;
+import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Services/Apiservices.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
+import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:public_vptax/Utils/utils.dart';
-
-import '../../Resources/StringsKey.dart';
-import '../../Utils/ContentInfo.dart';
-import 'Home.dart';
 
 class Login extends StatefulWidget {
   @override
-  State<Login> createState() => LoginState();
+  State<Login> createState() => LoginStateView();
 }
 
-class LoginState extends State<Login> with TickerProviderStateMixin {
+class LoginStateView extends State<Login> with TickerProviderStateMixin {
   Utils utils = Utils();
   ApiServices apiServices = ApiServices();
   PreferenceService preferencesService = locator<PreferenceService>();
-  TextEditingController mobileController = TextEditingController();
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
   OtpFieldController OTPcontroller = OtpFieldController();
-
-  //String values
-  String finalOTP = '';
-
-  //Bool Variables
-  bool otpFlag = false;
-
-  late AnimationController _rightToLeftAnimController;
   late Animation<Offset> _rightToLeftAnimation;
+  late AnimationController _rightToLeftAnimController;
+
+  int registerStep = 1;
+  String finalOTP = '';
+  bool isValidOtp = true;
+  String secretKey = '';
+  bool secretKeyIsValid = true;
 
   @override
   void initState() {
     super.initState();
-
     _rightToLeftAnimController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1300));
-
     _rightToLeftAnimation =
-        Tween<Offset>(begin: otpFlag ? Offset.zero : Offset(1.0, 0.0), end: const Offset(0.0, 0.0)).animate(CurvedAnimation(parent: _rightToLeftAnimController, curve: Curves.easeInOut));
+        Tween<Offset>(begin: registerStep == 2 ? Offset.zero : Offset(1.0, 0.0), end: const Offset(0.0, 0.0)).animate(CurvedAnimation(parent: _rightToLeftAnimController, curve: Curves.easeInOut));
   }
 
   @override
@@ -57,21 +55,8 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  Future<bool> onBackpress() async {
-    bool flag;
-    if (otpFlag) {
-      otpFlag = !otpFlag;
-      changeImageAndAnimate();
-      flag = false;
-    } else {
-      flag = true;
-      Navigator.of(context).pop();
-    }
-    return flag;
-  }
-
   void changeImageAndAnimate() async {
-    if (otpFlag) {
+    if (registerStep == 2) {
       _rightToLeftAnimController.forward();
     } else {
       await _rightToLeftAnimController.reverse();
@@ -79,32 +64,8 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
     setState(() {});
   }
 
-  Future<void> validate() async {
-    if (!otpFlag) {
-      utils.closeKeypad(context);
-      if (mobileController.text.isNotEmpty) {
-        if (utils.isNumberValid(mobileController.text)) {
-          otpFlag = !otpFlag;
-          changeImageAndAnimate();
-        } else {
-          utils.showAlert(
-            context,
-            ContentType.warning,
-            "mobileNotValid".tr().toString(),
-          );
-        }
-      } else {
-        utils.showAlert(
-          context,
-          ContentType.warning,
-          "enter_mobile_number".tr().toString(),
-        );
-      }
-    } else {
-      preferencesService.setUserInfo(key_mobile_number, mobileController.text);
-      await verifyOTP();
-    }
-    setState(() {});
+  onBackpress() async {
+    Navigator.of(context).pop();
   }
 
   @override
@@ -112,236 +73,301 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
     return SafeArea(
       top: true,
       child: Scaffold(
-          resizeToAvoidBottomInset: true,
-          body: WillPopScope(
-            onWillPop: onBackpress,
-            child: SingleChildScrollView(
-              child: Stack(
-                alignment: Alignment.topCenter,
+        resizeToAvoidBottomInset: true,
+        body: SingleChildScrollView(
+          child: Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              // ****************************** Background Color alone Field ****************************** //
+
+              CustomGradientButton(
+                width: Screen.width(context),
+                height: Screen.height(context) - 40,
+                topleft: 0,
+                topright: 0,
+                btmleft: 0,
+                btmright: 0,
+                btnPadding: 0,
+              ),
+
+              // ****************************** Upper Card Image Design Field ****************************** //
+
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // ****************************** Background Color alone Field ****************************** //
-
-                  CustomGradientButton(
-                    width: Screen.width(context),
-                    height: Screen.height(context) - 40,
-                    topleft: 0,
-                    topright: 0,
-                    btmleft: 0,
-                    btmright: 0,
-                    btnPadding: 0,
-                  ),
-
-                  // ****************************** Upper Card Image Design Field ****************************** //
-
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        margin: EdgeInsets.only(top: Screen.width(context) * 0.07, left: Screen.width(context) * 0.07),
-                        child: InkWell(
-                          onTap: () {
-                            onBackpress();
-                          },
-                          child: Icon(
-                            Icons.arrow_circle_left_outlined,
-                            size: 30,
-                            color: c.white,
-                          ),
-                        ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    margin: EdgeInsets.only(top: Screen.width(context) * 0.07, left: Screen.width(context) * 0.07),
+                    child: InkWell(
+                      onTap: () {
+                        onBackpress();
+                      },
+                      child: Icon(
+                        Icons.arrow_circle_left_outlined,
+                        size: 30,
+                        color: c.white,
                       ),
-                      Visibility(
-                          visible: !otpFlag,
-                          child: Container(
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            margin: EdgeInsets.only(top: Screen.height(context) * 0.02),
-                            width: Screen.width(context) - 150,
-                            height: Screen.width(context) - 150,
-                            decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
-                            child: ClipRect(
-                              child: SizedBox(
-                                height: Screen.width(context) - 50,
-                                width: Screen.width(context) - 50,
-                                child: Image.asset(
-                                  imagepath.loginEnc,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
+                    ),
+                  ),
+                  Visibility(
+                      visible: registerStep == 1,
+                      child: Container(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        margin: EdgeInsets.only(top: Screen.height(context) * 0.02),
+                        width: Screen.width(context) - 150,
+                        height: Screen.width(context) - 150,
+                        decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
+                        child: ClipRect(
+                          child: SizedBox(
+                            height: Screen.width(context) - 50,
+                            width: Screen.width(context) - 50,
+                            child: Image.asset(
+                              imagepath.loginEnc,
+                              fit: BoxFit.contain,
                             ),
-                          )),
-                      Visibility(
-                          visible: otpFlag,
-                          child: Container(
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            margin: EdgeInsets.only(top: Screen.height(context) * 0.02),
-                            width: Screen.width(context) - 150,
-                            height: Screen.width(context) - 150,
-                            decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
-                            child: ClipRect(
-                              child: SizedBox(
-                                height: Screen.width(context) - 50,
-                                width: Screen.width(context) - 50,
-                                child: AnimatedBuilder(
-                                    animation: _rightToLeftAnimation,
-                                    builder: (context, child) {
-                                      return SlideTransition(
-                                        position: _rightToLeftAnimation,
-                                        child: Image.asset(
-                                          imagepath.loginPass,
-                                          fit: BoxFit.contain,
-                                        ),
-                                      );
-                                    }),
-                              ),
-                            ),
-                          )),
-                      Container(
-                        margin: EdgeInsets.only(top: Screen.height(context) * 0.05),
-                        child: Text(
-                          'signIN'.tr().toString(),
-                          style: TextStyle(
-                            fontSize: 25.0,
-                            fontWeight: FontWeight.bold,
-                            color: c.white,
-                            fontStyle: FontStyle.normal,
-                            decorationStyle: TextDecorationStyle.wavy,
                           ),
                         ),
-                      )
-                    ],
-                  ),
-
-                  // ****************************** Log in Field ****************************** //
-
-                  Positioned(
-                    bottom: 0,
-                    child: Container(
-                        margin: EdgeInsets.only(bottom: Screen.height(context) * 0.02),
-                        width: Screen.width(context) - 50,
-                        height: Screen.width(context) - 50,
+                      )),
+                  Visibility(
+                      visible: registerStep != 1,
+                      child: Container(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        margin: EdgeInsets.only(top: Screen.height(context) * 0.02),
+                        width: Screen.width(context) - 150,
+                        height: Screen.width(context) - 150,
                         decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(),
-
-                            // ****************************** Mobile Number Field ****************************** //
-                            Container(
-                              margin: EdgeInsets.all(15),
-                              width: Screen.width(context) - 100,
-                              height: 50,
-                              child: IgnorePointer(
-                                ignoring: otpFlag,
-                                child: FormBuilderTextField(
-                                  // onTapOutside: (event) {
-                                  //   utils.closeKeypad(context);
-                                  // },
-                                  name: 'mobile',
-                                  textAlign: TextAlign.center,
-                                  controller: mobileController,
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
-                                    LengthLimitingTextInputFormatter(10),
-                                  ],
-                                  decoration: InputDecoration(
-                                    labelText: 'Mobile Number',
-                                    labelStyle: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.black),
-                                    hintText: 'Mobile Number',
-                                    hintStyle: TextStyle(fontSize: 16),
-                                    enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
-                                    focusedBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
-                                    filled: true,
-                                    contentPadding: EdgeInsets.all(16),
-                                    fillColor: c.inputGrey,
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                            // ****************************** OTP verification Field ****************************** //
-
-                            Visibility(
-                              visible: otpFlag,
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                                    child: OTPTextField(
-                                      onChanged: (pin) {},
-                                      onCompleted: (pin) {
-                                        utils.closeKeypad(context);
-                                        finalOTP = pin;
-                                      },
-                                      width: Screen.width(context) - 100,
-                                      controller: OTPcontroller,
-                                      length: 6,
-                                      fieldStyle: FieldStyle.box,
-                                      fieldWidth: 40,
+                        child: ClipRect(
+                          child: SizedBox(
+                            height: Screen.width(context) - 50,
+                            width: Screen.width(context) - 50,
+                            child: AnimatedBuilder(
+                                animation: _rightToLeftAnimation,
+                                builder: (context, child) {
+                                  return SlideTransition(
+                                    position: _rightToLeftAnimation,
+                                    child: Image.asset(
+                                      imagepath.loginPass,
+                                      fit: BoxFit.contain,
                                     ),
-                                  ),
-                                  Container(
-                                    width: Screen.width(context) - 100,
-                                    margin: EdgeInsets.only(right: 5),
-                                    alignment: Alignment.centerRight,
-                                    child: Text(
-                                      "{ ${'resendOTP'.tr().toString()} }",
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                        color: c.primary_text_color2,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-
-                            // ****************************** Submit Action Field ****************************** //
-
-                            CustomGradientButton(
-                              onPressed: () async {
-                                mobileController.text = '9875235654';
-                                if (await utils.isOnline()) {
-                                  await validate();
-                                } else {
-                                  utils.showAlert(
-                                    context,
-                                    ContentType.fail,
-                                    "noInternet".tr().toString(),
                                   );
-                                }
-                              },
-                              width: Screen.width(context) - 100,
-                              height: 50,
-                              child: Container(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  otpFlag ? 'verifyOTP'.tr().toString() : 'getOTP'.tr().toString(),
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox()
-                          ],
-                        )),
-                  ),
+                                }),
+                          ),
+                        ),
+                      )),
+                  UIHelper.verticalSpaceSmall,
+                  UIHelper.titleTextStyle('signIN', c.white, 25, true, true)
                 ],
               ),
-            ),
-          )),
+
+              // ****************************** Log in Field ****************************** //
+
+              Positioned(
+                bottom: 0,
+                child: Container(
+                    margin: EdgeInsets.only(bottom: Screen.height(context) * 0.02),
+                    width: Screen.width(context) - 50,
+                    // height: Screen.width(context),
+                    padding: EdgeInsets.all(15),
+                    decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        if (registerStep == 1) formControls(context),
+                        if (registerStep == 2) otpControls(),
+                        if (registerStep == 3) appKeyControls(),
+                        // ****************************** Submit Action Field ****************************** //
+                        CustomGradientButton(
+                          onPressed: () async {
+                            if (registerStep == 1) {
+                              if (_formKey.currentState!.saveAndValidate()) {
+                                Map<String, dynamic> postParams = Map.from(_formKey.currentState!.value);
+                                preferencesService.setUserInfo(key_mobile_number, postParams['mobile']);
+                                print("postParams----" + postParams.toString());
+                                registerStep++;
+                                changeImageAndAnimate();
+                              }
+                            } else if (registerStep == 2) {
+                              if (finalOTP.length == 6) {
+                                print("finalOTP----" + finalOTP.toString());
+                                registerStep++;
+                                setState(() {});
+                              }
+                            } else if (registerStep == 3) {
+                              if (secretKey.length == 4) {
+                                print("secretKey----" + secretKey.toString());
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+                              }
+                            } else {
+                              debugPrint("End of the Statement....");
+                            }
+                          },
+                          width: Screen.width(context) - 100,
+                          height: 50,
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: Text(
+                              'submit'.tr().toString(),
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
-  // *************************************** API CALL  *************************************** //
+// ************* Register Form Widget ****************** \\
+  Widget formControls(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        UIHelper.verticalSpaceMedium,
+        FormBuilder(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                children: [
+                  addInputFormControl('mobile', 'mobileNumber'.tr().toString(), key_mobile_number),
+                  UIHelper.verticalSpaceMedium,
+                  UIHelper.verticalSpaceMedium,
+                  UIHelper.verticalSpaceMedium,
+                  UIHelper.verticalSpaceMedium,
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 
-  Future<void> verifyOTP() async {
-    String mobile = preferencesService.getUserInfo(key_mobile_number).toString();
-    String lan = preferencesService.getUserInfo("lang").toString();
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Home(isLogin: true)));
+// ************* Input Field Widget ********************* \\
+  Widget addInputFormControl(String nameField, String hintText, String fieldType) {
+    return FormBuilderTextField(
+      style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_9),
+      name: nameField,
+      autocorrect: false,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      onChanged: (value) {},
+      decoration: InputDecoration(
+        labelText: hintText,
+        labelStyle: TextStyle(fontSize: 11.0, fontWeight: FontWeight.w600, color: c.grey_7),
+        filled: true,
+        fillColor: Colors.white,
+        enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
+        focusedBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
+        focusedErrorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
+        errorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
+        errorStyle: TextStyle(fontSize: 10),
+        contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12), // Optional: Adjust padding
+      ),
+      validator: fieldType == key_mobile_number
+          ? ((value) {
+              if (value == "" || value == null) {
+                return "$hintText ${'isEmpty'.tr()}";
+              }
+              if (!Utils().isNumberValid(value)) {
+                return "$hintText ${'isInvalid'.tr()}";
+              }
+              return null;
+            })
+          : fieldType == key_email_id
+              ? ((value) {
+                  if (value == "" || value == null) {
+                    return "$hintText ${'isEmpty'.tr()}";
+                  }
+                  if (!Utils().isEmailValid(value)) {
+                    return "$hintText ${'isInvalid'.tr()}";
+                  }
+                  return null;
+                })
+              : FormBuilderValidators.compose([
+                  FormBuilderValidators.required(errorText: "$hintText ${'isEmpty'.tr()}"),
+                ]),
+      inputFormatters: fieldType == key_mobile_number
+          ? [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(10),
+            ]
+          : [],
+      keyboardType: fieldType == key_mobile_number ? TextInputType.number : TextInputType.text,
+    );
+  }
+
+// ************* OTP Form Control *********************** \\
+  Widget otpControls() {
+    return Column(
+      children: [
+        UIHelper.titleTextStyle("Your Mobile Number has been Received the OTP", c.text_color, 12, true, false),
+        Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+            child: CustomOTP(
+                length: 6,
+                onChanged: (pin) {
+                  if (pin.length == 6) {
+                    finalOTP = pin;
+                    isValidOtp = true;
+                  } else {
+                    isValidOtp = false;
+                    finalOTP = "";
+                  }
+
+                  setState(() {});
+                })),
+        if (!isValidOtp) UIHelper.titleTextStyle("InValid OTP", c.red_new, 10, true, false),
+        Container(
+          width: Screen.width(context) - 100,
+          margin: EdgeInsets.only(right: 5),
+          alignment: Alignment.centerRight,
+          child: Text(
+            "( ${'resendOTP'.tr().toString()} )",
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              color: c.primary_text_color2,
+            ),
+          ),
+        ),
+        UIHelper.verticalSpaceMedium
+      ],
+    );
+  }
+
+// ************* OTP Form Control *********************** \\
+  Widget appKeyControls() {
+    return Column(
+      children: [
+        UIHelper.titleTextStyle("Enter Your Secrect PIN", c.text_color, 14, true, false),
+        UIHelper.verticalSpaceSmall,
+        Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+            child: CustomOTP(
+                length: 4,
+                onChanged: (pin) {
+                  if (pin.length == 4) {
+                    secretKey = pin;
+                    secretKeyIsValid = true;
+                  } else {
+                    secretKeyIsValid = false;
+                    secretKey = "";
+                  }
+                  setState(() {});
+                })),
+        if (!secretKeyIsValid) UIHelper.titleTextStyle("InValid PIN", c.red_new, 10, true, false),
+        UIHelper.verticalSpaceMedium
+      ],
+    );
   }
 }
