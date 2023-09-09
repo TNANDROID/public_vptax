@@ -6,8 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:otp_text_field/otp_text_field.dart';
-import 'package:otp_text_field/style.dart';
-import 'package:public_vptax/Activity/Auth/Home.dart';
 import 'package:public_vptax/Layout/custom_otp_field.dart';
 import 'package:public_vptax/Layout/customgradientbutton.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
@@ -31,6 +29,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   ApiServices apiServices = ApiServices();
   PreferenceService preferencesService = locator<PreferenceService>();
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
+  final GlobalKey<FormBuilderState> _SecretKey = GlobalKey<FormBuilderState>();
   OtpFieldController OTPcontroller = OtpFieldController();
   late Animation<Offset> _rightToLeftAnimation;
   late AnimationController _rightToLeftAnimController;
@@ -40,6 +39,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   bool isValidOtp = true;
   String secretKey = '';
   bool secretKeyIsValid = true;
+  List secureFields = [];
 
   @override
   void initState() {
@@ -193,9 +193,13 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                                 setState(() {});
                               }
                             } else if (registerStep == 3) {
-                              if (secretKey.length == 4) {
-                                print("secretKey----" + secretKey.toString());
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+                              if (_SecretKey.currentState!.saveAndValidate()) {
+                                Map<String, dynamic> postParams = Map.from(_SecretKey.currentState!.value);
+                                if (postParams['secretKey'].toString() == postParams['confirm'].toString()) {
+                                  print("postParams----" + postParams.toString());
+                                } else {
+                                  utils.showAlert(context, ContentType.warning, "Your Secret PIN does not match");
+                                }
                               }
                             } else {
                               debugPrint("End of the Statement....");
@@ -237,16 +241,12 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Column(
-                children: [
-                  addInputFormControl('name', 'name'.tr().toString(), "text"),
-                  UIHelper.verticalSpaceSmall,
-                  addInputFormControl('mobile', 'mobileNumber'.tr().toString(), key_mobile_number),
-                  UIHelper.verticalSpaceSmall,
-                  addInputFormControl('emailAddress', 'emailAddress'.tr().toString(), key_email_id),
-                  UIHelper.verticalSpaceMedium,
-                ],
-              ),
+              addInputFormControl('name', 'name'.tr().toString(), "text"),
+              UIHelper.verticalSpaceSmall,
+              addInputFormControl('mobile', 'mobileNumber'.tr().toString(), key_mobile_number),
+              UIHelper.verticalSpaceSmall,
+              addInputFormControl('emailAddress', 'emailAddress'.tr().toString(), key_email_id),
+              UIHelper.verticalSpaceMedium,
             ],
           ),
         ),
@@ -255,14 +255,37 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   }
 
 // ************* Input Field Widget ********************* \\
-  Widget addInputFormControl(String nameField, String hintText, String fieldType) {
+  Widget addInputFormControl(String nameField, String hintText, String fieldType, {bool isShowSuffixIcon = false}) {
     return FormBuilderTextField(
       style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_9),
+      obscureText: secureFields.contains(nameField) ? true : false,
       name: nameField,
       autocorrect: false,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       onChanged: (value) {},
       decoration: InputDecoration(
+        suffixIcon: isShowSuffixIcon
+            ? GestureDetector(
+                onTap: () {
+                  if (secureFields.contains(nameField)) {
+                    secureFields.remove(nameField);
+                  } else {
+                    secureFields.add(nameField);
+                  }
+                  setState(() {});
+                },
+                child: secureFields.contains(nameField)
+                    ? Icon(
+                        Icons.visibility,
+                        size: 25,
+                        color: c.grey_6,
+                      )
+                    : Icon(
+                        Icons.visibility_off,
+                        size: 25,
+                        color: c.grey_6,
+                      ))
+            : null,
         labelText: hintText,
         labelStyle: TextStyle(fontSize: 11.0, fontWeight: FontWeight.w600, color: c.grey_7),
         filled: true,
@@ -297,13 +320,13 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
               : FormBuilderValidators.compose([
                   FormBuilderValidators.required(errorText: "$hintText ${'isEmpty'.tr()}"),
                 ]),
-      inputFormatters: fieldType == key_mobile_number
+      inputFormatters: fieldType == key_mobile_number || fieldType == key_number
           ? [
               FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(10),
+              LengthLimitingTextInputFormatter(fieldType == key_mobile_number ? 10 : 4),
             ]
           : [],
-      keyboardType: fieldType == key_mobile_number ? TextInputType.number : TextInputType.text,
+      keyboardType: fieldType == key_mobile_number || fieldType == key_number ? TextInputType.number : TextInputType.text,
     );
   }
 
@@ -352,20 +375,17 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
       children: [
         UIHelper.titleTextStyle("Enter Your Secrect PIN", c.text_color, 14, true, false),
         UIHelper.verticalSpaceSmall,
-        Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-            child: CustomOTP(
-                length: 4,
-                onChanged: (pin) {
-                  if (pin.length == 4) {
-                    secretKey = pin;
-                    secretKeyIsValid = true;
-                  } else {
-                    secretKeyIsValid = false;
-                    secretKey = "";
-                  }
-                  setState(() {});
-                })),
+        FormBuilder(
+            key: _SecretKey,
+            child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                child: Column(
+                  children: [
+                    addInputFormControl("secretKey", "Enter Your 4 digit PIN", key_number, isShowSuffixIcon: true),
+                    UIHelper.verticalSpaceSmall,
+                    addInputFormControl("confirm", "Confirm Your PIN", key_number, isShowSuffixIcon: true),
+                  ],
+                ))),
         if (!secretKeyIsValid) UIHelper.titleTextStyle("InValid PIN", c.red_new, 10, true, false),
         UIHelper.verticalSpaceMedium
       ],

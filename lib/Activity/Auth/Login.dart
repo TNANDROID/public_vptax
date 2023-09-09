@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:otp_text_field/otp_text_field.dart';
-import 'package:otp_text_field/style.dart';
 import 'package:public_vptax/Activity/Auth/Home.dart';
 import 'package:public_vptax/Layout/custom_otp_field.dart';
 import 'package:public_vptax/Layout/customgradientbutton.dart';
@@ -18,7 +17,6 @@ import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Services/Apiservices.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
-import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:public_vptax/Utils/utils.dart';
 
 class Login extends StatefulWidget {
@@ -310,7 +308,7 @@ class LoginStateView extends State<Login> with TickerProviderStateMixin {
   Widget otpControls() {
     return Column(
       children: [
-        UIHelper.titleTextStyle("Your Mobile Number has been Received the OTP", c.text_color, 12, true, false),
+        UIHelper.titleTextStyle("OTP Received Your  Mobile number ***95", c.text_color, 12, true, false),
         Padding(
             padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
             child: CustomOTP(
@@ -355,10 +353,11 @@ class LoginStateView extends State<Login> with TickerProviderStateMixin {
             padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
             child: CustomOTP(
                 length: 4,
-                onChanged: (pin) {
+                onChanged: (pin) async {
                   if (pin.length == 4) {
                     secretKey = pin;
                     secretKeyIsValid = true;
+                    await preferencesService.setUserInfo("secrectKey", secretKey);
                   } else {
                     secretKeyIsValid = false;
                     secretKey = "";
