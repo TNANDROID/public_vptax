@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:public_vptax/Activity/Tax_Collection/taxCollection_details.dart';
+import 'package:public_vptax/Activity/Tax_Collection/taxCollection_detailsWithAddOption.dart';
 import 'package:public_vptax/Layout/customclip.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
@@ -57,6 +58,9 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
     if (widget.flag == "1") {
       selectedTaxTypeData = widget.selectedTaxTypeData;
       selectedTaxType = selectedTaxTypeData[key_taxtypeid];
+    }else if (widget.flag == "3") {
+      selectedTaxTypeData = widget.selectedTaxTypeData;
+      selectedTaxType = selectedTaxTypeData[key_taxtypeid];
     } else {
       taxlist = preferencesService.taxTypeList;
       selectedTaxTypeData = [];
@@ -67,7 +71,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
 
   @override
   Widget build(BuildContext context) {
-    String title = widget.appbarTitle ?? 'check_your_dues_title';
+    String title = widget.appbarTitle ?? 'get_tax_details';
 
     return Scaffold(
         appBar: AppBar(
@@ -100,6 +104,38 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                               /* Visibility(
+                                  visible: true,
+                                  child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Container(
+                                        width: MediaQuery.of(context).size.width / 2,
+                                        margin: EdgeInsets.only(top: 0, bottom: 15, right: 10),
+                                        decoration: UIHelper.GradientContainer(5, 5, 5, 5, [c.grey_8, c.grey_8]),
+                                        padding: EdgeInsets.fromLTRB(5, 8, 0, 8),
+                                        child: Row(
+                                          // Wrap with Row to add the plus icon
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.add, // Use the icon you prefer (e.g., Icons.add, Icons.add_circle, etc.)
+                                              color: c.white,
+                                              size: 15,
+                                            ),
+                                            SizedBox(width: 3),
+                                            Flexible(
+                                                child: UIHelper.titleTextStyle(
+                                                  selectedTaxTypeData.isNotEmpty ?("new".tr().toString() + (selectedLang == "en" ? selectedTaxTypeData["taxtypedesc_en"] : selectedTaxTypeData["taxtypedesc_ta"]) + "new2".tr().toString()):"new_tax".tr().toString(),
+                                                  c.white,
+                                                  10,
+                                                  true,
+                                                  true,
+                                                )) // Add a small space between the icon and the text
+                                            ,
+                                          ],
+                                        ),
+                                      )),
+                                ),*/
                                 taxWidgetGridView(),
                                 radioButtonListWidget(),
                                 formControls(context, model),
@@ -523,7 +559,13 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
 
             int totalAssessment = int.parse(await preferencesService.getUserInfo(key_total_assesment));
             if (totalAssessment > 0) {
-              Navigator.push(
+             widget.flag == "3"?  Navigator.push(
+                 context,
+                 MaterialPageRoute(
+                     builder: (_) => TaxCollectionDetailsWithAdd(
+                       selectedTaxTypeData: selectedTaxTypeData,
+                     ))):
+             Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (_) => TaxCollectionDetailsView(

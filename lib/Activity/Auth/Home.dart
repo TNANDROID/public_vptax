@@ -45,7 +45,7 @@ class _HomeState extends State<Home> {
   bool flag = true;
   bool flagMobileActive = true;
   String langText = 'தமிழ்';
-  String islogin = 'no';
+  String islogin = '';
   String selectedLang = "";
 
   TextEditingController mobileController = TextEditingController();
@@ -86,6 +86,8 @@ class _HomeState extends State<Home> {
     index_val = -1;
     selected_index = -1;
     selectedLang = await preferencesService.getUserInfo("lang");
+    await preferencesService.setUserInfo(key_isLogin, 'yes');
+    await preferencesService.setUserInfo(key_mobile_number, '9875235654');
     await Utils().apiCalls(context);
     List s_list = [
       {'service_id': 0, 'service_name': 'your_tax_details', 'img_path': imagePath.due4},
@@ -102,8 +104,7 @@ class _HomeState extends State<Home> {
     taxTypeList.clear();
     taxTypeList = preferencesService.taxTypeList;
     String pre_isLogin = await preferencesService.getUserInfo(key_isLogin);
-    // islogin = pre_isLogin != "" ? pre_isLogin : "no";
-    islogin = "Gone";
+    islogin = pre_isLogin != "" ? pre_isLogin : "no";
     print(islogin);
     setState(() {
       if (selectedLang != "" && selectedLang == "en") {
@@ -403,7 +404,15 @@ class _HomeState extends State<Home> {
                                   onTap: () async {
                                     selected_index = servicesList[index][key_service_id];
                                     if (selected_index == 0) {
-                                      _settingModalBottomSheet(context, false);
+                                      // _settingModalBottomSheet(context, false);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (_) => AllYourTaxDetails(
+                                                isTaxDropDown: true,
+                                                isHome: false,
+                                                selectedEntryType: 1,
+                                              )));
                                     } else if (selected_index == 1) {
                                       if (islogin == "yes") {
                                         Navigator.push(
@@ -676,7 +685,7 @@ class _HomeState extends State<Home> {
                                               isTaxDropDown: true,
                                               isHome: false,
                                               selectedEntryType: 1,
-                                              mobile: mobileController.text,
+
                                             )));
                               } else {
                                 bool resFlag = await model.getTransactionStatus(context, mobileController.text, emailController.text);

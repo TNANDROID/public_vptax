@@ -29,8 +29,7 @@ class AllYourTaxDetails extends StatefulWidget {
   final pvcode;
   final isTaxDropDown;
   final selectedEntryType;
-  final mobile;
-  AllYourTaxDetails({Key? key, this.selectedTaxTypeData, this.isHome, this.dcode, this.bcode, this.pvcode, this.isTaxDropDown, this.selectedEntryType, this.mobile});
+  AllYourTaxDetails({Key? key, this.selectedTaxTypeData, this.isHome, this.dcode, this.bcode, this.pvcode, this.isTaxDropDown, this.selectedEntryType});
 
   @override
   _AllYourTaxDetailsState createState() => _AllYourTaxDetailsState();
@@ -149,7 +148,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
     selectedLang = await preferencesService.getUserInfo("lang");
     islogin = await preferencesService.getUserInfo(s.key_isLogin);
     mobile_widget = islogin == "yes" ? await preferencesService.getUserInfo("mobile_number") : "";
-    etTextController.text = widget.mobile;
+    etTextController.text = mobile_widget;
     await getTaxDetails();
     await filterDataList();
     setState(() {});
@@ -213,7 +212,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                   decoration: InputDecoration(
                                     constraints: BoxConstraints(maxHeight: 40),
                                     contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                                    suffixIcon: IconButton(
+/*                                    suffixIcon: IconButton(
                                         onPressed: () async {
                                           Utils().closeKeypad(context);
                                           etTextController.text = "9875235654";
@@ -246,7 +245,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                                 Icons.arrow_circle_right_outlined,
                                                 color: c.colorPrimaryDark,
                                                 size: 28,
-                                              )),
+                                              )),*/
                                     filled: true,
                                     fillColor: Colors.white,
                                     hintText: 'Enter Mobile Number',
@@ -903,14 +902,14 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                     isSelectAll.remove(mainIndex);
                                   }
                                   setState(() {
-                                    dynamic selectedDemandDetails = mainList[mainIndex];
+                                    /*dynamic selectedDemandDetails = mainList[mainIndex];
                                     List selectedDemandDetailsList = selectedDemandDetails[key_DEMAND_DETAILS];
                                     bool hasActiveFlag = selectedDemandDetailsList.any((json) => json[key_flag] == true);
 
                                     if (hasActiveFlag && islogin == "yes") {
                                       preferencesService.addedTaxPayList.removeWhere((element) => element[key_assessment_id].toString() == mainList[mainIndex][key_assessment_id].toString());
                                       preferencesService.addedTaxPayList.add(selectedDemandDetails);
-                                    }
+                                    }*/
                                     getCount();
                                     repeatOnce();
 
@@ -1055,7 +1054,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                                       }
 
                                                       setState(() {
-                                                        dynamic selectedDemandDetails = mainList[mainIndex];
+                                                        /*dynamic selectedDemandDetails = mainList[mainIndex];
                                                         List selectedDemandDetailsList = selectedDemandDetails[key_DEMAND_DETAILS];
                                                         bool hasActiveFlag = selectedDemandDetailsList.any((json) => json[key_flag] == true);
 
@@ -1063,16 +1062,8 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                                           preferencesService.addedTaxPayList
                                                               .removeWhere((element) => element[key_assessment_id].toString() == mainList[mainIndex][key_assessment_id].toString());
                                                           preferencesService.addedTaxPayList.add(selectedDemandDetails);
-                                                        }
+                                                        }*/
 
-                                                        /* preferencesService.addedTaxPayList.clear();
-                                                    mainList.forEach((element) {
-                                                      element[key_DEMAND_DETAILS].forEach((e) {
-                                                        if (e[key_flag] == true) {
-                                                          preferencesService.addedTaxPayList.add(element);
-                                                        }
-                                                      });
-                                                    });*/
 
                                                         getCount();
                                                         repeatOnce();
@@ -1531,27 +1522,6 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
     print("mainList>>$mainList");
 
     getCount();
-
-/*
-    for (int m = 0; m < preferencesService.addedTaxPayList.length; m++) {
-      for (int j = 0;
-          j <
-              preferencesService
-                  .addedTaxPayList[m][s.key_DEMAND_DETAILS].length;
-          j++) {
-        if (preferencesService.addedTaxPayList[m][s.key_DEMAND_DETAILS][j]
-                [s.key_flag] ==
-            true) {
-          main_count = main_count + 1;
-        }
-      }
-      // for (int j = 0; j < preferencesService.addedTaxPayList[m]['swmData'].length; j++) {
-      //   if (preferencesService.addedTaxPayList[m]['swmData'][j][s.key_flag] == true) {
-      //     main_count = main_count + 1;
-      //   }
-      // }
-    }
-*/
   }
 
   String getTaxImage(int typeId) {

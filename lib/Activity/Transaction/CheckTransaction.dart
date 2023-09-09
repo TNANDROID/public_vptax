@@ -380,7 +380,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
                               style: TextStyle(fontSize: 12, color: c.black),
                             ),
                             Text(
-                              transAmount,
+                             "\u{20B9} ${transAmount}",
                               style: TextStyle(fontSize: 12, color: c.text_color),
                             ),
                           ],

@@ -98,14 +98,15 @@ class Utils {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
   }
 
-  void showToast(BuildContext context, String msg) {
+  void showToast(BuildContext context, String msg,String type) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: UIHelper.titleTextStyle(msg, c.white, 13, true, false),
+      backgroundColor: type == "S"? c.account_status_green_color:c.grey_10,
+      content: UIHelper.titleTextStyle(msg, type == "S"? c.white:c.white, 13, true, false),
       duration: const Duration(seconds: 1),
-      action: SnackBarAction(
+/*      action: SnackBarAction(
         label: 'ACTION',
         onPressed: () {},
-      ),
+      ),*/
     ));
   }
 

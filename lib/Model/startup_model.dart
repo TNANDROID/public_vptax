@@ -249,8 +249,10 @@ class StartUpViewModel extends BaseViewModel {
   Future mainServicesAPIcall(BuildContext context, dynamic requestJson) async {
     dynamic requestData = {key_data_content: requestJson};
     if (await Utils().isOnline()) {
+      Utils().showProgress(context, 1);
       try {
         var response = await apiServices.mainServiceFunction(requestData);
+        Utils().hideProgress(context);
         var status = response[key_status].toString();
         var responseValue = response[key_response].toString();
         print("requestData>>$requestData");
@@ -261,6 +263,7 @@ class StartUpViewModel extends BaseViewModel {
           return responseValue;
         }
       } catch (error) {
+        Utils().hideProgress(context);
         debugPrint('error (${error.toString()}) has been caught');
       }
     } else {
