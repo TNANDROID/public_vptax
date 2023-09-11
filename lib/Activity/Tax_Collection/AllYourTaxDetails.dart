@@ -684,9 +684,10 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                 visible: !isShowFlag.contains(mainIndex) && double.parse(getTotalToPay(mainIndex)) > 0,
                 child: InkWell(
                   onTap: () {
-                    List finalList = [];
-                    finalList.add(mainList[mainIndex]);
-                    Utils().settingModalBottomSheet(context, finalList);
+                    for (var item in taxData) {
+                      item[s.key_flag] = true;
+                    }
+                    Utils().settingModalBottomSheet(context, [mainList[mainIndex]]);
                   },
                   child: Container(
                       margin: EdgeInsets.only(top: 0, right: 10, bottom: 10),
