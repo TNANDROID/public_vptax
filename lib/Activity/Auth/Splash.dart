@@ -45,7 +45,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
         () {
           Navigator.of(context).push(
             PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) => getPrefesecrectKey.isNotEmpty ? const SecretKeyView() : const AuthModeView(),
+              pageBuilder: (context, animation, secondaryAnimation) => getPrefesecrectKey.isNotEmpty ? SecretKeyView() : AuthModeView(),
               transitionDuration: const Duration(seconds: 2),
               transitionsBuilder: (context, animation, secondaryAnimation, child) {
                 const begin = Offset(1.0, 0.0); // Start position

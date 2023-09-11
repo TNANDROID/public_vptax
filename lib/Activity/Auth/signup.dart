@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:otp_text_field/otp_text_field.dart';
+import 'package:public_vptax/Activity/Auth/Splash.dart';
 import 'package:public_vptax/Layout/custom_otp_field.dart';
 import 'package:public_vptax/Layout/customgradientbutton.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
@@ -197,6 +198,8 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                                 Map<String, dynamic> postParams = Map.from(_SecretKey.currentState!.value);
                                 if (postParams['secretKey'].toString() == postParams['confirm'].toString()) {
                                   print("postParams----" + postParams.toString());
+                                  await preferencesService.setUserInfo("secrectKey", postParams['secretKey'].toString());
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Splash()));
                                 } else {
                                   utils.showAlert(context, ContentType.warning, "Your Secret PIN does not match");
                                 }
@@ -258,7 +261,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   Widget addInputFormControl(String nameField, String hintText, String fieldType, {bool isShowSuffixIcon = false}) {
     return FormBuilderTextField(
       style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_9),
-      obscureText: secureFields.contains(nameField) ? true : false,
+      obscureText: secureFields.contains(nameField) || !isShowSuffixIcon ? false : true,
       name: nameField,
       autocorrect: false,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -276,12 +279,12 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                 },
                 child: secureFields.contains(nameField)
                     ? Icon(
-                        Icons.visibility,
+                        Icons.visibility_off,
                         size: 25,
                         color: c.grey_6,
                       )
                     : Icon(
-                        Icons.visibility_off,
+                        Icons.visibility,
                         size: 25,
                         color: c.grey_6,
                       ))

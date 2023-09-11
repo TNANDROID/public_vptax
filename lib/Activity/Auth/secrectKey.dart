@@ -65,7 +65,6 @@ class _SecretKeyViewState extends State<SecretKeyView> with TickerProviderStateM
             ]),
             UIHelper.verticalSpaceMedium,
             UIHelper.titleTextStyle("Enter your 4 Digit PIN", c.text_color, 14, true, true),
-            UIHelper.titleTextStyle("getPreferKey", c.text_color, 14, true, true),
             UIHelper.verticalSpaceMedium,
             CustomOTP(
                 length: 4,
