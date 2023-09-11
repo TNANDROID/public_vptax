@@ -58,6 +58,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
   //int Double
   double main_totalAmount = 0.00;
   int main_count = 0;
+  int overAllTotal = 0;
   int totalAssessment = 0;
   int pendingAssessment = 0;
   int totalAllAssessment = 0;
@@ -308,7 +309,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           UIHelper.titleTextStyle("total_assessment".tr().toString(), c.grey_10, 10, true, true),
-                                          UIHelper.titleTextStyle(" $totalAssessment", c.grey_10, 14, true, true),
+                                          UIHelper.titleTextStyle(" $overAllTotal", c.grey_10, 14, true, true),
                                         ],
                                       ),
                                     ],
@@ -1632,6 +1633,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
         }
       }
       totalAssessment = totalAllAssessment;
+      overAllTotal = totalAssessment;
       pendingAssessment = pendingAllAssessment;
       print("sampleDataList>>$sampleDataList");
       print("sampleDataList>>${sampleDataList.length}");

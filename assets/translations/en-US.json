@@ -187,5 +187,15 @@
   "pending_payment": "Pending payment",
   "work_type_name": "Work Type Name",
   "select_All": "Select All",
-  "select_To_Pay": "Select to Pay"
+  "select_To_Pay": "Select to Pay",
+  "otp_received":"OTP send this Mobile Numer ***",
+  "enter_your_SecretPin":"Enter your Secret PIN",
+  "enter_your_digitPin": "Enter your 4 Digit PIN",
+  "confirm_pin":"Confirm your PIN",
+  "invalid_Pin":"Invalid PIN",
+  "forgot_secret_Pin":"Forgot PIN ?",
+  "wrong_confirm_pin":"Your Secret PIN doesn't match",
+  "logout":"Logout",
+  "confirm_logout": "Do you want to logout this Device?",
+  "user_registered_successfull": "User Registered Successfully"
 }

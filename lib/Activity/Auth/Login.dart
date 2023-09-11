@@ -331,7 +331,7 @@ class LoginStateView extends State<LoginView> with TickerProviderStateMixin {
 
 // ************* OTP Form Control *********************** \\
   Widget otpControls() {
-    String phone = postParams['mobile'].toString().substring(8);
+    String phone = postParams['mobile'].toString().substring(6);
 
     return Column(
       children: [
