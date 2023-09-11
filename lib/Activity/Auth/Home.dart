@@ -409,10 +409,10 @@ class _HomeState extends State<Home> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (_) => AllYourTaxDetails(
-                                                isTaxDropDown: true,
-                                                isHome: false,
-                                                selectedEntryType: 1,
-                                              )));
+                                                    isTaxDropDown: true,
+                                                    isHome: false,
+                                                    selectedEntryType: 1,
+                                                  )));
                                     } else if (selected_index == 1) {
                                       if (islogin == "yes") {
                                         Navigator.push(
@@ -506,20 +506,14 @@ class _HomeState extends State<Home> {
     return s;
   }
 
-  Future<bool> showExitPopup() async {
+  Future<bool> showExitPopup({isLogout = false}) async {
     return await showDialog(
           //show confirm dialogue
           //the return value will be from "Yes" or "No" options
           context: context,
           builder: (context) => AlertDialog(
-            title: Text(
-              'exit_app'.tr().toString(),
-              style: TextStyle(fontSize: 14),
-            ),
-            content: Text(
-              'do_you_want_to_exit_an_app'.tr().toString(),
-              style: TextStyle(fontSize: 13),
-            ),
+            title: UIHelper.titleTextStyle(isLogout ? 'logout'.tr().toString() : 'exit_app'.tr().toString(), c.black, 14, false, false),
+            content: UIHelper.titleTextStyle(isLogout ? 'confirm_logout'.tr().toString() : 'do_you_want_to_exit_an_app'.tr().toString(), c.black, 13, false, false),
             actions: [
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(false),
@@ -530,13 +524,18 @@ class _HomeState extends State<Home> {
                 ),
               ),
               ElevatedButton(
-                onPressed: () {
-                  if (Platform.isAndroid) {
-                    SystemNavigator.pop();
-                  } else if (Platform.isIOS) {
-                    exit(0);
-                  }
-                },
+                onPressed: isLogout
+                    ? () {
+                        preferencesService.cleanAllPreferences();
+                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Splash()), (route) => false);
+                      }
+                    : () {
+                        if (Platform.isAndroid) {
+                          SystemNavigator.pop();
+                        } else if (Platform.isIOS) {
+                          exit(0);
+                        }
+                      },
                 //return true when click on "Yes"
                 child: Text(
                   'yes'.tr().toString(),
@@ -571,13 +570,7 @@ class _HomeState extends State<Home> {
   }
 
   void logout() {
-    preferencesService.cleanAllPreferences();
-    // if (Platform.isAndroid) {
-    //   SystemNavigator.pop();
-    // } else if (Platform.isIOS) {
-    //   exit(0);
-    // }
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Splash()), (route) => false);
+    showExitPopup(isLogout: true);
   }
 
   void _settingModalBottomSheet(BuildContext context, bool isCheckTransaction) {
@@ -685,7 +678,6 @@ class _HomeState extends State<Home> {
                                               isTaxDropDown: true,
                                               isHome: false,
                                               selectedEntryType: 1,
-
                                             )));
                               } else {
                                 bool resFlag = await model.getTransactionStatus(context, mobileController.text, emailController.text);

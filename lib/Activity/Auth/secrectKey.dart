@@ -3,6 +3,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:public_vptax/Activity/Auth/Home.dart';
+import 'package:public_vptax/Activity/Auth/Login.dart';
 import 'package:public_vptax/Layout/custom_otp_field.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
@@ -64,7 +65,7 @@ class _SecretKeyViewState extends State<SecretKeyView> with TickerProviderStateM
               ),
             ]),
             UIHelper.verticalSpaceMedium,
-            UIHelper.titleTextStyle("Enter your 4 Digit PIN", c.text_color, 14, true, true),
+            UIHelper.titleTextStyle('enter_your_SecretPin'.tr().toString(), c.text_color, 14, true, true),
             UIHelper.verticalSpaceMedium,
             CustomOTP(
                 length: 4,
@@ -81,8 +82,20 @@ class _SecretKeyViewState extends State<SecretKeyView> with TickerProviderStateM
                   }
                   setState(() {});
                 }),
-            UIHelper.verticalSpaceSmall,
-            if (!secretKeyIsValid) UIHelper.titleTextStyle("InValid PIN", c.red_new, 10, true, false),
+            if (!secretKeyIsValid) UIHelper.verticalSpaceMedium,
+            if (!secretKeyIsValid) UIHelper.titleTextStyle('invalid_Pin'.tr().toString(), c.red_new, 10, true, false),
+            UIHelper.verticalSpaceMedium,
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => LoginView()));
+              },
+              child: Container(
+                width: Screen.width(context),
+                margin: EdgeInsets.only(right: 15),
+                alignment: Alignment.centerRight,
+                child: UIHelper.titleTextStyle('forgot_secret_Pin'.tr().toString(), c.primary_text_color2, 12, true, false),
+              ),
+            ),
           ]),
         ),
       ),

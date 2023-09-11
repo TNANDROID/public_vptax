@@ -24,18 +24,11 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
   PreferenceService preferencesService = locator<PreferenceService>();
   Utils utils = Utils();
   String selectedLang = "en";
-
   @override
   void initState() {
     super.initState();
     initialize();
   }
-
-  // Future<void> initialize() async {
-  //   selectedLang == "en" ? preferencesService.setUserInfo("lang", "en") : preferencesService.setUserInfo("lang", "ta");
-  //   selectedLanguage = await selectedLang == "en" ? langItems[0][s.key_langCode] : langItems[1][s.key_langCode];
-  //   setState(() {});
-  // }
 
   Future<void> initialize() async {
     String getPrefesecrectKey = await preferencesService.getUserInfo("secrectKey");

@@ -292,7 +292,7 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
         onPressed: () async {
           if (flag == 1) {
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => Login(),
+              builder: (context) => LoginView(),
             ));
           } else if (flag == 2) {
             if (await utils.isOnline()) {
@@ -341,36 +341,4 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
       ),
     );
   }
-
-  // Future<void> initialize() async {
-  //   if (await utils.isOnline()) {
-  //     Future.delayed(
-  //       const Duration(seconds: 2, milliseconds: 350),
-  //       () {
-  //         Navigator.of(context).push(
-  //           PageRouteBuilder(
-  //             pageBuilder: (context, animation, secondaryAnimation) => Home(isLogin: true),
-  //             transitionDuration: const Duration(seconds: 2),
-  //             transitionsBuilder: (context, animation, secondaryAnimation, child) {
-  //               // Slide transition
-  //               const begin = Offset(1.0, 0.0); // Start position
-  //               const end = Offset.zero; // End position
-  //               const curve = Curves.easeInOut; // Transition curve
-
-  //               var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-  //               var offsetAnimation = animation.drive(tween);
-
-  //               return SlideTransition(
-  //                 position: offsetAnimation,
-  //                 child: child,
-  //               );
-  //             },
-  //           ),
-  //         );
-  //       },
-  //     );
-  //   } else {
-  //     utils.showAlert(context, ContentType.fail, 'No Internet');
-  //   }
-  // }
 }

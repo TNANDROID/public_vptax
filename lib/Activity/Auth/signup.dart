@@ -30,7 +30,6 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   ApiServices apiServices = ApiServices();
   PreferenceService preferencesService = locator<PreferenceService>();
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
-  final GlobalKey<FormBuilderState> _SecretKey = GlobalKey<FormBuilderState>();
   OtpFieldController OTPcontroller = OtpFieldController();
   late Animation<Offset> _rightToLeftAnimation;
   late AnimationController _rightToLeftAnimController;
@@ -38,10 +37,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   int registerStep = 1;
   String finalOTP = '';
   bool isValidOtp = true;
-  String secretKey = '';
-  bool secretKeyIsValid = true;
-  List secureFields = [];
-
+  Map<String, dynamic> postParams = {};
   @override
   void initState() {
     super.initState();
@@ -175,34 +171,23 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                       children: [
                         if (registerStep == 1) formControls(context),
                         if (registerStep == 2) otpControls(),
-                        if (registerStep == 3) appKeyControls(),
                         // ****************************** Submit Action Field ****************************** //
                         CustomGradientButton(
                           onPressed: () async {
                             if (registerStep == 1) {
                               if (_formKey.currentState!.saveAndValidate()) {
-                                Map<String, dynamic> postParams = Map.from(_formKey.currentState!.value);
+                                postParams = Map.from(_formKey.currentState!.value);
                                 preferencesService.setUserInfo(key_mobile_number, postParams['mobile']);
                                 print("postParams----" + postParams.toString());
                                 registerStep++;
+                                setState(() {});
                                 changeImageAndAnimate();
                               }
                             } else if (registerStep == 2) {
                               if (finalOTP.length == 6) {
                                 print("finalOTP----" + finalOTP.toString());
-                                registerStep++;
-                                setState(() {});
-                              }
-                            } else if (registerStep == 3) {
-                              if (_SecretKey.currentState!.saveAndValidate()) {
-                                Map<String, dynamic> postParams = Map.from(_SecretKey.currentState!.value);
-                                if (postParams['secretKey'].toString() == postParams['confirm'].toString()) {
-                                  print("postParams----" + postParams.toString());
-                                  await preferencesService.setUserInfo("secrectKey", postParams['secretKey'].toString());
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Splash()));
-                                } else {
-                                  utils.showAlert(context, ContentType.warning, "Your Secret PIN does not match");
-                                }
+                                await utils.showAlert(context, ContentType.success, 'user_registered_successfull'.tr().toString());
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => Splash()));
                               }
                             } else {
                               debugPrint("End of the Statement....");
@@ -261,34 +246,11 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   Widget addInputFormControl(String nameField, String hintText, String fieldType, {bool isShowSuffixIcon = false}) {
     return FormBuilderTextField(
       style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_9),
-      obscureText: secureFields.contains(nameField) || !isShowSuffixIcon ? false : true,
       name: nameField,
       autocorrect: false,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       onChanged: (value) {},
       decoration: InputDecoration(
-        suffixIcon: isShowSuffixIcon
-            ? GestureDetector(
-                onTap: () {
-                  if (secureFields.contains(nameField)) {
-                    secureFields.remove(nameField);
-                  } else {
-                    secureFields.add(nameField);
-                  }
-                  setState(() {});
-                },
-                child: secureFields.contains(nameField)
-                    ? Icon(
-                        Icons.visibility_off,
-                        size: 25,
-                        color: c.grey_6,
-                      )
-                    : Icon(
-                        Icons.visibility,
-                        size: 25,
-                        color: c.grey_6,
-                      ))
-            : null,
         labelText: hintText,
         labelStyle: TextStyle(fontSize: 11.0, fontWeight: FontWeight.w600, color: c.grey_7),
         filled: true,
@@ -335,9 +297,11 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
 
 // ************* OTP Form Control *********************** \\
   Widget otpControls() {
+    String phone = postParams['mobile'].toString().substring(8);
+
     return Column(
       children: [
-        UIHelper.titleTextStyle("Your Mobile Number has been Received the OTP", c.text_color, 12, true, false),
+        UIHelper.titleTextStyle('otp_received'.tr().toString() + phone, c.text_color, 12, true, false),
         Padding(
             padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
             child: CustomOTP(
@@ -353,7 +317,8 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
 
                   setState(() {});
                 })),
-        if (!isValidOtp) UIHelper.titleTextStyle("InValid OTP", c.red_new, 10, true, false),
+        if (!isValidOtp) UIHelper.titleTextStyle('verifyOTP'.tr().toString(), c.red_new, 10, true, false),
+        if (!isValidOtp) UIHelper.verticalSpaceSmall,
         Container(
           width: Screen.width(context) - 100,
           margin: EdgeInsets.only(right: 5),
@@ -373,25 +338,4 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   }
 
 // ************* OTP Form Control *********************** \\
-  Widget appKeyControls() {
-    return Column(
-      children: [
-        UIHelper.titleTextStyle("Enter Your Secrect PIN", c.text_color, 14, true, false),
-        UIHelper.verticalSpaceSmall,
-        FormBuilder(
-            key: _SecretKey,
-            child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                child: Column(
-                  children: [
-                    addInputFormControl("secretKey", "Enter Your 4 digit PIN", key_number, isShowSuffixIcon: true),
-                    UIHelper.verticalSpaceSmall,
-                    addInputFormControl("confirm", "Confirm Your PIN", key_number, isShowSuffixIcon: true),
-                  ],
-                ))),
-        if (!secretKeyIsValid) UIHelper.titleTextStyle("InValid PIN", c.red_new, 10, true, false),
-        UIHelper.verticalSpaceMedium
-      ],
-    );
-  }
 }
