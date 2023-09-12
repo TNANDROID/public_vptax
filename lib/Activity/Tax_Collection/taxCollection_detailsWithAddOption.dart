@@ -99,87 +99,110 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: c.white,
-        appBar: AppBar(
-          backgroundColor: c.colorPrimary,
-          centerTitle: true,
-          elevation: 2,
-          title: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Align(
-                  alignment: AlignmentDirectional.center,
-                  child: Container(
-                    transform: Matrix4.translationValues(-30.0, 0.0, 0.0),
-                    alignment: Alignment.center,
-                    child: Text(
-                      selectedLang == "en" ? selectedTaxTypeData["taxtypedesc_en"] : selectedTaxTypeData["taxtypedesc_ta"],
-                      style: TextStyle(fontSize: 15),
-                    ),
+      backgroundColor: c.white,
+      appBar: AppBar(
+        backgroundColor: c.colorPrimary,
+        centerTitle: true,
+        elevation: 2,
+        title: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Align(
+                alignment: AlignmentDirectional.center,
+                child: Container(
+                  transform: Matrix4.translationValues(-30.0, 0.0, 0.0),
+                  alignment: Alignment.center,
+                  child: Text(
+                    selectedLang == "en" ? selectedTaxTypeData["taxtypedesc_en"] : selectedTaxTypeData["taxtypedesc_ta"],
+                    style: TextStyle(fontSize: 15),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-        body: ViewModelBuilder<StartUpViewModel>.reactive(
-            builder: (context, model, child) {
-              return Container(
-                  color: c.need_improvement2,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      UIHelper.verticalSpaceSmall,
-                      assetCountWidget(),
-                      Expanded(
-                        child: SingleChildScrollView(
-                            controller: controller_scroll,
-                            scrollDirection: Axis.vertical,
-                            child: Column(
-                              children: [
-                                Visibility(
-                                  visible: mainList.isNotEmpty,
-                                  child: ListView.builder(
-                                      shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      itemCount: mainList.length,
-                                      itemBuilder: (context, mainIndex) {
-                                        return Column(
-                                          children: [
-                                            headerCardUIWidget(mainIndex),
-                                            UIHelper.verticalSpaceMedium,
-                                          ],
-                                        );
-                                      }),
-                                ),
-                                Visibility(
-                                  visible: mainList.isEmpty,
-                                  child: Center(child: Container(margin: EdgeInsets.only(top: 100), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true))),
-                                )
-                              ],
-                            )),
-                      ),
-                      GestureDetector(
-                          onTap: () {
-                            List selectedDataList = [];
-                            for (var item in isSelectAll) {
-                              selectedDataList.add(mainList[item]);
-                            }
-                            print("Tamil----" + selectedDataList.length.toString());
-                          },
-                          child: Container(
-                            height: 60,
-                            width: Screen.width(context),
-                            decoration: UIHelper.roundedBorderWithColor(60, 60, 0, 0, c.colorPrimary),
-                            child: Center(child: UIHelper.titleTextStyle("Add to Pay List", c.white, 14, true, true)),
+      ),
+      body: ViewModelBuilder<StartUpViewModel>.reactive(
+          builder: (context, model, child) {
+            return Container(
+                color: c.need_improvement2,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    UIHelper.verticalSpaceSmall,
+                    assetCountWidget(),
+                    Expanded(
+                      child: SingleChildScrollView(
+                          controller: controller_scroll,
+                          scrollDirection: Axis.vertical,
+                          child: Column(
+                            children: [
+                              Visibility(
+                                visible: mainList.isNotEmpty,
+                                child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: mainList.length,
+                                    itemBuilder: (context, mainIndex) {
+                                      return Column(
+                                        children: [
+                                          headerCardUIWidget(mainIndex),
+                                          UIHelper.verticalSpaceMedium,
+                                        ],
+                                      );
+                                    }),
+                              ),
+                              Visibility(
+                                visible: mainList.isEmpty,
+                                child: Center(child: Container(margin: EdgeInsets.only(top: 100), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true))),
+                              )
+                            ],
                           )),
-                    ],
-                  ));
-            },
-            viewModelBuilder: () => StartUpViewModel()));
+                    ),
+                    isSelectAll.length > 0
+                        ? GestureDetector(
+                            onTap: () {
+                              List selectedDataList = [];
+                              for (var item in isSelectAll) {
+                                var sendData = {};
+                                sendData['statecode'] = mainList[item]['statecode'];
+                                sendData['dcode'] = mainList[item]['dcode'];
+                                sendData['bcode'] = mainList[item]['bcode'];
+                                sendData['assessment_no'] = mainList[item]['assessment_no'];
+                                sendData['assessment_id'] = mainList[item]['assessment_id'];
+                                selectedDataList.add(sendData);
+                              }
+                              print("selectedDataList----:)$selectedDataList");
+                            },
+                            child: Container(
+                                height: 50,
+                                width: Screen.width(context),
+                                decoration: UIHelper.roundedBorderWithColor(60, 60, 0, 0, c.white, borderColor: c.grey_7, borderWidth: 2),
+                                child: Container(
+                                  margin: EdgeInsets.fromLTRB(3, 3, 3, 0),
+                                  decoration: UIHelper.roundedBorderWithColor(60, 60, 0, 0, c.colorPrimary),
+                                  child: Center(child: UIHelper.titleTextStyle("Add to Pay List", c.white, 14, true, true)),
+                                )))
+                        : SizedBox(),
+                  ],
+                ));
+          },
+          viewModelBuilder: () => StartUpViewModel()),
+      floatingActionButton: isSelectAll.length > 0
+          ? Container(
+              width: 50,
+              height: 50,
+              decoration: UIHelper.circleWithColorWithShadow(30, c.white, c.white, borderColor: c.grey_7, borderWidth: 5),
+              padding: EdgeInsets.all(3),
+              child: Container(
+                  decoration: UIHelper.circleWithColorWithShadow(30, c.yellow_new, c.colorPrimaryDark),
+                  child: Center(child: UIHelper.titleTextStyle(isSelectAll.length.toString(), c.white, 18, true, true))),
+            )
+          : SizedBox(),
+    );
   }
 
   Widget headerCardUIWidget(int mainIndex) {
