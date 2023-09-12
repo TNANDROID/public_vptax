@@ -203,5 +203,6 @@
   "male":"Male",
   "others":"Others",
   "wrong_otp_msg":"Please check your Valid OTP",
-  "remove": "Remove"
+  "remove": "Remove",
+  "otp_resent_success":"OTP sent successfully"
   }

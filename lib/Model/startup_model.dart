@@ -245,6 +245,28 @@ class StartUpViewModel extends BaseViewModel {
     setBusy(false);
   }
 
+  //Auth Service API Call
+  Future authendicationServicesAPIcall(BuildContext context, dynamic requestJson) async {
+    dynamic requestData = {key_data_content: requestJson};
+    if (await Utils().isOnline()) {
+      Utils().showProgress(context, 1);
+      try {
+        var response = await apiServices.mainServiceFunction(requestData);
+        Utils().hideProgress(context);
+        return response;
+      } catch (error) {
+        Utils().hideProgress(context);
+        debugPrint('error (${error.toString()}) has been caught');
+      }
+    } else {
+      Utils().showAlert(
+        context,
+        ContentType.fail,
+        "noInternet".tr().toString(),
+      );
+    }
+  }
+
   //Main Service API Call
   Future mainServicesAPIcall(BuildContext context, dynamic requestJson) async {
     dynamic requestData = {key_data_content: requestJson};
@@ -291,7 +313,6 @@ class StartUpViewModel extends BaseViewModel {
       } else {
         Utils().showAlert(context, ContentType.warning, response[key_response].toString());
       }
-
     } catch (error) {
       debugPrint('error (${error.toString()}) has been caught');
       Utils().hideProgress(context);

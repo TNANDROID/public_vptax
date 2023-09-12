@@ -25,6 +25,8 @@ import 'package:public_vptax/Utils/utils.dart';
 import 'package:stacked/stacked.dart';
 
 class SignUpView extends StatefulWidget {
+  bool isSignup;
+  SignUpView({Key? key, required this.isSignup});
   @override
   State<SignUpView> createState() => SignUpStateView();
 }
@@ -189,22 +191,30 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                               CustomGradientButton(
                                 onPressed: () async {
                                   if (registerStep == 1) {
-                                    String service_Id = "register";
                                     if (_formKey.currentState!.saveAndValidate()) {
                                       postParams = Map.from(_formKey.currentState!.value);
-                                      postParams[key_service_id] = service_Id;
-                                      var response = await model.mainServicesAPIcall(context, postParams);
-                                      registerStep++;
-                                      setState(() {});
-                                      changeImageAndAnimate();
+                                      String serviceId = "";
+                                      if (widget.isSignup) {
+                                        serviceId = "register";
+                                      } else {
+                                        serviceId = "ResendOtp";
+                                      }
+                                      postParams[key_service_id] = serviceId;
+                                      var response = await model.authendicationServicesAPIcall(context, postParams);
+                                      if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
+                                        utils.showToast(context, 'otp_resent_success'.tr().toString(), "S");
+                                        registerStep++;
+                                        setState(() {});
+                                        changeImageAndAnimate();
+                                      } else {
+                                        utils.showAlert(context, ContentType.fail, response[key_message].toString());
+                                      }
                                     }
                                   } else if (registerStep == 2) {
                                     if (finalOTP.length == 6) {
                                       var sendData = {key_service_id: "VerifyOtp", key_mobile_number: postParams[key_mobile_number].toString(), "mobile_otp": finalOTP};
-                                      var response = await model.mainServicesAPIcall(context, sendData);
-                                      if (response == key_fail) {
-                                        utils.showAlert(context, ContentType.fail, 'wrong_otp_msg'.tr().toString());
-                                      } else {
+                                      var response = await model.authendicationServicesAPIcall(context, sendData);
+                                      if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
                                         dynamic resData = response['DATA'];
                                         await preferencesService.setUserInfo("userId", resData['id'].toString());
                                         await preferencesService.setUserInfo(key_name, resData[key_name].toString());
@@ -213,6 +223,8 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                                         await preferencesService.setUserInfo(key_gender, resData[key_gender].toString());
                                         registerStep++;
                                         setState(() {});
+                                      } else {
+                                        utils.showAlert(context, ContentType.fail, 'wrong_otp_msg'.tr().toString());
                                       }
                                     }
                                   } else if (registerStep == 3) {
@@ -268,13 +280,13 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              addInputFormControl(key_name, key_name.tr().toString(), "text"),
-              UIHelper.verticalSpaceSmall,
+              if (widget.isSignup) addInputFormControl(key_name, key_name.tr().toString(), "text"),
+              if (widget.isSignup) UIHelper.verticalSpaceSmall,
               addInputFormControl(key_mobile_number, 'mobileNumber'.tr().toString(), key_mobile_number),
-              UIHelper.verticalSpaceSmall,
-              addInputFormControl(key_email, 'emailAddress'.tr().toString(), key_email_id),
-              UIHelper.verticalSpaceSmall,
-              addInputDropdownField(),
+              if (widget.isSignup) UIHelper.verticalSpaceSmall,
+              if (widget.isSignup) addInputFormControl(key_email, 'emailAddress'.tr().toString(), key_email_id),
+              if (widget.isSignup) UIHelper.verticalSpaceSmall,
+              if (widget.isSignup) addInputDropdownField(),
               UIHelper.verticalSpaceMedium,
             ],
           ),
@@ -421,7 +433,12 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
         GestureDetector(
             onTap: () async {
               var sendData = {key_service_id: "ResendOtp", key_mobile_number: postParams[key_mobile_number].toString()};
-              var response = await model.mainServicesAPIcall(context, sendData);
+              var response = await model.authendicationServicesAPIcall(context, sendData);
+              if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
+                utils.showToast(context, 'otp_resent_success'.tr().toString(), "S");
+              } else {
+                utils.showAlert(context, ContentType.fail, response[key_message].toString());
+              }
             },
             child: Container(
               width: Screen.width(context) - 100,

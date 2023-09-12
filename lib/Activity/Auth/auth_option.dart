@@ -3,7 +3,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:public_vptax/Activity/Auth/Login.dart';
-import 'package:public_vptax/Activity/Auth/signup.dart';
+import 'package:public_vptax/Activity/Auth/signin_signup.dart';
 import 'package:public_vptax/Layout/customgradientbutton.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
@@ -241,7 +241,7 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
                         UIHelper.horizontalSpaceSmall,
                         InkWell(
                           onTap: () => {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpView())),
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpView(isSignup: true))),
                           },
                           child: Text(
                             'signUP'.tr().toString(),
@@ -291,9 +291,7 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
       child: TextButton.icon(
         onPressed: () async {
           if (flag == 1) {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => LoginView(),
-            ));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpView(isSignup: false)));
           } else if (flag == 2) {
             if (await utils.isOnline()) {
               await Utils().apiCalls(context);

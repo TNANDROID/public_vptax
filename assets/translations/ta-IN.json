@@ -203,5 +203,6 @@
   "male":"ஆண்",
   "others":"மற்ற நபர்கள்",
   "wrong_otp_msg":"தவறான OTP. உங்கள் OTP ஐ சரிபார்க்கவும்",
-  "remove": "அகற்ற"
+  "remove": "அகற்ற",
+  "otp_resent_success":"OTP வெற்றிகரமாக அனுப்பப்பட்டது"
 }
