@@ -153,3 +153,4 @@ String service_key_GetReceipt = "GetReceipt";
 String service_key_CheckTransaction = "CheckTransaction";
 String service_key_TransactionidWiseGetReceipt = "TransactionidWiseGetReceipt";
 String service_key_TransactionHistory = "TransactionHistory";
+String key_secretKey = "secretKey";

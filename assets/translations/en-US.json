@@ -197,5 +197,11 @@
   "wrong_confirm_pin":"Your Secret PIN doesn't match",
   "logout":"Logout",
   "confirm_logout": "Do you want to logout this Device?",
-  "user_registered_successfull": "User Registered Successfully"
-}
+  "user_registered_successfull": "User Registered Successfully",
+  "gender":"Gender",
+  "female":"Female",
+  "male":"Male",
+  "others":"Others",
+  "wrong_otp_msg":"Please check your Valid OTP",
+  "remove": "Remove"
+  }

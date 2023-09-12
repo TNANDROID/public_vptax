@@ -2,13 +2,13 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:public_vptax/Activity/Auth/Home.dart';
 import 'package:public_vptax/Activity/Auth/auth_option.dart';
 import 'package:public_vptax/Activity/Auth/secrectKey.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagepath;
+import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/ContentInfo.dart';
@@ -32,14 +32,14 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
   }
 
   Future<void> initialize() async {
-    String getPrefesecrectKey = await preferencesService.getUserInfo("secrectKey");
+    String getPrefesecrectKey = await preferencesService.getUserInfo(key_secretKey);
     if (await utils.isOnline()) {
       Future.delayed(
         const Duration(seconds: 2, milliseconds: 350),
         () {
           Navigator.of(context).push(
             PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) => getPrefesecrectKey.isNotEmpty ? Home() : AuthModeView(),
+              pageBuilder: (context, animation, secondaryAnimation) => getPrefesecrectKey.isNotEmpty ? SecretKeyView() : AuthModeView(),
               transitionDuration: const Duration(seconds: 2),
               transitionsBuilder: (context, animation, secondaryAnimation, child) {
                 const begin = Offset(1.0, 0.0); // Start position

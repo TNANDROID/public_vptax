@@ -47,7 +47,7 @@ class _HomeState extends State<Home> {
   String langText = 'தமிழ்';
   String islogin = '';
   String selectedLang = "";
-
+  String userName = "";
   TextEditingController mobileController = TextEditingController();
   TextEditingController emailController = TextEditingController();
 
@@ -87,7 +87,7 @@ class _HomeState extends State<Home> {
     selected_index = -1;
     selectedLang = await preferencesService.getUserInfo("lang");
     await preferencesService.setUserInfo(key_isLogin, 'yes');
-    await preferencesService.setUserInfo(key_mobile_number, '9875235654');
+    userName = await preferencesService.getUserInfo(key_name);
     await Utils().apiCalls(context);
     List s_list = [
       {'service_id': 0, 'service_name': 'your_tax_details', 'img_path': imagePath.due4},
@@ -252,7 +252,8 @@ class _HomeState extends State<Home> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(children: [
+                //  Text()
+                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                   Container(
                     margin: EdgeInsets.all(20),
                     child: Image.asset(
@@ -260,17 +261,22 @@ class _HomeState extends State<Home> {
                       height: MediaQuery.of(context).size.height / 10,
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.only(top: 10, bottom: 10),
-                      decoration: UIHelper.GradientContainer(20, 0, 20, 0, [c.colorAccentlight, c.colorPrimaryDark]),
-                      child: Text(
-                        textAlign: TextAlign.center,
-                        'appName'.tr().toString(),
-                        style: TextStyle(color: c.white, fontSize: 14, fontWeight: FontWeight.bold),
+                  Column(
+                    children: [
+                      UIHelper.titleTextStyle("Hi, " + userName, c.text_color, 14, true, true),
+                      UIHelper.verticalSpaceTiny,
+                      Container(
+                        width: Screen.width(context) / 1.6,
+                        padding: EdgeInsets.only(top: 10, bottom: 10),
+                        decoration: UIHelper.GradientContainer(20, 0, 20, 0, [c.colorAccentlight, c.colorPrimaryDark]),
+                        child: Text(
+                          textAlign: TextAlign.center,
+                          'appName'.tr().toString(),
+                          style: TextStyle(color: c.white, fontSize: 14, fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                  ),
+                    ],
+                  )
                 ]),
                 Container(
                   padding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
@@ -526,7 +532,7 @@ class _HomeState extends State<Home> {
               ElevatedButton(
                 onPressed: isLogout
                     ? () {
-                        preferencesService.cleanAllPreferences();
+                        //preferencesService.cleanAllPreferences();
                         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Splash()), (route) => false);
                       }
                     : () {

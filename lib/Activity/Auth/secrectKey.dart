@@ -9,6 +9,7 @@ import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagepath;
+import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/utils.dart';
@@ -33,7 +34,7 @@ class _SecretKeyViewState extends State<SecretKeyView> with TickerProviderStateM
   }
 
   Future<void> initialize() async {
-    getPreferKey = await preferencesService.getUserInfo("secrectKey");
+    getPreferKey = await preferencesService.getUserInfo(key_secretKey);
   }
 
   @override
