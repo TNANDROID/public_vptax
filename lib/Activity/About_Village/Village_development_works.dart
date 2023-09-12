@@ -241,17 +241,7 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: c.colorPrimary,
-        centerTitle: true,
-        elevation: 2,
-        title: Container(
-          child: Text(
-            'village_development_works_title'.tr().toString(),
-            style: TextStyle(fontSize: 14),
-          ),
-        ),
-      ),
+      appBar: UIHelper.getBar('village_development_works_title'),
       body: ViewModelBuilder<StartUpViewModel>.reactive(
           onViewModelReady: (model) async {},
           builder: (context, model, child) {

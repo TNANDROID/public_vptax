@@ -422,17 +422,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: c.colorPrimary,
-          centerTitle: true,
-          elevation: 2,
-          title: Container(
-            child: Text(
-              'view_receipt_details'.tr().toString(),
-              style: TextStyle(fontSize: 14),
-            ),
-          ),
-        ),
+        appBar: UIHelper.getBar('view_receipt_details'),
         body: SafeArea(
           top: true,
           child: ViewModelBuilder<StartUpViewModel>.reactive(

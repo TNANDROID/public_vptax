@@ -78,30 +78,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: c.colorPrimary,
-        centerTitle: true,
-        elevation: 2,
-        title: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Align(
-                alignment: AlignmentDirectional.center,
-                child: Container(
-                  transform: Matrix4.translationValues(-30.0, 0.0, 0.0),
-                  alignment: Alignment.center,
-                  child: Text(
-                    'payment_transaction_history'.tr().toString(),
-                    style: const TextStyle(fontSize: 15),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      appBar: UIHelper.getBar('payment_transaction_history'),
       body: SizedBox(
         height: Screen.height(context),
         child: Stack(
@@ -380,7 +357,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
                               style: TextStyle(fontSize: 12, color: c.black),
                             ),
                             Text(
-                             "\u{20B9} ${transAmount}",
+                              "\u{20B9} ${transAmount}",
                               style: TextStyle(fontSize: 12, color: c.text_color),
                             ),
                           ],

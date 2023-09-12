@@ -58,7 +58,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
     if (widget.flag == "1") {
       selectedTaxTypeData = widget.selectedTaxTypeData;
       selectedTaxType = selectedTaxTypeData[key_taxtypeid];
-    }else if (widget.flag == "3") {
+    } else if (widget.flag == "3") {
       selectedTaxTypeData = widget.selectedTaxTypeData;
       selectedTaxType = selectedTaxTypeData[key_taxtypeid];
     } else {
@@ -74,15 +74,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
     String title = widget.appbarTitle ?? 'get_tax_details';
 
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: c.colorPrimary,
-          centerTitle: true,
-          elevation: 2,
-          title: Text(
-            title.tr().toString(),
-            style: TextStyle(fontSize: 14),
-          ),
-        ),
+        appBar: UIHelper.getBar(title),
         body: SafeArea(
           top: true,
           child: ViewModelBuilder<StartUpViewModel>.reactive(
@@ -104,7 +96,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                               /* Visibility(
+                                /* Visibility(
                                   visible: true,
                                   child: Align(
                                       alignment: Alignment.centerRight,
@@ -559,25 +551,26 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
 
             int totalAssessment = int.parse(await preferencesService.getUserInfo(key_total_assesment));
             if (totalAssessment > 0) {
-             widget.flag == "3"?  Navigator.push(
-                 context,
-                 MaterialPageRoute(
-                     builder: (_) => TaxCollectionDetailsWithAdd(
-                       selectedTaxTypeData: selectedTaxTypeData,
-                     ))):
-             Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => TaxCollectionDetailsView(
-                            selectedTaxTypeData: selectedTaxTypeData,
-                            isTaxDropDown: selectedEntryType == 1 ? true : false,
-                            isHome: false,
-                            dcode: selectedDistrict,
-                            bcode: selectedBlock,
-                            pvcode: selectedVillage,
-                            mobile: etTextController.text,
-                            selectedEntryType: selectedEntryType,
-                          )));
+              widget.flag == "3"
+                  ? Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => TaxCollectionDetailsWithAdd(
+                                selectedTaxTypeData: selectedTaxTypeData,
+                              )))
+                  : Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => TaxCollectionDetailsView(
+                                selectedTaxTypeData: selectedTaxTypeData,
+                                isTaxDropDown: selectedEntryType == 1 ? true : false,
+                                isHome: false,
+                                dcode: selectedDistrict,
+                                bcode: selectedBlock,
+                                pvcode: selectedVillage,
+                                mobile: etTextController.text,
+                                selectedEntryType: selectedEntryType,
+                              )));
             }
 
             // throw ('000');

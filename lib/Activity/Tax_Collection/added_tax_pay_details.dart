@@ -83,24 +83,7 @@ class _TaxPayDetailsViewState extends State<TaxPayDetailsView> with SingleTicker
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: c.white,
-        appBar: AppBar(
-          backgroundColor: c.colorPrimary,
-          centerTitle: true,
-          elevation: 2,
-          title: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Align(
-                  alignment: AlignmentDirectional.center,
-                  child: Container(
-                      transform: Matrix4.translationValues(-30.0, 0.0, 0.0), alignment: Alignment.center, child: UIHelper.titleTextStyle('tax_details'.tr().toString(), c.white, 15, true, false)),
-                ),
-              ],
-            ),
-          ),
-        ),
+        appBar: UIHelper.getBar('tax_details'),
         body: SafeArea(
           top: true,
           child: ViewModelBuilder<StartUpViewModel>.reactive(

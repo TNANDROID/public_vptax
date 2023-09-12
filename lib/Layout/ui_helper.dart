@@ -20,6 +20,11 @@ class UIHelper {
   static const Widget horizontalSpaceMedium = SizedBox(width: 20.0);
   static const Widget horizontalSpaceLarge = SizedBox(width: 40.0);
 
+// AppBar Provider
+  static AppBar getBar(String title) {
+    return AppBar(backgroundColor: c.colorPrimary, centerTitle: true, elevation: 2, title: UIHelper.titleTextStyle(title.tr().toString(), c.white, 15, true, false));
+  }
+
 // Input Box Style Provider
   static OutlineInputBorder getInputBorder(double width, {double radius = 15, Color borderColor = Colors.transparent}) {
     return OutlineInputBorder(

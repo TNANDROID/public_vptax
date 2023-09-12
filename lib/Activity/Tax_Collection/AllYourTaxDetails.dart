@@ -165,30 +165,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: c.white,
-        appBar: AppBar(
-          backgroundColor: c.colorPrimary,
-          centerTitle: true,
-          elevation: 2,
-          title: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Align(
-                  alignment: AlignmentDirectional.center,
-                  child: Container(
-                    transform: Matrix4.translationValues(-30.0, 0.0, 0.0),
-                    alignment: Alignment.center,
-                    child: Text(
-                      'tax_details_yours'.tr().toString(),
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+        appBar: UIHelper.getBar('tax_details_yours'),
         body: ViewModelBuilder<StartUpViewModel>.reactive(
             builder: (context, model, child) {
               return Container(

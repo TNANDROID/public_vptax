@@ -55,7 +55,7 @@ class _KYVDashboardState extends State<KYVDashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: c.white,
-      appBar: AppBar(backgroundColor: c.colorPrimary, centerTitle: true, elevation: 2, title: UIHelper.titleTextStyle('know_your_village'.tr().toString(), c.white, 15, true, false)),
+      appBar: UIHelper.getBar('know_your_village'),
       body: ViewModelBuilder<StartUpViewModel>.reactive(
           onViewModelReady: (model) async {},
           builder: (context, model, child) {

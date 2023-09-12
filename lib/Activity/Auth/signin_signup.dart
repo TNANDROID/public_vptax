@@ -37,20 +37,21 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   PreferenceService preferencesService = locator<PreferenceService>();
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
   final GlobalKey<FormBuilderState> _SecretKey = GlobalKey<FormBuilderState>();
-  OtpFieldController OTPcontroller = OtpFieldController();
   late Animation<Offset> _rightToLeftAnimation;
   late AnimationController _rightToLeftAnimController;
-  List<dynamic> genderList = [
-    {"title": 'female'.tr().toString(), "value": "F"},
-    {"title": 'male'.tr().toString(), "value": "M"},
-    {"title": 'others'.tr().toString(), "value": "O"}
-  ];
   int registerStep = 1;
   String finalOTP = '';
   bool isValidOtp = true;
   String gender = "";
   List secureFields = [];
   Map<String, dynamic> postParams = {};
+
+  List<dynamic> genderList = [
+    {"title": 'female'.tr().toString(), "value": "F"},
+    {"title": 'male'.tr().toString(), "value": "M"},
+    {"title": 'others'.tr().toString(), "value": "O"}
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -74,10 +75,19 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
     setState(() {});
   }
 
-  onBackpress() async {
-    Navigator.of(context).pop();
-  }
+  // String getErrorMessage(String errTxt) {
+  //   String retStr = "";
+  //   switch (errTxt) {
+  //     case "":
+  //       retStr = "";
+  //       break;
+  //     default:
+  //       retStr = errTxt;
+  //   }
+  //   return retStr;
+  // }
 
+// ************* Main Widget from this Class ****************** \\
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -110,7 +120,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                     margin: EdgeInsets.only(top: Screen.width(context) * 0.07, left: Screen.width(context) * 0.07),
                     child: InkWell(
                       onTap: () {
-                        onBackpress();
+                        Navigator.of(context).pop();
                       },
                       child: Icon(
                         Icons.arrow_circle_left_outlined,
@@ -165,7 +175,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                         ),
                       )),
                   UIHelper.verticalSpaceSmall,
-                  UIHelper.titleTextStyle('signUP', c.white, 25, true, true)
+                  UIHelper.titleTextStyle(widget.isSignup ? 'signUP' : 'signIN', c.white, 25, true, true)
                 ],
               ),
 

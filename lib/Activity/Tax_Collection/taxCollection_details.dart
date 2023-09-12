@@ -152,30 +152,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: c.white,
-        appBar: AppBar(
-          backgroundColor: c.colorPrimary,
-          centerTitle: true,
-          elevation: 2,
-          title: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Align(
-                  alignment: AlignmentDirectional.center,
-                  child: Container(
-                    transform: Matrix4.translationValues(-30.0, 0.0, 0.0),
-                    alignment: Alignment.center,
-                    child: Text(
-                      selectedLang == "en" ? selectedTaxTypeData["taxtypedesc_en"] : selectedTaxTypeData["taxtypedesc_ta"],
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+        appBar: UIHelper.getBar(selectedLang == "en" ? selectedTaxTypeData["taxtypedesc_en"] : selectedTaxTypeData["taxtypedesc_ta"]),
         body: ViewModelBuilder<StartUpViewModel>.reactive(
             builder: (context, model, child) {
               return Container(
