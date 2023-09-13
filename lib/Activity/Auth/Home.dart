@@ -27,8 +27,7 @@ import '../Tax_Collection/taxCollection_view_request_screen.dart';
 import '../About_Village/Village_development_works.dart';
 
 class Home extends StatefulWidget {
-  final isLogin;
-  const Home({super.key, this.isLogin});
+  const Home({super.key});
 
   @override
   State<Home> createState() => _HomeState();
@@ -45,7 +44,6 @@ class _HomeState extends State<Home> {
   bool flag = true;
   bool flagMobileActive = true;
   String langText = 'தமிழ்';
-  String islogin = '';
   String selectedLang = "";
   String userName = "";
   TextEditingController mobileController = TextEditingController();
@@ -86,7 +84,6 @@ class _HomeState extends State<Home> {
     index_val = -1;
     selected_index = -1;
     selectedLang = await preferencesService.getUserInfo("lang");
-    await preferencesService.setUserInfo(key_isLogin, 'yes');
     userName = await preferencesService.getUserInfo(key_name);
     await Utils().apiCalls(context);
     List s_list = [
@@ -103,9 +100,7 @@ class _HomeState extends State<Home> {
 
     taxTypeList.clear();
     taxTypeList = preferencesService.taxTypeList;
-    String pre_isLogin = await preferencesService.getUserInfo(key_isLogin);
-    islogin = pre_isLogin != "" ? pre_isLogin : "no";
-    print(islogin);
+
     setState(() {
       if (selectedLang != "" && selectedLang == "en") {
         context.setLocale(Locale('en', 'US'));
@@ -184,27 +179,6 @@ class _HomeState extends State<Home> {
                       ),
                     ),
 
-                    Positioned(
-                      right: 15,
-                      child: Visibility(
-                        visible: islogin == "no",
-                        child: InkWell(
-                          onTap: () async {
-                            await preferencesService.setUserInfo(key_isLogin, 'yes');
-                            await preferencesService.setUserInfo(key_mobile_number, '9875235654');
-                            islogin = "yes";
-                            setState(() {});
-                          },
-                          child: Text(
-                            'login'.tr().toString(),
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: c.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
                     Positioned(
                       right: 15,
                       child: Visibility(
@@ -420,7 +394,7 @@ class _HomeState extends State<Home> {
                                                     selectedEntryType: 1,
                                                   )));
                                     } else if (selected_index == 1) {
-                                      if (islogin == "yes") {
+                                      if (await preferencesService.getUserInfo(key_isLogin) == "yes") {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -660,14 +634,12 @@ class _HomeState extends State<Home> {
                             utils.closeKeypad(context);
                             bool validationFlag = false;
                             if (flagMobileActive) {
-                              mobileController.text = "9875235654";
                               if (utils.isNumberValid(mobileController.text)) {
                                 validationFlag = true;
                               } else {
                                 utils.showAlert(context, ContentType.fail, "please_enter_valid_number".tr());
                               }
                             } else {
-                              emailController.text = 'test@gmail.com';
                               if (utils.isEmailValid(emailController.text)) {
                                 validationFlag = true;
                               } else {

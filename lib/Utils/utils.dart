@@ -36,7 +36,6 @@ import '../Resources/StringsKey.dart';
 import 'ContentInfo.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 
-
 class Utils {
   PreferenceService preferencesService = locator<PreferenceService>();
 
@@ -98,10 +97,10 @@ class Utils {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
   }
 
-  void showToast(BuildContext context, String msg,String type) {
+  void showToast(BuildContext context, String msg, String type) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      backgroundColor: type == "S"? c.account_status_green_color:c.grey_10,
-      content: UIHelper.titleTextStyle(msg, type == "S"? c.white:c.white, 13, true, false),
+      backgroundColor: type == "S" ? c.account_status_green_color : c.grey_10,
+      content: UIHelper.titleTextStyle(msg, type == "S" ? c.white : c.white, 13, true, false),
       duration: const Duration(seconds: 1),
 /*      action: SnackBarAction(
         label: 'ACTION',
@@ -278,13 +277,7 @@ class Utils {
                           } else if (btnmsg == 'receipt') {
                             openFilePath(file_path!);
                           } else if (btnmsg == 'canceled') {
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Home(
-                                          isLogin: false,
-                                        )),
-                                (route) => false);
+                            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
                           }
                         },
                         child: Container(
@@ -318,13 +311,7 @@ class Utils {
                                   Navigator.of(context).pop();
                                   openFilePath(file_path!);
                                 } else if (btnmsg == 'canceled') {
-                                  Navigator.pushAndRemoveUntil(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Home(
-                                                isLogin: false,
-                                              )),
-                                      (route) => false);
+                                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
                                 } else {
                                   performAction(btnmsg ?? '', context);
                                 }
@@ -706,7 +693,6 @@ class Utils {
     return amount;
   }
 
-
   TextEditingController nameTextController = TextEditingController();
   TextEditingController mobileTextController = TextEditingController();
   TextEditingController emailTextController = TextEditingController();
@@ -771,17 +757,17 @@ class Utils {
                                                           alignment: Alignment.centerLeft,
                                                           child: selected_id == list[index][key_gateway_id]
                                                               ? Image.asset(
-                                                            imagePath.tick,
-                                                            color: c.account_status_green_color,
-                                                            height: 25,
-                                                            width: 25,
-                                                          )
+                                                                  imagePath.tick,
+                                                                  color: c.account_status_green_color,
+                                                                  height: 25,
+                                                                  width: 25,
+                                                                )
                                                               : Image.asset(
-                                                            imagePath.unchecked,
-                                                            color: c.grey_9,
-                                                            height: 25,
-                                                            width: 25,
-                                                          ),
+                                                                  imagePath.unchecked,
+                                                                  color: c.grey_9,
+                                                                  height: 25,
+                                                                  width: 25,
+                                                                ),
                                                         ),
                                                         IconButton(
                                                             onPressed: () {},
@@ -830,14 +816,14 @@ class Utils {
                             child: CustomGradientButton(
                               onPressed: () async {
                                 if (selected_id > 0) {
-                                  nameTextController.text = 'Test';
-                                  mobileTextController.text = '9875235654';
-                                  emailTextController.text = 'test@gmail.com';
+                                  nameTextController.text = await preferencesService.getUserInfo(key_name);
+                                  mobileTextController.text = await preferencesService.getUserInfo(key_mobile_number);
+                                  emailTextController.text = await preferencesService.getUserInfo(key_email);
                                   if (_formKey.currentState!.saveAndValidate()) {
                                     Map<String, dynamic> postParams = Map.from(_formKey.currentState!.value);
                                     postParams.removeWhere((key, value) => value == null);
                                     Navigator.of(context).pop();
-                                    getPaymentToken(mcontext,finalList, selected_id,selectedLang);
+                                    getPaymentToken(mcontext, finalList, selected_id, selectedLang);
                                   }
                                 } else {
                                   Utils().showAlert(context, ContentType.fail, 'select_anyOne_gateway'.tr().toString());
@@ -879,8 +865,8 @@ class Utils {
       controller: fieldType == key_mobile_number
           ? mobileTextController
           : fieldType == key_name
-          ? nameTextController
-          : emailTextController,
+              ? nameTextController
+              : emailTextController,
       autocorrect: false,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       onChanged: (value) {},
@@ -898,38 +884,38 @@ class Utils {
       ),
       validator: fieldType == key_mobile_number
           ? ((value) {
-        if (value == "" || value == null) {
-          return "$hintText ${'isEmpty'.tr()}";
-        }
-        if (!Utils().isNumberValid(value)) {
-          return "$hintText ${'isInvalid'.tr()}";
-        }
-        return null;
-      })
+              if (value == "" || value == null) {
+                return "$hintText ${'isEmpty'.tr()}";
+              }
+              if (!Utils().isNumberValid(value)) {
+                return "$hintText ${'isInvalid'.tr()}";
+              }
+              return null;
+            })
           : fieldType == key_email
-          ? ((value) {
-        if (value == "" || value == null) {
-          return "$hintText ${'isEmpty'.tr()}";
-        }
-        if (!Utils().isEmailValid(value)) {
-          return "$hintText ${'isInvalid'.tr()}";
-        }
-        return null;
-      })
-          : FormBuilderValidators.compose([
-        FormBuilderValidators.required(errorText: "$hintText ${'isEmpty'.tr()}"),
-      ]),
+              ? ((value) {
+                  if (value == "" || value == null) {
+                    return "$hintText ${'isEmpty'.tr()}";
+                  }
+                  if (!Utils().isEmailValid(value)) {
+                    return "$hintText ${'isInvalid'.tr()}";
+                  }
+                  return null;
+                })
+              : FormBuilderValidators.compose([
+                  FormBuilderValidators.required(errorText: "$hintText ${'isEmpty'.tr()}"),
+                ]),
       inputFormatters: fieldType == key_mobile_number
           ? [
-        FilteringTextInputFormatter.digitsOnly,
-        LengthLimitingTextInputFormatter(10),
-      ]
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(10),
+            ]
           : [],
       keyboardType: fieldType == key_mobile_number || fieldType == key_number ? TextInputType.number : TextInputType.text,
     );
   }
 
-  Future<void> getPaymentToken(BuildContext context,List selList, int selected_id,String selectedLang) async {
+  Future<void> getPaymentToken(BuildContext context, List selList, int selected_id, String selectedLang) async {
     List finalList = selList;
     Utils().showProgress(context, 1);
 
@@ -985,7 +971,7 @@ class Utils {
         'assessment_demand_list': assessment_demand_list,
       };
       dynamic pay_params =
-      await StartUpViewModel().getMainServiceList("CollectionPaymentTokenList", requestDataValue: request, context: context, taxType: finalList[0][s.key_taxtypeid].toString(), lang: selectedLang);
+          await StartUpViewModel().getMainServiceList("CollectionPaymentTokenList", requestDataValue: request, context: context, taxType: finalList[0][s.key_taxtypeid].toString(), lang: selectedLang);
       Utils().hideProgress(context);
       String transaction_unique_id = Utils().decodeBase64(pay_params['a'].toString());
       String atomTokenId = Utils().decodeBase64(pay_params['b'].toString());

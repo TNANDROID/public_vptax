@@ -148,7 +148,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
   Future<void> initialize() async {
     selectedLang = await preferencesService.getUserInfo("lang");
     islogin = await preferencesService.getUserInfo(s.key_isLogin);
-    mobile_widget = islogin == "yes" ? await preferencesService.getUserInfo("mobile_number") : "";
+    mobile_widget = islogin == "yes" ? await preferencesService.getUserInfo(key_mobile_number) : "";
     etTextController.text = mobile_widget;
     await getTaxDetails();
     await filterDataList();
@@ -190,40 +190,6 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                   decoration: InputDecoration(
                                     constraints: BoxConstraints(maxHeight: 40),
                                     contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-/*                                    suffixIcon: IconButton(
-                                        onPressed: () async {
-                                          Utils().closeKeypad(context);
-                                          etTextController.text = "9875235654";
-                                          numIsLoading = true;
-                                          setState(() {});
-
-                                          if (await Utils().isOnline()) {
-                                            if (etTextController.text != "" && Utils().isNumberValid(etTextController.text)) {
-                                              await getTaxDetails();
-                                              await filterDataList();
-                                              numIsLoading = false;
-                                              setState(() {});
-                                            } else {
-                                              Utils().showAlert(context, ContentType.warning, 'enter_mobile_number'.tr().toString(), btnCount: "1", btnmsg: "ok");
-                                            }
-                                          } else {
-                                            Utils().showAlert(context, ContentType.fail, 'no_internet'.tr().toString());
-                                          }
-                                        },
-                                        icon: numIsLoading
-                                            ? SizedBox(
-                                                width: 15,
-                                                height: 15,
-                                                child: CircularProgressIndicator(
-                                                  strokeWidth: 2,
-                                                  color: c.colorAccentlight,
-                                                ),
-                                              )
-                                            : Icon(
-                                                Icons.arrow_circle_right_outlined,
-                                                color: c.colorPrimaryDark,
-                                                size: 28,
-                                              )),*/
                                     filled: true,
                                     fillColor: Colors.white,
                                     hintText: 'Enter Mobile Number',
@@ -900,35 +866,8 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                     isSelectAll.remove(mainIndex);
                                   }
                                   setState(() {
-                                    /*dynamic selectedDemandDetails = mainList[mainIndex];
-                                    List selectedDemandDetailsList = selectedDemandDetails[key_DEMAND_DETAILS];
-                                    bool hasActiveFlag = selectedDemandDetailsList.any((json) => json[key_flag] == true);
-
-                                    if (hasActiveFlag && islogin == "yes") {
-                                      preferencesService.addedTaxPayList.removeWhere((element) => element[key_assessment_id].toString() == mainList[mainIndex][key_assessment_id].toString());
-                                      preferencesService.addedTaxPayList.add(selectedDemandDetails);
-                                    }*/
                                     getCount();
                                     repeatOnce();
-
-/*
-                                    if (islogin == "yes") {
-                                      preferencesService.addedTaxPayList.removeWhere((element) => element[key_assessment_id].toString() == mainList[mainIndex][key_assessment_id].toString());
-                                      dynamic selectedDemandDetails = mainList[mainIndex];
-                                      List selectedDemandDetailsList = selectedDemandDetails[key_DEMAND_DETAILS];
-                                      bool hasActiveFlag = selectedDemandDetailsList.any((json) => json[key_flag] == true);
-
-                                      if (hasActiveFlag) {
-                                        preferencesService.addedTaxPayList.add(selectedDemandDetails);
-                                      }
-
-                                      // element[key_DEMAND_DETAILS].forEach((e) {
-                                      //   if (e[key_flag] == true) {
-                                      //     preferencesService.addedTaxPayList.add(element);
-                                      //   }
-                                      // });
-                                    }
-*/
                                   });
                                 },
                                 child: Stack(
@@ -1052,16 +991,6 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                                       }
 
                                                       setState(() {
-                                                        /*dynamic selectedDemandDetails = mainList[mainIndex];
-                                                        List selectedDemandDetailsList = selectedDemandDetails[key_DEMAND_DETAILS];
-                                                        bool hasActiveFlag = selectedDemandDetailsList.any((json) => json[key_flag] == true);
-
-                                                        if (hasActiveFlag && islogin == "yes") {
-                                                          preferencesService.addedTaxPayList
-                                                              .removeWhere((element) => element[key_assessment_id].toString() == mainList[mainIndex][key_assessment_id].toString());
-                                                          preferencesService.addedTaxPayList.add(selectedDemandDetails);
-                                                        }*/
-
                                                         getCount();
                                                         repeatOnce();
                                                       });

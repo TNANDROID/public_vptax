@@ -131,7 +131,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
   Future<void> initialize() async {
     selectedLang = await preferencesService.getUserInfo("lang");
     islogin = await preferencesService.getUserInfo(s.key_isLogin);
-    mobile_widget = islogin == "yes" ? await preferencesService.getUserInfo("mobile_number") : widget.mobile;
+    mobile_widget = islogin == "yes" ? await preferencesService.getUserInfo(key_mobile_number) : widget.mobile;
     taxTypeList = preferencesService.taxTypeList;
     selectTaxtype = selectedTaxTypeData['taxtypeid'].toString();
     if (widget.isHome) {
@@ -192,7 +192,6 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                               ],
                             )),
                       ),
-                      // Visibility(visible: /*islogin != "yes" || !widget.isHome*/ true, child: payWidget())
                     ],
                   ));
             },
@@ -601,18 +600,6 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                   }
 
                                   setState(() {
-                                    /*if (islogin == "yes" && widget.isHome) {
-                                      dynamic selectedDemandDetails = mainList[mainIndex];
-                                      List selectedDemandDetailsList = selectedDemandDetails[key_DEMAND_DETAILS];
-                                      bool hasActiveFlag = selectedDemandDetailsList.any((json) => json[key_flag] == true);
-
-                                      if (hasActiveFlag) {
-                                        preferencesService.addedTaxPayList.removeWhere((element) => element[key_assessment_id].toString() == mainList[mainIndex][key_assessment_id].toString());
-                                        preferencesService.addedTaxPayList.add(selectedDemandDetails);
-                                      }
-
-                                    }*/
-
                                     getCount();
                                     repeatOnce();
                                   });
@@ -738,17 +725,6 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                                       }
 
                                                       setState(() {
-                                                        /* if (islogin == "yes" && widget.isHome ) {
-                                                          preferencesService.addedTaxPayList.removeWhere((element) => element['taxtypeid'].toString() == selectedTaxTypeData['taxtypeid'].toString());
-                                                          mainList.forEach((element) {
-                                                            element[key_DEMAND_DETAILS].forEach((e) {
-                                                              if (e[key_flag] == true) {
-                                                                preferencesService.addedTaxPayList.add(element);
-                                                              }
-                                                            });
-                                                          });
-                                                        }*/
-
                                                         getCount();
                                                         repeatOnce();
                                                       });

@@ -26,13 +26,7 @@ class PDF_Viewer extends StatefulWidget {
 class _PDF_ViewerState extends State<PDF_Viewer> {
   Future<bool> _onWillPop() async {
     if (widget.flag != null && widget.flag == 'payment') {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-              builder: (context) => Home(
-                    isLogin: false,
-                  )),
-          (route) => false);
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
     } else {
       Navigator.of(context).pop();
     }
@@ -51,15 +45,7 @@ class _PDF_ViewerState extends State<PDF_Viewer> {
               icon: const Icon(Icons.arrow_back, color: Colors.white),
               onPressed: () => {
                 if (widget.flag != null && widget.flag == 'payment')
-                  {
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Home(
-                                  isLogin: false,
-                                )),
-                        (route) => false)
-                  }
+                  {Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false)}
                 else
                   {Navigator.of(context).pop()}
               },

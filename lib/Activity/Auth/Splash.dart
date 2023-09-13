@@ -2,6 +2,7 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:public_vptax/Activity/Auth/Home.dart';
 import 'package:public_vptax/Activity/Auth/auth_option.dart';
 import 'package:public_vptax/Activity/Auth/secrectKey.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
@@ -33,6 +34,14 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
 
   Future<void> initialize() async {
     String getPrefesecrectKey = await preferencesService.getUserInfo(key_secretKey);
+
+    if (getPrefesecrectKey.isNotEmpty) {
+      await preferencesService.setUserInfo(key_isLogin, "yes");
+    }
+    ////********************  Need to Remove ********************************************////
+    await preferencesService.setUserInfo(key_mobile_number, "9875235654"); //**************//
+    ////*********************************************************************************////
+
     if (await utils.isOnline()) {
       Future.delayed(
         const Duration(seconds: 2, milliseconds: 350),
@@ -60,6 +69,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
     } else {
       utils.showAlert(context, ContentType.fail, 'No Internet');
     }
+    setState(() {});
   }
 
   @override

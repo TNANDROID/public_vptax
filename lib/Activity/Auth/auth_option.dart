@@ -72,8 +72,6 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
     ));
 
     _topAnimationController.forward();
-    preferencesService.setUserInfo(key_isLogin, 'no');
-    // initialize();
   }
 
   // *************************** Future Functionality  *************************** //
