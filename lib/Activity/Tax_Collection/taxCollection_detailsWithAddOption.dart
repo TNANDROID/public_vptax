@@ -2,29 +2,15 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:public_vptax/Activity/Tax_Collection/added_tax_pay_details.dart';
-import 'package:public_vptax/Activity/Tax_Collection/taxCollection_view_request_screen.dart';
-import 'package:public_vptax/Layout/customclip.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
-import 'package:public_vptax/Model/startup_model.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
-import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:public_vptax/Utils/utils.dart';
-import 'package:responsive_grid_list/responsive_grid_list.dart';
-import '../../Layout/customgradientbutton.dart';
 import '../../Resources/StringsKey.dart' as s;
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
-import 'package:stacked/stacked.dart';
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
-
 import '../../Resources/StringsKey.dart';
-import '../Auth/Home.dart';
 
 class TaxCollectionDetailsWithAdd extends StatefulWidget {
   final selectedTaxTypeData;
@@ -47,7 +33,7 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
   //List
   List sampleDataList = [];
   List mainList = [];
-  List isSelectAll = [];
+  List selectedList = [];
 
   //int Double
   int main_count = 0;
@@ -124,74 +110,70 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
           ),
         ),
       ),
-      body: ViewModelBuilder<StartUpViewModel>.reactive(
-          builder: (context, model, child) {
-            return Container(
-                color: c.need_improvement2,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    UIHelper.verticalSpaceSmall,
-                    assetCountWidget(),
-                    Expanded(
-                      child: SingleChildScrollView(
-                          controller: controller_scroll,
-                          scrollDirection: Axis.vertical,
-                          child: Column(
-                            children: [
-                              Visibility(
-                                visible: mainList.isNotEmpty,
-                                child: ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemCount: mainList.length,
-                                    itemBuilder: (context, mainIndex) {
-                                      return Column(
-                                        children: [
-                                          headerCardUIWidget(mainIndex),
-                                          UIHelper.verticalSpaceMedium,
-                                        ],
-                                      );
-                                    }),
-                              ),
-                              Visibility(
-                                visible: mainList.isEmpty,
-                                child: Center(child: Container(margin: EdgeInsets.only(top: 100), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true))),
-                              )
-                            ],
-                          )),
-                    ),
-                    isSelectAll.length > 0
-                        ? GestureDetector(
-                            onTap: () {
-                              List selectedDataList = [];
-                              for (var item in isSelectAll) {
-                                var sendData = {};
-                                sendData['statecode'] = mainList[item]['statecode'];
-                                sendData['dcode'] = mainList[item]['dcode'];
-                                sendData['bcode'] = mainList[item]['bcode'];
-                                sendData['assessment_no'] = mainList[item]['assessment_no'];
-                                sendData['assessment_id'] = mainList[item]['assessment_id'];
-                                selectedDataList.add(sendData);
-                              }
-                              print("selectedDataList----:)$selectedDataList");
-                            },
-                            child: Container(
-                                height: 50,
-                                width: Screen.width(context),
-                                decoration: UIHelper.roundedBorderWithColor(60, 60, 0, 0, c.white, borderColor: c.grey_7, borderWidth: 2),
-                                child: Container(
-                                  margin: EdgeInsets.fromLTRB(3, 3, 3, 0),
-                                  decoration: UIHelper.roundedBorderWithColor(60, 60, 0, 0, c.colorPrimary),
-                                  child: Center(child: UIHelper.titleTextStyle("Add to Pay List", c.white, 14, true, true)),
-                                )))
-                        : SizedBox(),
-                  ],
-                ));
-          },
-          viewModelBuilder: () => StartUpViewModel()),
-      floatingActionButton: isSelectAll.length > 0
+      body: Container(
+          color: c.need_improvement2,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              UIHelper.verticalSpaceSmall,
+              assetCountWidget(),
+              Expanded(
+                child: SingleChildScrollView(
+                    controller: controller_scroll,
+                    scrollDirection: Axis.vertical,
+                    child: Column(
+                      children: [
+                        Visibility(
+                          visible: mainList.isNotEmpty,
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: mainList.length,
+                              itemBuilder: (context, mainIndex) {
+                                return Column(
+                                  children: [
+                                    headerCardUIWidget(mainIndex),
+                                    UIHelper.verticalSpaceMedium,
+                                  ],
+                                );
+                              }),
+                        ),
+                        Visibility(
+                          visible: mainList.isEmpty,
+                          child: Center(child: Container(margin: EdgeInsets.only(top: 100), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true))),
+                        )
+                      ],
+                    )),
+              ),
+              selectedList.isNotEmpty
+                  ? InkWell(
+                      onTap: () {
+                        List selectedDataList = [];
+                        for (var item in selectedList) {
+                          var sendData = {};
+                          sendData['statecode'] = mainList[item]['statecode'];
+                          sendData['dcode'] = mainList[item]['dcode'];
+                          sendData['bcode'] = mainList[item]['bcode'];
+                          sendData['assessment_no'] = mainList[item]['assessment_no'];
+                          sendData['assessment_id'] = mainList[item]['assessment_id'];
+                          selectedDataList.add(sendData);
+                        }
+                        print("selectedDataList----:)$selectedDataList");
+                      },
+                      child: Container(
+                          height: 50,
+                          width: Screen.width(context),
+                          decoration: UIHelper.roundedBorderWithColor(60, 60, 0, 0, c.white, borderColor: c.grey_7, borderWidth: 2),
+                          child: Container(
+                            margin: EdgeInsets.fromLTRB(3, 3, 3, 0),
+                            decoration: UIHelper.roundedBorderWithColor(60, 60, 0, 0, c.colorPrimary),
+                            child: Center(child: UIHelper.titleTextStyle("Add to Pay List", c.white, 14, true, true)),
+                          )))
+                  : SizedBox(),
+            ],
+          )),
+      floatingActionButton: selectedList.isNotEmpty
           ? Container(
               width: 50,
               height: 50,
@@ -199,7 +181,7 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
               padding: EdgeInsets.all(3),
               child: Container(
                   decoration: UIHelper.circleWithColorWithShadow(30, c.yellow_new, c.colorPrimaryDark),
-                  child: Center(child: UIHelper.titleTextStyle(isSelectAll.length.toString(), c.white, 18, true, true))),
+                  child: Center(child: UIHelper.titleTextStyle(selectedList.length.toString(), c.white, 18, true, true))),
             )
           : SizedBox(),
     );
@@ -309,22 +291,22 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
   Widget selectAllWidget(String title, int mainIndex) {
     return GestureDetector(
         onTap: () {
-          if (isSelectAll.contains(mainIndex)) {
-            isSelectAll.remove(mainIndex);
+          if (selectedList.contains(mainIndex)) {
+            selectedList.remove(mainIndex);
             addDataList(mainIndex);
           } else {
-            isSelectAll.add(mainIndex);
+            selectedList.add(mainIndex);
           }
           setState(() {});
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            UIHelper.titleTextStyle(("+ " + 'add'.tr().toString()), c.text_color, 12, false, true),
+            UIHelper.titleTextStyle(selectedList.contains(mainIndex) ? ("- ${'remove'.tr()}") : ("+ ${'add'.tr()}"), c.text_color, 12, false, true),
             UIHelper.horizontalSpaceSmall,
             Image.asset(
-              isSelectAll.contains(mainIndex) ? imagePath.tick : imagePath.unchecked,
-              color: isSelectAll.contains(mainIndex) ? c.account_status_green_color : c.text_color,
+              selectedList.contains(mainIndex) ? imagePath.tick : imagePath.unchecked,
+              color: selectedList.contains(mainIndex) ? c.account_status_green_color : c.text_color,
               height: 20,
               width: 20,
             ),
@@ -427,7 +409,7 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            UIHelper.titleTextStyle("${'total'.tr()} : \u{20B9} " + getTotalToPaySWM(mainIndex), c.grey_10, 12, false, false),
+            UIHelper.titleTextStyle("${'total'.tr()} : \u{20B9} ${getTotalToPaySWM(mainIndex)}", c.grey_10, 12, false, false),
             UIHelper.titleTextStyle("${'selected'.tr()} : \u{20B9} ${mainList[mainIndex][s.key_swm_total]}", c.grey_10, 12, false, false),
             /* UIHelper.titleTextStyle("${'demand'.tr()} : \u{20B9} ${mainList[mainIndex][s.key_swm_total]}", c.black, 11, false, false),
             UIHelper.titleTextStyle("${'advance'.tr()} : \u{20B9} ${mainList[mainIndex][s.key_swm_available_advance]}", c.black, 11, false, false),
@@ -601,8 +583,8 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
         preferencesService.addedTaxPayList.add(sampletaxData);
       }
     }
-    print("added" + preferencesService.addedTaxPayList.toString());
-    print("added" + preferencesService.addedTaxPayList.length.toString());
+    print("added${preferencesService.addedTaxPayList}");
+    print("added${preferencesService.addedTaxPayList.length}");
   }
 
   Future<void> removeDataList(int mainIndex) async {
@@ -619,8 +601,8 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
         }
       }
     }
-    print("removed" + preferencesService.addedTaxPayList.toString());
-    print("removed" + preferencesService.addedTaxPayList.length.toString());
+    print("removed${preferencesService.addedTaxPayList}");
+    print("removed${preferencesService.addedTaxPayList.length}");
   }
 
   String getvillageAndBlockName(int mainIndex, String taxTypeId) {
