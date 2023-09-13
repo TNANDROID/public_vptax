@@ -204,5 +204,6 @@
   "others":"மற்ற நபர்கள்",
   "wrong_otp_msg":"தவறான OTP. உங்கள் OTP ஐ சரிபார்க்கவும்",
   "remove": "அகற்ற",
-  "otp_resent_success":"OTP வெற்றிகரமாக அனுப்பப்பட்டது"
+  "otp_resent_success":"OTP வெற்றிகரமாக அனுப்பப்பட்டது",
+  "dont_have_mobile_number":"மொபைல் எண் பதிவு செய்யப்படவில்லை"
 }

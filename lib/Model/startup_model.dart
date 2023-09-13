@@ -252,11 +252,12 @@ class StartUpViewModel extends BaseViewModel {
       Utils().showProgress(context, 1);
       try {
         var response = await apiServices.mainServiceFunction(requestData);
+        print("response----:) $response");
         Utils().hideProgress(context);
         return response;
       } catch (error) {
         Utils().hideProgress(context);
-        debugPrint('error (${error.toString()}) has been caught');
+        debugPrint('error : $error has been caught');
       }
     } else {
       Utils().showAlert(

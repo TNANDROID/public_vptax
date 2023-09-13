@@ -263,7 +263,7 @@ class _HomeState extends State<Home> {
                   ),
                   Column(
                     children: [
-                      UIHelper.titleTextStyle("Hi, " + userName, c.text_color, 14, true, true),
+                      UIHelper.titleTextStyle(userName, c.text_color, 14, true, true),
                       UIHelper.verticalSpaceTiny,
                       Container(
                         width: Screen.width(context) / 1.6,

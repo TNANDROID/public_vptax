@@ -204,5 +204,6 @@
   "others":"Others",
   "wrong_otp_msg":"Please check your Valid OTP",
   "remove": "Remove",
-  "otp_resent_success":"OTP sent successfully"
+  "otp_resent_success":"OTP sent successfully",
+  "dont_have_mobile_number":"Mobile Number Not Registered"
   }

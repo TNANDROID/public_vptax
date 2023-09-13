@@ -75,17 +75,17 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
     setState(() {});
   }
 
-  // String getErrorMessage(String errTxt) {
-  //   String retStr = "";
-  //   switch (errTxt) {
-  //     case "":
-  //       retStr = "";
-  //       break;
-  //     default:
-  //       retStr = errTxt;
-  //   }
-  //   return retStr;
-  // }
+  String getErrorMessage(String errTxt) {
+    String retStr = "";
+    switch (errTxt) {
+      case "Mobile Number Not Registered":
+        retStr = 'dont_have_mobile_number'.tr().toString();
+        break;
+      default:
+        retStr = errTxt;
+    }
+    return retStr;
+  }
 
 // ************* Main Widget from this Class ****************** \\
   @override
@@ -217,7 +217,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                                         setState(() {});
                                         changeImageAndAnimate();
                                       } else {
-                                        utils.showAlert(context, ContentType.fail, response[key_message].toString());
+                                        utils.showAlert(context, ContentType.fail, getErrorMessage(response[key_message].toString()));
                                       }
                                     }
                                   } else if (registerStep == 2) {
@@ -447,7 +447,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
               if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
                 utils.showToast(context, 'otp_resent_success'.tr().toString(), "S");
               } else {
-                utils.showAlert(context, ContentType.fail, response[key_message].toString());
+                utils.showAlert(context, ContentType.fail, getErrorMessage(response[key_message].toString()));
               }
             },
             child: Container(
