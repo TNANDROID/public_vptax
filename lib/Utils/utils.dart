@@ -20,6 +20,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:open_file/open_file.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:public_vptax/Activity/Auth/Splash.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
@@ -277,7 +278,11 @@ class Utils {
                           } else if (btnmsg == 'receipt') {
                             openFilePath(file_path!);
                           } else if (btnmsg == 'canceled') {
-                            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
+                            if (await preferencesService.getUserInfo(s.key_isLogin) == "yes") {
+                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
+                            } else {
+                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Splash()), (route) => false);
+                            }
                           }
                         },
                         child: Container(
@@ -311,7 +316,11 @@ class Utils {
                                   Navigator.of(context).pop();
                                   openFilePath(file_path!);
                                 } else if (btnmsg == 'canceled') {
-                                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
+                                  if (await preferencesService.getUserInfo(s.key_isLogin) == "yes") {
+                                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
+                                  } else {
+                                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Splash()), (route) => false);
+                                  }
                                 } else {
                                   performAction(btnmsg ?? '', context);
                                 }
@@ -700,9 +709,12 @@ class Utils {
   bool _isKeyboardFocused = false;
   Future<void> settingModalBottomSheet(BuildContext mcontext, List finalList) async {
     int selected_id = -1;
-    nameTextController.text = '';
-    mobileTextController.text = '';
-    emailTextController.text = '';
+    String isLogin = await preferencesService.getUserInfo(key_isLogin);
+    if (isLogin == "yes") {
+      nameTextController.text = await preferencesService.getUserInfo(key_name);
+      mobileTextController.text = await preferencesService.getUserInfo(key_mobile_number);
+      emailTextController.text = await preferencesService.getUserInfo(key_email);
+    }
     String selectedLang = await preferencesService.getUserInfo("lang");
     List list = preferencesService.GatewayList;
     List paymentType = preferencesService.PaymentTypeList;
@@ -790,7 +802,7 @@ class Utils {
                           alignment: Alignment.centerLeft,
                           child: Container(
                               margin: EdgeInsets.only(top: 10, left: 20, bottom: 5),
-                              child: Text('enter_the_details'.tr().toString(), style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.black))),
+                              child: Text(isLogin == "yes" ? "Payment Details" : 'enter_the_details'.tr().toString(), style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.black))),
                         ),
                         Container(
                           margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
@@ -798,11 +810,11 @@ class Utils {
                               key: _formKey,
                               child: Column(
                                 children: [
-                                  addInputFormControl('name', 'name'.tr().toString(), key_name),
+                                  addInputFormControl('name', 'name'.tr().toString(), key_name, isLogin),
                                   UIHelper.verticalSpaceSmall,
-                                  addInputFormControl('mobile', 'mobileNumber'.tr().toString(), key_mobile_number),
+                                  addInputFormControl('mobile', 'mobileNumber'.tr().toString(), key_mobile_number, isLogin),
                                   UIHelper.verticalSpaceSmall,
-                                  addInputFormControl('email', 'emailAddress'.tr().toString(), key_email),
+                                  addInputFormControl('email', 'emailAddress'.tr().toString(), key_email, isLogin),
                                   UIHelper.verticalSpaceSmall,
                                 ],
                               )),
@@ -816,9 +828,6 @@ class Utils {
                             child: CustomGradientButton(
                               onPressed: () async {
                                 if (selected_id > 0) {
-                                  nameTextController.text = await preferencesService.getUserInfo(key_name);
-                                  mobileTextController.text = await preferencesService.getUserInfo(key_mobile_number);
-                                  emailTextController.text = await preferencesService.getUserInfo(key_email);
                                   if (_formKey.currentState!.saveAndValidate()) {
                                     Map<String, dynamic> postParams = Map.from(_formKey.currentState!.value);
                                     postParams.removeWhere((key, value) => value == null);
@@ -858,8 +867,9 @@ class Utils {
         });
   }
 
-  Widget addInputFormControl(String nameField, String hintText, String fieldType) {
+  Widget addInputFormControl(String nameField, String hintText, String fieldType, String isLogin) {
     return FormBuilderTextField(
+      enabled: isLogin == "yes" ? false : true,
       style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.w400, color: c.grey_9),
       name: nameField,
       controller: fieldType == key_mobile_number
@@ -875,6 +885,7 @@ class Utils {
         labelStyle: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w600, color: c.grey_7),
         filled: true,
         fillColor: Colors.white,
+        // disabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
         enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
         focusedBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
         focusedErrorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),

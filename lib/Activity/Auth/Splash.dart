@@ -39,7 +39,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
       await preferencesService.setUserInfo(key_isLogin, "yes");
     }
     ////********************  Need to Remove ********************************************////
-    await preferencesService.setUserInfo(key_mobile_number, "9875235654"); //**************//
+    /*******/ await preferencesService.setUserInfo(key_mobile_number, "9875235654"); //**////
     ////*********************************************************************************////
 
     if (await utils.isOnline()) {

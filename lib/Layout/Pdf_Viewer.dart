@@ -9,7 +9,11 @@ import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:public_vptax/Activity/Auth/Home.dart';
+import 'package:public_vptax/Activity/Auth/Splash.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
+import 'package:public_vptax/Resources/StringsKey.dart';
+import 'package:public_vptax/Services/Preferenceservices.dart';
+import 'package:public_vptax/Services/locator.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../Utils/utils.dart';
 import 'package:public_vptax/Utils/ContentInfo.dart';
@@ -24,9 +28,14 @@ class PDF_Viewer extends StatefulWidget {
 }
 
 class _PDF_ViewerState extends State<PDF_Viewer> {
+  PreferenceService preferencesService = locator<PreferenceService>();
   Future<bool> _onWillPop() async {
     if (widget.flag != null && widget.flag == 'payment') {
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
+      if (await preferencesService.getUserInfo(key_isLogin) == "yes") {
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
+      } else {
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Splash()), (route) => false);
+      }
     } else {
       Navigator.of(context).pop();
     }
@@ -43,11 +52,16 @@ class _PDF_ViewerState extends State<PDF_Viewer> {
             backgroundColor: c.colorPrimary,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () => {
-                if (widget.flag != null && widget.flag == 'payment')
-                  {Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false)}
-                else
-                  {Navigator.of(context).pop()}
+              onPressed: () async {
+                if (widget.flag != null && widget.flag == 'payment') {
+                  if (await preferencesService.getUserInfo(key_isLogin) == "yes") {
+                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
+                  } else {
+                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Splash()), (route) => false);
+                  }
+                } else {
+                  Navigator.of(context).pop();
+                }
               },
             ),
             actions: [
