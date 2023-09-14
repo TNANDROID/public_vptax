@@ -403,7 +403,10 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
               UIHelper.verticalSpaceTiny,
               UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${mainList[mainIndex][s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
               UIHelper.verticalSpaceTiny,
-              UIHelper.titleTextStyle(("${'pending_payment'.tr()} : \u{20B9} ${getTotalToPay(mainIndex)}"), c.grey_10, 12, true, true),
+              Row(children: [
+                UIHelper.titleTextStyle(("${'pending_payment'.tr()} : "), c.black, 12, true, true),
+                UIHelper.titleTextStyle(("\u{20B9} ${getTotalToPay(mainIndex)}"), c.grey_10, 13, true, true),
+              ],)
             ],
           )
         : selectedTaxTypeData[s.key_taxtypeid] == 2
@@ -414,7 +417,10 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                   UIHelper.verticalSpaceTiny,
                   UIHelper.titleTextStyle(("${'water_connection_number'.tr()} : ${mainList[mainIndex][s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
                   UIHelper.verticalSpaceTiny,
-                  UIHelper.titleTextStyle(("${'pending_payment'.tr()} : \u{20B9} ${getTotalToPay(mainIndex)}"), c.grey_10, 12, true, true),
+                  Row(children: [
+                    UIHelper.titleTextStyle(("${'pending_payment'.tr()} : "), c.black, 12, true, true),
+                    UIHelper.titleTextStyle(("\u{20B9} ${getTotalToPay(mainIndex)}"), c.grey_10, 13, true, true),
+                  ],)
                 ],
               )
             : selectedTaxTypeData[s.key_taxtypeid] == 4
@@ -427,7 +433,10 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                       UIHelper.verticalSpaceTiny,
                       UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${mainList[mainIndex][s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
                       UIHelper.verticalSpaceTiny,
-                      UIHelper.titleTextStyle(("${'pending_payment'.tr()} : \u{20B9} ${getTotalToPay(mainIndex)}"), c.grey_10, 12, true, true),
+                      Row(children: [
+                        UIHelper.titleTextStyle(("${'pending_payment'.tr()} : "), c.black, 12, true, true),
+                        UIHelper.titleTextStyle(("\u{20B9} ${getTotalToPay(mainIndex)}"), c.grey_10, 13, true, true),
+                      ],)
                     ],
                   )
                 : selectedTaxTypeData[s.key_taxtypeid] == 5
@@ -445,7 +454,10 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                           UIHelper.titleTextStyle(
                               ("${'lease_duration'.tr()} : ${mainList[mainIndex]['from_date'].toString() ?? ""} - ${mainList[mainIndex]['to_date'].toString() ?? ""}"), clr, 12, false, true),
                           UIHelper.verticalSpaceTiny,
-                          UIHelper.titleTextStyle(("${'pending_payment'.tr()} : \u{20B9} ${getTotalToPay(mainIndex)}"), c.grey_10, 12, true, true),
+                          Row(children: [
+                            UIHelper.titleTextStyle(("${'pending_payment'.tr()} : "), c.black, 12, true, true),
+                            UIHelper.titleTextStyle(("\u{20B9} ${getTotalToPay(mainIndex)}"), c.grey_10, 13, true, true),
+                          ],)
                         ],
                       )
                     : Column(
@@ -455,7 +467,10 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                           UIHelper.verticalSpaceTiny,
                           UIHelper.titleTextStyle(("${'traders_code'.tr()} : ${mainList[mainIndex][s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
                           UIHelper.verticalSpaceTiny,
-                          UIHelper.titleTextStyle(("${'pending_payment'.tr()} : \u{20B9} ${getTotalToPay(mainIndex)}"), c.grey_10, 12, true, true),
+                          Row(children: [
+                            UIHelper.titleTextStyle(("${'pending_payment'.tr()} : "), c.black, 12, true, true),
+                            UIHelper.titleTextStyle(("\u{20B9} ${getTotalToPay(mainIndex)}"), c.grey_10, 13, true, true),
+                          ],)
                         ],
                       );
   }
@@ -758,9 +773,12 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
               padding: const EdgeInsets.only(left: 10.0),
               child: Column(
                 children: [
-                  UIHelper.titleTextStyle('selected'.tr(), c.grey_10, 12, false, false),
-                  UIHelper.titleTextStyle("${mainList[mainIndex][s.key_tax_total]}", c.grey_10, 12, true, false),
-                ],
+                  UIHelper.titleTextStyle('selected'.tr(), c.black, 12, false, false),
+                      UIHelper.verticalSpaceTiny,
+                      Transform.scale(
+                      scale: _animation.value,
+                      child:UIHelper.titleTextStyle("\u{20B9} ${mainList[mainIndex][s.key_tax_total]}", c.grey_10, 13, true, false),)
+                     ],
               ),
             ),
             Visibility(
