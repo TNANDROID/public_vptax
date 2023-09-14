@@ -41,7 +41,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   final GlobalKey<FormBuilderState> _SecretKey = GlobalKey<FormBuilderState>();
   late Animation<Offset> _rightToLeftAnimation;
   late AnimationController _rightToLeftAnimController;
-  int registerStep = 2;
+  int registerStep = 1;
   String finalOTP = '';
   bool isShowKeyboard = false;
   String gender = "";
@@ -210,7 +210,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                                         if (widget.isSignup) {
                                           serviceId = "register";
                                         } else {
-                                          serviceId = "ResendOtp";
+                                          serviceId = "SendOTPforGeneratePIN";
                                         }
                                         postParams[key_service_id] = serviceId;
                                         var response = await model.authendicationServicesAPIcall(context, postParams);
@@ -225,7 +225,14 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                                       }
                                     } else if (registerStep == 2) {
                                       if (finalOTP.length == 6) {
-                                        var sendData = {key_service_id: "VerifyOtp", key_mobile_number: postParams[key_mobile_number].toString(), "mobile_otp": finalOTP};
+                                        String serviceId = "";
+                                        if (widget.isSignup) {
+                                          serviceId = "VerifyOtp";
+                                        } else {
+                                          serviceId = "VerifyOTPforGeneratePIN";
+                                        }
+
+                                        var sendData = {key_service_id: serviceId, key_mobile_number: postParams[key_mobile_number].toString(), "mobile_otp": finalOTP};
                                         var response = await model.authendicationServicesAPIcall(context, sendData);
                                         if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
                                           dynamic resData = response['DATA'];
@@ -245,7 +252,9 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                                         Map<String, dynamic> postkEYParams = Map.from(_SecretKey.currentState!.value);
                                         if (postkEYParams[key_secretKey].toString() == postkEYParams['confirm'].toString()) {
                                           await preferencesService.setUserInfo(key_secretKey, postkEYParams[key_secretKey].toString());
-                                          await utils.showAlert(context, ContentType.success, 'user_registered_successfull'.tr().toString());
+                                          if (widget.isSignup) {
+                                            await utils.showAlert(context, ContentType.success, 'user_registered_successfull'.tr().toString());
+                                          }
                                           Navigator.push(context, MaterialPageRoute(builder: (context) => Splash()));
                                         } else {
                                           utils.showAlert(context, ContentType.warning, 'wrong_confirm_pin'.tr().toString());
@@ -438,8 +447,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
 
 // ************* OTP Form Control *********************** \\
   Widget otpControls(StartUpViewModel model) {
-    //   String phone = postParams[key_mobile_number].toString().substring(6);
-    String phone = "";
+    String phone = postParams[key_mobile_number].toString().substring(6);
     return Column(
       children: [
         UIHelper.titleTextStyle('otp_received'.tr().toString() + phone, c.text_color, 12, true, false),
@@ -454,7 +462,14 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
             )),
         GestureDetector(
             onTap: () async {
-              var sendData = {key_service_id: "ResendOtp", key_mobile_number: postParams[key_mobile_number].toString()};
+              String serviceid = "";
+              if (widget.isSignup) {
+                serviceid = "ResendOtp";
+              } else {
+                serviceid = "ResendOTPforGeneratePIN";
+              }
+
+              var sendData = {key_service_id: serviceid, key_mobile_number: postParams[key_mobile_number].toString()};
               var response = await model.authendicationServicesAPIcall(context, sendData);
               if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
                 utils.showToast(context, 'otp_resent_success'.tr().toString(), "S");

@@ -1,30 +1,26 @@
 // ignore_for_file: non_constant_identifier_names, sort_child_properties_last, prefer_const_constructors, use_build_context_synchronously
 
 import 'dart:io';
-import 'dart:ui';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:public_vptax/Activity/About_Village/Village_development_works.dart';
+import 'package:public_vptax/Activity/About_Village/know_your_village.dart';
 import 'package:public_vptax/Activity/Auth/Splash.dart';
 import 'package:public_vptax/Activity/Tax_Collection/AllYourTaxDetails.dart';
+import 'package:public_vptax/Activity/Tax_Collection/taxCollection_view_request_screen.dart';
 import 'package:public_vptax/Activity/Transaction/View_receipt.dart';
-import 'package:public_vptax/Activity/Transaction/CheckTransaction.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Model/startup_model.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 import 'package:public_vptax/Resources/StringsKey.dart';
-import 'package:public_vptax/Utils/ContentInfo.dart';
-import '../../Services/Preferenceservices.dart';
-import '../../Services/locator.dart';
-import '../../Utils/utils.dart';
-import '../About_Village/know_your_village.dart';
-import '../Tax_Collection/taxCollection_details.dart';
-import '../Tax_Collection/taxCollection_view_request_screen.dart';
-import '../About_Village/Village_development_works.dart';
+import 'package:public_vptax/Services/Preferenceservices.dart';
+import 'package:public_vptax/Services/locator.dart';
+import 'package:public_vptax/Utils/utils.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -34,85 +30,110 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  PreferenceService preferencesService = locator<PreferenceService>();
+  StartUpViewModel model = StartUpViewModel();
   Utils utils = Utils();
   List taxTypeList = [];
-  List servicesList = [];
-  int index_val = -1;
+  List servicesList = [
+    {'service_id': 0, 'service_name': 'your_tax_details', 'img_path': imagePath.due4},
+    {'service_id': 2, 'service_name': 'quickPay', 'img_path': imagePath.quick_pay1},
+    {'service_id': 3, 'service_name': 'payment_transaction_history', 'img_path': imagePath.transaction_history},
+    {'service_id': 4, 'service_name': 'view_receipt_details', 'img_path': imagePath.download_receipt},
+    {'service_id': 5, 'service_name': 'know_about_your_village', 'img_path': imagePath.village},
+    {'service_id': 6, 'service_name': 'village_development_works', 'img_path': imagePath.village_development},
+  ];
   int selected_index = -1;
-  final _controller = ScrollController();
-  PreferenceService preferencesService = locator<PreferenceService>();
-  bool flag = true;
-  bool flagMobileActive = true;
   String langText = 'தமிழ்';
   String selectedLang = "";
   String userName = "";
-  TextEditingController mobileController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
 
-  StartUpViewModel model = StartUpViewModel();
-
+// ***** initState ***********
   @override
   void initState() {
     super.initState();
     initialize();
-    // Setup the listener.
-    _controller.addListener(() {
-      if (_controller.position.atEdge) {
-        bool isTop = _controller.position.pixels == 0;
-        if (isTop) {
-          setState(() {
-            flag = true;
-          });
-        } else {
-          setState(() {
-            flag = false;
-          });
-        }
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-
-    mobileController.dispose();
-    emailController.dispose();
   }
 
   Future<void> initialize() async {
-    index_val = -1;
-    selected_index = -1;
     selectedLang = await preferencesService.getUserInfo("lang");
     userName = await preferencesService.getUserInfo(key_name);
     await Utils().apiCalls(context);
-    List s_list = [
-      {'service_id': 0, 'service_name': 'your_tax_details', 'img_path': imagePath.due4},
-      // {'service_id': 1, 'service_name': 'check_your_dues', 'img_path': imagePath.due4},
-      {'service_id': 2, 'service_name': 'quickPay', 'img_path': imagePath.quick_pay1},
-      {'service_id': 3, 'service_name': 'payment_transaction_history', 'img_path': imagePath.transaction_history},
-      {'service_id': 4, 'service_name': 'view_receipt_details', 'img_path': imagePath.download_receipt},
-      {'service_id': 5, 'service_name': 'know_about_your_village', 'img_path': imagePath.village},
-      {'service_id': 6, 'service_name': 'village_development_works', 'img_path': imagePath.village_development},
-    ];
-    servicesList.clear();
-    servicesList.addAll(s_list);
-
-    taxTypeList.clear();
     taxTypeList = preferencesService.taxTypeList;
 
-    setState(() {
-      if (selectedLang != "" && selectedLang == "en") {
-        context.setLocale(Locale('en', 'US'));
-        langText = 'English';
-      } else {
-        preferencesService.setUserInfo("lang", "ta");
-        context.setLocale(Locale('ta', 'IN'));
-        langText = 'தமிழ்';
-      }
-    });
+    if (selectedLang != "" && selectedLang == "en") {
+      context.setLocale(Locale('en', 'US'));
+      langText = 'English';
+    } else {
+      preferencesService.setUserInfo("lang", "ta");
+      context.setLocale(Locale('ta', 'IN'));
+      langText = 'தமிழ்';
+    }
+    setState(() {});
   }
 
+// ********** Language Selection Function ***********\\
+  void handleClick(String value) {
+    switch (value) {
+      case 'தமிழ்':
+        setState(() {
+          langText = value;
+          selectedLang = "ta";
+          preferencesService.setUserInfo("lang", "ta");
+          context.setLocale(Locale('ta', 'IN'));
+        });
+        break;
+      case 'English':
+        setState(() {
+          langText = value;
+          selectedLang = "en";
+          preferencesService.setUserInfo("lang", "en");
+          context.setLocale(Locale('en', 'US'));
+        });
+        break;
+    }
+  }
+
+// ********** App Exit and Logout Widget ***********\\
+  Future<bool> showExitPopup({isLogout = false}) async {
+    return await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: UIHelper.titleTextStyle(isLogout ? 'logout'.tr().toString() : 'exit_app'.tr().toString(), c.black, 14, false, false),
+            content: UIHelper.titleTextStyle(isLogout ? 'confirm_logout'.tr().toString() : 'do_you_want_to_exit_an_app'.tr().toString(), c.black, 13, false, false),
+            actions: [
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                //return false when click on "NO"
+                child: Text(
+                  'no'.tr().toString(),
+                  style: TextStyle(fontSize: 12),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: isLogout
+                    ? () {
+                        //preferencesService.cleanAllPreferences();
+                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Splash()), (route) => false);
+                      }
+                    : () {
+                        if (Platform.isAndroid) {
+                          SystemNavigator.pop();
+                        } else if (Platform.isIOS) {
+                          exit(0);
+                        }
+                      },
+                child: Text(
+                  'yes'.tr().toString(),
+                  style: TextStyle(fontSize: 12),
+                ),
+              ),
+            ],
+          ),
+        ) ??
+        false; //if showDialouge had returned null, then return false
+  }
+
+// ********** Main Build Widget ***********\\
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -178,14 +199,13 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                     ),
-
                     Positioned(
                       right: 15,
                       child: Visibility(
                         visible: true,
                         child: InkWell(
                           onTap: () {
-                            logout();
+                            showExitPopup(isLogout: true);
                           },
                           child: Image.asset(
                             imagePath.logout,
@@ -197,27 +217,6 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                     )
-
-                    // SizedBox(width: Screen.width(context) * 0.11)
-
-                    // *************************** Future Functionality  *************************** //
-
-                    // Container(
-                    //   alignment: Alignment.centerRight,
-                    //   child: InkWell(
-                    //       child: Image.asset(
-                    //         imagePath.logout,
-                    //         color: c.white,
-                    //         fit: BoxFit.contain,
-                    //         height: 25,
-                    //         width: 25,
-                    //       ),
-                    //       onTap: () async {
-                    //         logout();
-                    //       }),
-                    // )
-
-                    // *************************** Future Functionality  *************************** //
                   ],
                 )),
           ),
@@ -252,110 +251,7 @@ class _HomeState extends State<Home> {
                     ],
                   )
                 ]),
-                Container(
-                  padding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'tax_types'.tr().toString(),
-                    style: TextStyle(color: c.grey_8, fontSize: 14, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Column(
-                  children: [
-                    Container(
-                      height: MediaQuery.of(context).size.width * 0.3,
-                      margin: EdgeInsets.only(left: 15, right: 15),
-                      child: ScrollConfiguration(
-                          behavior: ScrollConfiguration.of(context).copyWith(
-                            dragDevices: {
-                              PointerDeviceKind.touch,
-                              PointerDeviceKind.mouse,
-                            },
-                          ),
-                          child: ListView.builder(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            shrinkWrap: true, // new
-                            controller: _controller,
-                            scrollDirection: Axis.horizontal,
-                            itemCount: taxTypeList == null ? 0 : taxTypeList.length,
-                            itemBuilder: (context, i) {
-                              return InkWell(
-                                onTap: () async {
-                                  index_val = i;
-                                  if (await preferencesService.getUserInfo(key_isLogin) == "yes") {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (_) => TaxCollectionDetailsView(
-                                                  selectedTaxTypeData: taxTypeList[i],
-                                                  isTaxDropDown: false,
-                                                  isHome: true,
-                                                  mobile: preferencesService.getUserInfo(key_mobile_number).toString(),
-                                                  selectedEntryType: 1,
-                                                )));
-                                  } else {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => TaxCollectionView(
-                                                  selectedTaxTypeData: taxTypeList[i],
-                                                  flag: "1",
-                                                )));
-                                  }
 
-                                  setState(() {});
-                                },
-                                child: SizedBox(
-                                  width: Screen.width(context) / 3.3,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        decoration: UIHelper.circleWithColorWithShadow(360, c.white, c.white),
-                                        alignment: Alignment.center,
-                                        margin: EdgeInsets.only(top: 0),
-                                        padding: EdgeInsets.all(10),
-                                        child: Image.asset(
-                                          taxTypeList[i][key_img_path],
-                                          height: (MediaQuery.of(context).size.height / 4) / 4,
-                                          width: (MediaQuery.of(context).size.height / 4) / 4,
-                                        ),
-                                      ),
-                                      UIHelper.verticalSpaceSmall,
-                                      Container(
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          selectedLang == 'en' ? taxTypeList[i][key_taxtypedesc_en] : taxTypeList[i][key_taxtypedesc_ta],
-                                          style: TextStyle(fontSize: 12, color: c.grey_9),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          )),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        _controller.animateTo(500, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
-                      },
-                      child: Container(
-                        alignment: flag ? Alignment.centerRight : Alignment.centerLeft,
-                        transform: flag ? Matrix4.translationValues(13.0, -80.0, 0.0) : Matrix4.translationValues(2.0, -80.0, 0.0),
-                        color: c.full_transparent,
-                        margin: EdgeInsets.only(top: 0, right: 10),
-                        child: Image.asset(
-                          flag ? imagePath.right_arrow : imagePath.left_arrow,
-                          height: 25,
-                          color: c.grey_9,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
                 Container(
                   padding: EdgeInsets.only(left: 20, right: 20, top: 10),
                   alignment: Alignment.centerLeft,
@@ -372,7 +268,7 @@ class _HomeState extends State<Home> {
                       physics: NeverScrollableScrollPhysics(),
                       crossAxisCount: 2,
                       children: List.generate(
-                        servicesList == null ? 0 : servicesList.length,
+                        servicesList.length,
                         (int index) {
                           return AnimationConfiguration.staggeredGrid(
                             position: index,
@@ -384,46 +280,11 @@ class _HomeState extends State<Home> {
                                   onTap: () async {
                                     selected_index = servicesList[index][key_service_id];
                                     if (selected_index == 0) {
-                                      // _settingModalBottomSheet(context, false);
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (_) => AllYourTaxDetails(
-                                                    isTaxDropDown: true,
-                                                    isHome: false,
-                                                    selectedEntryType: 1,
-                                                  )));
-                                    } else if (selected_index == 1) {
-                                      if (await preferencesService.getUserInfo(key_isLogin) == "yes") {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (_) => TaxCollectionDetailsView(
-                                                      selectedTaxTypeData: taxTypeList[0],
-                                                      isTaxDropDown: true,
-                                                      isHome: true,
-                                                      mobile: preferencesService.getUserInfo(key_mobile_number),
-                                                      selectedEntryType: 1,
-                                                    )));
-                                      } else {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => TaxCollectionView(
-                                                      appbarTitle: 'check_your_dues_title',
-                                                      flag: "2",
-                                                    )));
-                                      }
+                                      Navigator.push(context, MaterialPageRoute(builder: (_) => AllYourTaxDetails(isHome: false)));
                                     } else if (selected_index == 2) {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => TaxCollectionView(
-                                                    appbarTitle: 'quickPay',
-                                                    flag: "2",
-                                                  )));
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(appbarTitle: 'quickPay', flag: "2")));
                                     } else if (selected_index == 3) {
-                                      _settingModalBottomSheet(context, true);
+                                      print("Waiting for Input...");
                                     } else if (selected_index == 4) {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => ViewReceipt()));
                                     } else if (selected_index == 5) {
@@ -457,7 +318,7 @@ class _HomeState extends State<Home> {
                                           alignment: Alignment.center,
                                           margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
                                           child: Text(
-                                            getServiceName(servicesList[index][key_service_name]),
+                                            servicesList[index][key_service_name].toString().tr().toString(),
                                             style: TextStyle(fontSize: 11, height: 1.5, color: c.grey_9),
                                             textAlign: TextAlign.center,
                                           ),
@@ -478,275 +339,5 @@ class _HomeState extends State<Home> {
             ),
           ),
         ));
-  }
-
-  String getServiceName(String name) {
-    String s = "";
-    s = name.tr().toString();
-    return s;
-  }
-
-  Future<bool> showExitPopup({isLogout = false}) async {
-    return await showDialog(
-          //show confirm dialogue
-          //the return value will be from "Yes" or "No" options
-          context: context,
-          builder: (context) => AlertDialog(
-            title: UIHelper.titleTextStyle(isLogout ? 'logout'.tr().toString() : 'exit_app'.tr().toString(), c.black, 14, false, false),
-            content: UIHelper.titleTextStyle(isLogout ? 'confirm_logout'.tr().toString() : 'do_you_want_to_exit_an_app'.tr().toString(), c.black, 13, false, false),
-            actions: [
-              ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                //return false when click on "NO"
-                child: Text(
-                  'no'.tr().toString(),
-                  style: TextStyle(fontSize: 12),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: isLogout
-                    ? () {
-                        //preferencesService.cleanAllPreferences();
-                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Splash()), (route) => false);
-                      }
-                    : () {
-                        if (Platform.isAndroid) {
-                          SystemNavigator.pop();
-                        } else if (Platform.isIOS) {
-                          exit(0);
-                        }
-                      },
-                //return true when click on "Yes"
-                child: Text(
-                  'yes'.tr().toString(),
-                  style: TextStyle(fontSize: 12),
-                ),
-              ),
-            ],
-          ),
-        ) ??
-        false; //if showDialouge had returned null, then return false
-  }
-
-  void handleClick(String value) {
-    switch (value) {
-      case 'தமிழ்':
-        setState(() {
-          langText = value;
-          selectedLang = "ta";
-          preferencesService.setUserInfo("lang", "ta");
-          context.setLocale(Locale('ta', 'IN'));
-        });
-        break;
-      case 'English':
-        setState(() {
-          langText = value;
-          selectedLang = "en";
-          preferencesService.setUserInfo("lang", "en");
-          context.setLocale(Locale('en', 'US'));
-        });
-        break;
-    }
-  }
-
-  void logout() {
-    showExitPopup(isLogout: true);
-  }
-
-  void _settingModalBottomSheet(BuildContext context, bool isCheckTransaction) {
-    mobileController.text = '';
-    emailController.text = '';
-    showModalBottomSheet(
-        context: context,
-        backgroundColor: c.full_transparent,
-        builder: (BuildContext bc) {
-          return StatefulBuilder(builder: (context, setState) {
-            return Container(
-                decoration: UIHelper.GradientContainer(30.0, 30, 0, 0, [c.white, c.white]),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(left: 20),
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        isCheckTransaction ? 'payment_transaction_history'.tr().toString() : 'your_tax_details'.tr(),
-                        style: TextStyle(color: c.text_color, fontWeight: FontWeight.w500, fontSize: 15, decorationStyle: TextDecorationStyle.wavy),
-                      ),
-                    ),
-                    Visibility(
-                      visible: isCheckTransaction,
-                      child: Container(
-                        margin: EdgeInsets.only(left: 20),
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            badge(
-                              context,
-                              flagMobileActive,
-                              () => {
-                                utils.closeKeypad(context),
-                                FocusScope.of(context).unfocus(),
-                                if (flagMobileActive) flagMobileActive = flagMobileActive else flagMobileActive = !flagMobileActive,
-                                setState(() {})
-                              },
-                            ),
-                            isCheckTransaction
-                                ? badge(context, !flagMobileActive,
-                                    () => {FocusScope.of(context).unfocus(), if (!flagMobileActive) flagMobileActive = flagMobileActive else flagMobileActive = !flagMobileActive, setState(() {})},
-                                    isMobileActive: false)
-                                : SizedBox()
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: Screen.width(context) * 0.8,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          flagMobileActive
-                              ? BottomText(context, mobileController, 'mobile', 'mobileNumber'.tr(), TextInputType.number, isMobile: true)
-                              : BottomText(context, emailController, 'email', 'email'.tr(), TextInputType.emailAddress),
-                        ],
-                      ),
-                    ),
-                    isCheckTransaction ? UIHelper.verticalSpaceSmall : SizedBox(),
-                    isCheckTransaction ? UIHelper.verticalSpaceSmall : SizedBox(),
-                    isCheckTransaction ? UIHelper.verticalSpaceSmall : SizedBox(),
-                    Container(
-                        width: Screen.width(context) * 0.8,
-                        alignment: Alignment.center,
-                        height: 40,
-                        padding: EdgeInsets.all(5),
-                        decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.colorAccentlight, c.colorAccentlight, borderColor: Colors.transparent, borderWidth: 0),
-                        child: InkWell(
-                          child: Center(
-                            child: Text(
-                              isCheckTransaction ? 'get_status'.tr().toString() : 'get_tax_details'.tr(),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: c.white, fontWeight: FontWeight.w500, fontSize: 11, decorationStyle: TextDecorationStyle.wavy),
-                            ),
-                          ),
-                          onTap: () async {
-                            utils.closeKeypad(context);
-                            bool validationFlag = false;
-                            if (flagMobileActive) {
-                              if (utils.isNumberValid(mobileController.text)) {
-                                validationFlag = true;
-                              } else {
-                                utils.showAlert(context, ContentType.fail, "please_enter_valid_number".tr());
-                              }
-                            } else {
-                              if (utils.isEmailValid(emailController.text)) {
-                                validationFlag = true;
-                              } else {
-                                utils.showAlert(context, ContentType.fail, "please_enter_valid_email".tr());
-                              }
-                            }
-                            if (validationFlag) {
-                              if (!isCheckTransaction) {
-                                Navigator.pop(context);
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => AllYourTaxDetails(
-                                              isTaxDropDown: true,
-                                              isHome: false,
-                                              selectedEntryType: 1,
-                                            )));
-                              } else {
-                                bool resFlag = await model.getTransactionStatus(context, mobileController.text, emailController.text);
-                                if (resFlag) {
-                                  Navigator.pop(context);
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => CheckTransaction(
-                                                mobileNumber: mobileController.text,
-                                                emailID: emailController.text,
-                                              )));
-                                } else {
-                                  utils.showAlert(context, ContentType.fail, 'No transaction Found');
-                                }
-                              }
-                            }
-                          },
-                        ))
-                  ],
-                ));
-          });
-        }).whenComplete(() {
-      flagMobileActive = true;
-      setState(() {});
-    });
-  }
-
-  Card badge(BuildContext context, bool isActive, Function onPressed, {isMobileActive = true}) {
-    return Card(
-      elevation: isActive ? 3 : 0,
-      color: isActive ? c.green_new : c.inputGrey,
-      shadowColor: isActive ? c.account_status_green_color : c.black,
-      child: SizedBox(
-        width: 120,
-        height: 30, // Adjust the height as needed
-        child: TextButton(
-          onPressed: () {
-            onPressed();
-          },
-          style: ButtonStyle(
-            shape: MaterialStateProperty.all<OutlinedBorder>(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                isMobileActive ? Icons.mobile_screen_share_rounded : Icons.email_rounded,
-                size: 13,
-                color: isActive ? c.white : Colors.black,
-              ),
-              SizedBox(width: 4),
-              Text(
-                isMobileActive ? 'mobile'.tr() : 'email'.tr(),
-                style: TextStyle(color: isActive ? c.white : Colors.black, fontSize: 11),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  FormBuilderTextField BottomText(BuildContext context, TextEditingController controller, String nameText, String labelText, TextInputType type, {bool isMobile = false}) {
-    List<TextInputFormatter> inputFormatters = isMobile
-        ? [
-            FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(10),
-          ]
-        : [];
-    return FormBuilderTextField(
-      name: nameText,
-      textAlign: TextAlign.left,
-      controller: controller,
-      keyboardType: type,
-      inputFormatters: inputFormatters,
-      decoration: InputDecoration(
-        labelText: labelText,
-        labelStyle: TextStyle(fontSize: 11.0, fontWeight: FontWeight.w400, color: Colors.black),
-        hintText: labelText,
-        hintStyle: TextStyle(fontSize: 11),
-        enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
-        focusedBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
-        filled: true,
-        contentPadding: EdgeInsets.all(10),
-        fillColor: c.inputGrey,
-      ),
-    );
   }
 }

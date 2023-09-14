@@ -251,6 +251,7 @@ class StartUpViewModel extends BaseViewModel {
     if (await Utils().isOnline()) {
       Utils().showProgress(context, 1);
       try {
+        print("requestData----:) $requestData");
         var response = await apiServices.mainServiceFunction(requestData);
         print("response----:) $response");
         Utils().hideProgress(context);
