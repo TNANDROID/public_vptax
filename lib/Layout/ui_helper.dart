@@ -193,6 +193,15 @@ class UIHelper {
     );
   }
 
+//Container Style Provider with shadow
+  static BoxDecoration BottomBorderContainer(Color bottomBorderclr) {
+    return BoxDecoration(
+      border: Border(
+        bottom: BorderSide(color: bottomBorderclr, width: 3),
+      ),
+    );
+  }
+
 //small Line Style Provider
   static Widget tinyLinewidget({Color borderColor = const Color(0x88A5A5A5)}) {
     return Container(

@@ -11,8 +11,10 @@ import 'package:otp_text_field/otp_text_field.dart';
 import 'package:public_vptax/Activity/Auth/Splash.dart';
 import 'package:public_vptax/Layout/custom_otp_field.dart';
 import 'package:public_vptax/Layout/customgradientbutton.dart';
+import 'package:public_vptax/Layout/number_keyboard.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
+import 'package:public_vptax/Layout/verification.dart';
 import 'package:public_vptax/Model/startup_model.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagepath;
@@ -39,9 +41,9 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   final GlobalKey<FormBuilderState> _SecretKey = GlobalKey<FormBuilderState>();
   late Animation<Offset> _rightToLeftAnimation;
   late AnimationController _rightToLeftAnimController;
-  int registerStep = 1;
+  int registerStep = 2;
   String finalOTP = '';
-  bool isValidOtp = true;
+  bool isShowKeyboard = false;
   String gender = "";
   List secureFields = [];
   Map<String, dynamic> postParams = {};
@@ -149,7 +151,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                         ),
                       )),
                   Visibility(
-                      visible: registerStep != 1,
+                      visible: registerStep != 1 && !isShowKeyboard,
                       child: Container(
                         clipBehavior: Clip.antiAliasWithSaveLayer,
                         margin: EdgeInsets.only(top: Screen.height(context) * 0.02),
@@ -180,97 +182,115 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
               ),
 
               // ****************************** Log in Field ****************************** //
-
-              ViewModelBuilder<StartUpViewModel>.reactive(
-                  builder: (context, model, child) {
-                    return Positioned(
-                      bottom: 0,
-                      child: Container(
-                          margin: EdgeInsets.only(bottom: Screen.height(context) * 0.02),
-                          width: Screen.width(context) - 50,
-                          // height: Screen.width(context),
-                          padding: EdgeInsets.all(15),
-                          decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              if (registerStep == 1) formControls(context),
-                              if (registerStep == 2) otpControls(model),
-                              if (registerStep == 3) appKeyControls(),
-                              // ****************************** Submit Action Field ****************************** //
-                              CustomGradientButton(
-                                onPressed: () async {
-                                  if (registerStep == 1) {
-                                    if (_formKey.currentState!.saveAndValidate()) {
-                                      postParams = Map.from(_formKey.currentState!.value);
-                                      String serviceId = "";
-                                      if (widget.isSignup) {
-                                        serviceId = "register";
-                                      } else {
-                                        serviceId = "ResendOtp";
+              Container(
+                height: Screen.height(context),
+                child: ViewModelBuilder<StartUpViewModel>.reactive(
+                    builder: (context, model, child) {
+                      return Column(
+                        children: [
+                          Expanded(child: SizedBox()),
+                          Container(
+                            margin: EdgeInsets.only(bottom: Screen.height(context) * 0.02),
+                            width: Screen.width(context) - 50,
+                            padding: EdgeInsets.all(15),
+                            decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                if (registerStep == 1) formControls(context),
+                                if (registerStep == 2) otpControls(model),
+                                if (registerStep == 3) appKeyControls(),
+                                // ****************************** Submit Action Field ****************************** //
+                                CustomGradientButton(
+                                  onPressed: () async {
+                                    if (registerStep == 1) {
+                                      if (_formKey.currentState!.saveAndValidate()) {
+                                        postParams = Map.from(_formKey.currentState!.value);
+                                        String serviceId = "";
+                                        if (widget.isSignup) {
+                                          serviceId = "register";
+                                        } else {
+                                          serviceId = "ResendOtp";
+                                        }
+                                        postParams[key_service_id] = serviceId;
+                                        var response = await model.authendicationServicesAPIcall(context, postParams);
+                                        if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
+                                          utils.showToast(context, 'otp_resent_success'.tr().toString(), "S");
+                                          registerStep++;
+                                          setState(() {});
+                                          changeImageAndAnimate();
+                                        } else {
+                                          utils.showAlert(context, ContentType.fail, getErrorMessage(response[key_message].toString()));
+                                        }
                                       }
-                                      postParams[key_service_id] = serviceId;
-                                      var response = await model.authendicationServicesAPIcall(context, postParams);
-                                      if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
-                                        utils.showToast(context, 'otp_resent_success'.tr().toString(), "S");
-                                        registerStep++;
-                                        setState(() {});
-                                        changeImageAndAnimate();
-                                      } else {
-                                        utils.showAlert(context, ContentType.fail, getErrorMessage(response[key_message].toString()));
+                                    } else if (registerStep == 2) {
+                                      if (finalOTP.length == 6) {
+                                        var sendData = {key_service_id: "VerifyOtp", key_mobile_number: postParams[key_mobile_number].toString(), "mobile_otp": finalOTP};
+                                        var response = await model.authendicationServicesAPIcall(context, sendData);
+                                        if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
+                                          dynamic resData = response['DATA'];
+                                          await preferencesService.setUserInfo("userId", resData['id'].toString());
+                                          await preferencesService.setUserInfo(key_name, resData[key_name].toString());
+                                          await preferencesService.setUserInfo(key_mobile_number, resData[key_mobile_number].toString());
+                                          await preferencesService.setUserInfo(key_email, resData[key_email].toString());
+                                          await preferencesService.setUserInfo(key_gender, resData[key_gender].toString());
+                                          registerStep++;
+                                          setState(() {});
+                                        } else {
+                                          utils.showAlert(context, ContentType.fail, 'wrong_otp_msg'.tr().toString());
+                                        }
                                       }
+                                    } else if (registerStep == 3) {
+                                      if (_SecretKey.currentState!.saveAndValidate()) {
+                                        Map<String, dynamic> postkEYParams = Map.from(_SecretKey.currentState!.value);
+                                        if (postkEYParams[key_secretKey].toString() == postkEYParams['confirm'].toString()) {
+                                          await preferencesService.setUserInfo(key_secretKey, postkEYParams[key_secretKey].toString());
+                                          await utils.showAlert(context, ContentType.success, 'user_registered_successfull'.tr().toString());
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => Splash()));
+                                        } else {
+                                          utils.showAlert(context, ContentType.warning, 'wrong_confirm_pin'.tr().toString());
+                                        }
+                                      }
+                                    } else {
+                                      debugPrint("End of the Statement....");
                                     }
-                                  } else if (registerStep == 2) {
-                                    if (finalOTP.length == 6) {
-                                      var sendData = {key_service_id: "VerifyOtp", key_mobile_number: postParams[key_mobile_number].toString(), "mobile_otp": finalOTP};
-                                      var response = await model.authendicationServicesAPIcall(context, sendData);
-                                      if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
-                                        dynamic resData = response['DATA'];
-                                        await preferencesService.setUserInfo("userId", resData['id'].toString());
-                                        await preferencesService.setUserInfo(key_name, resData[key_name].toString());
-                                        await preferencesService.setUserInfo(key_mobile_number, resData[key_mobile_number].toString());
-                                        await preferencesService.setUserInfo(key_email, resData[key_email].toString());
-                                        await preferencesService.setUserInfo(key_gender, resData[key_gender].toString());
-                                        registerStep++;
-                                        setState(() {});
-                                      } else {
-                                        utils.showAlert(context, ContentType.fail, 'wrong_otp_msg'.tr().toString());
-                                      }
-                                    }
-                                  } else if (registerStep == 3) {
-                                    if (_SecretKey.currentState!.saveAndValidate()) {
-                                      Map<String, dynamic> postkEYParams = Map.from(_SecretKey.currentState!.value);
-                                      if (postkEYParams[key_secretKey].toString() == postkEYParams['confirm'].toString()) {
-                                        await preferencesService.setUserInfo(key_secretKey, postkEYParams[key_secretKey].toString());
-                                        await utils.showAlert(context, ContentType.success, 'user_registered_successfull'.tr().toString());
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Splash()));
-                                      } else {
-                                        utils.showAlert(context, ContentType.warning, 'wrong_confirm_pin'.tr().toString());
-                                      }
-                                    }
-                                  } else {
-                                    debugPrint("End of the Statement....");
-                                  }
-                                },
-                                width: Screen.width(context) - 100,
-                                height: 50,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    'submit'.tr().toString(),
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                  },
+                                  width: Screen.width(context) - 100,
+                                  height: 50,
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      'submit'.tr().toString(),
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          )),
-                    );
-                  },
-                  viewModelBuilder: () => StartUpViewModel()),
+                              ],
+                            ),
+                          ),
+                          if (isShowKeyboard)
+                            CustomNumberBoard(
+                              initialValue: finalOTP,
+                              length: 6,
+                              onChanged: (value) {
+                                finalOTP = value;
+                                setState(() {});
+                              },
+                              onCompleted: () {
+                                isShowKeyboard = false;
+                                setState(() {});
+                              },
+                            ),
+                          isShowKeyboard ? UIHelper.verticalSpaceSmall : UIHelper.verticalSpaceLarge
+                        ],
+                      );
+                    },
+                    viewModelBuilder: () => StartUpViewModel()),
+              )
             ],
           ),
         ),
@@ -418,28 +438,20 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
 
 // ************* OTP Form Control *********************** \\
   Widget otpControls(StartUpViewModel model) {
-    String phone = postParams[key_mobile_number].toString().substring(6);
-
+    //   String phone = postParams[key_mobile_number].toString().substring(6);
+    String phone = "";
     return Column(
       children: [
         UIHelper.titleTextStyle('otp_received'.tr().toString() + phone, c.text_color, 12, true, false),
-        Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-            child: CustomOTP(
-                length: 6,
-                onChanged: (pin) {
-                  if (pin.length == 6) {
-                    finalOTP = pin;
-                    isValidOtp = true;
-                  } else {
-                    isValidOtp = false;
-                    finalOTP = "";
-                  }
-
-                  setState(() {});
-                })),
-        if (!isValidOtp) UIHelper.titleTextStyle('verifyOTP'.tr().toString(), c.red_new, 10, true, false),
-        if (!isValidOtp) UIHelper.verticalSpaceSmall,
+        GestureDetector(
+            onTap: () {
+              isShowKeyboard = true;
+              setState(() {});
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+              child: VerificationView(fixedlength: 6, pinString: finalOTP, secureText: false),
+            )),
         GestureDetector(
             onTap: () async {
               var sendData = {key_service_id: "ResendOtp", key_mobile_number: postParams[key_mobile_number].toString()};

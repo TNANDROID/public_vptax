@@ -34,7 +34,6 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
 
   Future<void> initialize() async {
     String getPrefesecrectKey = await preferencesService.getUserInfo(key_secretKey);
-
     if (getPrefesecrectKey.isNotEmpty) {
       await preferencesService.setUserInfo(key_isLogin, "yes");
     }
@@ -48,7 +47,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
         () {
           Navigator.of(context).push(
             PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) => getPrefesecrectKey.isNotEmpty ? SecretKeyView() : AuthModeView(),
+              pageBuilder: (context, animation, secondaryAnimation) => getPrefesecrectKey.isNotEmpty ? AuthModeView() : AuthModeView(),
               transitionDuration: const Duration(seconds: 2),
               transitionsBuilder: (context, animation, secondaryAnimation, child) {
                 const begin = Offset(1.0, 0.0); // Start position
