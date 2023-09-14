@@ -2,22 +2,18 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:public_vptax/Activity/Auth/Login.dart';
 import 'package:public_vptax/Activity/Auth/signin_signup.dart';
+import 'package:public_vptax/Activity/Tax_Collection/taxCollection_view_request_screen.dart';
 import 'package:public_vptax/Layout/customgradientbutton.dart';
+import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagepath;
+import 'package:public_vptax/Resources/StringsKey.dart';
+import 'package:public_vptax/Services/Preferenceservices.dart';
+import 'package:public_vptax/Services/locator.dart';
+import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:public_vptax/Utils/utils.dart';
-
-import '../../Layout/screen_size.dart';
-import '../../Resources/StringsKey.dart' as s;
-import '../../Resources/StringsKey.dart';
-import '../../Services/Preferenceservices.dart';
-import '../../Services/locator.dart';
-import '../../Utils/ContentInfo.dart';
-import '../Tax_Collection/taxCollection_view_request_screen.dart';
-import 'Home.dart';
 
 class AuthModeView extends StatefulWidget {
   const AuthModeView({super.key});
@@ -37,8 +33,8 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
   String selectedLang = "en";
 
   List langItems = [
-    {s.key_langCode: '1', s.key_language: 'English'},
-    {s.key_langCode: '2', s.key_language: 'தமிழ்'},
+    {key_langCode: '1', key_language: 'English'},
+    {key_langCode: '2', key_language: 'தமிழ்'},
   ];
 
   @override
@@ -78,7 +74,7 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
 
   Future<void> initialize() async {
     selectedLang == "en" ? preferencesService.setUserInfo("lang", "en") : preferencesService.setUserInfo("lang", "ta");
-    selectedLanguage = await selectedLang == "en" ? langItems[0][s.key_langCode] : langItems[1][s.key_langCode];
+    selectedLanguage = await selectedLang == "en" ? langItems[0][key_langCode] : langItems[1][key_langCode];
 
     setState(() {});
   }
@@ -149,8 +145,8 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
                         ),
                         items: langItems
                             .map((item) => DropdownMenuItem<String>(
-                                  value: item[s.key_langCode],
-                                  child: Text(item[s.key_language]),
+                                  value: item[key_langCode],
+                                  child: Text(item[key_language]),
                                 ))
                             .toList(),
                         onChanged: (newValue) {
@@ -311,8 +307,6 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
                 "noInternet".tr().toString(),
               );
             }
-/* utils.showAlert(context, ContentType.warning, "message",
-                flag: 'openAppSetting');*/
           }
         },
         style: ButtonStyle(

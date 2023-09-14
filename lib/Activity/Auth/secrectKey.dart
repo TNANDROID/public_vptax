@@ -2,10 +2,7 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:public_vptax/Activity/Auth/Home.dart';
-import 'package:public_vptax/Activity/Auth/Login.dart';
-import 'package:public_vptax/Layout/custom_otp_field.dart';
 import 'package:public_vptax/Layout/number_keyboard.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
@@ -15,7 +12,6 @@ import 'package:public_vptax/Resources/ImagePath.dart' as imagepath;
 import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
-import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:public_vptax/Utils/utils.dart';
 
 class SecretKeyView extends StatefulWidget {
@@ -87,7 +83,7 @@ class _SecretKeyViewState extends State<SecretKeyView> with TickerProviderStateM
               UIHelper.verticalSpaceMedium,
               GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => LoginView()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
                 },
                 child: Container(
                   width: Screen.width(context),
