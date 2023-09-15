@@ -625,8 +625,6 @@ class Utils {
         amount = taxData['traders_rate'].toString();
         break;
     }
-
-    // taxData[rowIndex][s.key_demand].toString();
     return amount;
   }
 

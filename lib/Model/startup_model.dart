@@ -105,8 +105,6 @@ class StartUpViewModel extends BaseViewModel {
       requestData = {key_service_id: service_key_PaymentTypeList, key_dcode: dcode, key_bcode: bcode, key_pvcode: pvcode};
     } else if (type == "GatewayList") {
       requestData = {key_service_id: service_key_GatewayList};
-    } else if (type == "TaxCollectionDetails") {
-      requestData = requestDataValue;
     } else if (type == "CollectionPaymentTokenList") {
       requestData = requestDataValue;
     }
