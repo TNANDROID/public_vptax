@@ -83,16 +83,16 @@ class _SecretKeyViewState extends State<SecretKeyView> with TickerProviderStateM
               UIHelper.verticalSpaceMedium,
               GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Home()));
                 },
                 child: Container(
                   width: Screen.width(context),
-                  margin: EdgeInsets.only(right: 15),
+                  margin: const EdgeInsets.only(right: 15),
                   alignment: Alignment.centerRight,
                   child: UIHelper.titleTextStyle('forgot_secret_Pin'.tr().toString(), c.primary_text_color2, 12, true, false),
                 ),
               ),
-              Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
               CustomNumberBoard(
                 initialValue: secretPin,
                 length: 4,
@@ -102,7 +102,7 @@ class _SecretKeyViewState extends State<SecretKeyView> with TickerProviderStateM
                 },
                 onCompleted: () {
                   if (getPreferKey == secretPin) {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const Home()));
                   } else {
                     pinIsValid = false;
                     setState(() {});

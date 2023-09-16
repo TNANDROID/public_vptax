@@ -3,7 +3,6 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:public_vptax/Layout/customclip.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 
 class UIHelper {
@@ -12,7 +11,7 @@ class UIHelper {
   static const Widget verticalSpaceSmall = SizedBox(height: 10.0);
   static const Widget verticalSpaceMedium = SizedBox(height: 20.0);
   static const Widget verticalSpaceLarge = SizedBox(height: 60.0);
-  static const Widget verticalSpaceVeryLarge = SizedBox(height: 80.00);
+  static const Widget verticalSpaceVeryLarge = SizedBox(height: 130.00);
 
 // Horizontal Space provider
   static const Widget horizontalSpaceTiny = SizedBox(width: 5.0);

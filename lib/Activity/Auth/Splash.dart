@@ -2,7 +2,6 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:public_vptax/Activity/Auth/Home.dart';
 import 'package:public_vptax/Activity/Auth/auth_option.dart';
 import 'package:public_vptax/Activity/Auth/secrectKey.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
@@ -45,9 +44,9 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
       Future.delayed(
         const Duration(seconds: 2, milliseconds: 350),
         () {
-          Navigator.of(context).push(
+          Navigator.of(context).pushReplacement(
             PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) => getPrefesecrectKey.isNotEmpty ? SecretKeyView() : AuthModeView(),
+              pageBuilder: (context, animation, secondaryAnimation) => getPrefesecrectKey.isNotEmpty ? const SecretKeyView() : const AuthModeView(),
               transitionDuration: const Duration(seconds: 2),
               transitionsBuilder: (context, animation, secondaryAnimation, child) {
                 const begin = Offset(1.0, 0.0); // Start position

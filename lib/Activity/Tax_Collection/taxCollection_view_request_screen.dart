@@ -1,4 +1,4 @@
-// ignore_for_file: library_prefixes, prefer_const_constructors_in_immutables, library_private_types_in_public_api, prefer_typing_uninitialized_variables, prefer_const_constructors, avoid_print, deprecated_member_use, use_build_context_synchronously, file_names
+// ignore_for_file: library_prefixes, prefer_const_constructors_in_immutables, library_private_types_in_public_api, prefer_typing_uninitialized_variables, prefer_const_constructors, avoid_print, deprecated_member_use, use_build_context_synchronously, file_names, use_key_in_widget_constructors
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -341,8 +341,8 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           UIHelper.titleTextStyle('select_anyOne'.tr().toString(), c.grey_9, 12, true, true),
-          UIHelper.verticalSpaceMedium,
-          radioButtonWidget(1, 'via_mobileNumber'.tr().toString()),
+          /* UIHelper.verticalSpaceMedium,
+          radioButtonWidget(1, 'via_mobileNumber'.tr().toString()), */
           UIHelper.verticalSpaceSmall,
           radioButtonWidget(2, 'via_e_taxNumber'.tr().toString()),
           UIHelper.verticalSpaceSmall,

@@ -32,11 +32,11 @@ class _CustomNumberBoardState extends State<CustomNumberBoard> with TickerProvid
   Widget build(BuildContext context) {
     return Container(
         decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.grey_2, c.grey_2),
-        padding: EdgeInsets.fromLTRB(15, 20, 15, 20),
-        margin: EdgeInsets.only(top: 10),
+        padding: const EdgeInsets.fromLTRB(15, 20, 15, 20),
+        margin: const EdgeInsets.only(top: 10),
         height: 300,
         child: ResponsiveGridList(
-          listViewBuilderOptions: ListViewBuilderOptions(physics: NeverScrollableScrollPhysics()),
+          listViewBuilderOptions: ListViewBuilderOptions(physics: const NeverScrollableScrollPhysics()),
           horizontalGridMargin: 0,
           verticalGridMargin: 0,
           minItemWidth: Screen.width(context) / 4,
@@ -44,43 +44,53 @@ class _CustomNumberBoardState extends State<CustomNumberBoard> with TickerProvid
             String getData = numbers[index];
             return Column(
               children: [
-                GestureDetector(
-                    onTap: () {
-                      if (getData == "back") {
-                        if (pin.isNotEmpty) {
-                          pin = pin.substring(0, pin.length - 1);
-                        }
-                        widget.onChanged!(pin);
-                      } else {
-                        if (pin.length <= widget.length - 1) {
-                          pin = pin + getData;
-                          widget.onChanged!(pin);
-                        }
-                        if (pin.length == widget.length) {
-                          widget.onCompleted();
-                        }
-                      }
-                    },
-                    child: getData == "E"
-                        ? SizedBox(
-                            height: 50,
-                            width: Screen.width(context) / 3,
-                          )
-                        : Container(
-                            decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.white, c.white, borderColor: c.grey_2),
-                            height: 50,
-                            width: Screen.width(context) / 3,
-                            padding: EdgeInsets.all(5),
-                            child: Center(
-                                child: getData == "back"
-                                    ? Image.asset(
-                                        "assets/images/backspace.png",
-                                        fit: BoxFit.contain,
-                                        height: 20,
-                                        width: 40,
-                                      )
-                                    : UIHelper.titleTextStyle(getData, c.black, 16, true, true)),
-                          ))
+                getData == "E"
+                    ? SizedBox(
+                        height: 50,
+                        width: Screen.width(context) / 3,
+                      )
+                    : ElevatedButton(
+                        onPressed: () {
+                          if (getData == "back") {
+                            if (pin.isNotEmpty) {
+                              pin = pin.substring(0, pin.length - 1);
+                            }
+                            widget.onChanged!(pin);
+                          } else {
+                            if (pin.length <= widget.length - 1) {
+                              pin = pin + getData;
+                              widget.onChanged!(pin);
+                            }
+                            if (pin.length == widget.length) {
+                              widget.onCompleted();
+                            }
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: c.blue_new_very_very_light,
+                          backgroundColor: c.white, // Text color
+                          elevation: 4, // Shadow elevation
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10), // Rounded corners
+                            side: BorderSide(color: c.grey_2), // Border color
+                          ),
+                        ),
+                        child: Container(
+                          height: 50,
+                          width: Screen.width(context) / 3,
+                          padding: const EdgeInsets.all(5),
+                          child: Center(
+                            child: getData == "back"
+                                ? Image.asset(
+                                    "assets/images/backspace.png",
+                                    fit: BoxFit.contain,
+                                    height: 20,
+                                    width: 40,
+                                  )
+                                : UIHelper.titleTextStyle(getData, c.black, 16, true, true),
+                          ),
+                        ),
+                      )
               ],
             );
           }),

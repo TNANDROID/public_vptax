@@ -1,6 +1,4 @@
-// ignore_for_file: unused_local_variable, non_constant_identifier_names, file_names, camel_case_types, prefer_typing_uninitialized_variables, prefer_const_constructors_in_immutables, use_key_in_widget_constructors, avoid_print, library_prefixes, prefer_const_constructors, prefer_interpolation_to_compose_strings, use_build_context_synchronously, avoid_unnecessary_containers, no_leading_underscores_for_local_identifiers
-
-import 'dart:convert';
+// ignore_for_file: unused_local_variable, non_constant_identifier_names, file_names, camel_case_types, prefer_typing_uninitialized_variables, prefer_const_constructors_in_immutables, use_key_in_widget_constructors, avoid_print, library_prefixes, prefer_const_constructors, prefer_interpolation_to_compose_strings, use_build_context_synchronously, avoid_unnecessary_containers, no_leading_underscores_for_local_identifiers, equal_elements_in_set, must_be_immutable
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -180,7 +178,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
               ),
 
               // ****************************** Log in Field ****************************** //
-              Container(
+              SizedBox(
                 height: Screen.height(context),
                 child: ViewModelBuilder<StartUpViewModel>.reactive(
                     builder: (context, model, child) {
@@ -198,6 +196,8 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                                 if (registerStep == 1) formControls(context),
                                 if (registerStep == 2) otpControls(model),
                                 if (registerStep == 3) appKeyControls(),
+                                UIHelper.verticalSpaceMedium,
+
                                 // ****************************** Submit Action Field ****************************** //
                                 CustomGradientButton(
                                   onPressed: () async {
@@ -311,20 +311,40 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        UIHelper.verticalSpaceMedium,
+        Visibility(
+          visible: widget.isSignup,
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: InkWell(
+              onTap: () {
+                widget.isSignup = false;
+                setState(() {});
+              },
+              child: Text(
+                'already_register'.tr().toString(),
+                style: TextStyle(
+                  color: c.sky_blue,
+                  fontSize: 11,
+                ),
+              ),
+            ),
+          ),
+        ),
+        UIHelper.verticalSpaceSmall,
         FormBuilder(
           key: _formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (widget.isSignup) addInputFormControl(key_name, key_name.tr().toString(), "text"),
-              if (widget.isSignup) UIHelper.verticalSpaceSmall,
               addInputFormControl(key_mobile_number, 'mobileNumber'.tr().toString(), key_mobile_number),
-              if (widget.isSignup) UIHelper.verticalSpaceSmall,
-              if (widget.isSignup) addInputFormControl(key_email, 'emailAddress'.tr().toString(), key_email_id),
-              if (widget.isSignup) UIHelper.verticalSpaceSmall,
-              if (widget.isSignup) addInputDropdownField(),
-              UIHelper.verticalSpaceMedium,
+              if (widget.isSignup) ...{
+                addInputFormControl(key_name, key_name.tr().toString(), "text"),
+                addInputFormControl(key_email, 'emailAddress'.tr().toString(), key_email_id),
+                UIHelper.verticalSpaceSmall,
+                addInputDropdownField(),
+              } else ...{
+                UIHelper.verticalSpaceVeryLarge,
+              }
             ],
           ),
         ),
@@ -334,77 +354,82 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
 
 // ************* Input Field Widget ********************* \\
   Widget addInputFormControl(String nameField, String hintText, String fieldType, {bool isShowSuffixIcon = false}) {
-    return FormBuilderTextField(
-      style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_9),
-      obscureText: secureFields.contains(nameField) || !isShowSuffixIcon ? false : true,
-      name: nameField,
-      autocorrect: false,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      onChanged: (value) {},
-      decoration: InputDecoration(
-        suffixIcon: isShowSuffixIcon
-            ? GestureDetector(
-                onTap: () {
-                  if (secureFields.contains(nameField)) {
-                    secureFields.remove(nameField);
-                  } else {
-                    secureFields.add(nameField);
-                  }
-                  setState(() {});
-                },
-                child: secureFields.contains(nameField)
-                    ? Icon(
-                        Icons.visibility_off,
-                        size: 25,
-                        color: c.grey_6,
-                      )
-                    : Icon(
-                        Icons.visibility,
-                        size: 25,
-                        color: c.grey_6,
-                      ))
-            : null,
-        labelText: hintText,
-        labelStyle: TextStyle(fontSize: 11.0, fontWeight: FontWeight.w600, color: c.grey_7),
-        filled: true,
-        fillColor: Colors.white,
-        enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
-        focusedBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
-        focusedErrorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
-        errorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
-        errorStyle: TextStyle(fontSize: 10),
-        contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12), // Optional: Adjust padding
-      ),
-      validator: fieldType == key_mobile_number
-          ? ((value) {
-              if (value == "" || value == null) {
-                return "$hintText ${'isEmpty'.tr()}";
-              }
-              if (!Utils().isNumberValid(value)) {
-                return "$hintText ${'isInvalid'.tr()}";
-              }
-              return null;
-            })
-          : fieldType == key_email_id
+    return Column(
+      children: [
+        UIHelper.verticalSpaceSmall,
+        FormBuilderTextField(
+          style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_9),
+          obscureText: secureFields.contains(nameField) || !isShowSuffixIcon ? false : true,
+          name: nameField,
+          autocorrect: false,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          onChanged: (value) {},
+          decoration: InputDecoration(
+            suffixIcon: isShowSuffixIcon
+                ? GestureDetector(
+                    onTap: () {
+                      if (secureFields.contains(nameField)) {
+                        secureFields.remove(nameField);
+                      } else {
+                        secureFields.add(nameField);
+                      }
+                      setState(() {});
+                    },
+                    child: secureFields.contains(nameField)
+                        ? Icon(
+                            Icons.visibility_off,
+                            size: 25,
+                            color: c.grey_6,
+                          )
+                        : Icon(
+                            Icons.visibility,
+                            size: 25,
+                            color: c.grey_6,
+                          ))
+                : null,
+            labelText: hintText,
+            labelStyle: TextStyle(fontSize: 11.0, fontWeight: FontWeight.w600, color: c.grey_7),
+            filled: true,
+            fillColor: Colors.white,
+            enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
+            focusedBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
+            focusedErrorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
+            errorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
+            errorStyle: TextStyle(fontSize: 10),
+            contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12), // Optional: Adjust padding
+          ),
+          validator: fieldType == key_mobile_number
               ? ((value) {
                   if (value == "" || value == null) {
                     return "$hintText ${'isEmpty'.tr()}";
                   }
-                  if (!Utils().isEmailValid(value)) {
+                  if (!Utils().isNumberValid(value)) {
                     return "$hintText ${'isInvalid'.tr()}";
                   }
                   return null;
                 })
-              : FormBuilderValidators.compose([
-                  FormBuilderValidators.required(errorText: "$hintText ${'isEmpty'.tr()}"),
-                ]),
-      inputFormatters: fieldType == key_mobile_number || fieldType == key_number
-          ? [
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(fieldType == key_mobile_number ? 10 : 4),
-            ]
-          : [],
-      keyboardType: fieldType == key_mobile_number || fieldType == key_number ? TextInputType.number : TextInputType.text,
+              : fieldType == key_email_id
+                  ? ((value) {
+                      if (value == "" || value == null) {
+                        return "$hintText ${'isEmpty'.tr()}";
+                      }
+                      if (!Utils().isEmailValid(value)) {
+                        return "$hintText ${'isInvalid'.tr()}";
+                      }
+                      return null;
+                    })
+                  : FormBuilderValidators.compose([
+                      FormBuilderValidators.required(errorText: "$hintText ${'isEmpty'.tr()}"),
+                    ]),
+          inputFormatters: fieldType == key_mobile_number || fieldType == key_number
+              ? [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(fieldType == key_mobile_number ? 10 : 4),
+                ]
+              : [],
+          keyboardType: fieldType == key_mobile_number || fieldType == key_number ? TextInputType.number : TextInputType.text,
+        ),
+      ],
     );
   }
 
