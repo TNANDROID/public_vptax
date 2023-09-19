@@ -499,6 +499,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                   var requestJson = {"service_id": "RemovefavouriteList", "user_id": getData['user_id'], "favourite_assessment_id": getData['favourite_assessment_id']};
                   var responce = await model.authendicationServicesAPIcall(context, requestJson);
                   await getDemandList(model);
+                  Navigator.of(context).pop(false);
                 },
                 child: Text(
                   'yes'.tr().toString(),
