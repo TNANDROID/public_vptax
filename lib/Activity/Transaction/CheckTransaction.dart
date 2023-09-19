@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print, non_constant_identifier_names, unnecessary_brace_in_string_interps, use_build_context_synchronously
 
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -9,9 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Model/startup_model.dart';
-import 'package:public_vptax/Model/startup_model.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
-import 'package:public_vptax/Resources/ImagePath.dart';
 import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:public_vptax/Utils/utils.dart';
 import '../../Layout/customclip.dart';
@@ -23,9 +20,9 @@ import '../../Services/locator.dart';
 import '../../Layout/Pdf_Viewer.dart';
 
 class CheckTransaction extends StatefulWidget {
-  final mobileNumber;
-  final emailID;
-  const CheckTransaction({super.key, this.mobileNumber, this.emailID});
+  /* final mobileNumber;
+  final emailID; */
+  const CheckTransaction({super.key /* , this.mobileNumber, this.emailID */});
 
   @override
   State<CheckTransaction> createState() => _CheckTransactionState();
@@ -68,6 +65,8 @@ class _CheckTransactionState extends State<CheckTransaction> {
   }
 
   Future<void> initialize() async {
+    await model.getTransactionStatus(context);
+
     defaultWorklist = preferencesService.TransactionList;
     selectLang = await preferencesService.getUserInfo('lang');
     FilterList();
@@ -532,7 +531,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
         );
       } else {
         Utils().showAlert(context, ContentType.help, '${response[key_message]}');
-        await model.getTransactionStatus(context, widget.mobileNumber, widget.emailID);
+        await model.getTransactionStatus(context /* , widget.mobileNumber, widget.emailID */);
         initialize();
       }
     }

@@ -88,43 +88,51 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
 // ************* Main Widget from this Class ****************** \\
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        body: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                stops: const [0.2, 0.8],
-                colors: [c.colorAccentlight, c.colorPrimaryDark],
-              ),
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      body: SingleChildScrollView(
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            // ****************************** Background Color alone Field ****************************** //
 
+            CustomGradientButton(
+              width: Screen.width(context),
+              height: Screen.height(context),
+              topleft: 0,
+              topright: 0,
+              btmleft: 0,
+              btmright: 0,
+              btnPadding: 0,
             ),
-          child: SingleChildScrollView(
-            child:                 Column(
+
+            // ****************************** Back Arrow ****************************** //
+
+            Container(
+              alignment: Alignment.centerLeft,
+              margin: EdgeInsets.only(top: Screen.width(context) * 0.15, left: Screen.width(context) * 0.07),
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Icon(
+                  Icons.arrow_circle_left_outlined,
+                  size: 30,
+                  color: c.white,
+                ),
+              ),
+            ),
+
+            // ****************************** Upper Card Image Design Field ****************************** //
+
+            Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  alignment: Alignment.centerLeft,
-                  margin: EdgeInsets.only(top: Screen.width(context) * 0.07, left: Screen.width(context) * 0.07),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Icon(
-                      Icons.arrow_circle_left_outlined,
-                      size: 30,
-                      color: c.white,
-                    ),
-                  ),
-                ),
                 Visibility(
                     visible: registerStep == 1,
                     child: Container(
                       clipBehavior: Clip.antiAliasWithSaveLayer,
-                      margin: EdgeInsets.only(top: Screen.height(context) * 0.02),
+                      margin: EdgeInsets.only(top: Screen.height(context) * 0.12),
                       width: Screen.width(context) - 150,
                       height: Screen.width(context) - 150,
                       decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
@@ -166,12 +174,20 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                       ),
                     )),
                 UIHelper.verticalSpaceSmall,
-                UIHelper.titleTextStyle(widget.isSignup ? 'signUP' : 'signIN', c.white, 23, true, true),
-                UIHelper.verticalSpaceSmall,
-                ViewModelBuilder<StartUpViewModel>.reactive(
+                UIHelper.titleTextStyle(widget.isSignup ? 'signUP' : 'signIN', c.white, 25, true, true)
+              ],
+            ),
+
+            // ****************************** Log in Field ****************************** //
+            Positioned(
+              bottom: 0,
+              child: SizedBox(
+                height: Screen.height(context),
+                child: ViewModelBuilder<StartUpViewModel>.reactive(
                     builder: (context, model, child) {
                       return Column(
                         children: [
+                          Expanded(child: SizedBox()),
                           Container(
                             width: Screen.width(context) - 50,
                             padding: EdgeInsets.all(15),
@@ -179,6 +195,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                UIHelper.titleTextStyle('otp_received'.tr().toString() + postParams[key_mobile_number].toString().substring(6), c.text_color, 12, true, false),
                                 if (registerStep == 1) formControls(context),
                                 if (registerStep == 2) otpControls(model),
                                 if (registerStep == 3) appKeyControls(),
@@ -187,66 +204,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                                 // ****************************** Submit Action Field ****************************** //
                                 CustomGradientButton(
                                   onPressed: () async {
-                                    if (registerStep == 1) {
-                                      if (_formKey.currentState!.saveAndValidate()) {
-                                        postParams = Map.from(_formKey.currentState!.value);
-                                        String serviceId = "";
-                                        if (widget.isSignup) {
-                                          serviceId = "register";
-                                        } else {
-                                          serviceId = "SendOTPforGeneratePIN";
-                                        }
-                                        postParams[key_service_id] = serviceId;
-                                        var response = await model.authendicationServicesAPIcall(context, postParams);
-                                        if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
-                                          utils.showToast(context, 'otp_resent_success'.tr().toString(), "S");
-                                          registerStep++;
-                                          setState(() {});
-                                          changeImageAndAnimate();
-                                        } else {
-                                          utils.showAlert(context, ContentType.fail, getErrorMessage(response[key_message].toString()));
-                                        }
-                                      }
-                                    } else if (registerStep == 2) {
-                                      if (finalOTP.length == 6) {
-                                        String serviceId = "";
-                                        if (widget.isSignup) {
-                                          serviceId = "VerifyOtp";
-                                        } else {
-                                          serviceId = "VerifyOTPforGeneratePIN";
-                                        }
-
-                                        var sendData = {key_service_id: serviceId, key_mobile_number: postParams[key_mobile_number].toString(), "mobile_otp": finalOTP};
-                                        var response = await model.authendicationServicesAPIcall(context, sendData);
-                                        if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
-                                          dynamic resData = response['DATA'];
-                                          await preferencesService.setUserInfo("userId", resData['id'].toString());
-                                          await preferencesService.setUserInfo(key_name, resData[key_name].toString());
-                                          await preferencesService.setUserInfo(key_mobile_number, resData[key_mobile_number].toString());
-                                          await preferencesService.setUserInfo(key_email, resData[key_email].toString());
-                                          await preferencesService.setUserInfo(key_gender, resData[key_gender].toString());
-                                          registerStep++;
-                                          setState(() {});
-                                        } else {
-                                          utils.showAlert(context, ContentType.fail, 'wrong_otp_msg'.tr().toString());
-                                        }
-                                      }
-                                    } else if (registerStep == 3) {
-                                      if (_SecretKey.currentState!.saveAndValidate()) {
-                                        Map<String, dynamic> postkEYParams = Map.from(_SecretKey.currentState!.value);
-                                        if (postkEYParams[key_secretKey].toString() == postkEYParams['confirm'].toString()) {
-                                          await preferencesService.setUserInfo(key_secretKey, postkEYParams[key_secretKey].toString());
-                                          if (widget.isSignup) {
-                                            await utils.showAlert(context, ContentType.success, 'user_registered_successfull'.tr().toString());
-                                          }
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => Splash()));
-                                        } else {
-                                          utils.showAlert(context, ContentType.warning, 'wrong_confirm_pin'.tr().toString());
-                                        }
-                                      }
-                                    } else {
-                                      debugPrint("End of the Statement....");
-                                    }
+                                    finalValidation(model);
                                   },
                                   width: Screen.width(context) - 100,
                                   height: 50,
@@ -282,9 +240,10 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                         ],
                       );
                     },
-                    viewModelBuilder: () => StartUpViewModel()),                ],
+                    viewModelBuilder: () => StartUpViewModel()),
+              ),
             )
-          ),
+          ],
         ),
       ),
     );
@@ -455,10 +414,8 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
 
 // ************* OTP Form Control *********************** \\
   Widget otpControls(StartUpViewModel model) {
-    String phone = postParams[key_mobile_number].toString().substring(6);
     return Column(
       children: [
-        UIHelper.titleTextStyle('otp_received'.tr().toString() + phone, c.text_color, 12, true, false),
         GestureDetector(
             onTap: () {
               isShowKeyboard = true;
@@ -501,6 +458,72 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
         UIHelper.verticalSpaceMedium
       ],
     );
+  }
+
+// ************* finalValidation  *********************** \\
+
+  Future<void> finalValidation(StartUpViewModel model) async {
+    if (registerStep == 1) {
+      if (_formKey.currentState!.saveAndValidate()) {
+        postParams = Map.from(_formKey.currentState!.value);
+        String serviceId = "";
+
+        if (widget.isSignup) {
+          serviceId = "register";
+        } else {
+          serviceId = "SendOTPforGeneratePIN";
+        }
+        postParams[key_service_id] = serviceId;
+        var response = await model.authendicationServicesAPIcall(context, postParams);
+        if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
+          utils.showToast(context, 'otp_resent_success'.tr().toString(), "S");
+          registerStep++;
+          setState(() {});
+          changeImageAndAnimate();
+        } else {
+          utils.showAlert(context, ContentType.fail, getErrorMessage(response[key_message].toString()));
+        }
+      }
+    } else if (registerStep == 2) {
+      if (finalOTP.length == 6) {
+        String serviceId = "";
+        if (widget.isSignup) {
+          serviceId = "VerifyOtp";
+        } else {
+          serviceId = "VerifyOTPforGeneratePIN";
+        }
+
+        var sendData = {key_service_id: serviceId, key_mobile_number: postParams[key_mobile_number].toString(), "mobile_otp": finalOTP};
+        var response = await model.authendicationServicesAPIcall(context, sendData);
+        if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
+          dynamic resData = response['DATA'];
+          await preferencesService.setUserInfo("userId", resData['id'].toString());
+          await preferencesService.setUserInfo(key_name, resData[key_name].toString());
+          await preferencesService.setUserInfo(key_mobile_number, resData[key_mobile_number].toString());
+          await preferencesService.setUserInfo(key_email, resData[key_email].toString());
+          await preferencesService.setUserInfo(key_gender, resData[key_gender].toString());
+          registerStep++;
+          setState(() {});
+        } else {
+          utils.showAlert(context, ContentType.fail, 'wrong_otp_msg'.tr().toString());
+        }
+      }
+    } else if (registerStep == 3) {
+      if (_SecretKey.currentState!.saveAndValidate()) {
+        Map<String, dynamic> postkEYParams = Map.from(_SecretKey.currentState!.value);
+        if (postkEYParams[key_secretKey].toString() == postkEYParams['confirm'].toString()) {
+          await preferencesService.setUserInfo(key_secretKey, postkEYParams[key_secretKey].toString());
+          if (widget.isSignup) {
+            await utils.showAlert(context, ContentType.success, 'user_registered_successfull'.tr().toString());
+          }
+          Navigator.push(context, MaterialPageRoute(builder: (context) => Splash()));
+        } else {
+          utils.showAlert(context, ContentType.warning, 'wrong_confirm_pin'.tr().toString());
+        }
+      }
+    } else {
+      debugPrint("End of the Statement....");
+    }
   }
 
 // ************* SecretKey Form Control *********************** \\
