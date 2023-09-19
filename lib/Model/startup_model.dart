@@ -236,6 +236,7 @@ class StartUpViewModel extends BaseViewModel {
 
   //Auth Service API Call
   Future authendicationServicesAPIcall(BuildContext context, dynamic requestJson) async {
+    setBusy(true);
     dynamic requestData = {key_data_content: requestJson};
     if (await Utils().isOnline()) {
       Utils().showProgress(context, 1);
@@ -244,8 +245,10 @@ class StartUpViewModel extends BaseViewModel {
         var response = await apiServices.mainServiceFunction(requestData);
         print("response----:) $response");
         Utils().hideProgress(context);
+        setBusy(false);
         return response;
       } catch (error) {
+        setBusy(false);
         Utils().hideProgress(context);
         debugPrint('error : $error has been caught');
       }
@@ -283,9 +286,9 @@ class StartUpViewModel extends BaseViewModel {
   }
 
   /// This Function used by Get Transaction Status
-  Future<bool> getTransactionStatus(BuildContext context, String mobileNo, String email) async {
+  Future<bool> getTransactionStatus(BuildContext context /* , String mobileNo, String email */) async {
     bool flag = false;
-    dynamic requestData = {key_service_id: service_key_TransactionHistory, key_mobile_no: mobileNo, key_email_id: email};
+    dynamic requestData = {key_service_id: service_key_TransactionHistory, key_mobile_no: preferencesService.getUserInfo(key_mobile_number), key_email_id: ''};
     try {
       Utils().showProgress(context, 1);
       var response = await mainServicesAPIcall(context, requestData);

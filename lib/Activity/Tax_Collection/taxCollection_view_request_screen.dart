@@ -527,56 +527,37 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
           Map<String, dynamic> postParams = Map.from(_formKey.currentState!.value);
           postParams.removeWhere((key, value) => value == null);
 
-          try {
-            dynamic request = {
-              key_service_id: service_key_DemandSelectionList,
-              key_mode_type: selectedEntryType,
-              key_taxtypeid: selectedTaxTypeData[key_taxtypeid].toString(),
-              key_language_name: selectedLang,
-              if (selectedEntryType == 1)
-                key_mobile_number: etTextController.text
-              else if (selectedEntryType == 2)
-                key_assessment_id: etTextController.text
-              else ...{
-                key_assessment_no: etTextController.text,
-                key_dcode: selectedDistrict,
-                key_bcode: selectedBlock,
-                key_pvcode: selectedVillage,
-                if (selectedTaxTypeData[key_taxtypeid] == 4) key_fin_year: selectedFinYear
-              }
-            };
-
-            await StartUpViewModel()
-                .getMainServiceList("TaxCollectionDetails", requestDataValue: request, context: context, taxType: selectedTaxTypeData[key_taxtypeid].toString(), lang: selectedLang);
-
-            int totalAssessment = int.parse(await preferencesService.getUserInfo(key_total_assesment));
-            if (totalAssessment > 0) {
-              widget.flag == "3"
-                  ? Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => TaxCollectionDetailsWithAdd(
-                                selectedTaxTypeData: selectedTaxTypeData,
-                              )))
-                  : Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => TaxCollectionDetailsView(
-                                selectedTaxTypeData: selectedTaxTypeData,
-                                isTaxDropDown: selectedEntryType == 1 ? true : false,
-                                isHome: false,
-                                dcode: selectedDistrict,
-                                bcode: selectedBlock,
-                                pvcode: selectedVillage,
-                                mobile: etTextController.text,
-                                selectedEntryType: selectedEntryType,
-                              )));
+          dynamic request = {
+            key_service_id: service_key_DemandSelectionList,
+            key_mode_type: selectedEntryType,
+            key_taxtypeid: selectedTaxTypeData[key_taxtypeid].toString(),
+            key_language_name: selectedLang,
+            if (selectedEntryType == 1)
+              key_mobile_number: etTextController.text
+            else if (selectedEntryType == 2)
+              key_assessment_id: etTextController.text
+            else ...{
+              key_assessment_no: etTextController.text,
+              key_dcode: selectedDistrict,
+              key_bcode: selectedBlock,
+              key_pvcode: selectedVillage,
+              if (selectedTaxTypeData[key_taxtypeid] == 4) key_fin_year: selectedFinYear
             }
-
-            // throw ('000');
-          } catch (error) {
-            debugPrint('error (${error.toString()}) has been caught');
+          };
+          var response = await StartUpViewModel().authendicationServicesAPIcall(context, request);
+          if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
+            List resData = [];
+            if (response["DATA"] != null) {
+              resData = response["DATA"];
+              widget.flag == "3"
+                  ? Navigator.push(context, MaterialPageRoute(builder: (_) => TaxCollectionDetailsWithAdd(selectedTaxTypeData: selectedTaxTypeData, responseData: resData)))
+                  : Navigator.push(context, MaterialPageRoute(builder: (_) => TaxCollectionDetailsView(responseData: resData)));
+            }
+          } else {
+            Utils().showAlert(context, ContentType.fail, response[key_message].toString());
           }
+
+          // }
         }
       } else {
         Utils().showAlert(context, ContentType.warning, 'select_all_field'.tr().toString(), btnCount: "1", btnmsg: "ok");
