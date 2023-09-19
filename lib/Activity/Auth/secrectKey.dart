@@ -3,6 +3,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:public_vptax/Activity/Auth/Home.dart';
+import 'package:public_vptax/Activity/Auth/signin_signup.dart';
 import 'package:public_vptax/Layout/number_keyboard.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
@@ -83,7 +84,7 @@ class _SecretKeyViewState extends State<SecretKeyView> with TickerProviderStateM
               UIHelper.verticalSpaceMedium,
               GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Home()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpView(isSignup: false)));
                 },
                 child: Container(
                   width: Screen.width(context),

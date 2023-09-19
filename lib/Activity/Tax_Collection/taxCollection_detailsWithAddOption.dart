@@ -129,7 +129,14 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
                         var response = await StartUpViewModel().authendicationServicesAPIcall(context, requestJson);
 
                         if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => AllYourTaxDetails()), (route) => false);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            backgroundColor: c.account_status_green_color,
+                            content: Text(
+                              response[key_message].toString(),
+                              style: TextStyle(color: c.white),
+                            ),
+                          ));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => AllYourTaxDetails()));
                         }
                         print("response----:)$response");
                       },

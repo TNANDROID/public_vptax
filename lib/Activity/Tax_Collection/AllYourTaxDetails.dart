@@ -232,7 +232,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                                         ],
                                                       ),
                                                       width: Screen.width(context) - 40,
-                                                      child: headerCardUIWidget(mainIndex, mainList[mainIndex]))),
+                                                      child: headerCardUIWidget(mainIndex, mainList[mainIndex], model))),
                                             ],
                                           ),
                                         ],
@@ -292,7 +292,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
   }
 
 // *************** Blue Color Main Card Widget ***********
-  Widget headerCardUIWidget(int mainIndex, dynamic getData) {
+  Widget headerCardUIWidget(int mainIndex, dynamic getData, StartUpViewModel model) {
     List taxData = [];
     if (getData[key_DEMAND_DETAILS] != "Empty" && getData[key_DEMAND_DETAILS] != "Pending" && getData[key_DEMAND_DETAILS] != null) {
       taxData = getData[key_DEMAND_DETAILS];
@@ -305,6 +305,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
 
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 UIHelper.verticalSpaceSmall,
                 Row(
@@ -355,6 +356,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                 ),
                 UIHelper.verticalSpaceTiny,
                 Container(alignment: Alignment.centerLeft, child: taxWiseReturnDataWidget(getData, c.grey_8)),
+                UIHelper.titleTextStyle(("${'pending_payment'.tr()} : \u{20B9} " + getData['totaldemand']), c.grey_10, 14, true, true),
               ],
             ),
 
@@ -384,21 +386,21 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
 
             //************************** Tax Image ***************************/
 
-            Visibility(
-              visible: isShowFlag.contains(mainIndex),
-              child: Positioned(
-                right: 0,
-                child: Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.white, c.white),
-                    child: Image.asset(
-                      getTaxImage(mainIndex),
-                      fit: BoxFit.contain,
-                      height: 40,
-                      width: 40,
-                    )),
-              ),
-            ),
+            // Visibility(
+            //   visible: isShowFlag.contains(mainIndex),
+            //   child: Positioned(
+            //     right: 0,
+            //     child: Container(
+            //         padding: const EdgeInsets.all(5),
+            //         decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.white, c.white),
+            //         child: Image.asset(
+            //           getTaxImage(mainIndex),
+            //           fit: BoxFit.contain,
+            //           height: 40,
+            //           width: 40,
+            //         )),
+            //   ),
+            // ),
 
             //************************** Warning and Danger Logo ***************************/
 
@@ -421,21 +423,36 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
 
             Positioned(
               right: 0,
-              child: Visibility(
-                visible: !isShowFlag.contains(mainIndex) && getData[key_DEMAND_DETAILS] != "Empty" && getData[key_DEMAND_DETAILS] != "Pending",
-                child: InkWell(
-                  onTap: () {
-                    for (var item in taxData) {
-                      item[s.key_flag] = true;
-                    }
-                    Utils().settingModalBottomSheet(context, [getData]);
-                  },
-                  child: Container(
-                      margin: EdgeInsets.only(top: 0, right: 10, bottom: 10),
-                      decoration: UIHelper.GradientContainer(5, 5, 5, 5, [c.account_status_green_color, c.account_status_green_color]),
-                      padding: EdgeInsets.fromLTRB(10, 5, 10, 7),
-                      child: UIHelper.titleTextStyle("pay".tr().toString(), c.white, 11, true, true)),
-                ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Visibility(
+                    visible: !isShowFlag.contains(mainIndex) && getData[key_DEMAND_DETAILS] != "Empty" && getData[key_DEMAND_DETAILS] != "Pending",
+                    child: InkWell(
+                      onTap: () {
+                        for (var item in taxData) {
+                          item[s.key_flag] = true;
+                        }
+                        Utils().settingModalBottomSheet(context, [getData]);
+                      },
+                      child: Container(
+                          margin: EdgeInsets.only(top: 0, right: 10, bottom: 10),
+                          decoration: UIHelper.GradientContainer(5, 5, 5, 5, [c.account_status_green_color, c.account_status_green_color]),
+                          padding: EdgeInsets.fromLTRB(10, 5, 10, 7),
+                          child: UIHelper.titleTextStyle("pay".tr().toString(), c.white, 11, true, true)),
+                    ),
+                  ),
+                  Visibility(
+                    visible: getData['is_favourite'] == "Y",
+                    child: InkWell(
+                      onTap: () async {
+                        await showRemovePopup(getData, model);
+                      },
+                      child: Padding(padding: EdgeInsets.only(right: 5), child: Icon(Icons.delete, color: c.grey_7, size: 25)),
+                    ),
+                  )
+                ],
               ),
             )
           ],
@@ -461,6 +478,37 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                   ),
       ],
     );
+  }
+
+// ********** App Exit and Logout Widget ***********\\
+  Future<bool> showRemovePopup(dynamic getData, StartUpViewModel model) async {
+    return await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: UIHelper.titleTextStyle("Do you want to remove computer generated number " + getData[key_assessment_id].toString() + " data ?", c.black, 13, false, false),
+            actions: [
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text(
+                  'no'.tr().toString(),
+                  style: TextStyle(fontSize: 12),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  var requestJson = {"service_id": "RemovefavouriteList", "user_id": getData['user_id'], "favourite_assessment_id": getData['favourite_assessment_id']};
+                  var responce = await model.authendicationServicesAPIcall(context, requestJson);
+                  await getDemandList(model);
+                },
+                child: Text(
+                  'yes'.tr().toString(),
+                  style: TextStyle(fontSize: 12),
+                ),
+              ),
+            ],
+          ),
+        ) ??
+        false; //if showDialouge had returned null, then return false
   }
 
 // *************** Village Name Get Widget ***********
@@ -497,7 +545,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
   Widget taxWiseReturnDataWidget(dynamic getData, Color clr) {
     return getData[key_taxtypeid].toString() == "1"
         ? Container(
-            margin: EdgeInsets.only(left: 20),
+            // margin: EdgeInsets.only(left: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
