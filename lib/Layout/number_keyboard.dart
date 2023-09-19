@@ -32,9 +32,9 @@ class _CustomNumberBoardState extends State<CustomNumberBoard> with TickerProvid
   Widget build(BuildContext context) {
     return Container(
         decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.grey_2, c.grey_2),
-        padding: const EdgeInsets.fromLTRB(15, 20, 15, 20),
-        margin: const EdgeInsets.only(top: 10),
-        height: 300,
+        padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+        margin: const EdgeInsets.only(top: 15),
+        height: 330,
         child: ResponsiveGridList(
           listViewBuilderOptions: ListViewBuilderOptions(physics: const NeverScrollableScrollPhysics()),
           horizontalGridMargin: 0,

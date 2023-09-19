@@ -20,7 +20,6 @@ import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:public_vptax/Utils/utils.dart';
-import 'package:stacked/stacked.dart';
 
 class SignUpView extends StatefulWidget {
   bool isSignup;
@@ -35,6 +34,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   PreferenceService preferencesService = locator<PreferenceService>();
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
   final GlobalKey<FormBuilderState> _SecretKey = GlobalKey<FormBuilderState>();
+  StartUpViewModel model = StartUpViewModel();
   late Animation<Offset> _rightToLeftAnimation;
   late AnimationController _rightToLeftAnimController;
   int registerStep = 1;
@@ -42,6 +42,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   String titleText = '';
   bool isShowKeyboard = false;
   bool verifyOTPFlag = false;
+  bool signUpFlag = false;
   String gender = "";
   List secureFields = [];
   Map<String, dynamic> postParams = {};
@@ -58,6 +59,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
     _rightToLeftAnimController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1300));
     _rightToLeftAnimation =
         Tween<Offset>(begin: registerStep == 2 ? Offset.zero : Offset(1.0, 0.0), end: const Offset(0.0, 0.0)).animate(CurvedAnimation(parent: _rightToLeftAnimController, curve: Curves.easeInOut));
+    signUpFlag = widget.isSignup;
   }
 
   @override
@@ -108,142 +110,137 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
               btnPadding: 0,
             ),
 
-            // ****************************** Back Arrow ****************************** //
-
-            Container(
-              alignment: Alignment.centerLeft,
-              margin: EdgeInsets.only(top: Screen.width(context) * 0.15, left: Screen.width(context) * 0.07),
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: Icon(
-                  Icons.arrow_circle_left_outlined,
-                  size: 30,
-                  color: c.white,
-                ),
-              ),
-            ),
-
-            // ****************************** Upper Card Image Design Field ****************************** //
-
             Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Visibility(
-                    visible: registerStep == 1,
-                    child: Container(
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      margin: EdgeInsets.only(top: Screen.height(context) * 0.12),
-                      width: Screen.width(context) - 150,
-                      height: Screen.width(context) - 150,
-                      decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
-                      child: ClipRect(
-                        child: SizedBox(
-                          height: Screen.width(context) - 50,
-                          width: Screen.width(context) - 50,
-                          child: Image.asset(
-                            imagepath.loginEnc,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
-                    )),
-                Visibility(
-                    visible: registerStep != 1 && !isShowKeyboard,
-                    child: Container(
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      margin: EdgeInsets.only(top: Screen.height(context) * 0.02),
-                      width: Screen.width(context) - 150,
-                      height: Screen.width(context) - 150,
-                      decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
-                      child: ClipRect(
-                        child: SizedBox(
-                          height: Screen.width(context) - 50,
-                          width: Screen.width(context) - 50,
-                          child: AnimatedBuilder(
-                              animation: _rightToLeftAnimation,
-                              builder: (context, child) {
-                                return SlideTransition(
-                                  position: _rightToLeftAnimation,
-                                  child: Image.asset(
-                                    imagepath.loginPass,
-                                    fit: BoxFit.contain,
-                                  ),
-                                );
-                              }),
-                        ),
-                      ),
-                    )),
-                UIHelper.verticalSpaceSmall,
-                UIHelper.titleTextStyle(widget.isSignup ? 'signUP' : 'signIN', c.white, 25, true, true)
-              ],
-            ),
+                // ****************************** Back Arrow ****************************** //
 
-            // ****************************** Log in Field ****************************** //
-            Positioned(
-              bottom: 0,
-              child: SizedBox(
-                height: Screen.height(context),
-                child: ViewModelBuilder<StartUpViewModel>.reactive(
-                    builder: (context, model, child) {
-                      return Column(
-                        children: [
-                          Expanded(child: SizedBox()),
-                          Container(
-                            width: Screen.width(context) - 50,
-                            padding: EdgeInsets.all(15),
-                            decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                if (verifyOTPFlag) UIHelper.titleTextStyle(titleText, c.text_color, 15, true, false),
-                                if (registerStep == 1) formControls(context),
-                                if (registerStep == 2) otpControls(model),
-                                if (registerStep == 3) appKeyControls(),
-                                UIHelper.verticalSpaceMedium,
-
-                                // ****************************** Submit Action Field ****************************** //
-                                CustomGradientButton(
-                                  onPressed: () async {
-                                    finalValidation(model);
-                                  },
-                                  width: Screen.width(context) - 100,
-                                  height: 50,
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      'submit'.tr().toString(),
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          if (isShowKeyboard)
-                            CustomNumberBoard(
-                              initialValue: finalOTP,
-                              length: 6,
-                              onChanged: (value) {
-                                finalOTP = value;
-                                setState(() {});
-                              },
-                              onCompleted: () {
-                                isShowKeyboard = false;
-                                setState(() {});
-                              },
-                            ),
-                          isShowKeyboard ? UIHelper.verticalSpaceSmall : UIHelper.verticalSpaceLarge
-                        ],
-                      );
+                Container(
+                  alignment: Alignment.centerLeft,
+                  margin: EdgeInsets.only(top: Screen.width(context) * 0.15, left: Screen.width(context) * 0.07),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).pop();
                     },
-                    viewModelBuilder: () => StartUpViewModel()),
-              ),
+                    child: Icon(
+                      Icons.arrow_circle_left_outlined,
+                      size: 30,
+                      color: c.white,
+                    ),
+                  ),
+                ),
+
+                // ****************************** Upper Card Image Design Field ****************************** //
+
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Visibility(
+                        visible: registerStep == 1,
+                        child: Container(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          width: Screen.width(context) - 150,
+                          height: Screen.width(context) - 150,
+                          decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
+                          child: ClipRect(
+                            child: SizedBox(
+                              height: Screen.width(context) - 50,
+                              width: Screen.width(context) - 50,
+                              child: Image.asset(
+                                imagepath.loginEnc,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                        )),
+                    Visibility(
+                        visible: registerStep != 1 && !isShowKeyboard,
+                        child: Container(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          margin: EdgeInsets.only(top: Screen.height(context) * 0.02),
+                          width: Screen.width(context) - 150,
+                          height: Screen.width(context) - 150,
+                          decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
+                          child: ClipRect(
+                            child: SizedBox(
+                              height: Screen.width(context) - 50,
+                              width: Screen.width(context) - 50,
+                              child: AnimatedBuilder(
+                                  animation: _rightToLeftAnimation,
+                                  builder: (context, child) {
+                                    return SlideTransition(
+                                      position: _rightToLeftAnimation,
+                                      child: Image.asset(
+                                        imagepath.loginPass,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    );
+                                  }),
+                            ),
+                          ),
+                        )),
+                    UIHelper.verticalSpaceSmall,
+                    UIHelper.titleTextStyle(signUpFlag ? 'signUP' : 'signIN', c.white, 25, true, true)
+                  ],
+                ),
+
+                // ****************************** Log in Field ****************************** //
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: signUpFlag ? Screen.width(context) * 0.10 : Screen.width(context) * 0.20),
+                      width: Screen.width(context) - 50,
+                      padding: EdgeInsets.all(15),
+                      decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          if (verifyOTPFlag && registerStep == 1) UIHelper.titleTextStyle(titleText, c.text_color, 15, true, false),
+                          if (registerStep == 1) formControls(context),
+                          if (registerStep == 2) otpControls(model),
+                          if (registerStep == 3) appKeyControls(),
+                          UIHelper.verticalSpaceMedium,
+
+                          // ****************************** Submit Action Field ****************************** //
+                          CustomGradientButton(
+                            onPressed: () async {
+                              finalValidation(model);
+                            },
+                            width: Screen.width(context) - 100,
+                            height: 50,
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: Text(
+                                'submit'.tr().toString(),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (isShowKeyboard) ...{
+                      CustomNumberBoard(
+                        initialValue: finalOTP,
+                        length: 6,
+                        onChanged: (value) {
+                          finalOTP = value;
+                          setState(() {});
+                        },
+                        onCompleted: () {
+                          isShowKeyboard = false;
+                          setState(() {});
+                        },
+                      ),
+                    }
+                  ],
+                )
+              ],
             )
           ],
         ),
@@ -257,33 +254,13 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Visibility(
-          visible: widget.isSignup,
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: InkWell(
-              onTap: () {
-                widget.isSignup = false;
-                setState(() {});
-              },
-              child: Text(
-                'already_register'.tr().toString(),
-                style: TextStyle(
-                  color: c.sky_blue,
-                  fontSize: 11,
-                ),
-              ),
-            ),
-          ),
-        ),
-        UIHelper.verticalSpaceSmall,
         FormBuilder(
           key: _formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               addInputFormControl(key_mobile_number, 'mobileNumber'.tr().toString(), key_mobile_number),
-              if (widget.isSignup) ...{
+              if (signUpFlag) ...{
                 addInputFormControl(key_name, key_name.tr().toString(), "text"),
                 addInputFormControl(key_email, 'emailAddress'.tr().toString(), key_email_id),
                 UIHelper.verticalSpaceSmall,
@@ -430,7 +407,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
         GestureDetector(
             onTap: () async {
               String serviceid = "";
-              if (widget.isSignup) {
+              if (signUpFlag || verifyOTPFlag) {
                 serviceid = "ResendOtp";
               } else {
                 serviceid = "ResendOTPforGeneratePIN";
@@ -465,12 +442,14 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
 // ************* finalValidation  *********************** \\
 
   Future<void> finalValidation(StartUpViewModel model) async {
+    utils.closeKeypad(context);
+
     if (registerStep == 1) {
       if (_formKey.currentState!.saveAndValidate()) {
         postParams = Map.from(_formKey.currentState!.value);
         String serviceId = "";
 
-        if (widget.isSignup) {
+        if (signUpFlag) {
           serviceId = "register";
         } else {
           serviceId = verifyOTPFlag ? "ResendOtp" : "SendOTPforGeneratePIN";
@@ -483,9 +462,16 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
           setState(() {});
           changeImageAndAnimate();
         } else if (response[key_status].toString() == key_success && response[key_response].toString() == key_fail) {
-          verifyOTPFlag = true;
-          titleText = "verifyOTP".tr();
-          utils.closeKeypad(context);
+          await utils.showAlert(context, ContentType.fail, getErrorMessage(response[key_message].toString()));
+          String flag = response['flag'] ?? '';
+          if (flag == 'N') {
+            verifyOTPFlag = true;
+            titleText = "verifyOTP".tr();
+          } else if (flag == 'Y') {
+            verifyOTPFlag = false;
+            signUpFlag = false;
+          }
+
           setState(() {});
         } else {
           utils.showAlert(context, ContentType.fail, getErrorMessage(response[key_message].toString()));
@@ -494,7 +480,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
     } else if (registerStep == 2) {
       if (finalOTP.length == 6) {
         String serviceId = "";
-        if (widget.isSignup) {
+        if (signUpFlag || verifyOTPFlag) {
           serviceId = "VerifyOtp";
         } else {
           serviceId = "VerifyOTPforGeneratePIN";
@@ -520,7 +506,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
         Map<String, dynamic> postkEYParams = Map.from(_SecretKey.currentState!.value);
         if (postkEYParams[key_secretKey].toString() == postkEYParams['confirm'].toString()) {
           await preferencesService.setUserInfo(key_secretKey, postkEYParams[key_secretKey].toString());
-          if (widget.isSignup) {
+          if (signUpFlag) {
             await utils.showAlert(context, ContentType.success, 'user_registered_successfull'.tr().toString());
           }
           Navigator.push(context, MaterialPageRoute(builder: (context) => Splash()));
