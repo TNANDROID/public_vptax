@@ -20,9 +20,7 @@ import '../../Services/locator.dart';
 import '../../Layout/Pdf_Viewer.dart';
 
 class CheckTransaction extends StatefulWidget {
-  /* final mobileNumber;
-  final emailID; */
-  const CheckTransaction({super.key /* , this.mobileNumber, this.emailID */});
+  const CheckTransaction();
 
   @override
   State<CheckTransaction> createState() => _CheckTransactionState();
@@ -65,10 +63,11 @@ class _CheckTransactionState extends State<CheckTransaction> {
   }
 
   Future<void> initialize() async {
+    selectLang = await preferencesService.getUserInfo('lang');
     await model.getTransactionStatus(context);
 
     defaultWorklist = preferencesService.TransactionList;
-    selectLang = await preferencesService.getUserInfo('lang');
+
     FilterList();
 
     setState(() {});
@@ -77,7 +76,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: UIHelper.getBar('payment_transaction_history'),
+      appBar: UIHelper.getBar('payment_transaction_history'.tr().toString()),
       body: SizedBox(
         height: Screen.height(context),
         child: Stack(

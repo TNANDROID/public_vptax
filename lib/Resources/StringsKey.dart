@@ -65,6 +65,7 @@ String key_amount = "Amount";
 String key_flag = "flag";
 String key_mode_type = "mode_type";
 String key_mobile_number = "mobile_number";
+String key_mobile = "mobile";
 String key_mobile_no = "mobile_no";
 String key_assessment_id = "assessment_id";
 String key_lbcode = "lbcode";
@@ -133,6 +134,7 @@ String key_pending_assessment = "no_of_pending_assessment";
 String key_watercharges = "watercharges";
 String key_demand_id = "demand_id";
 String key_amount_to_pay = "amount_to_pay";
+String key_totaldemand = "totaldemand";
 
 // ************************** Service Key Strings ************************** //
 

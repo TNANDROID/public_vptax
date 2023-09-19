@@ -87,7 +87,7 @@ class _PDF_ViewerState extends State<PDF_Viewer> {
     PermissionStatus status;
 
     if (Platform.isAndroid) {
-      var androidInfo = await DeviceInfoPlugin().androidInfo;
+     /* var androidInfo = await DeviceInfoPlugin().androidInfo;
       var sdkInt = androidInfo.version.sdkInt;
       if (sdkInt >= 30) {
         status = await Permission.manageExternalStorage.request();
@@ -103,6 +103,12 @@ class _PDF_ViewerState extends State<PDF_Viewer> {
         } else {
           flag = true;
         }
+      }*/
+      status = await Permission.storage.request();
+      if (status != PermissionStatus.granted) {
+        await showAppSettings(context, 'storage_permission'.tr().toString());
+      } else {
+        flag = true;
       }
     } else if (Platform.isIOS) {
       flag = true;
