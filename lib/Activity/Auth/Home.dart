@@ -39,8 +39,8 @@ class _HomeState extends State<Home> {
     {'service_id': 2, 'service_name': 'quickPay', 'img_path': imagePath.quick_pay1},
     {'service_id': 3, 'service_name': 'payment_transaction_history', 'img_path': imagePath.transaction_history},
     {'service_id': 4, 'service_name': 'view_receipt_details', 'img_path': imagePath.download_receipt},
-    {'service_id': 5, 'service_name': 'know_about_your_village', 'img_path': imagePath.village},
-    {'service_id': 6, 'service_name': 'village_development_works', 'img_path': imagePath.village_development},
+    /* {'service_id': 5, 'service_name': 'know_about_your_village', 'img_path': imagePath.village},
+    {'service_id': 6, 'service_name': 'village_development_works', 'img_path': imagePath.village_development}, */
   ];
   int selected_index = -1;
   String langText = 'தமிழ்';
@@ -236,15 +236,15 @@ class _HomeState extends State<Home> {
                   ),
                   Column(
                     children: [
-                      UIHelper.titleTextStyle(userName, c.text_color, 14, true, true),
-                      UIHelper.verticalSpaceTiny,
+                      /* UIHelper.titleTextStyle(userName, c.text_color, 14, true, true),
+                      UIHelper.verticalSpaceTiny, */
                       Container(
                         width: Screen.width(context) / 1.6,
                         padding: EdgeInsets.only(top: 10, bottom: 10),
                         decoration: UIHelper.GradientContainer(20, 0, 20, 0, [c.colorAccentlight, c.colorPrimaryDark]),
                         child: Text(
                           textAlign: TextAlign.center,
-                          'appName'.tr().toString(),
+                          userName,
                           style: TextStyle(color: c.white, fontSize: 14, fontWeight: FontWeight.bold),
                         ),
                       ),

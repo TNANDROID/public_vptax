@@ -55,6 +55,8 @@ String submit = "assets/images/submit.png";
 String all = "assets/images/all.png";
 String search = "assets/images/search.png";
 String search1 = "assets/images/search1.png";
+String warning_png = "assets/images/warning.png";
+String delete_png = "assets/images/delete.png";
 
 String help = 'assets/images/help.svg';
 String failure = 'assets/images/failure.svg';

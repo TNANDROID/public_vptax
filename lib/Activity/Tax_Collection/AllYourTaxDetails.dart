@@ -170,7 +170,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                         ),
                       ),
                       Visibility(
-                        visible: mainList.length > 0,
+                        visible: mainList.isNotEmpty,
                         child: Expanded(
                             child: GroupedListView<dynamic, String>(
                           elements: mainList,
@@ -188,7 +188,13 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                 child: Container(
                                   padding: EdgeInsets.only(bottom: 5),
                                   width: Screen.width(context),
-                                  decoration: BoxDecoration(color: c.blue_new, borderRadius: BorderRadius.circular(20)),
+                                  decoration: BoxDecoration(
+                                      color: mainList[mainIndex][key_DEMAND_DETAILS] == "Empty"
+                                          ? c.yellow_new
+                                          : mainList[mainIndex][key_DEMAND_DETAILS] == "Pending"
+                                              ? c.red_new
+                                              : c.green_new,
+                                      borderRadius: BorderRadius.circular(20)),
                                   child: Stack(
                                     children: [
                                       Positioned(
@@ -196,7 +202,13 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                         right: 0,
                                         child: Container(
                                           constraints: const BoxConstraints(maxWidth: 130, maxHeight: 80),
-                                          decoration: BoxDecoration(color: c.blue_new_light, borderRadius: BorderRadius.circular(20)),
+                                          decoration: BoxDecoration(
+                                              color: mainList[mainIndex][key_DEMAND_DETAILS] == "Empty"
+                                                  ? c.yellow_new_light
+                                                  : mainList[mainIndex][key_DEMAND_DETAILS] == "Pending"
+                                                      ? c.red_new_light
+                                                      : c.light_green_new,
+                                              borderRadius: BorderRadius.circular(20)),
                                         ),
                                       ),
                                       Column(
@@ -288,6 +300,8 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
       children: [
         Stack(
           children: [
+            //************************** Basic Details ***************************/
+
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -342,6 +356,9 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                 Container(alignment: Alignment.centerLeft, child: taxWiseReturnDataWidget(getData, c.grey_8)),
               ],
             ),
+
+            //************************** Down Arrow ***************************/
+
             Visibility(
                 visible: getData[key_DEMAND_DETAILS] != "Empty" && getData[key_DEMAND_DETAILS] != "Pending",
                 child: Positioned(
@@ -363,6 +380,9 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                     ),
                   ),
                 )),
+
+            //************************** Tax Image ***************************/
+
             Visibility(
               visible: isShowFlag.contains(mainIndex),
               child: Positioned(
@@ -378,7 +398,26 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                     )),
               ),
             ),
-            UIHelper.horizontalSpaceSmall,
+
+            //************************** Warning and Danger Logo ***************************/
+
+            Visibility(
+              visible: getData[key_DEMAND_DETAILS] == "Empty" || getData[key_DEMAND_DETAILS] == "Pending",
+              child: Positioned(
+                right: 10,
+                child: Container(
+                    decoration: UIHelper.roundedBorderWithColorWithShadow(50, c.white, c.white),
+                    child: Image.asset(
+                      getData[key_DEMAND_DETAILS] == "Empty" ? imagePath.warning_png : imagePath.delete_png,
+                      fit: BoxFit.contain,
+                      height: 40,
+                      width: 40,
+                    )),
+              ),
+            ),
+
+            //************************** Proceed To Pay Button ***************************/
+
             Positioned(
               right: 0,
               child: Visibility(
@@ -402,9 +441,15 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
         ),
         UIHelper.verticalSpaceSmall,
         getData[key_DEMAND_DETAILS] == "Empty"
-            ? UIHelper.titleTextStyle('no_demand'.tr().toString(), c.blue_new, 11, false, false)
+            ? Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: UIHelper.titleTextStyle('no_demand'.tr().toString(), c.warningYellow, 12, true, false),
+              )
             : getData[key_DEMAND_DETAILS] == "Pending"
-                ? UIHelper.titleTextStyle('transaction_warning_hint'.tr().toString(), c.red, 11, false, false)
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: UIHelper.titleTextStyle('transaction_warning_hint'.tr().toString(), c.red, 12, true, true),
+                  )
                 : AnimatedSize(
                     duration: const Duration(milliseconds: 500),
                     curve: Curves.linear,
@@ -450,16 +495,19 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
 // *************** Tax based  Data Get Widget***********
   Widget taxWiseReturnDataWidget(dynamic getData, Color clr) {
     return getData[key_taxtypeid].toString() == "1"
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
-              UIHelper.verticalSpaceTiny,
-              UIHelper.titleTextStyle(("${'building_licence_number'.tr()} : ${getData[s.key_building_licence_no].toString() ?? ""}"), clr, 12, false, true),
-              UIHelper.verticalSpaceTiny,
-              UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
-              UIHelper.verticalSpaceTiny,
-            ],
+        ? Container(
+            margin: EdgeInsets.only(left: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
+                UIHelper.verticalSpaceTiny,
+                UIHelper.titleTextStyle(("${'building_licence_number'.tr()} : ${getData[s.key_building_licence_no].toString() ?? ""}"), clr, 12, false, true),
+                UIHelper.verticalSpaceTiny,
+                UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
+                UIHelper.verticalSpaceTiny,
+              ],
+            ),
           )
         : getData[key_taxtypeid].toString() == "2"
             ? Column(
