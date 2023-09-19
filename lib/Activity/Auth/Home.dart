@@ -236,19 +236,25 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                   Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      /* UIHelper.titleTextStyle(userName, c.text_color, 14, true, true),
-                      UIHelper.verticalSpaceTiny, */
                       Container(
                         width: Screen.width(context) / 1.6,
                         padding: EdgeInsets.only(top: 10, bottom: 10),
                         decoration: UIHelper.GradientContainer(20, 0, 20, 0, [c.colorAccentlight, c.colorPrimaryDark]),
                         child: Text(
                           textAlign: TextAlign.center,
-                          userName,
+                          "appName".tr().toString(),
                           style: TextStyle(color: c.white, fontSize: 14, fontWeight: FontWeight.bold),
                         ),
                       ),
+                      UIHelper.verticalSpaceSmall,
+                       Container(
+                         margin: EdgeInsets.only(right: 20),
+                           child: UIHelper.titleTextStyle("Hi Test", c.text_color, 14, true, true)),
+                      UIHelper.verticalSpaceTiny,
+
                     ],
                   )
                 ]),

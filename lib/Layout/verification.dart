@@ -50,7 +50,7 @@ class _VerificationViewState extends State<VerificationView> with TickerProvider
                       child: Icon(
                         Icons.fiber_manual_record,
                         size: 25,
-                        color: widget.pinString.length > index ? c.colorPrimary : c.grey_8,
+                        color: widget.pinString.length > index ? c.colorPrimary : c.full_transparent,
                       ),
                     )
                   : Container(

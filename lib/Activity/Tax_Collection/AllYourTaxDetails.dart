@@ -73,6 +73,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
   Future<void> initialize() async {
     selectedLang = await preferencesService.getUserInfo("lang");
     requestJson[key_mobile_number] = await preferencesService.getUserInfo(key_mobile_number);
+    print(">>>"+requestJson[key_mobile_number].toString());
     requestJson[key_language_name] = selectedLang;
     setState(() {});
   }

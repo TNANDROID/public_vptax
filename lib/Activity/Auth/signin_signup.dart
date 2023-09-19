@@ -492,7 +492,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
           dynamic resData = response['DATA'];
           await preferencesService.setUserInfo("userId", resData['id'].toString());
           await preferencesService.setUserInfo(key_name, resData[key_name].toString());
-          await preferencesService.setUserInfo(key_mobile_number, resData[key_mobile_number].toString());
+          await preferencesService.setUserInfo(key_mobile_number, resData[key_mobile].toString());
           await preferencesService.setUserInfo(key_email, resData[key_email].toString());
           await preferencesService.setUserInfo(key_gender, resData[key_gender].toString());
           registerStep++;

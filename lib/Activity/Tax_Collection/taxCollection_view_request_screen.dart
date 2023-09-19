@@ -435,7 +435,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                               alignment: Alignment.center,
                               child: GestureDetector(
                                 onTap: () async {
-                                  selectedEntryType == 1 ? etTextController.text = '9875235654' : null;
+                                  // selectedEntryType == 1 ? etTextController.text = '9875235654' : null;
                                   validate();
                                 },
                                 child: Container(

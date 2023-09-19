@@ -14,6 +14,7 @@ import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:public_vptax/Utils/utils.dart';
 import 'package:stacked/stacked.dart';
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
+import 'package:url_launcher/url_launcher.dart';
 
 class StartUpViewModel extends BaseViewModel {
   PreferenceService preferencesService = locator<PreferenceService>();
@@ -264,12 +265,12 @@ class StartUpViewModel extends BaseViewModel {
   //Main Service API Call
   Future mainServicesAPIcall(BuildContext context, dynamic requestJson) async {
     dynamic requestData = {key_data_content: requestJson};
+    print("requestData>>$requestData");
     if (await Utils().isOnline()) {
       Utils().showProgress(context, 1);
       try {
         var response = await apiServices.mainServiceFunction(requestData);
         Utils().hideProgress(context);
-        print("requestData>>$requestData");
         print("response>>$response");
         return response;
       } catch (error) {
@@ -288,7 +289,7 @@ class StartUpViewModel extends BaseViewModel {
   /// This Function used by Get Transaction Status
   Future<bool> getTransactionStatus(BuildContext context /* , String mobileNo, String email */) async {
     bool flag = false;
-    dynamic requestData = {key_service_id: service_key_TransactionHistory, key_mobile_no: preferencesService.getUserInfo(key_mobile_number), key_email_id: ''};
+    dynamic requestData = {key_service_id: service_key_TransactionHistory, key_mobile_no: await preferencesService.getUserInfo(key_mobile_number), key_email_id: ''};
     try {
       Utils().showProgress(context, 1);
       var response = await mainServicesAPIcall(context, requestData);
@@ -328,13 +329,14 @@ class StartUpViewModel extends BaseViewModel {
       var receiptResponce = response[key_data];
       var pdftoString = receiptResponce[key_receipt_content];
       Uint8List? pdf = const Base64Codec().decode(pdftoString);
-      Navigator.of(context).push(
+      /* Navigator.of(context).push(
         MaterialPageRoute(
             builder: (context) => PDF_Viewer(
                   pdfBytes: pdf,
                   flag: setFlag,
                 )),
-      );
+      );*/
+      launch("https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf");
     } else {
       Utils().showAlert(context, ContentType.fail, response[key_message]);
     }
