@@ -229,16 +229,7 @@ class StartUpViewModel extends BaseViewModel {
             "g": "ODk1Mg=="
         }
       };*/
-      var status = response[key_status];
-      var response_value = response[key_response];
-      if (status == key_success && response_value == key_success) {
-        dynamic pay_params = response['pay_params'];
-        return pay_params;
-      } else if (response_value == key_fail) {
-        Utils().showAlert(context, ContentType.warning, response[key_message].toString());
-      } else {
-        Utils().showAlert(context, ContentType.warning, response_value.toString());
-      }
+      return response;
     }
     setBusy(false);
   }
@@ -275,15 +266,9 @@ class StartUpViewModel extends BaseViewModel {
       try {
         var response = await apiServices.mainServiceFunction(requestData);
         Utils().hideProgress(context);
-        var status = response[key_status].toString();
-        var responseValue = response[key_response].toString();
         print("requestData>>$requestData");
         print("response>>$response");
-        if (status == key_success && responseValue == key_success) {
-          return response;
-        } else {
-          return responseValue;
-        }
+        return response;
       } catch (error) {
         Utils().hideProgress(context);
         debugPrint('error (${error.toString()}) has been caught');

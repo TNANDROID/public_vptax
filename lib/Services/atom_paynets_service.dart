@@ -222,7 +222,7 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
     var responceMessage = '';
     var requestData = {key_service_id: service_key_SaveCollectionList, key_merchId_server_side: merchId, key_encdata_server_side: encData};
     var response = await model.mainServicesAPIcall(context, requestData);
-    if (response == key_fail) {
+    if (response[key_response] == key_fail) {
       receiptList = [];
     } else {
       var receiptResponce = response[key_data];

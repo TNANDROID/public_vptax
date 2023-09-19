@@ -92,101 +92,87 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
       top: true,
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        body: SingleChildScrollView(
-          child: Stack(
-            alignment: Alignment.topCenter,
-            children: [
-              // ****************************** Background Color alone Field ****************************** //
-
-              CustomGradientButton(
-                width: Screen.width(context),
-                height: Screen.height(context) - 40,
-                topleft: 0,
-                topright: 0,
-                btmleft: 0,
-                btmright: 0,
-                btnPadding: 0,
+        body: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                stops: const [0.2, 0.8],
+                colors: [c.colorAccentlight, c.colorPrimaryDark],
               ),
 
-              // ****************************** Upper Card Image Design Field ****************************** //
-
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.only(top: Screen.width(context) * 0.07, left: Screen.width(context) * 0.07),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Icon(
-                        Icons.arrow_circle_left_outlined,
-                        size: 30,
-                        color: c.white,
-                      ),
+            ),
+          child: SingleChildScrollView(
+            child:                 Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  margin: EdgeInsets.only(top: Screen.width(context) * 0.07, left: Screen.width(context) * 0.07),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Icon(
+                      Icons.arrow_circle_left_outlined,
+                      size: 30,
+                      color: c.white,
                     ),
                   ),
-                  Visibility(
-                      visible: registerStep == 1,
-                      child: Container(
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        margin: EdgeInsets.only(top: Screen.height(context) * 0.02),
-                        width: Screen.width(context) - 150,
-                        height: Screen.width(context) - 150,
-                        decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
-                        child: ClipRect(
-                          child: SizedBox(
-                            height: Screen.width(context) - 50,
-                            width: Screen.width(context) - 50,
-                            child: Image.asset(
-                              imagepath.loginEnc,
-                              fit: BoxFit.contain,
-                            ),
+                ),
+                Visibility(
+                    visible: registerStep == 1,
+                    child: Container(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      margin: EdgeInsets.only(top: Screen.height(context) * 0.02),
+                      width: Screen.width(context) - 150,
+                      height: Screen.width(context) - 150,
+                      decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
+                      child: ClipRect(
+                        child: SizedBox(
+                          height: Screen.width(context) - 50,
+                          width: Screen.width(context) - 50,
+                          child: Image.asset(
+                            imagepath.loginEnc,
+                            fit: BoxFit.contain,
                           ),
                         ),
-                      )),
-                  Visibility(
-                      visible: registerStep != 1 && !isShowKeyboard,
-                      child: Container(
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        margin: EdgeInsets.only(top: Screen.height(context) * 0.02),
-                        width: Screen.width(context) - 150,
-                        height: Screen.width(context) - 150,
-                        decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
-                        child: ClipRect(
-                          child: SizedBox(
-                            height: Screen.width(context) - 50,
-                            width: Screen.width(context) - 50,
-                            child: AnimatedBuilder(
-                                animation: _rightToLeftAnimation,
-                                builder: (context, child) {
-                                  return SlideTransition(
-                                    position: _rightToLeftAnimation,
-                                    child: Image.asset(
-                                      imagepath.loginPass,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  );
-                                }),
-                          ),
+                      ),
+                    )),
+                Visibility(
+                    visible: registerStep != 1 && !isShowKeyboard,
+                    child: Container(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      margin: EdgeInsets.only(top: Screen.height(context) * 0.02),
+                      width: Screen.width(context) - 150,
+                      height: Screen.width(context) - 150,
+                      decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
+                      child: ClipRect(
+                        child: SizedBox(
+                          height: Screen.width(context) - 50,
+                          width: Screen.width(context) - 50,
+                          child: AnimatedBuilder(
+                              animation: _rightToLeftAnimation,
+                              builder: (context, child) {
+                                return SlideTransition(
+                                  position: _rightToLeftAnimation,
+                                  child: Image.asset(
+                                    imagepath.loginPass,
+                                    fit: BoxFit.contain,
+                                  ),
+                                );
+                              }),
                         ),
-                      )),
-                  UIHelper.verticalSpaceSmall,
-                  UIHelper.titleTextStyle(widget.isSignup ? 'signUP' : 'signIN', c.white, 25, true, true)
-                ],
-              ),
-
-              // ****************************** Log in Field ****************************** //
-              SizedBox(
-                height: Screen.height(context),
-                child: ViewModelBuilder<StartUpViewModel>.reactive(
+                      ),
+                    )),
+                UIHelper.verticalSpaceSmall,
+                UIHelper.titleTextStyle(widget.isSignup ? 'signUP' : 'signIN', c.white, 23, true, true),
+                UIHelper.verticalSpaceSmall,
+                ViewModelBuilder<StartUpViewModel>.reactive(
                     builder: (context, model, child) {
                       return Column(
                         children: [
-                          Expanded(child: SizedBox()),
                           Container(
-                            margin: EdgeInsets.only(bottom: Screen.height(context) * 0.02),
                             width: Screen.width(context) - 50,
                             padding: EdgeInsets.all(15),
                             decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
@@ -296,9 +282,8 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                         ],
                       );
                     },
-                    viewModelBuilder: () => StartUpViewModel()),
-              )
-            ],
+                    viewModelBuilder: () => StartUpViewModel()),                ],
+            )
           ),
         ),
       ),

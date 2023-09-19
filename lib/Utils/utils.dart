@@ -979,18 +979,29 @@ class Utils {
         s.key_payment_gateway: selected_id,
         'assessment_demand_list': assessment_demand_list,
       };
-      dynamic pay_params =
+      dynamic response =
           await StartUpViewModel().getMainServiceList("CollectionPaymentTokenList", requestDataValue: request, context: context, taxType: finalList[0][s.key_taxtypeid].toString(), lang: selectedLang);
       Utils().hideProgress(context);
-      String transaction_unique_id = Utils().decodeBase64(pay_params['a'].toString());
-      String atomTokenId = Utils().decodeBase64(pay_params['b'].toString());
-      String req_payment_amount = Utils().decodeBase64(pay_params['c'].toString());
-      String public_transaction_email_id = Utils().decodeBase64(pay_params['d'].toString());
-      String public_transaction_mobile_no = Utils().decodeBase64(pay_params['e'].toString());
-      String txmStartTime = Utils().decodeBase64(pay_params['f'].toString());
-      String merchId = Utils().decodeBase64(pay_params['g'].toString());
+      print("response2>>$response");
+      var status = response[key_status];
+      String response_value = response[key_response];
+      if (status == key_success && response_value == key_success) {
+        dynamic pay_params = response['pay_params'];
+        String transaction_unique_id = Utils().decodeBase64(pay_params['a'].toString());
+        String atomTokenId = Utils().decodeBase64(pay_params['b'].toString());
+        String req_payment_amount = Utils().decodeBase64(pay_params['c'].toString());
+        String public_transaction_email_id = Utils().decodeBase64(pay_params['d'].toString());
+        String public_transaction_mobile_no = Utils().decodeBase64(pay_params['e'].toString());
+        String txmStartTime = Utils().decodeBase64(pay_params['f'].toString());
+        String merchId = Utils().decodeBase64(pay_params['g'].toString());
 
-      await Utils().openNdpsPG(context, atomTokenId, merchId, public_transaction_email_id, public_transaction_mobile_no);
+        await Utils().openNdpsPG(context, atomTokenId, merchId, public_transaction_email_id, public_transaction_mobile_no);
+      } else if (response_value == key_fail) {
+        Utils().showAlert(context, ContentType.warning, response[key_message].toString());
+      } else {
+        Utils().showAlert(context, ContentType.warning, response_value.toString());
+      }
+
 
       // throw ('000');
     } catch (error) {
