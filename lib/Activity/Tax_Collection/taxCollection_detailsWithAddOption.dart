@@ -2,8 +2,10 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:public_vptax/Activity/Tax_Collection/AllYourTaxDetails.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
+import 'package:public_vptax/Model/startup_model.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 import 'package:public_vptax/Resources/StringsKey.dart';
@@ -106,18 +108,30 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
               ),
               selectedList.isNotEmpty
                   ? InkWell(
-                      onTap: () {
+                      onTap: () async {
                         List selectedDataList = [];
                         for (var item in selectedList) {
                           var sendData = {};
-                          sendData['statecode'] = mainList[item]['statecode'];
-                          sendData['dcode'] = mainList[item]['dcode'];
-                          sendData['bcode'] = mainList[item]['bcode'];
-                          sendData['assessment_no'] = mainList[item]['assessment_no'];
-                          sendData['assessment_id'] = mainList[item]['assessment_id'];
+
+                          sendData['user_id'] = await preferencesService.getUserInfo("userId");
+                          sendData['mobile'] = await preferencesService.getUserInfo(key_mobile_number);
+                          sendData[key_dcode] = mainList[item][key_dcode];
+                          sendData[key_bcode] = mainList[item][key_bcode];
+                          sendData[key_pvcode] = mainList[item][key_lbcode];
+                          sendData[key_taxtypeid] = mainList[item][key_taxtypeid];
+                          sendData[key_assessment_no] = mainList[item][key_assessment_no];
+                          if (mainList[item][key_taxtypeid] == 4) {
+                            sendData[key_fin_year] = item[key_financialyear];
+                          }
                           selectedDataList.add(sendData);
                         }
-                        print("selectedDataList----:)$selectedDataList");
+                        var requestJson = {"service_id": "AddfavouriteList", "favourite_assessment_list": selectedDataList};
+                        var response = await StartUpViewModel().authendicationServicesAPIcall(context, requestJson);
+
+                        if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => AllYourTaxDetails()), (route) => false);
+                        }
+                        print("response----:)$response");
                       },
                       child: Container(
                           height: 50,

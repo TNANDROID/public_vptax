@@ -59,8 +59,12 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
       selectedTaxTypeData = widget.selectedTaxTypeData;
       selectedTaxType = selectedTaxTypeData[key_taxtypeid];
     } else if (widget.flag == "3") {
-      selectedTaxTypeData = widget.selectedTaxTypeData;
-      selectedTaxType = selectedTaxTypeData[key_taxtypeid];
+      if (widget.selectedTaxTypeData[key_taxtypeid] != 0) {
+        selectedTaxTypeData = widget.selectedTaxTypeData;
+        selectedTaxType = selectedTaxTypeData[key_taxtypeid];
+      } else {
+        taxlist = preferencesService.taxTypeList;
+      }
     } else {
       taxlist = preferencesService.taxTypeList;
       selectedTaxTypeData = [];
