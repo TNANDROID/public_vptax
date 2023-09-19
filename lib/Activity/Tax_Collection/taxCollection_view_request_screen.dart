@@ -553,9 +553,12 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
             List resData = [];
             if (response["DATA"] != null) {
               resData = response["DATA"];
-              widget.flag == "3"
-                  ? Navigator.push(context, MaterialPageRoute(builder: (_) => TaxCollectionDetailsWithAdd(selectedTaxTypeData: selectedTaxTypeData, responseData: resData)))
-                  : Navigator.push(context, MaterialPageRoute(builder: (_) => TaxCollectionDetailsView(responseData: resData)));
+              if (widget.flag == "3") {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (_) => TaxCollectionDetailsWithAdd(selectedTaxTypeData: selectedTaxTypeData, responseData: resData)));
+              } else {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => TaxCollectionDetailsView(responseData: resData)));
+              }
             }
           } else {
             Utils().showAlert(context, ContentType.fail, response[key_message].toString());

@@ -485,7 +485,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
     return await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            content: UIHelper.titleTextStyle("Do you want to remove computer generated number " + getData[key_assessment_id].toString() + " data ?", c.black, 13, false, false),
+            content: UIHelper.titleTextStyle('assessment_remove'.tr().toString(), c.black, 13, false, false),
             actions: [
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(false),

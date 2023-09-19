@@ -236,6 +236,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
 
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 UIHelper.verticalSpaceSmall,
                 Row(
@@ -286,6 +287,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                 ),
                 UIHelper.verticalSpaceTiny,
                 Container(alignment: Alignment.centerLeft, child: taxWiseReturnDataWidget(getData, c.grey_8)),
+                UIHelper.titleTextStyle(("${'pending_payment'.tr()} : \u{20B9} " + getData['totaldemand']), c.grey_10, 14, true, true),
               ],
             ),
 
