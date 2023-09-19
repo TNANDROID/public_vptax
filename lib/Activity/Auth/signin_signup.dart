@@ -39,7 +39,9 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   late AnimationController _rightToLeftAnimController;
   int registerStep = 1;
   String finalOTP = '';
+  String titleText = '';
   bool isShowKeyboard = false;
+  bool verifyOTPFlag = false;
   String gender = "";
   List secureFields = [];
   Map<String, dynamic> postParams = {};
@@ -195,7 +197,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                UIHelper.titleTextStyle('otp_received'.tr().toString() + postParams[key_mobile_number].toString().substring(6), c.text_color, 12, true, false),
+                                if (verifyOTPFlag) UIHelper.titleTextStyle(titleText, c.text_color, 15, true, false),
                                 if (registerStep == 1) formControls(context),
                                 if (registerStep == 2) otpControls(model),
                                 if (registerStep == 3) appKeyControls(),
@@ -471,7 +473,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
         if (widget.isSignup) {
           serviceId = "register";
         } else {
-          serviceId = "SendOTPforGeneratePIN";
+          serviceId = verifyOTPFlag ? "ResendOtp" : "SendOTPforGeneratePIN";
         }
         postParams[key_service_id] = serviceId;
         var response = await model.authendicationServicesAPIcall(context, postParams);
@@ -480,6 +482,11 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
           registerStep++;
           setState(() {});
           changeImageAndAnimate();
+        } else if (response[key_status].toString() == key_success && response[key_response].toString() == key_fail) {
+          verifyOTPFlag = true;
+          titleText = "verifyOTP".tr();
+          utils.closeKeypad(context);
+          setState(() {});
         } else {
           utils.showAlert(context, ContentType.fail, getErrorMessage(response[key_message].toString()));
         }
