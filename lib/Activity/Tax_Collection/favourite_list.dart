@@ -162,19 +162,17 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
 // *************** Blue Color Main Card Widget ***********
   Widget headerCardUIWidget(int mainIndex, dynamic getData, StartUpViewModel model) {
     List taxData = [];
-    bool isData = false;
     if (getData[key_DEMAND_DETAILS] != "Empty" && getData[key_DEMAND_DETAILS] != "Pending" && getData[key_DEMAND_DETAILS] != null) {
       taxData = getData[key_DEMAND_DETAILS];
-      isData = true;
     }
     return Container(
         decoration: BoxDecoration(
           color: c.white,
           borderRadius: BorderRadius.circular(5),
-          border: Border.all(width: 2, color: isData ? c.green_new : c.warningYellow),
+          border: Border.all(width: 2, color: c.grey_5),
           boxShadow: [
             BoxShadow(
-              color: isData ? c.green_new.withOpacity(0.3) : c.warningYellow.withOpacity(0.3),
+              color: c.grey_4,
               spreadRadius: 3, // Spread radius
               blurRadius: 5, // Blur radius
               offset: Offset(3, 3), // Offset from the top-left corner
@@ -193,9 +191,10 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                     Row(
                       children: [
                         Container(
+                            transform: Matrix4.translationValues(0.0, -2, 0.0),
                             padding: const EdgeInsets.all(5),
                             margin: EdgeInsets.only(left: 15),
-                            decoration: UIHelper.roundedBorderWithColor(5, 5, 100, 100, isData ? c.green_new : c.warningYellow),
+                            decoration: UIHelper.roundedBorderWithColor(5, 5, 100, 100, c.grey_3, borderColor: c.grey_5, borderWidth: 2),
                             child: Image.asset(
                               getTaxImage(mainIndex),
                               fit: BoxFit.contain,
@@ -213,7 +212,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           taxWiseReturnDataWidget(getData, c.grey_8),
-                          UIHelper.titleTextStyle(("${'pending_payment'.tr()} : \u{20B9} " + getData['totaldemand']), c.grey_10, 14, true, true),
+                          //   UIHelper.titleTextStyle(("${'pending_payment'.tr()} : \u{20B9} " + getData['totaldemand']), c.grey_10, 14, true, true),
                         ],
                       ),
                     )
@@ -222,27 +221,27 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
 
                 //************************** Down Arrow ***************************/
 
-                Visibility(
-                    visible: getData[key_DEMAND_DETAILS] != "Empty" && getData[key_DEMAND_DETAILS] != "Pending",
-                    child: Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            if (isShowFlag.contains(mainIndex)) {
-                              isShowFlag.remove(mainIndex);
-                            } else {
-                              isShowFlag.add(mainIndex);
-                            }
-                          });
-                        },
-                        child: Icon(
-                          isShowFlag.contains(mainIndex) ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
-                          size: 30,
-                        ),
-                      ),
-                    )),
+                // Visibility(
+                //     visible: getData[key_DEMAND_DETAILS] != "Empty" && getData[key_DEMAND_DETAILS] != "Pending",
+                //     child: Positioned(
+                //       bottom: 0,
+                //       right: 0,
+                //       child: InkWell(
+                //         onTap: () {
+                //           setState(() {
+                //             if (isShowFlag.contains(mainIndex)) {
+                //               isShowFlag.remove(mainIndex);
+                //             } else {
+                //               isShowFlag.add(mainIndex);
+                //             }
+                //           });
+                //         },
+                //         child: Icon(
+                //           isShowFlag.contains(mainIndex) ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
+                //           size: 30,
+                //         ),
+                //       ),
+                //     )),
 
                 //************************** Proceed To Pay Button ***************************/
 
@@ -258,25 +257,25 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
               ],
             ),
             UIHelper.verticalSpaceSmall,
-            getData[key_DEMAND_DETAILS] == "Empty" || getData[key_DEMAND_DETAILS] == null
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: UIHelper.titleTextStyle('no_demand'.tr().toString(), c.warningYellow, 12, true, false),
-                  )
-                : getData[key_DEMAND_DETAILS] == "Pending" || getData[key_DEMAND_DETAILS] == null
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: UIHelper.titleTextStyle('transaction_warning_hint'.tr().toString(), c.red, 12, true, true),
-                      )
-                    : AnimatedSize(
-                        duration: const Duration(milliseconds: 200),
-                        curve: Curves.linear,
-                        child: Visibility(
-                          visible: isShowFlag.contains(mainIndex),
-                          child: propertyTaxCollectionWidget(mainIndex, getData),
-                        ),
-                      ),
-            UIHelper.verticalSpaceSmall,
+            // getData[key_DEMAND_DETAILS] == "Empty" || getData[key_DEMAND_DETAILS] == null
+            //     ? Padding(
+            //         padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            //         child: UIHelper.titleTextStyle('no_demand'.tr().toString(), c.warningYellow, 12, true, false),
+            //       )
+            //     : getData[key_DEMAND_DETAILS] == "Pending" || getData[key_DEMAND_DETAILS] == null
+            //         ? Padding(
+            //             padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            //             child: UIHelper.titleTextStyle('transaction_warning_hint'.tr().toString(), c.red, 12, true, true),
+            //           )
+            //         : AnimatedSize(
+            //             duration: const Duration(milliseconds: 200),
+            //             curve: Curves.linear,
+            //             child: Visibility(
+            //               visible: isShowFlag.contains(mainIndex),
+            //               child: propertyTaxCollectionWidget(mainIndex, getData),
+            //             ),
+            //           ),
+            // UIHelper.verticalSpaceSmall,
           ],
         ));
   }
