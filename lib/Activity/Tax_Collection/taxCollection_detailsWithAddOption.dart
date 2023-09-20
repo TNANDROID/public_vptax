@@ -3,6 +3,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:public_vptax/Activity/Tax_Collection/AllYourTaxDetails.dart';
+import 'package:public_vptax/Activity/Tax_Collection/favourite_list.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Model/startup_model.dart';
@@ -114,7 +115,7 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
                             ),
                           ));
                           Navigator.pop(context);
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AllYourTaxDetails()));
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FavouriteTaxDetails()));
                         }
                         print("response----:)$response");
                       },

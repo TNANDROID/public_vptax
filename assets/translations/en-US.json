@@ -184,7 +184,7 @@
   "selected_to_pay": "Selected amount to pay",
   "total": "Total to pay",
   "selected": "Selected to pay",
-  "pending_payment": "Pending payment",
+  "pending_payment": "Pending Due",
   "work_type_name": "Work Type Name",
   "select_All": "Select All",
   "select_To_Pay": "Select to Pay",
@@ -207,5 +207,6 @@
   "otp_resent_success": "OTP sent successfully",
   "already_register": "Already register ?",
   "dont_have_mobile_number": "Mobile Number Not Registered",
-  "assessment_remove":"Do you want to remove this assessment from your favourites?"
+  "assessment_remove":"Do you want to remove this assessment from your favourites?",
+  "addedList":"Added List"
 }
