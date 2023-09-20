@@ -261,6 +261,28 @@ class StartUpViewModel extends BaseViewModel {
       );
     }
   }
+  Future demandServicesAPIcall(BuildContext context, dynamic requestJson) async {
+    setBusy(true);
+    dynamic requestData = {key_data_content: requestJson};
+    if (await Utils().isOnline()) {
+      try {
+        print("requestData----:) $requestData");
+        var response = await apiServices.mainServiceFunction(requestData);
+        print("response----:) $response");
+        setBusy(false);
+        return response;
+      } catch (error) {
+        setBusy(false);
+        debugPrint('error : $error has been caught');
+      }
+    } else {
+      Utils().showAlert(
+        context,
+        ContentType.fail,
+        "noInternet".tr().toString(),
+      );
+    }
+  }
 
   //Main Service API Call
   Future mainServicesAPIcall(BuildContext context, dynamic requestJson) async {

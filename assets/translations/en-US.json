@@ -208,5 +208,6 @@
   "already_register": "Already register ?",
   "dont_have_mobile_number": "Mobile Number Not Registered",
   "assessment_remove":"Do you want to remove this assessment from your favourites?",
-  "addedList":"Added List"
+  "addedList":"Added List",
+  "tax_due":"Tax Dues"
 }

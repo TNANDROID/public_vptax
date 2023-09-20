@@ -135,6 +135,8 @@ String key_watercharges = "watercharges";
 String key_demand_id = "demand_id";
 String key_amount_to_pay = "amount_to_pay";
 String key_totaldemand = "totaldemand";
+String key_secretKey = "secretKey";
+
 
 // ************************** Service Key Strings ************************** //
 
@@ -155,4 +157,5 @@ String service_key_GetReceipt = "GetReceipt";
 String service_key_CheckTransaction = "CheckTransaction";
 String service_key_TransactionidWiseGetReceipt = "TransactionidWiseGetReceipt";
 String service_key_TransactionHistory = "TransactionHistory";
-String key_secretKey = "secretKey";
+String service_key_getAssessmentDemandList = "getAssessmentDemandList";
+String service_key_getAllTaxAssessmentList = "getAllTaxAssessmentList";

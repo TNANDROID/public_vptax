@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, sort_child_properties_last, prefer_const_constructors, use_build_context_synchronously
 
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,8 @@ import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/utils.dart';
 
+import '../Tax_Collection/favourite_list.dart';
+
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -37,6 +40,7 @@ class _HomeState extends State<Home> {
   List taxTypeList = [];
   List servicesList = [
     {'service_id': 0, 'service_name': 'your_tax_details', 'img_path': imagePath.due4},
+    {'service_id': 1, 'service_name': 'addedList', 'img_path': imagePath.group},
     {'service_id': 2, 'service_name': 'quickPay', 'img_path': imagePath.quick_pay1},
     {'service_id': 3, 'service_name': 'payment_transaction_history', 'img_path': imagePath.transaction_history},
     {'service_id': 4, 'service_name': 'view_receipt_details', 'img_path': imagePath.download_receipt},
@@ -47,17 +51,41 @@ class _HomeState extends State<Home> {
   String langText = 'தமிழ்';
   String selectedLang = "";
   String userName = "";
+  String mobile_number = "";
+  final _controller = ScrollController();
+  bool flag = true;
+  List sourceList = [];
+  double property_total=0.0;
+  double water_total=0.0;
+  double professional_total=0.0;
+  double non_total=0.0;
+  double trade_total=0.0;
 
 // ***** initState ***********
   @override
   void initState() {
     super.initState();
     initialize();
+    _controller.addListener(() {
+      if (_controller.position.atEdge) {
+        bool isTop = _controller.position.pixels == 0;
+        if (isTop) {
+          setState(() {
+            flag = true;
+          });
+        } else {
+          setState(() {
+            flag = false;
+          });
+        }
+      }
+    });
   }
 
   Future<void> initialize() async {
     selectedLang = await preferencesService.getUserInfo("lang");
     userName = await preferencesService.getUserInfo(key_name);
+    mobile_number = await preferencesService.getUserInfo(key_mobile_number);
     await Utils().apiCalls(context);
     taxTypeList = preferencesService.taxTypeList;
 
@@ -69,6 +97,7 @@ class _HomeState extends State<Home> {
       context.setLocale(Locale('ta', 'IN'));
       langText = 'தமிழ்';
     }
+    await getDemandList();
     setState(() {});
   }
 
@@ -92,6 +121,48 @@ class _HomeState extends State<Home> {
         });
         break;
     }
+  }
+  Future getDemandList() async {
+    property_total=0.0;
+    water_total=0.0;
+    professional_total=0.0;
+    non_total=0.0;
+    trade_total=0.0;
+    sourceList.clear();
+    Utils().showProgress(context, 1);
+    try {
+      dynamic requestJson = {key_service_id: service_key_getAllTaxAssessmentList,key_mobile_number:mobile_number,key_language_name:selectedLang};
+      var responce = await model.demandServicesAPIcall(context, requestJson);
+      if (responce[key_data] != null && responce[key_data].length > 0) {
+        sourceList = responce[key_data].toList();
+
+        for (var item in sourceList) {
+          switch (item[key_taxtypeid].toString()) {
+            case '1':
+              property_total=property_total+double.parse(item["totaldemand"]);
+              break;
+            case '2':
+              water_total=water_total+double.parse(item["totaldemand"]);
+              break;
+            case '4':
+              professional_total=professional_total+double.parse(item["totaldemand"]);
+              break;
+            case '5':
+              non_total=non_total+double.parse(item["totaldemand"]);
+              break;
+            case '6':
+              trade_total=trade_total+double.parse(item["totaldemand"]);
+              break;
+          }
+
+        }
+      }
+      Utils().hideProgress(context);
+    } catch (error) {
+      Utils().hideProgress(context);
+      debugPrint('error : $error has been caught');
+    }
+    setState(() {});
   }
 
 // ********** App Exit and Logout Widget ***********\\
@@ -252,13 +323,129 @@ class _HomeState extends State<Home> {
                       UIHelper.verticalSpaceSmall,
                        Container(
                          margin: EdgeInsets.only(right: 20),
-                           child: UIHelper.titleTextStyle("Hi Test", c.text_color, 14, true, true)),
+                           child: UIHelper.titleTextStyle("Hi "+userName, c.text_color, 14, true, true)),
                       UIHelper.verticalSpaceTiny,
 
                     ],
                   )
                 ]),
+                Container(
+                  padding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'tax_due'.tr().toString(),
+                    style: TextStyle(color: c.grey_8, fontSize: 14, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Stack(
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.width /1.4,
+                      padding: EdgeInsets.only(left: 0, right: 0),
+                      child: ScrollConfiguration(
+                          behavior: ScrollConfiguration.of(context).copyWith(
+                            dragDevices: {
+                              PointerDeviceKind.touch,
+                              PointerDeviceKind.mouse,
+                            },
+                          ),
+                          child: ListView.builder(
+                            physics:  PageScrollPhysics(),
+                            shrinkWrap: true, // new
+                            controller: _controller,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: taxTypeList == null ? 0 : taxTypeList.length,
+                            itemBuilder: (context, i) {
+                              return InkWell(
+                                onTap: ()  {
+                                  Navigator.push(context, MaterialPageRoute(builder: (_) => AllYourTaxDetails( selectedTaxTypeData: taxTypeList[i],
+                                    isHome: true,)));
+                                },
+                                child: Container(
+                                 width: Screen.width(context)/1.4/*selectedLang == "ta"?Screen.width(context) / 1.6:Screen.width(context) / 1.8*/,
+                                  decoration: UIHelper.GradientContainer(20,20,20,20, [c.white, c.white]),
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.fromLTRB(50,20,50,20),
+                                  padding: EdgeInsets.all(15),
+                                  child:Column(
+                                    children: [
+                                      Row(children: [
+                                        Image.asset(
+                                          taxTypeList[i][key_img_path],
+                                          width: selectedLang == "ta"?((MediaQuery.of(context).size.height / 5) / 5):((MediaQuery.of(context).size.height / 4) / 4),
+                                        ),
+                                        UIHelper.horizontalSpaceSmall,
+                                        Container(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            selectedLang == 'en' ? taxTypeList[i][key_taxtypedesc_en] : taxTypeList[i][key_taxtypedesc_ta],
+                                            style: TextStyle(fontSize: 14, color: c.text_color,fontWeight: FontWeight.bold),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ],),
 
+                                      UIHelper.verticalSpaceMedium,
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                            'pending_payment'.tr().toString(),
+                                          style: TextStyle(fontSize: 13, color: c.grey_10,fontWeight: FontWeight.bold),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      UIHelper.verticalSpaceSmall,
+                                       Container(
+                                         padding: EdgeInsets.all(10),
+                                         decoration: UIHelper.GradientContainer(10,10,10,10, [c.primary_text_color2,c.primary_text_color2]),
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                            "\u{20B9} ${gettotal(taxTypeList[i][key_taxtypeid].toString())}",
+                                          style: TextStyle(fontSize: 18, color: c.white,fontWeight: FontWeight.bold),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      UIHelper.verticalSpaceSmall,
+                                       Container(
+                                        alignment: Alignment.bottomRight,
+                                           child: Image.asset(
+                                             imagePath.right_arrow_icon,
+                                             height: 25,
+                                             color: c.grey_9,
+                                           )
+                                      ),
+
+                                    ],
+                                  )
+                                ),
+                              );
+                            },
+                          )),
+                    ),
+                    Positioned(
+                      left: flag?0:null,
+                      right: !flag?0:null,
+
+                      child: InkWell(
+                        onTap: () {
+
+                          _controller.animateTo(400, duration: Duration(milliseconds: 300), curve:Curves.easeInOut);
+                        },
+                        child: Container(
+                          alignment: flag ? Alignment.centerRight : Alignment.centerLeft,
+                          color: c.full_transparent,
+                          // transform: Matrix4.translationValues(0.0, -130.0, 0.0),
+                          margin: EdgeInsets.only(left: 10, right: 10,top: 100),
+                          child: Image.asset(
+                            flag ? imagePath.right_arrow : imagePath.left_arrow,
+                            height: 25,
+                            color: c.grey_9,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
                 Container(
                   padding: EdgeInsets.only(left: 20, right: 20, top: 10),
                   alignment: Alignment.centerLeft,
@@ -287,8 +474,10 @@ class _HomeState extends State<Home> {
                                   onTap: () async {
                                     selected_index = servicesList[index][key_service_id];
                                     if (selected_index == 0) {
-                                      Navigator.push(context, MaterialPageRoute(builder: (_) => AllYourTaxDetails()));
-                                    } else if (selected_index == 2) {
+                                      Navigator.push(context, MaterialPageRoute(builder: (_) => AllYourTaxDetails(isHome: false,)));
+                                    } else if (selected_index == 1) {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => FavouriteTaxDetails()));
+                                    }else if (selected_index == 2) {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(appbarTitle: 'quickPay', flag: "2")));
                                     } else if (selected_index == 3) {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => CheckTransaction()));
@@ -346,5 +535,28 @@ class _HomeState extends State<Home> {
             ),
           ),
         ));
+  }
+
+  String gettotal(taxtypeid) {
+    String total='';
+    switch (taxtypeid) {
+      case '1':
+        total=property_total.toString();
+        break;
+      case '2':
+        total=water_total.toString();
+        break;
+      case '4':
+        total=professional_total.toString();
+        break;
+      case '5':
+        total=non_total.toString();
+        break;
+      case '6':
+        total=trade_total.toString();
+        break;
+    }
+
+    return total;
   }
 }

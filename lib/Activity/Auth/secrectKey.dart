@@ -1,7 +1,10 @@
 // ignore_for_file: use_build_context_synchronously, file_names, unused_field
 
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:public_vptax/Activity/Auth/Home.dart';
 import 'package:public_vptax/Activity/Auth/signin_signup.dart';
 import 'package:public_vptax/Layout/number_keyboard.dart';
@@ -40,79 +43,82 @@ class _SecretKeyViewState extends State<SecretKeyView> with TickerProviderStateM
   }
 
   Future<bool> _onWillPop() async {
-    return false;
+    print("cli");
+    if (Platform.isAndroid) {
+      SystemNavigator.pop();
+    } else if (Platform.isIOS) {
+      exit(0);
+    }
+    return true;
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
-      child: WillPopScope(
-        onWillPop: _onWillPop,
-        child: Scaffold(
-          body: Container(
-            width: Screen.width(context),
-            height: Screen.height(context),
-            margin: const EdgeInsets.all(5),
-            child: Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-              UIHelper.verticalSpaceMedium,
-              UIHelper.verticalSpaceMedium,
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Image.asset(
-                  imagepath.logo,
-                  fit: BoxFit.cover,
-                  height: 70,
-                  width: 70,
-                ),
-                Text(
-                  'appName'.tr().toString(),
-                  style: TextStyle(
-                    fontSize: 25.0,
-                    fontWeight: FontWeight.bold,
-                    color: c.text_color,
-                    fontStyle: FontStyle.normal,
-                    decorationStyle: TextDecorationStyle.wavy,
-                  ),
-                ),
-              ]),
-              UIHelper.verticalSpaceMedium,
-              UIHelper.titleTextStyle('enter_your_SecretPin'.tr().toString(), c.text_color, 14, true, true),
-              UIHelper.verticalSpaceMedium,
-              VerificationView(fixedlength: 4, pinString: secretPin, secureText: true),
-              if (!pinIsValid) UIHelper.verticalSpaceSmall,
-              if (!pinIsValid) UIHelper.titleTextStyle('invalid_Pin'.tr().toString(), c.red_new, 12, true, true),
-              UIHelper.verticalSpaceMedium,
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpView(isSignup: false)));
-                },
-                child: Container(
-                  width: Screen.width(context),
-                  margin: const EdgeInsets.only(right: 15),
-                  alignment: Alignment.centerRight,
-                  child: UIHelper.titleTextStyle('forgot_secret_Pin'.tr().toString(), c.primary_text_color2, 12, true, false),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        body: Container(
+          width: Screen.width(context),
+          height: Screen.height(context),
+          margin: const EdgeInsets.all(5),
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+            UIHelper.verticalSpaceMedium,
+            UIHelper.verticalSpaceMedium,
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Image.asset(
+                imagepath.logo,
+                fit: BoxFit.cover,
+                height: 70,
+                width: 70,
+              ),
+              Text(
+                'appName'.tr().toString(),
+                style: TextStyle(
+                  fontSize: 25.0,
+                  fontWeight: FontWeight.bold,
+                  color: c.text_color,
+                  fontStyle: FontStyle.normal,
+                  decorationStyle: TextDecorationStyle.wavy,
                 ),
               ),
-              const Expanded(child: SizedBox()),
-              CustomNumberBoard(
-                initialValue: secretPin,
-                length: 4,
-                onChanged: (value) {
-                  secretPin = value;
-                  setState(() {});
-                },
-                onCompleted: () {
-                  if (getPreferKey == secretPin) {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const Home()));
-                  } else {
-                    pinIsValid = false;
-                    setState(() {});
-                  }
-                },
-              ),
-              // UIHelper.verticalSpaceMedium,
             ]),
-          ),
+            UIHelper.verticalSpaceMedium,
+            UIHelper.titleTextStyle('enter_your_SecretPin'.tr().toString(), c.text_color, 14, true, true),
+            UIHelper.verticalSpaceMedium,
+            VerificationView(fixedlength: 4, pinString: secretPin, secureText: true),
+            if (!pinIsValid) UIHelper.verticalSpaceSmall,
+            if (!pinIsValid) UIHelper.titleTextStyle('invalid_Pin'.tr().toString(), c.red_new, 12, true, true),
+            UIHelper.verticalSpaceMedium,
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpView(isSignup: false)));
+              },
+              child: Container(
+                width: Screen.width(context),
+                margin: const EdgeInsets.only(right: 15),
+                alignment: Alignment.centerRight,
+                child: UIHelper.titleTextStyle('forgot_secret_Pin'.tr().toString(), c.primary_text_color2, 12, true, false),
+              ),
+            ),
+            const Expanded(child: SizedBox()),
+            CustomNumberBoard(
+              initialValue: secretPin,
+              length: 4,
+              onChanged: (value) {
+                secretPin = value;
+                setState(() {});
+              },
+              onCompleted: () {
+                if (getPreferKey == secretPin) {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Home()));
+                } else {
+                  pinIsValid = false;
+                  setState(() {});
+                }
+              },
+            ),
+            // UIHelper.verticalSpaceMedium,
+          ]),
         ),
       ),
     );
