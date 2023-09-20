@@ -121,11 +121,9 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                               padding: const EdgeInsets.all(10),
                               child: Row(
                                 children: [
-                                  Expanded(flex: 1, child: SizedBox()),
-
                                   Expanded(
                                     child: Container(
-                                      margin: EdgeInsets.only(left: 15),
+                                      margin: EdgeInsets.only(right: 15),
                                       decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.white, c.white),
                                       child: Row(
                                         children: [
@@ -146,42 +144,45 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                       ),
                                     ),
                                   ),
-                                  // Align(
-                                  //     alignment: Alignment.centerRight,
-                                  //     child: InkWell(
-                                  //       onTap: () {
-                                  //         Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(selectedTaxTypeData: selectedTaxTypeData, flag: "3")));
-                                  //       },
-                                  //       child: Container(
-                                  //         width: MediaQuery.of(context).size.width / 2.5,
-                                  //         margin: EdgeInsets.only(top: 10, bottom: 15, left: 15),
-                                  //         decoration: UIHelper.GradientContainer(5, 5, 5, 5, [c.grey_8, c.grey_8]),
-                                  //         padding: EdgeInsets.fromLTRB(5, 8, 0, 8),
-                                  //         child: Row(
-                                  //           // Wrap with Row to add the plus icon
-                                  //           crossAxisAlignment: CrossAxisAlignment.center,
-                                  //           children: [
-                                  //             Icon(
-                                  //               Icons.add, // Use the icon you prefer (e.g., Icons.add, Icons.add_circle, etc.)
-                                  //               color: c.white,
-                                  //               size: 15,
-                                  //             ),
-                                  //             SizedBox(width: 3),
-                                  //             Flexible(
-                                  //                 child: UIHelper.titleTextStyle(
-                                  //               "new".tr().toString() +
-                                  //                   (selectedLang == "en" ? selectedTaxTypeData["taxtypedesc_en"] : selectedTaxTypeData["taxtypedesc_ta"]) +
-                                  //                   "new2".tr().toString(),
-                                  //               c.white,
-                                  //               10,
-                                  //               true,
-                                  //               true,
-                                  //             )) // Add a small space between the icon and the text
-                                  //             ,
-                                  //           ],
-                                  //         ),
-                                  //       ),
-                                  //     )),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: InkWell(
+                                          onTap: () {
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(selectedTaxTypeData: selectedTaxTypeData, flag: "3")));
+                                          },
+                                          child: Container(
+                                            width: MediaQuery.of(context).size.width / 2.5,
+                                            margin: EdgeInsets.only(top: 10, bottom: 15, left: 15),
+                                            decoration: UIHelper.GradientContainer(5, 5, 5, 5, [c.grey_8, c.grey_8]),
+                                            padding: EdgeInsets.fromLTRB(5, 8, 0, 8),
+                                            child: Row(
+                                              // Wrap with Row to add the plus icon
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  Icons.add, // Use the icon you prefer (e.g., Icons.add, Icons.add_circle, etc.)
+                                                  color: c.white,
+                                                  size: 15,
+                                                ),
+                                                SizedBox(width: 3),
+                                                Flexible(
+                                                    child: UIHelper.titleTextStyle(
+                                                  "new".tr().toString() +
+                                                      (selectedLang == "en" ? selectedTaxTypeData["taxtypedesc_en"] : selectedTaxTypeData["taxtypedesc_ta"]) +
+                                                      "new2".tr().toString(),
+                                                  c.white,
+                                                  10,
+                                                  true,
+                                                  true,
+                                                )) // Add a small space between the icon and the text
+                                                ,
+                                              ],
+                                            ),
+                                          ),
+                                        )),
+                                  ),
                                 ],
                               ),
                             ),
@@ -1061,9 +1062,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
     try {
       var responce = await model.authendicationServicesAPIcall(context, requestJson);
       if (responce[key_data] != null && responce[key_data].length > 0) {
-        List resList = responce[key_data].toList();
-        sourceList = resList.where((item) => item["is_favourite"] != "Y").toList();
-        // sourceList = responce[key_data].toList();
+        sourceList = responce[key_data].toList();
         mainList = sourceList.toList();
         mainList.sort((a, b) {
           return a[key_taxtypeid].compareTo(b[key_taxtypeid]);
