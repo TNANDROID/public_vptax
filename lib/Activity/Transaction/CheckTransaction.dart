@@ -4,12 +4,10 @@ import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Model/startup_model.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
-import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:public_vptax/Utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../Layout/customclip.dart';
@@ -20,7 +18,7 @@ import '../../Services/Preferenceservices.dart';
 import '../../Services/locator.dart';
 
 class CheckTransaction extends StatefulWidget {
-  const CheckTransaction();
+  const CheckTransaction({super.key});
 
   @override
   State<CheckTransaction> createState() => _CheckTransactionState();
@@ -30,6 +28,8 @@ class _CheckTransactionState extends State<CheckTransaction> {
   PreferenceService preferencesService = locator<PreferenceService>();
   ApiServices apiServices = locator<ApiServices>();
   StartUpViewModel model = StartUpViewModel();
+
+  Utils utils = Utils();
 
   List successList = [];
   List failureList = [];
@@ -532,7 +532,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
       } else {
         Utils().showAlert(context, ContentType.help, '${response[key_message]}');
         await model.getTransactionStatus(context */
-/* , widget.mobileNumber, widget.emailID *//*
+/* , widget.mobileNumber, widget.emailID */ /*
 );
         initialize();
       }
@@ -540,20 +540,14 @@ class _CheckTransactionState extends State<CheckTransaction> {
   }
 */
   Future<void> checkReceiptStatus(String flag, String transID, String lang, String taxType, BuildContext context) async {
+    String urlParams = "taxtypeid=${base64Encode(utf8.encode(taxType))}&transaction_id=${base64Encode(utf8.encode(transID))}&language_name=${base64Encode(utf8.encode(lang))}";
 
-   /* String urlParams =
-        "taxtypeid=${base64Encode(utf8.encode(receiptList[key_taxtypeid].toString()))}&statecode=${base64Encode(utf8.encode(receiptList[key_state_code].toString()))}&dcode=${base64Encode(utf8.encode(receiptList[key_dcode].toString()))}&lbcode=${base64Encode(utf8.encode(receiptList[key_lbcode].toString()))}&bcode=${base64Encode(utf8.encode(receiptList[key_bcode].toString()))}&receipt_id=${base64Encode(utf8.encode(receiptList[key_receipt_id].toString()))}&receipt_no=${base64Encode(utf8.encode(receiptList[key_receipt_no].toString()))}&language_name=${base64Encode(utf8.encode(language))}";
-
-    String key = await preferencesService.userPassKey;
+    String key = preferencesService.userPassKey;
 
     String Signature = utils.generateHmacSha256(urlParams, key, true);
-    log('headerSignature: $Signature');
 
     String encodedParams = "${ApiServices().pdfURL}?$urlParams&sign=$Signature";
-    log('encodedParams: $encodedParams');
 
-    log('uri: $encodedParams');
-
-    await launch(encodedParams.toString());  */
+    await launch(encodedParams.toString());
   }
 }

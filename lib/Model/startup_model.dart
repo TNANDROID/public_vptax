@@ -261,6 +261,7 @@ class StartUpViewModel extends BaseViewModel {
       );
     }
   }
+
   Future demandServicesAPIcall(BuildContext context, dynamic requestJson) async {
     setBusy(true);
     dynamic requestData = {key_data_content: requestJson};
@@ -332,7 +333,7 @@ class StartUpViewModel extends BaseViewModel {
   }
 
   /// This Function used by Get Receipt PDF
- /* Future getReceipt(BuildContext context, receiptList, String setFlag, String language) async {
+  /* Future getReceipt(BuildContext context, receiptList, String setFlag, String language) async {
     Utils().showProgress(context, 1);
     var requestData = {
       key_service_id: service_key_GetReceipt,
@@ -363,22 +364,16 @@ class StartUpViewModel extends BaseViewModel {
       Utils().showAlert(context, ContentType.fail, response[key_message]);
     }
   }*/
-  Future getReceipt(BuildContext context, receiptList,String setFlag,  String language) async {
+  Future getReceipt(BuildContext context, receiptList, String setFlag, String language) async {
     String urlParams =
         "taxtypeid=${base64Encode(utf8.encode(receiptList[key_taxtypeid].toString()))}&statecode=${base64Encode(utf8.encode(receiptList[key_state_code].toString()))}&dcode=${base64Encode(utf8.encode(receiptList[key_dcode].toString()))}&lbcode=${base64Encode(utf8.encode(receiptList[key_lbcode].toString()))}&bcode=${base64Encode(utf8.encode(receiptList[key_bcode].toString()))}&receipt_id=${base64Encode(utf8.encode(receiptList[key_receipt_id].toString()))}&receipt_no=${base64Encode(utf8.encode(receiptList[key_receipt_no].toString()))}&language_name=${base64Encode(utf8.encode(language))}";
 
-    String key = await preferencesService.userPassKey;
+    String key = preferencesService.userPassKey;
 
     String Signature = utils.generateHmacSha256(urlParams, key, true);
-    log('headerSignature: $Signature');
 
     String encodedParams = "${ApiServices().pdfURL}?$urlParams&sign=$Signature";
-    log('encodedParams: $encodedParams');
-
-    log('uri: $encodedParams');
 
     await launch(encodedParams.toString());
   }
-
-
 }

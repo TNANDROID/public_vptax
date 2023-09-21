@@ -275,13 +275,18 @@ class Utils {
                           if (btnmsg == 'payment') {
                             String selectedLang = await preferencesService.getUserInfo("lang");
                             await StartUpViewModel().getReceipt(mcontext, receiptList, 'payment', selectedLang);
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                  builder: (context) => const Home(),
+                                ),
+                                (route) => false);
                           } else if (btnmsg == 'receipt') {
                             openFilePath(file_path!);
                           } else if (btnmsg == 'canceled') {
                             if (await preferencesService.getUserInfo(s.key_isLogin) == "yes") {
-                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
+                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);
                             } else {
-                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Splash()), (route) => false);
+                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Splash()), (route) => false);
                             }
                           }
                         },
@@ -311,15 +316,20 @@ class Utils {
                                 if (btnmsg == 'payment') {
                                   String selectedLang = await preferencesService.getUserInfo("lang");
                                   Navigator.of(context).pop();
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                        builder: (context) => const Home(),
+                                      ),
+                                      (route) => false);
                                   await StartUpViewModel().getReceipt(mcontext, receiptList, 'payment', selectedLang);
                                 } else if (btnmsg == 'receipt') {
                                   Navigator.of(context).pop();
                                   openFilePath(file_path!);
                                 } else if (btnmsg == 'canceled') {
                                   if (await preferencesService.getUserInfo(s.key_isLogin) == "yes") {
-                                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
+                                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);
                                   } else {
-                                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Splash()), (route) => false);
+                                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Splash()), (route) => false);
                                   }
                                 } else {
                                   performAction(btnmsg ?? '', context);
@@ -384,7 +394,7 @@ class Utils {
     Navigator.of(context).pop();
     switch (type) {
       case 'appSetting':
-        // openAppSettings();
+      // openAppSettings();
 
       case 'openLocation':
         await channel.invokeMethod('openSettings', 'location_source');
@@ -731,13 +741,13 @@ class Utils {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                            margin: EdgeInsets.only(top: 20, bottom: 10),
+                            margin: const EdgeInsets.only(top: 20, bottom: 10),
                             child: Text(('payment_mode'.tr().toString() + (selectedLang == 'en' ? paymentType[0][key_paymenttype_en] : paymentType[0][key_paymenttype_ta])),
-                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold))),
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold))),
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Container(
-                              margin: EdgeInsets.only(top: 5, left: 20, bottom: 5),
+                              margin: const EdgeInsets.only(top: 5, left: 20, bottom: 5),
                               child: Text('select_payment_gateway'.tr().toString(), style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.black))),
                         ),
                         Container(
@@ -754,7 +764,7 @@ class Utils {
                                             horizontalOffset: 200.0,
                                             child: FlipAnimation(
                                               child: Padding(
-                                                  padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                                                   child: InkWell(
                                                     onTap: () {
                                                       mystate(() {
@@ -799,11 +809,11 @@ class Utils {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Container(
-                              margin: EdgeInsets.only(top: 10, left: 20, bottom: 5),
+                              margin: const EdgeInsets.only(top: 10, left: 20, bottom: 5),
                               child: Text(isLogin == "yes" ? "Payment Details" : 'enter_the_details'.tr().toString(), style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.black))),
                         ),
                         Container(
-                          margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                          margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                           child: FormBuilder(
                               key: _formKey,
                               child: Column(
@@ -820,7 +830,7 @@ class Utils {
                         Align(
                           alignment: Alignment.centerRight,
                           child: Container(
-                            margin: EdgeInsets.only(left: 5, right: 20, bottom: 20),
+                            margin: const EdgeInsets.only(left: 5, right: 20, bottom: 20),
                             /*margin: EdgeInsets.only(left: 5, right: 20),
                       padding: EdgeInsets.only(bottom: 30, right: 10),*/
                             child: CustomGradientButton(
@@ -841,7 +851,7 @@ class Utils {
                               height: 40,
                               child: Container(
                                 alignment: Alignment.center,
-                                child: Text(
+                                child: const Text(
                                   "CONTINUE",
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -888,8 +898,8 @@ class Utils {
         focusedBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
         focusedErrorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
         errorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
-        errorStyle: TextStyle(fontSize: 10),
-        contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12), // Optional: Adjust padding
+        errorStyle: const TextStyle(fontSize: 10),
+        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12), // Optional: Adjust padding
       ),
       validator: fieldType == key_mobile_number
           ? ((value) {
@@ -1002,7 +1012,6 @@ class Utils {
         Utils().showAlert(context, ContentType.warning, response_value.toString());
       }
 
-
       // throw ('000');
     } catch (error) {
       Utils().hideProgress(context);
@@ -1010,30 +1019,21 @@ class Utils {
     }
   }
 
-
   DateTime? selectedFromDate;
   DateTime? selectedToDate;
   List<DateTime> selectedfromDateRange = [];
   List<DateTime> selectedtoDateRange = [];
   int calendarSelectedIndex = 0;
   Future<Map<String, dynamic>> ShowCalenderDialog(BuildContext context) async {
-    Map<String, dynamic> jsonValue = {
-      "fromDate": "",
-      "toDate": "",
-      "flag": false
-    };
+    Map<String, dynamic> jsonValue = {"fromDate": "", "toDate": "", "flag": false};
 
     await showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return Container(
             margin: MediaQuery.of(context).size.height < 700
-                ? EdgeInsets.all(10)
-                : EdgeInsets.only(
-                left: 15,
-                right: 15,
-                top: MediaQuery.of(context).size.height / 6,
-                bottom: MediaQuery.of(context).size.height / 6),
+                ? const EdgeInsets.all(10)
+                : EdgeInsets.only(left: 15, right: 15, top: MediaQuery.of(context).size.height / 6, bottom: MediaQuery.of(context).size.height / 6),
             child: Material(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
@@ -1055,8 +1055,8 @@ class Utils {
                                   },
                                   child: Container(
                                     width: 150,
-                                    padding: EdgeInsets.symmetric(vertical: 16),
-                                    decoration: BoxDecoration(
+                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    decoration: const BoxDecoration(
                                       borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(10),
                                       ),
@@ -1065,25 +1065,16 @@ class Utils {
                                       child: Text(
                                         'from_date'.tr().toString(),
                                         style: TextStyle(
-                                          color: calendarSelectedIndex == 0
-                                              ? Colors.black
-                                              : Colors.grey,
+                                          color: calendarSelectedIndex == 0 ? Colors.black : Colors.grey,
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
                                 AnimatedContainer(
-                                  duration: Duration(milliseconds: 400),
+                                  duration: const Duration(milliseconds: 400),
                                   decoration: BoxDecoration(
-                                      border: Border(
-                                          bottom: BorderSide(
-                                              width: calendarSelectedIndex == 0
-                                                  ? 2.0
-                                                  : 1.0,
-                                              color: calendarSelectedIndex == 0
-                                                  ? c.primary_text_color2
-                                                  : Colors.white))),
+                                      border: Border(bottom: BorderSide(width: calendarSelectedIndex == 0 ? 2.0 : 1.0, color: calendarSelectedIndex == 0 ? c.primary_text_color2 : Colors.white))),
                                 ),
                               ],
                             ),
@@ -1098,14 +1089,13 @@ class Utils {
                                         calendarSelectedIndex = 1;
                                       });
                                     } else {
-                                      showAlert(context, ContentType.warning,
-                                          "select_from_date".tr().toString());
+                                      showAlert(context, ContentType.warning, "select_from_date".tr().toString());
                                     }
                                   },
                                   child: Container(
                                     width: 150,
-                                    padding: EdgeInsets.symmetric(vertical: 16),
-                                    decoration: BoxDecoration(
+                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    decoration: const BoxDecoration(
                                       borderRadius: BorderRadius.only(
                                         topRight: Radius.circular(10),
                                       ),
@@ -1114,25 +1104,16 @@ class Utils {
                                       child: Text(
                                         'to_date'.tr().toString(),
                                         style: TextStyle(
-                                          color: calendarSelectedIndex == 1
-                                              ? Colors.black
-                                              : Colors.grey,
+                                          color: calendarSelectedIndex == 1 ? Colors.black : Colors.grey,
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
                                 AnimatedContainer(
-                                  duration: Duration(milliseconds: 400),
+                                  duration: const Duration(milliseconds: 400),
                                   decoration: BoxDecoration(
-                                      border: Border(
-                                          bottom: BorderSide(
-                                              width: calendarSelectedIndex == 0
-                                                  ? 2.0
-                                                  : 1.0,
-                                              color: calendarSelectedIndex == 1
-                                                  ? c.primary_text_color2
-                                                  : Colors.white))),
+                                      border: Border(bottom: BorderSide(width: calendarSelectedIndex == 0 ? 2.0 : 1.0, color: calendarSelectedIndex == 1 ? c.primary_text_color2 : Colors.white))),
                                 ),
                               ],
                             ),
@@ -1140,21 +1121,14 @@ class Utils {
                         ],
                       ),
                       calendarSelectedIndex == 0
-                          ? calendarWidget(context, 0,
-                          selectedFromDate ?? DateTime.now(), setState)
+                          ? calendarWidget(context, 0, selectedFromDate ?? DateTime.now(), setState)
                           : AnimatedContainer(
-                        duration:
-                        const Duration(seconds: 1, milliseconds: 500),
-                        child: Center(
-                            child: calendarWidget(
-                                context,
-                                1,
-                                selectedFromDate ?? DateTime.now(),
-                                setState)),
-                      ),
+                              duration: const Duration(seconds: 1, milliseconds: 500),
+                              child: Center(child: calendarWidget(context, 1, selectedFromDate ?? DateTime.now(), setState)),
+                            ),
                       Expanded(
                         child: Container(
-                          margin: EdgeInsets.only(bottom: 5),
+                          margin: const EdgeInsets.only(bottom: 5),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.end,
@@ -1171,29 +1145,22 @@ class Utils {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.white,
                                 ),
-
                                 child: Padding(
-                                    padding: EdgeInsets.only(top: 2,bottom:2),
+                                    padding: const EdgeInsets.only(top: 2, bottom: 2),
                                     child: Text(
                                       "cancel".tr().toString(),
                                       style: TextStyle(
                                         color: c.colorPrimary,
                                         fontWeight: FontWeight.bold,
                                       ),
-                                    )
-                                ),
+                                    )),
                               ),
                               const SizedBox(width: 16),
                               ElevatedButton(
                                 onPressed: () {
-                                  if (selectedToDate != null &&
-                                      selectedFromDate != null) {
+                                  if (selectedToDate != null && selectedFromDate != null) {
                                     calendarSelectedIndex = 0;
-                                    jsonValue = {
-                                      "fromDate": selectedFromDate,
-                                      "toDate": selectedToDate,
-                                      "flag": true
-                                    };
+                                    jsonValue = {"fromDate": selectedFromDate, "toDate": selectedToDate, "flag": true};
                                     selectedfromDateRange.clear();
                                     selectedtoDateRange.clear();
                                     selectedFromDate = null;
@@ -1201,11 +1168,9 @@ class Utils {
                                     Navigator.of(context).pop();
                                   } else {
                                     if (selectedFromDate == null) {
-                                      showAlert(context, ContentType.warning,
-                                          'select_from_date'.tr().toString());
+                                      showAlert(context, ContentType.warning, 'select_from_date'.tr().toString());
                                     } else if (selectedToDate == null) {
-                                      showAlert(context, ContentType.warning,
-                                          'select_to_date'.tr().toString());
+                                      showAlert(context, ContentType.warning, 'select_to_date'.tr().toString());
                                     } else {
                                       print("Something Went Wrong....");
                                     }
@@ -1215,15 +1180,14 @@ class Utils {
                                   backgroundColor: Colors.white,
                                 ),
                                 child: Padding(
-                                    padding: EdgeInsets.only(top: 2,bottom: 2),
+                                    padding: const EdgeInsets.only(top: 2, bottom: 2),
                                     child: Text(
                                       "ok".tr().toString(),
                                       style: TextStyle(
                                         color: c.colorPrimary,
                                         fontWeight: FontWeight.bold,
                                       ),
-                                    )
-                                ),
+                                    )),
                               ),
                               const SizedBox(
                                 width: 16,
@@ -1241,9 +1205,9 @@ class Utils {
     );
     return jsonValue;
   }
+
   @override
-  Widget calendarWidget(
-      BuildContext context, int index, DateTime initialDate, setState) {
+  Widget calendarWidget(BuildContext context, int index, DateTime initialDate, setState) {
     //Date Time
     return CalendarDatePicker2(
       config: CalendarDatePicker2Config(
@@ -1252,10 +1216,7 @@ class Utils {
         currentDate: initialDate,
         selectedDayHighlightColor: c.colorAccentlight,
         weekdayLabels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-        weekdayLabelTextStyle: const TextStyle(
-            color: Color(0xFF07b3a5),
-            fontWeight: FontWeight.bold,
-            fontSize: 10),
+        weekdayLabelTextStyle: const TextStyle(color: Color(0xFF07b3a5), fontWeight: FontWeight.bold, fontSize: 10),
         firstDayOfWeek: 1,
         controlsHeight: 50,
         controlsTextStyle: const TextStyle(
@@ -1288,9 +1249,7 @@ class Utils {
           selectedtoDateRange.add(value[0]!);
         }
       },
-      displayedMonthDate:
-      index == 0 ? initialDate : selectedToDate ?? DateTime.now(),
+      displayedMonthDate: index == 0 ? initialDate : selectedToDate ?? DateTime.now(),
     );
   }
-
 }
