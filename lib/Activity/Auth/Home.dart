@@ -69,7 +69,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 400),
+      duration: Duration(milliseconds: 200),
     );
     // Create a curved animation with Curves.bounceOut
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOutCirc);
@@ -357,7 +357,21 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         padding: EdgeInsets.only(left: 0, right: 0),
                         child: Transform.scale(
                             scale: _animation.value,
-                            child: InkWell(
+                            child: GestureDetector(
+                              onHorizontalDragEnd: (details) {
+                                if (details.primaryVelocity == null) return;
+                                if (details.primaryVelocity! > 0) {
+                                  if (currentSelectedTax != 0) {
+                                    currentSelectedTax--;
+                                  }
+                                } else if (details.primaryVelocity! < 0) {
+                                  if (currentSelectedTax != 4) {
+                                    currentSelectedTax++;
+                                  }
+                                }
+                                repeatOnce();
+                                setState(() {});
+                              },
                               onTap: () {
                                 Navigator.push(
                                     context,
@@ -386,7 +400,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                             alignment: Alignment.center,
                                             child: Text(
                                               selectedLang == 'en' ? taxTypeList[currentSelectedTax][key_taxtypedesc_en] : taxTypeList[currentSelectedTax][key_taxtypedesc_ta],
-                                              style: TextStyle(fontSize: selectedLang =="ta"?13:14, color: c.text_color, fontWeight: FontWeight.bold),
+                                              style: TextStyle(fontSize: selectedLang == "ta" ? 13 : 14, color: c.text_color, fontWeight: FontWeight.bold),
                                               textAlign: TextAlign.center,
                                             ),
                                           ),
@@ -397,7 +411,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                         alignment: Alignment.centerLeft,
                                         child: Text(
                                           'pending_payment'.tr().toString(),
-                                          style: TextStyle(fontSize: selectedLang =="ta"?12:13, color: c.grey_10, fontWeight: FontWeight.bold),
+                                          style: TextStyle(fontSize: selectedLang == "ta" ? 12 : 13, color: c.grey_10, fontWeight: FontWeight.bold),
                                           textAlign: TextAlign.center,
                                         ),
                                       ),
@@ -414,7 +428,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                         ),
                                       ),
                                       UIHelper.verticalSpaceMedium,
-                                      Container(alignment: Alignment.bottomRight, child: UIHelper.titleTextStyle("payTo".tr().toString(), c.green_new, selectedLang =="ta"?13:15, true, true)),
+                                      Container(alignment: Alignment.bottomRight, child: UIHelper.titleTextStyle("payTo".tr().toString(), c.green_new, selectedLang == "ta" ? 13 : 15, true, true)),
                                     ],
                                   )),
                             )),
@@ -432,7 +446,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                               child: Container(
                                 alignment: Alignment.centerLeft,
                                 color: c.full_transparent,
-                                margin: EdgeInsets.only(left: 10, right: 10, top: 100),
+                                margin: EdgeInsets.only(left: 10, right: 10, top: 100, bottom: 100),
                                 child: Image.asset(imagePath.left_arrow, height: 25, color: c.grey_9),
                               ),
                             ),
@@ -450,7 +464,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                               child: Container(
                                 alignment: Alignment.centerLeft,
                                 color: c.full_transparent,
-                                margin: EdgeInsets.only(left: 10, right: 10, top: 100),
+                                margin: EdgeInsets.only(left: 10, right: 10, top: 100, bottom: 100),
                                 child: Image.asset(imagePath.right_arrow, height: 25, color: c.grey_9),
                               ),
                             ),
