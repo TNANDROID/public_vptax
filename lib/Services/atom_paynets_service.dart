@@ -17,7 +17,6 @@ import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'Apiservices.dart';
 import 'Preferenceservices.dart';
 import 'locator.dart';
-import '../Layout/Pdf_Viewer.dart';
 
 class AtomPaynetsView extends StatefulWidget {
   final mode;

@@ -48,6 +48,13 @@ class _ViewReceiptState extends State<ViewReceipt> {
   TextEditingController assessmentController = TextEditingController();
   TextEditingController receiptController = TextEditingController();
 
+  TextEditingController dateController = TextEditingController();
+  //Date Time
+  DateTime? selectedFromDate;
+  DateTime? selectedToDate;
+  String from_Date = "";
+  String to_Date = "";
+  String mobile_number = "";
   @override
   void initState() {
     super.initState();
@@ -56,6 +63,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
 
   initialize() async {
     selectedLang = await preferencesService.getUserInfo("lang");
+    mobile_number = await preferencesService.getUserInfo(key_mobile_number);
   }
 
   //Dropdown Input Field Widget
@@ -275,9 +283,9 @@ class _ViewReceiptState extends State<ViewReceipt> {
                 if (selectedvillage.isNotEmpty)
                   Container(
                       decoration: UIHelper.roundedBorderWithColorWithShadow(15, c.need_improvement2, c.need_improvement2, borderColor: Colors.transparent, borderWidth: 5),
-                      padding: EdgeInsets.only(top: 15, bottom: 10, left: 10, right: 10),
+                      // padding: EdgeInsets.only(top: 15, bottom: 10, left: 10, right: 10),
                       child: Column(children: [
-                        headingWithDropdownWidget('assesmentNumber', addInputFormControl("assessment_no")),
+                       /* headingWithDropdownWidget('assesmentNumber', addInputFormControl("assessment_no")),
                         UIHelper.verticalSpaceSmall,
                         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                           Text(
@@ -290,7 +298,9 @@ class _ViewReceiptState extends State<ViewReceipt> {
                         UIHelper.verticalSpaceSmall,
                         invalidReceiptNumber
                             ? UIHelper.titleTextStyle('receiptno'.tr().toString() + "/" + 'assesmentNumber'.tr().toString() + " " + 'isEmpty'.tr().toString(), c.red, 10, false, false)
-                            : SizedBox()
+                            : SizedBox()*/
+
+                        _DatePicker(),
                       ])),
               ]))),
       Container(
@@ -300,12 +310,15 @@ class _ViewReceiptState extends State<ViewReceipt> {
           style: TextButton.styleFrom(fixedSize: const Size(130, 20), shape: StadiumBorder(), backgroundColor: c.colorPrimary),
           onPressed: () async {
             validateForm();
-            if (_formKey.currentState!.saveAndValidate() && !invalidReceiptNumber) {
+            if (_formKey.currentState!.saveAndValidate() && dateValidation()/*!invalidReceiptNumber*/) {
               Map<String, dynamic> postParams = Map.from(_formKey.currentState!.value);
               postParams['service_id'] = "ReceiptBillDetails";
               postParams['language_name'] = selectedLang;
-              postParams['assessment_no'] = assessmentController.text;
-              postParams['receipt_no'] = receiptController.text;
+              postParams['from_date'] = from_Date;
+              postParams['to_date'] = to_Date;
+              postParams[key_mobile_number] = mobile_number;
+              /*  postParams['assessment_no'] = assessmentController.text;
+              postParams['receipt_no'] = receiptController.text;*/
               print("Ra--->>>>>$postParams");
               postParams.removeWhere((key, value) {
                 return value == null || (value is String && value.isEmpty);
@@ -372,44 +385,53 @@ class _ViewReceiptState extends State<ViewReceipt> {
         ? Container(
             transform: Matrix4.translationValues(-5.0, -100.0, 10.0),
             padding: EdgeInsets.only(left: 22, right: 22),
-            child: AnimationLimiter(
-              child: ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: receiptList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Column(children: [
-                    AnimationConfiguration.staggeredList(
-                      position: index,
-                      duration: const Duration(milliseconds: 800),
-                      child: SlideAnimation(
-                        horizontalOffset: 200.0,
-                        child: FlipAnimation(
-                            child: Stack(children: [
-                          Container(
-                            height: 220,
-                            decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.colorAccentlight, c.white, stop1: 0.25, stop2: 0.1),
-                            child: Center(
-                                child: Container(
-                                    margin: EdgeInsets.all(10.0),
-                                    child: Column(
-                                      children: [
-                                        UIHelper.titleTextStyle('receiptno'.tr().toString(), c.primary_text_color, 12, false, true),
-                                        UIHelper.titleTextStyle(receiptList[index]['receipt_no'].toString(), c.text_color, 12, true, true),
-                                        UIHelper.verticalSpaceMedium,
-                                        getReceiptDownloadWidget(context, 'download_tamil'.tr().toString() + "\n" + 'tamil_1'.tr().toString(), receiptList[index], "ta", model),
-                                        UIHelper.verticalSpaceMedium,
-                                        getReceiptDownloadWidget(context, 'download_english'.tr().toString() + "\n" + 'english_1'.tr().toString(), receiptList[index], "en", model),
-                                      ],
-                                    ))),
+            child: Column(
+              children: [
+                Row(children: [
+                  UIHelper.titleTextStyle('payed_by'.tr().toString(), c.grey_9, 13, false, true),
+                  UIHelper.titleTextStyle((" ($mobile_number) "), c.primary_text_color2, 14, false, true),
+                ],),
+                UIHelper.verticalSpaceMedium,
+                AnimationLimiter(
+                  child: ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: receiptList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Column(children: [
+                        AnimationConfiguration.staggeredList(
+                          position: index,
+                          duration: const Duration(milliseconds: 800),
+                          child: SlideAnimation(
+                            horizontalOffset: 200.0,
+                            child: FlipAnimation(
+                                child: Stack(children: [
+                              Container(
+                                height: 220,
+                                decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.colorAccentlight, c.white, stop1: 0.25, stop2: 0.1),
+                                child: Center(
+                                    child: Container(
+                                        margin: EdgeInsets.all(10.0),
+                                        child: Column(
+                                          children: [
+                                            UIHelper.titleTextStyle('receiptno'.tr().toString(), c.primary_text_color, 12, false, true),
+                                            UIHelper.titleTextStyle(receiptList[index]['receipt_no'].toString(), c.text_color, 12, true, true),
+                                            UIHelper.verticalSpaceMedium,
+                                            getReceiptDownloadWidget(context, 'download_tamil'.tr().toString() + "\n" + 'tamil_1'.tr().toString(), receiptList[index], "ta", model),
+                                            UIHelper.verticalSpaceMedium,
+                                            getReceiptDownloadWidget(context, 'download_english'.tr().toString() + "\n" + 'english_1'.tr().toString(), receiptList[index], "en", model),
+                                          ],
+                                        ))),
+                              ),
+                            ])),
                           ),
-                        ])),
-                      ),
-                    ),
-                    UIHelper.verticalSpaceSmall
-                  ]);
-                },
-              ),
+                        ),
+                        UIHelper.verticalSpaceSmall
+                      ]);
+                    },
+                  ),
+                ),
+              ],
             ),
           )
         : noDataFound
@@ -433,7 +455,9 @@ class _ViewReceiptState extends State<ViewReceipt> {
                     scrollDirection: Axis.vertical,
                     child: Container(
                         child: Column(
-                      children: [formField(context, model), listview(context, model)],
+                      children: [
+                        formField(context, model),
+                        listview(context, model)],
                     )));
               },
               viewModelBuilder: () => StartUpViewModel()),
@@ -451,6 +475,69 @@ class _ViewReceiptState extends State<ViewReceipt> {
     }
     setState(() {});
   }
+  _DatePicker() {
+    return Container(
+      child: TextField(
+        style: TextStyle(fontSize: 12),
+          controller: dateController,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            suffixIconConstraints:
+            BoxConstraints(minHeight: 20, minWidth: 20),
+            contentPadding:
+            EdgeInsets.only(left: 15, right: 5, top: 5, bottom: 5),
+            suffixIcon: Padding(
+              padding: EdgeInsets.all(5),
+              child: Image.asset(
+                imagePath.datepicker_icon,
+                height: 30,
+                width: 30,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(width: 0.1, color: c.grey_2),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10))),
+          ),
+          readOnly: true,
+          onTap: () async {
+            utils.ShowCalenderDialog(context).then((value) => {
+              if (value['flag'])
+                {
+                  selectedFromDate = value['fromDate'],
+                  selectedToDate = value['toDate'],
+                  dateValidation()
+                }
+            });
+          }),
+    );
+  }
+  bool dateValidation()  {
+    bool flag=false;
+    receiptList.clear();
+    String startDate = DateFormat('dd-MM-yyyy').format(selectedFromDate!);
+    print("Start_date" + startDate);
+    String endDate = DateFormat('dd-MM-yyyy').format(selectedToDate!);
+    print("End_date" + endDate);
+    from_Date = startDate;
+    to_Date = endDate;
+    print("Startdate>>>>>" + from_Date);
+    print("Todate>>>>>" + to_Date);
+
+    if (startDate.compareTo(endDate) > 0) {
+      flag=false;
+      dateController.text = "select_from_to_date".tr().toString();
+    } else {
+      flag=true;
+      // getWorkDetails(from_Date, to_Date);
+      dateController.text = "$startDate  To  $endDate";
+    }
+    return flag;
+  }
+
 }
 
 class CustomInputFormatter extends TextInputFormatter {

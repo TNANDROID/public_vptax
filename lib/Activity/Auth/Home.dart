@@ -353,7 +353,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   Stack(
                     children: [
                       Container(
-                        height: MediaQuery.of(context).size.width / 1.7,
+                        height: MediaQuery.of(context).size.width / 1.6,
                         padding: EdgeInsets.only(left: 0, right: 0),
                         child: Transform.scale(
                             scale: _animation.value,
@@ -386,7 +386,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                             alignment: Alignment.center,
                                             child: Text(
                                               selectedLang == 'en' ? taxTypeList[currentSelectedTax][key_taxtypedesc_en] : taxTypeList[currentSelectedTax][key_taxtypedesc_ta],
-                                              style: TextStyle(fontSize: 14, color: c.text_color, fontWeight: FontWeight.bold),
+                                              style: TextStyle(fontSize: selectedLang =="ta"?13:14, color: c.text_color, fontWeight: FontWeight.bold),
                                               textAlign: TextAlign.center,
                                             ),
                                           ),
@@ -397,7 +397,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                         alignment: Alignment.centerLeft,
                                         child: Text(
                                           'pending_payment'.tr().toString(),
-                                          style: TextStyle(fontSize: 13, color: c.grey_10, fontWeight: FontWeight.bold),
+                                          style: TextStyle(fontSize: selectedLang =="ta"?12:13, color: c.grey_10, fontWeight: FontWeight.bold),
                                           textAlign: TextAlign.center,
                                         ),
                                       ),
@@ -414,7 +414,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                         ),
                                       ),
                                       UIHelper.verticalSpaceMedium,
-                                      Container(alignment: Alignment.bottomRight, child: UIHelper.titleTextStyle("pay".tr().toString(), c.green_new, 14, true, true)),
+                                      Container(alignment: Alignment.bottomRight, child: UIHelper.titleTextStyle("payTo".tr().toString(), c.green_new, selectedLang =="ta"?13:15, true, true)),
                                     ],
                                   )),
                             )),
@@ -471,14 +471,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     child: GridView.count(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      crossAxisCount: 2,
+                      crossAxisCount: 3,
                       children: List.generate(
                         servicesList.length,
                         (int index) {
                           return AnimationConfiguration.staggeredGrid(
                             position: index,
                             duration: const Duration(milliseconds: 375),
-                            columnCount: 2,
+                            columnCount: 3,
                             child: ScaleAnimation(
                               child: FadeInAnimation(
                                 child: InkWell(
@@ -510,7 +510,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                     height: (Screen.height(context) / 4) - 10,
                                     width: (Screen.height(context) / 2) - 10,
                                     alignment: Alignment.center,
-                                    margin: EdgeInsets.all(10),
+                                    margin: EdgeInsets.all(5),
                                     decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.need_improvement1, c.need_improvement1, borderWidth: 0),
                                     child: Column(
                                       children: [
@@ -518,7 +518,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                           child: Image.asset(
                                             servicesList[index][key_img_path],
                                           ),
-                                          height: MediaQuery.of(context).size.width * 0.15,
+                                          height: MediaQuery.of(context).size.width * 0.13,
                                           margin: EdgeInsets.only(
                                             left: MediaQuery.of(context).size.width / 20,
                                             right: MediaQuery.of(context).size.width / 20,
@@ -528,10 +528,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                         ),
                                         Container(
                                           alignment: Alignment.center,
-                                          margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                                          margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
                                           child: Text(
                                             servicesList[index][key_service_name].toString().tr().toString(),
-                                            style: TextStyle(fontSize: 12, height: 1.2, color: c.grey_10),
+                                            style: TextStyle(fontSize: 11, height: 1.2, color: c.grey_10),
                                             textAlign: TextAlign.center,
                                           ),
                                         ),

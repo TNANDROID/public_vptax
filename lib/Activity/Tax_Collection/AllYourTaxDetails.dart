@@ -160,7 +160,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                     )),
                               ),
                             )
-                            ,                                Visibility(
+                            ,    Visibility(
                               visible: !widget.isHome,
                               child: Expanded(
                                 child: Container(
@@ -349,6 +349,29 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                   ],
                 ),
                 UIHelper.verticalSpaceSmall,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.location_on,
+                      color: c.grey_8,
+                      size: 18,
+                    ),
+                    UIHelper.horizontalSpaceTiny,
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          UIHelper.titleTextStyle(getDoorAndStreetName(getData).trim(), c.grey_9, 12, false, false),
+                          UIHelper.titleTextStyle(getvillageAndBlockName(getData).trim(), c.grey_9, 12, false, false),
+                          UIHelper.titleTextStyle(getData[s.key_district_name].trim() ?? '', c.grey_9, 12, false, false)
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
                 Container(alignment: Alignment.centerLeft, child: taxWiseReturnDataWidget(getData, c.grey_10)),
                 Row(
                   children: [
@@ -448,7 +471,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                     )),
               ),
             ),*/
-            Positioned(
+           /* Positioned(
               right: 0,
               child: InkWell(
                 onTap: () async {
@@ -457,7 +480,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                 child: Padding(padding: EdgeInsets.only(right: 5), child: Icon(Icons.location_on_sharp, color: c.grey_9, size: 25)),
               ),
             )
-
+*/
 
             //************************** Proceed To Pay Button ***************************/
 
@@ -638,7 +661,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
     String street = "";
     switch (getData[key_taxtypeid].toString()) {
       case '1':
-        street = selectedLang == 'en' ? (getData[s.key_street_name_en] ?? '') : (getData[s.key_street_name_ta] ?? '');
+        street = (getData['doorno'] ?? '') + ", " +(selectedLang == 'en' ? (getData[s.key_street_name_en] ?? '') : (getData[s.key_street_name_ta] ?? ''));
         break;
       case '2':
         street = (getData["street_name"] ?? '');
@@ -1201,7 +1224,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
             child: Center(
               child: Container(
                 width: size.width,
-                height: size.width,
+                height: size.width/1.3,
                 margin: EdgeInsets.symmetric(horizontal: size.width * 0.045),
                 decoration: UIHelper.roundedBorderWithColorWithShadow(20, c.white, c.white),
                 child: Stack(
@@ -1234,6 +1257,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                         children: [
                           Image.asset(
                             imagePath.location,
+                            color: c.colorPrimary,
                             height: size.height * 0.08,
                             // colorFilter: getColorFilter(hslDark.toColor(), ui.BlendMode.srcIn),
                           ),
@@ -1250,22 +1274,22 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
 
                     // ***********************  Text Content *********************** //
 
-                     Positioned(
-                      top: 25,
-                      child: Container(
-                        child:Text(
-                      "asset_details".tr().toString(),
-                       style: TextStyle(fontSize: 15, height: 1.5, color: c.colorPrimaryDark),
-                       textAlign: TextAlign.center,
-                     ),
-                      ),
-                    ),
-
                     Container(
                       margin: EdgeInsets.only(bottom: size.width * 0.05, left: size.width * 0.05, right: size.width * 0.05, top: size.width * 0.07),
                       child: Container(
                         child: Column(
                           children: [
+                            Container(
+                              child:Text(
+                                "location".tr().toString(),
+                                style: TextStyle(fontSize: 15, height: 1.5, color: c.colorPrimaryDark,decoration: TextDecoration.none,),
+                                textAlign: TextAlign.center,
+
+                              ),
+
+                            ),
+                            UIHelper.verticalSpaceMedium,
+
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1281,9 +1305,9 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      UIHelper.titleTextStyle(getDoorAndStreetName(getData), c.grey_9, 14, false, false),
-                                      UIHelper.titleTextStyle(getvillageAndBlockName(getData), c.grey_9, 14, false, false),
-                                      UIHelper.titleTextStyle(getData[s.key_district_name] ?? '', c.grey_9, 14, false, false)
+                                      UIHelper.titleTextStyle(getDoorAndStreetName(getData).trim(), c.grey_9, 14, false, false),
+                                      UIHelper.titleTextStyle(getvillageAndBlockName(getData).trim(), c.grey_9, 14, false, false),
+                                      UIHelper.titleTextStyle(getData[s.key_district_name].trim() ?? '', c.grey_9, 14, false, false)
                                     ],
                                   ),
                                 ),
@@ -1365,6 +1389,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                       right: 0,
                       child: GestureDetector(
                         onTap: () async {
+                          Navigator.of(context).pop();
                         },
                         child: Container(
                           margin: const EdgeInsets.all(10.0),
@@ -1386,7 +1411,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                             child: ElevatedButton(
                               onPressed: () async {
-
+                                Navigator.of(context).pop();
                               },
                               style: ButtonStyle(
                                 elevation: MaterialStateProperty.all(5.0),

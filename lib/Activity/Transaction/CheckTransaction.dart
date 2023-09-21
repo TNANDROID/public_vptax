@@ -11,13 +11,13 @@ import 'package:public_vptax/Model/startup_model.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:public_vptax/Utils/utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../Layout/customclip.dart';
 import '../../Layout/ui_helper.dart';
 import '../../Resources/StringsKey.dart';
 import '../../Services/Apiservices.dart';
 import '../../Services/Preferenceservices.dart';
 import '../../Services/locator.dart';
-import '../../Layout/Pdf_Viewer.dart';
 
 class CheckTransaction extends StatefulWidget {
   const CheckTransaction();
@@ -506,6 +506,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
     setState(() {});
   }
 
+/*
   Future<void> checkReceiptStatus(String flag, String transID, String lang, String taxType, BuildContext context) async {
     Utils().showProgress(context, 1);
     var requestData = {
@@ -530,9 +531,29 @@ class _CheckTransactionState extends State<CheckTransaction> {
         );
       } else {
         Utils().showAlert(context, ContentType.help, '${response[key_message]}');
-        await model.getTransactionStatus(context /* , widget.mobileNumber, widget.emailID */);
+        await model.getTransactionStatus(context */
+/* , widget.mobileNumber, widget.emailID *//*
+);
         initialize();
       }
     }
+  }
+*/
+  Future<void> checkReceiptStatus(String flag, String transID, String lang, String taxType, BuildContext context) async {
+
+   /* String urlParams =
+        "taxtypeid=${base64Encode(utf8.encode(receiptList[key_taxtypeid].toString()))}&statecode=${base64Encode(utf8.encode(receiptList[key_state_code].toString()))}&dcode=${base64Encode(utf8.encode(receiptList[key_dcode].toString()))}&lbcode=${base64Encode(utf8.encode(receiptList[key_lbcode].toString()))}&bcode=${base64Encode(utf8.encode(receiptList[key_bcode].toString()))}&receipt_id=${base64Encode(utf8.encode(receiptList[key_receipt_id].toString()))}&receipt_no=${base64Encode(utf8.encode(receiptList[key_receipt_no].toString()))}&language_name=${base64Encode(utf8.encode(language))}";
+
+    String key = await preferencesService.userPassKey;
+
+    String Signature = utils.generateHmacSha256(urlParams, key, true);
+    log('headerSignature: $Signature');
+
+    String encodedParams = "${ApiServices().pdfURL}?$urlParams&sign=$Signature";
+    log('encodedParams: $encodedParams');
+
+    log('uri: $encodedParams');
+
+    await launch(encodedParams.toString());  */
   }
 }
