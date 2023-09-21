@@ -16,6 +16,7 @@ import '../../Resources/StringsKey.dart';
 import '../../Services/Apiservices.dart';
 import '../../Services/Preferenceservices.dart';
 import '../../Services/locator.dart';
+import '../../Utils/ContentInfo.dart';
 
 class CheckTransaction extends StatefulWidget {
   const CheckTransaction({super.key});
@@ -84,19 +85,23 @@ class _CheckTransactionState extends State<CheckTransaction> {
           children: [
             SingleChildScrollView(
                 child: Container(
-              margin: EdgeInsets.only(top: Screen.width(context) * 0.35),
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: searchEnable ? filteredWorklist.length : defaultWorklist.length,
-                  itemBuilder: (context, mainIndex) {
-                    var item = searchEnable ? filteredWorklist.elementAt(mainIndex) : defaultWorklist[mainIndex];
-                    return Container(
-                      margin: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                      child: buildTransactionStatusCard(item),
-                    );
-                  }),
-            )),
+                  margin: EdgeInsets.only(top: Screen.width(context) * 0.35),
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: searchEnable
+                          ? filteredWorklist.length
+                          : defaultWorklist.length,
+                      itemBuilder: (context, mainIndex) {
+                        var item = searchEnable ? filteredWorklist.elementAt(
+                            mainIndex) : defaultWorklist[mainIndex];
+                        return Container(
+                          margin: EdgeInsets.symmetric(
+                              vertical: 0, horizontal: 10),
+                          child: buildTransactionStatusCard(item),
+                        );
+                      }),
+                )),
             Positioned(
               top: Screen.width(context) * 0.15,
               child: SizedBox(
@@ -114,27 +119,29 @@ class _CheckTransactionState extends State<CheckTransaction> {
                     children: [
                       Expanded(
                           child: FormBuilderTextField(
-                        onChanged: (value) {
-                          if (value == '') {
-                            searchEnable = false;
-                          }
-                          setState(() {});
-                        },
-                        name: 'search',
-                        controller: searchController,
-                        keyboardType: TextInputType.number,
-                        textAlign: TextAlign.left,
-                        decoration: InputDecoration(
-                          hintText: 'transaction_id'.tr(),
-                          hintStyle: TextStyle(fontSize: 11),
-                          filled: true,
-                          contentPadding: EdgeInsets.all(10),
-                          focusedBorder: UIHelper.getInputBorder(0, borderColor: c.white, radius: 20),
-                          enabledBorder: UIHelper.getInputBorder(0, borderColor: c.white, radius: 20),
-                          fillColor: c.white,
-                        ),
-                        style: TextStyle(fontSize: 13),
-                      )),
+                            onChanged: (value) {
+                              if (value == '') {
+                                searchEnable = false;
+                              }
+                              setState(() {});
+                            },
+                            name: 'search',
+                            controller: searchController,
+                            keyboardType: TextInputType.number,
+                            textAlign: TextAlign.left,
+                            decoration: InputDecoration(
+                              hintText: 'transaction_id'.tr(),
+                              hintStyle: TextStyle(fontSize: 11),
+                              filled: true,
+                              contentPadding: EdgeInsets.all(10),
+                              focusedBorder: UIHelper.getInputBorder(
+                                  0, borderColor: c.white, radius: 20),
+                              enabledBorder: UIHelper.getInputBorder(
+                                  0, borderColor: c.white, radius: 20),
+                              fillColor: c.white,
+                            ),
+                            style: TextStyle(fontSize: 13),
+                          )),
                       IconButton(
                         icon: Icon(
                           Icons.search,
@@ -234,25 +241,25 @@ class _CheckTransactionState extends State<CheckTransaction> {
                 Container(
                   decoration: type == 'Failed'
                       ? BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: c.red_new,
-                            width: 1,
-                          ),
-                        )
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: c.red_new,
+                      width: 1,
+                    ),
+                  )
                       : null,
                   child: Icon(
                     type == 'Success'
                         ? Icons.check_circle_outline_rounded
                         : type == 'Failed'
-                            ? Icons.clear
-                            : Icons.error_outline_rounded,
+                        ? Icons.clear
+                        : Icons.error_outline_rounded,
                     size: type == 'Failed' ? 10 : 15,
                     color: type == 'Success'
                         ? c.green_new
                         : type == 'Failed'
-                            ? c.red_new
-                            : c.warningYellow,
+                        ? c.red_new
+                        : c.warningYellow,
                   ),
                 ),
                 SizedBox(width: 3),
@@ -261,7 +268,8 @@ class _CheckTransactionState extends State<CheckTransaction> {
                     headerText,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
-                    style: TextStyle(color: c.text_color, fontSize: selectLang == 'ta' ? 10 : 13),
+                    style: TextStyle(color: c.text_color,
+                        fontSize: selectLang == 'ta' ? 10 : 13),
                   ),
                 ),
               ],
@@ -332,7 +340,8 @@ class _CheckTransactionState extends State<CheckTransaction> {
                             ),
                             Text(
                               transID,
-                              style: TextStyle(fontSize: 12, color: c.text_color),
+                              style: TextStyle(
+                                  fontSize: 12, color: c.text_color),
                             ),
                           ],
                         ),
@@ -344,7 +353,8 @@ class _CheckTransactionState extends State<CheckTransaction> {
                             ),
                             Text(
                               transDate,
-                              style: TextStyle(fontSize: 12, color: c.text_color),
+                              style: TextStyle(
+                                  fontSize: 12, color: c.text_color),
                             ),
                           ],
                         ),
@@ -356,7 +366,8 @@ class _CheckTransactionState extends State<CheckTransaction> {
                             ),
                             Text(
                               "\u{20B9} ${transAmount}",
-                              style: TextStyle(fontSize: 12, color: c.text_color),
+                              style: TextStyle(
+                                  fontSize: 12, color: c.text_color),
                             ),
                           ],
                         ),
@@ -372,40 +383,49 @@ class _CheckTransactionState extends State<CheckTransaction> {
                     children: [
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: status == 'FAILED' ? MainAxisAlignment.end : MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: status == 'FAILED'
+                            ? MainAxisAlignment.end
+                            : MainAxisAlignment.spaceBetween,
                         children: [
                           status == 'FAILED'
                               ? SizedBox(
-                                  width: 150,
-                                  height: 30,
-                                )
+                            width: 150,
+                            height: 30,
+                          )
                               : ElevatedButton(
-                                  onPressed: () {
-                                    checkReceiptStatus(status, transID, selectLang, taxTypeID, context);
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    fixedSize: Size(160, 30),
-                                    backgroundColor: cardColorPrimary,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      status == 'SUCCESS'
-                                          ? Icon(
-                                              Icons.download_rounded,
-                                              color: c.white,
-                                              size: selectLang == 'ta' ? 16 : 18,
-                                            )
-                                          : SizedBox(),
-                                      Text(
-                                        status == 'SUCCESS' ? 'download_receipt'.tr() : 'check_status'.tr(),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(fontSize: selectLang == 'ta' ? 10 : 12, color: c.white, fontWeight: FontWeight.w600),
-                                      ),
-                                    ],
-                                  ),
+                            onPressed: () {
+                              checkReceiptStatus(
+                                  status, transID, selectLang, taxTypeID,
+                                  context);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              fixedSize: Size(160, 30),
+                              backgroundColor: cardColorPrimary,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                status == 'SUCCESS'
+                                    ? Icon(
+                                  Icons.download_rounded,
+                                  color: c.white,
+                                  size: selectLang == 'ta' ? 16 : 18,
+                                )
+                                    : SizedBox(),
+                                Text(
+                                  status == 'SUCCESS'
+                                      ? 'download_receipt'.tr()
+                                      : 'check_status'.tr(),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: selectLang == 'ta' ? 10 : 12,
+                                      color: c.white,
+                                      fontWeight: FontWeight.w600),
                                 ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                       Row(
@@ -413,29 +433,32 @@ class _CheckTransactionState extends State<CheckTransaction> {
                           Container(
                             decoration: status == 'FAILED'
                                 ? BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: cardColorPrimary,
-                                      width: 1.5,
-                                    ),
-                                  )
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: cardColorPrimary,
+                                width: 1.5,
+                              ),
+                            )
                                 : null,
                             child: Icon(
                               status == 'SUCCESS'
                                   ? Icons.check_circle_outline_rounded
                                   : status == 'FAILED'
-                                      ? Icons.clear
-                                      : Icons.error_outline_rounded,
+                                  ? Icons.clear
+                                  : Icons.error_outline_rounded,
                               color: cardColorPrimary,
                               size: status == 'FAILED' ? 11 : 15,
                             ),
                           ),
-                          SizedBox(width: 5), // Add some spacing between the icon and text
+                          SizedBox(width: 5),
+                          // Add some spacing between the icon and text
                           Text(
                             headerText,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: TextStyle(fontSize: 10, color: c.text_color, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 10,
+                                color: c.text_color,
+                                fontWeight: FontWeight.bold),
                           ),
                         ],
                       )
@@ -456,8 +479,10 @@ class _CheckTransactionState extends State<CheckTransaction> {
                   transform: Matrix4.translationValues(0.0, 1.0, 0.0),
                   width: 25,
                   height: 50,
-                  decoration: UIHelper.GradientContainer(10, 0, 0, 0, [cardColorPrimary, cardColorPrimary]),
-                  child: Center(child: UIHelper.titleTextStyle('', c.white, 18, true, true)),
+                  decoration: UIHelper.GradientContainer(
+                      10, 0, 0, 0, [cardColorPrimary, cardColorPrimary]),
+                  child: Center(child: UIHelper.titleTextStyle(
+                      '', c.white, 18, true, true)),
                 ),
                 ClipPath(
                   clipper: BottomTriangleClipper(),
@@ -539,15 +564,38 @@ class _CheckTransactionState extends State<CheckTransaction> {
     }
   }
 */
-  Future<void> checkReceiptStatus(String flag, String transID, String lang, String taxType, BuildContext context) async {
-    String urlParams = "taxtypeid=${base64Encode(utf8.encode(taxType))}&transaction_id=${base64Encode(utf8.encode(transID))}&language_name=${base64Encode(utf8.encode(lang))}";
+  Future<void> checkReceiptStatus(String flag, String transID, String lang,
+      String taxType, BuildContext context) async {
+    if (flag == "SUCCESS") {
+      String urlParams = "taxtypeid=${base64Encode(
+          utf8.encode(taxType))}&transaction_id=${base64Encode(
+          utf8.encode(transID))}&language_name=${base64Encode(
+          utf8.encode(lang))}";
 
-    String key = preferencesService.userPassKey;
+      String key = preferencesService.userPassKey;
 
-    String Signature = utils.generateHmacSha256(urlParams, key, true);
+      String Signature = utils.generateHmacSha256(urlParams, key, true);
 
-    String encodedParams = "${ApiServices().pdfURL}?$urlParams&sign=$Signature";
+      String encodedParams = "${ApiServices()
+          .pdfURL}?$urlParams&sign=$Signature";
 
-    await launch(encodedParams.toString());
+      await launch(encodedParams.toString());
+    } else {
+      Utils().showProgress(context, 1);
+      var requestData = {
+        key_service_id: service_key_CheckTransaction,
+        key_transaction_id: transID,
+        key_language_name: lang
+      };
+      var response = await model.mainServicesAPIcall(context, requestData);
+      Utils().hideProgress(context);
+      if (response[key_status] == key_success &&
+          response[key_response] == key_success) {
+        Utils().showAlert(
+            context, ContentType.help, '${response[key_message]}');
+        await model.getTransactionStatus(context);
+        initialize();
+      }
+    }
   }
 }

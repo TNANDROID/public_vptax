@@ -48,12 +48,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
   TextEditingController assessmentController = TextEditingController();
   TextEditingController receiptController = TextEditingController();
 
-  TextEditingController dateController = TextEditingController();
-  //Date Time
-  DateTime? selectedFromDate;
-  DateTime? selectedToDate;
-  String from_Date = "";
-  String to_Date = "";
+
   String mobile_number = "";
   @override
   void initState() {
@@ -283,9 +278,11 @@ class _ViewReceiptState extends State<ViewReceipt> {
                 if (selectedvillage.isNotEmpty)
                   Container(
                       decoration: UIHelper.roundedBorderWithColorWithShadow(15, c.need_improvement2, c.need_improvement2, borderColor: Colors.transparent, borderWidth: 5),
-                      // padding: EdgeInsets.only(top: 15, bottom: 10, left: 10, right: 10),
-                      child: Column(children: [
-                       /* headingWithDropdownWidget('assesmentNumber', addInputFormControl("assessment_no")),
+                      padding: EdgeInsets.only(top: 15, bottom: 10, left: 10, right: 10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                        headingWithDropdownWidget('assesmentNumber', addInputFormControl("assessment_no")),
                         UIHelper.verticalSpaceSmall,
                         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                           Text(
@@ -298,9 +295,8 @@ class _ViewReceiptState extends State<ViewReceipt> {
                         UIHelper.verticalSpaceSmall,
                         invalidReceiptNumber
                             ? UIHelper.titleTextStyle('receiptno'.tr().toString() + "/" + 'assesmentNumber'.tr().toString() + " " + 'isEmpty'.tr().toString(), c.red, 10, false, false)
-                            : SizedBox()*/
+                            : SizedBox()
 
-                        _DatePicker(),
                       ])),
               ]))),
       Container(
@@ -310,15 +306,12 @@ class _ViewReceiptState extends State<ViewReceipt> {
           style: TextButton.styleFrom(fixedSize: const Size(130, 20), shape: StadiumBorder(), backgroundColor: c.colorPrimary),
           onPressed: () async {
             validateForm();
-            if (_formKey.currentState!.saveAndValidate() && dateValidation()/*!invalidReceiptNumber*/) {
+            if (_formKey.currentState!.saveAndValidate() && !invalidReceiptNumber) {
               Map<String, dynamic> postParams = Map.from(_formKey.currentState!.value);
               postParams['service_id'] = "ReceiptBillDetails";
               postParams['language_name'] = selectedLang;
-              postParams['from_date'] = from_Date;
-              postParams['to_date'] = to_Date;
-              postParams[key_mobile_number] = mobile_number;
-              /*  postParams['assessment_no'] = assessmentController.text;
-              postParams['receipt_no'] = receiptController.text;*/
+              postParams['assessment_no'] = assessmentController.text;
+              postParams['receipt_no'] = receiptController.text;
               print("Ra--->>>>>$postParams");
               postParams.removeWhere((key, value) {
                 return value == null || (value is String && value.isEmpty);
@@ -387,11 +380,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
             padding: EdgeInsets.only(left: 22, right: 22),
             child: Column(
               children: [
-                Row(children: [
-                  UIHelper.titleTextStyle('payed_by'.tr().toString(), c.grey_9, 13, false, true),
-                  UIHelper.titleTextStyle((" ($mobile_number) "), c.primary_text_color2, 14, false, true),
-                ],),
-                UIHelper.verticalSpaceMedium,
                 AnimationLimiter(
                   child: ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
@@ -474,68 +462,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
       invalidReceiptNumber = false;
     }
     setState(() {});
-  }
-  _DatePicker() {
-    return Container(
-      child: TextField(
-        style: TextStyle(fontSize: 12),
-          controller: dateController,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            suffixIconConstraints:
-            BoxConstraints(minHeight: 20, minWidth: 20),
-            contentPadding:
-            EdgeInsets.only(left: 15, right: 5, top: 5, bottom: 5),
-            suffixIcon: Padding(
-              padding: EdgeInsets.all(5),
-              child: Image.asset(
-                imagePath.datepicker_icon,
-                height: 30,
-                width: 30,
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 0.1, color: c.grey_2),
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10))),
-          ),
-          readOnly: true,
-          onTap: () async {
-            utils.ShowCalenderDialog(context).then((value) => {
-              if (value['flag'])
-                {
-                  selectedFromDate = value['fromDate'],
-                  selectedToDate = value['toDate'],
-                  dateValidation()
-                }
-            });
-          }),
-    );
-  }
-  bool dateValidation()  {
-    bool flag=false;
-    receiptList.clear();
-    String startDate = DateFormat('dd-MM-yyyy').format(selectedFromDate!);
-    print("Start_date" + startDate);
-    String endDate = DateFormat('dd-MM-yyyy').format(selectedToDate!);
-    print("End_date" + endDate);
-    from_Date = startDate;
-    to_Date = endDate;
-    print("Startdate>>>>>" + from_Date);
-    print("Todate>>>>>" + to_Date);
-
-    if (startDate.compareTo(endDate) > 0) {
-      flag=false;
-      dateController.text = "select_from_to_date".tr().toString();
-    } else {
-      flag=true;
-      // getWorkDetails(from_Date, to_Date);
-      dateController.text = "$startDate  To  $endDate";
-    }
-    return flag;
   }
 
 }

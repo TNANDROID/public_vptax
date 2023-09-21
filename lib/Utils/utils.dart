@@ -345,7 +345,7 @@ class Utils {
                                 ),
                               ),
                               child: Text(
-                                btnmsg == 'payment' ? 'View Receipt' : btnText ?? 'OK',
+                                btnmsg == 'payment' ? 'view_receipt'.tr().toString() : btnText ?? 'ok'.tr().toString(),
                                 style: TextStyle(color: contentInfo.color, fontSize: 11),
                               ),
                             ),

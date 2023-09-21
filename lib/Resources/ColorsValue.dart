@@ -7,6 +7,7 @@ Color colorAccentlight = Color(0xFFff8f60);
 Color card1 = Color(0xFFff8f60);
 Color card2 = Color(0xFFFFFFFF);
 Color colorAccentverylight = Color(0xfff89a42);
+Color colorAccentverylight2 = Color(0xfff6d3b2);
 Color red = Color(0xFFB71C1C);
 Color failureRed = Color(0xffc72c41);
 Color yellow_new = Color(0xFFFFC947);

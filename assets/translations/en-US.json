@@ -210,7 +210,6 @@
   "assessment_remove":"Do you want to remove this assessment from your favourites?",
   "addedList":"Favourite List",
   "location":"Location",
-  "tax_due":"Tax Dues",
   "select_from_to_date" : "Select Form and To Date",
   "select_from_date" : "Please Select From Date",
   "select_to_date" : "Please Select From Date",
@@ -219,6 +218,6 @@
   "ok" : "Ok",
   "cancel" : "Cancel",
   "tax_due":"Pending Dues for All Taxes",
-  "payed_by":"Tax receipts Paid by you"
-
+  "payed_by":"Tax receipts Paid by you",
+  "view_receipt":"Download Receipt",
 }

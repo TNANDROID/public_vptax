@@ -140,16 +140,16 @@ class UIHelper {
     return BoxDecoration(color: clr, borderRadius: BorderRadius.circular(radius), boxShadow: [
       BoxShadow(
         //  color: Color(0xFFBEBEBE),
-        color: Colors.black38,
-        offset: Offset(8, 8),
-        blurRadius: 30,
+        color: c.grey,
+        offset: Offset(5, 5),
+        blurRadius: 2,
         spreadRadius: 1,
       ),
       const BoxShadow(
         color: Colors.white,
-        offset: Offset(-10, -10),
-        blurRadius: 30,
-        spreadRadius: 5,
+        offset: Offset(-5, -5),
+        blurRadius: 2,
+        spreadRadius: 1,
       ),
     ]);
   }
