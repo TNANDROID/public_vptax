@@ -38,7 +38,7 @@
   "tryAnotherWay": "Try Another Way",
   "userName": "User Name",
   "services": "Services",
-  "view_receipt_details": "View Receipt Details And  Download Your Receipts",
+  "view_receipt_details": "View receipt details and  download your receipts",
   "check_your_dues": "Check Your Dues",
   "check_your_dues_title": "Check Your Dues",
   "download_receipt": "Download Receipt",
@@ -208,6 +208,6 @@
   "already_register": "Already register ?",
   "dont_have_mobile_number": "Mobile Number Not Registered",
   "assessment_remove":"Do you want to remove this assessment from your favourites?",
-  "addedList":"Added List",
+  "addedList":"Favourite List",
   "tax_due":"Tax Dues"
 }

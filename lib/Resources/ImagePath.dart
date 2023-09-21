@@ -57,6 +57,7 @@ String search = "assets/images/search.png";
 String search1 = "assets/images/search1.png";
 String warning_png = "assets/images/warning.png";
 String delete_png = "assets/images/delete.png";
+String location = "assets/images/location.png";
 
 String help = 'assets/images/help.svg';
 String failure = 'assets/images/failure.svg';

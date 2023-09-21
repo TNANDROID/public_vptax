@@ -340,7 +340,7 @@ class _HomeState extends State<Home> {
                 Stack(
                   children: [
                     Container(
-                      height: MediaQuery.of(context).size.width /1.4,
+                      height: MediaQuery.of(context).size.width /1.7,
                       padding: EdgeInsets.only(left: 0, right: 0),
                       child: ScrollConfiguration(
                           behavior: ScrollConfiguration.of(context).copyWith(
@@ -365,8 +365,8 @@ class _HomeState extends State<Home> {
                                  width: Screen.width(context)/1.4/*selectedLang == "ta"?Screen.width(context) / 1.6:Screen.width(context) / 1.8*/,
                                   decoration: UIHelper.GradientContainer(20,20,20,20, [c.white, c.white]),
                                   alignment: Alignment.center,
-                                  margin: EdgeInsets.fromLTRB(50,20,50,20),
-                                  padding: EdgeInsets.all(15),
+                                  margin: EdgeInsets.fromLTRB(50,10,50,10),
+                                  padding: EdgeInsets.fromLTRB(15,15,15,0),
                                   child:Column(
                                     children: [
                                       Row(children: [
@@ -396,6 +396,7 @@ class _HomeState extends State<Home> {
                                       ),
                                       UIHelper.verticalSpaceSmall,
                                        Container(
+                                         margin: EdgeInsets.symmetric(horizontal: 30),
                                          padding: EdgeInsets.all(10),
                                          decoration: UIHelper.GradientContainer(10,10,10,10, [c.primary_text_color2,c.primary_text_color2]),
                                         alignment: Alignment.center,
@@ -423,12 +424,11 @@ class _HomeState extends State<Home> {
                           )),
                     ),
                     Positioned(
-                      left: flag?0:null,
-                      right: !flag?0:null,
+                      left: !flag?0:null,
+                      right: flag?0:null,
 
                       child: InkWell(
                         onTap: () {
-
                           _controller.animateTo(400, duration: Duration(milliseconds: 300), curve:Curves.easeInOut);
                         },
                         child: Container(
@@ -491,18 +491,18 @@ class _HomeState extends State<Home> {
                                     setState(() {});
                                   },
                                   child: Container(
-                                    height: (Screen.height(context) / 2) - 10,
+                                    height: (Screen.height(context) / 4) - 10,
                                     width: (Screen.height(context) / 2) - 10,
                                     alignment: Alignment.center,
                                     margin: EdgeInsets.all(10),
-                                    decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.need_improvement2, c.need_improvement2, borderWidth: 0),
+                                    decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.need_improvement1, c.need_improvement1, borderWidth: 0),
                                     child: Column(
                                       children: [
                                         Container(
                                           child: Image.asset(
                                             servicesList[index][key_img_path],
                                           ),
-                                          height: MediaQuery.of(context).size.width * 0.2,
+                                          height: MediaQuery.of(context).size.width * 0.15,
                                           margin: EdgeInsets.only(
                                             left: MediaQuery.of(context).size.width / 20,
                                             right: MediaQuery.of(context).size.width / 20,
@@ -515,7 +515,7 @@ class _HomeState extends State<Home> {
                                           margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
                                           child: Text(
                                             servicesList[index][key_service_name].toString().tr().toString(),
-                                            style: TextStyle(fontSize: 11, height: 1.5, color: c.grey_9),
+                                            style: TextStyle(fontSize: 12, height: 1.2, color: c.grey_10),
                                             textAlign: TextAlign.center,
                                           ),
                                         ),
