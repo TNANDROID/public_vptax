@@ -76,6 +76,24 @@ class BottomTriangleClipper extends CustomClipper<Path> {
   }
 }
 
+class LeftTriangleClipper1 extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final path = Path()
+      ..moveTo(size.width, 0) // Top-right point of the card
+      ..lineTo(0, size.height) // Bottom-left point of the card
+      ..lineTo(size.width, size.height) // Bottom-right point of the card
+      ..close(); // Close the path to complete the shape
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    return false;
+  }
+}
+
 class RightTriangleClipper1 extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
