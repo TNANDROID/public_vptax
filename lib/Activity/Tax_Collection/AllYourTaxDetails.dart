@@ -101,7 +101,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
         body: ViewModelBuilder<StartUpViewModel>.reactive(
             onModelReady: (model) async {
               try {
-                widget.isHome?await getDemandListofTax(model):await getAllDemandList(model);
+                await getAllDemandList(model);
               } catch (error) {
                 debugPrint('error : $error has been caught');
               }
@@ -529,7 +529,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
               var responce = await model.authendicationServicesAPIcall(context, requestJson);
 
               try {
-                widget.isHome?await getDemandListofTax(model):await getAllDemandList(model);
+                await getAllDemandList(model);
               } catch (error) {
                 debugPrint('error : $error has been caught');
               }
@@ -1089,7 +1089,11 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
       var responce = await model.authendicationServicesAPIcall(context, requestJson);
       if (responce[key_data] != null && responce[key_data].length > 0) {
         List resList = responce[key_data].toList();
-        sourceList = resList.where((item) => item["is_favourite"] != "Y").toList();
+        if(widget.isHome){
+          sourceList = resList.where((item) => item[key_taxtypeid].toString() == selectedTaxTypeData['taxtypeid'].toString() && double.parse(item['totaldemand']) != 0).toList();
+        }else{
+          sourceList = resList.where((item) => item["is_favourite"] != "Y").toList();
+        }
         mainList = sourceList.toList();
         for (var item in mainList) {
           dynamic getDemandRequest = {
@@ -1118,54 +1122,6 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
             if (getDemandResponce[key_data] != null && getDemandResponce[key_data].length > 0) {
               item[key_DEMAND_DETAILS] = getDemandResponce[key_data];
             }
-          }
-        }
-        mainList.sort((a, b) {
-          return a[key_assessment_no].compareTo(b[key_assessment_no]);
-        });
-      } else {
-        mainList = [];
-      }
-    } catch (error) {
-      debugPrint('error : $error has been caught');
-    }
-    setState(() {});
-  }
-  Future getDemandListofTax(StartUpViewModel model) async {
-    try {
-      var responce = await model.authendicationServicesAPIcall(context, requestJson);
-      if (responce[key_data] != null && responce[key_data].length > 0) {
-        sourceList = responce[key_data].toList();
-        for (var item in sourceList.toList()) {
-          if(item[key_taxtypeid].toString() == selectedTaxTypeData['taxtypeid'].toString() && double.parse(item['totaldemand']) != 0){
-            dynamic getDemandRequest = {
-              key_service_id: service_key_getAssessmentDemandList,
-              key_taxtypeid: item[key_taxtypeid],
-              key_assessment_id: item[key_assessment_id],
-              key_dcode: item[key_dcode],
-              key_bcode: item[key_bcode],
-              key_pvcode: item[key_lbcode],
-              key_language_name: selectedLang,
-            };
-            if (item[key_taxtypeid] == 4) {
-              getDemandRequest[key_fin_year] = item[key_financialyear];
-            }
-            var getDemandResponce = await model.authendicationServicesAPIcall(context, getDemandRequest);
-
-            if (getDemandResponce[key_response] == key_fail) {
-              if (getDemandResponce[key_message] == "Demand Details Not Found") {
-                item[key_DEMAND_DETAILS] = "Empty";
-              } else if (getDemandResponce[key_message] == "Your previous transaction is pending. Please try after 60 minutes") {
-                item[key_DEMAND_DETAILS] = "Pending";
-              } else {
-                item[key_DEMAND_DETAILS] = "Something Went Wrong...";
-              }
-            } else {
-              if (getDemandResponce[key_data] != null && getDemandResponce[key_data].length > 0) {
-                item[key_DEMAND_DETAILS] = getDemandResponce[key_data];
-              }
-            }
-            mainList.add(item);
           }
         }
         mainList.sort((a, b) {
