@@ -66,12 +66,9 @@ class StartUpViewModel extends BaseViewModel {
     }
     if (await Utils().isOnline()) {
       try {
-        Utils().showProgress(context, 1);
         response = await apiServices.openServiceFunction(requestData);
-        Utils().hideProgress(context);
       } catch (error) {
         debugPrint('error (${error.toString()}) has been caught');
-        Utils().hideProgress(context);
       }
     } else {
       Utils().showAlert(
@@ -109,7 +106,7 @@ class StartUpViewModel extends BaseViewModel {
     } else if (type == "CollectionPaymentTokenList") {
       requestData = requestDataValue;
     }
-    var response = await mainServicesAPIcall(context, requestData);
+    var response = await demandServicesAPIcall(context, requestData);
 
     if (type == "TaxType") {
       var status = response[key_status];
@@ -283,37 +280,13 @@ class StartUpViewModel extends BaseViewModel {
     }
   }
 
-  //Main Service API Call
-  Future mainServicesAPIcall(BuildContext context, dynamic requestJson) async {
-    dynamic requestData = {key_data_content: requestJson};
-    print("requestData>>$requestData");
-    if (await Utils().isOnline()) {
-      Utils().showProgress(context, 1);
-      try {
-        var response = await apiServices.mainServiceFunction(requestData);
-        Utils().hideProgress(context);
-        print("response>>$response");
-        return response;
-      } catch (error) {
-        Utils().hideProgress(context);
-        debugPrint('error (${error.toString()}) has been caught');
-      }
-    } else {
-      Utils().showAlert(
-        context,
-        ContentType.fail,
-        "noInternet".tr().toString(),
-      );
-    }
-  }
-
   /// This Function used by Get Transaction Status
   Future<bool> getTransactionStatus(BuildContext context /* , String mobileNo, String email */) async {
     bool flag = false;
     dynamic requestData = {key_service_id: service_key_TransactionHistory, key_mobile_no: await preferencesService.getUserInfo(key_mobile_number), key_email_id: ''};
     try {
       Utils().showProgress(context, 1);
-      var response = await mainServicesAPIcall(context, requestData);
+      var response = await demandServicesAPIcall(context, requestData);
       Utils().hideProgress(context);
       if (response[key_status] == key_success && response[key_response] == key_success) {
         preferencesService.TransactionList = response[key_data];
@@ -344,7 +317,7 @@ class StartUpViewModel extends BaseViewModel {
       key_pvcode: receiptList[key_lbcode].toString(),
       key_language_name: language
     };
-    var response = await mainServicesAPIcall(context, requestData);
+    var response = await demandServicesAPIcall(context, requestData);
     Utils().hideProgress(context);
     if (response[key_status] == key_success && response[key_response] == key_success) {
       var receiptResponce = response[key_data];

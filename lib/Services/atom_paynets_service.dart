@@ -181,7 +181,7 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
   closeWebView(context, transactionResult, ContentType type) async {
     Navigator.pop(context);
     if (type == ContentType.success) {
-      Utils().showAlert(mcontext, type,/*"$transactionResult"*/'payment_msg'.tr().toString(), btnCount: "1", btnmsg: 'payment', receiptList: receiptList,mode: 'payment_success');
+      Utils().showAlert(mcontext, type, /*"$transactionResult"*/ 'payment_msg'.tr().toString(), btnCount: "1", btnmsg: 'payment', receiptList: receiptList, mode: 'payment_success');
     } else {
       String msg = "$transactionResult \n Please Check Transaction History for more Details";
       Utils().showAlert(mcontext, type, msg, btnCount: "1", btnmsg: 'canceled');
@@ -220,7 +220,8 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
   Future<String> getPaymentStatus(BuildContext context, encData, String merchId) async {
     var responceMessage = '';
     var requestData = {key_service_id: service_key_SaveCollectionList, key_merchId_server_side: merchId, key_encdata_server_side: encData};
-    var response = await model.mainServicesAPIcall(context, requestData);
+    Utils().showProgress(context, 1);
+    var response = await model.demandServicesAPIcall(context, requestData);
     if (response[key_response] == key_fail) {
       receiptList = [];
     } else {
@@ -230,6 +231,7 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
         responceMessage = response[key_message];
       }
     }
+    Utils().hideProgress(context);
     return responceMessage;
   }
 }

@@ -100,6 +100,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     selectedLang = await preferencesService.getUserInfo("lang");
     userName = await preferencesService.getUserInfo(key_name);
     mobile_number = await preferencesService.getUserInfo(key_mobile_number);
+
     await Utils().apiCalls(context);
     taxTypeList = preferencesService.taxTypeList;
 
@@ -544,11 +545,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                   onTap: () async {
                                     selected_index = servicesList[index][key_service_id];
                                     if (selected_index == 0) {
-                                       Navigator.push(context, MaterialPageRoute(builder: (_) => AllYourTaxDetails(isHome: false))).then((value) => getDemandList());
+                                      Navigator.push(context, MaterialPageRoute(builder: (_) => AllYourTaxDetails(isHome: false))).then((value) => getDemandList());
                                     } else if (selected_index == 1) {
-                                       Navigator.push(context, MaterialPageRoute(builder: (context) => FavouriteTaxDetails())).then((value) => getDemandList());
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => FavouriteTaxDetails())).then((value) => getDemandList());
                                     } else if (selected_index == 2) {
-                                       Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(appbarTitle: 'quickPay', flag: "2"))).then((value) => getDemandList());
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(appbarTitle: 'quickPay', flag: "2"))).then((value) => getDemandList());
                                     } else if (selected_index == 3) {
                                       await Navigator.push(context, MaterialPageRoute(builder: (context) => CheckTransaction())).then((value) => getDemandList());
                                     } else if (selected_index == 4) {

@@ -48,7 +48,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
   TextEditingController assessmentController = TextEditingController();
   TextEditingController receiptController = TextEditingController();
 
-
   String mobile_number = "";
   @override
   void initState() {
@@ -279,9 +278,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                   Container(
                       decoration: UIHelper.roundedBorderWithColorWithShadow(15, c.need_improvement2, c.need_improvement2, borderColor: Colors.transparent, borderWidth: 5),
                       padding: EdgeInsets.only(top: 15, bottom: 10, left: 10, right: 10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
+                      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                         headingWithDropdownWidget('assesmentNumber', addInputFormControl("assessment_no")),
                         UIHelper.verticalSpaceSmall,
                         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -296,7 +293,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
                         invalidReceiptNumber
                             ? UIHelper.titleTextStyle('receiptno'.tr().toString() + "/" + 'assesmentNumber'.tr().toString() + " " + 'isEmpty'.tr().toString(), c.red, 10, false, false)
                             : SizedBox()
-
                       ])),
               ]))),
       Container(
@@ -318,7 +314,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
               });
               print("Ra---)))))))$postParams");
               Utils().showProgress(context, 1);
-              var response = await model.mainServicesAPIcall(context, postParams);
+              var response = await model.demandServicesAPIcall(context, postParams);
               if (response[key_response] == key_fail) {
                 receiptList = [];
                 noDataFound = true;
@@ -443,9 +439,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                     scrollDirection: Axis.vertical,
                     child: Container(
                         child: Column(
-                      children: [
-                        formField(context, model),
-                        listview(context, model)],
+                      children: [formField(context, model), listview(context, model)],
                     )));
               },
               viewModelBuilder: () => StartUpViewModel()),
@@ -463,7 +457,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
     }
     setState(() {});
   }
-
 }
 
 class CustomInputFormatter extends TextInputFormatter {
