@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:public_vptax/Activity/Tax_Collection/taxCollection_view_request_screen.dart';
@@ -20,6 +21,7 @@ import 'package:public_vptax/Services/locator.dart';
 import 'package:stacked/stacked.dart';
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 import '../../Resources/StringsKey.dart';
+import '../Auth/Home.dart';
 
 class FavouriteTaxDetails extends StatefulWidget {
   FavouriteTaxDetails({Key? key});
@@ -84,80 +86,87 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
     super.dispose();
     _controller.dispose();
   }
+  Future<bool> _onWillPop() async {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const Home()));
+    return true;
+  }
 
   // ********* Main Widget for this Class **********
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: c.white,
-      appBar: UIHelper.getBar('addedList'),
-      body: ViewModelBuilder<StartUpViewModel>.reactive(
-          onModelReady: (model) async {
-            await getDemandList(model);
-          },
-          builder: (context, model, child) {
-            return model.isBusy
-                ? Center(child: Container(margin: EdgeInsets.only(top: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true)))
-                : Container(
-                    color: c.need_improvement2,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        UIHelper.verticalSpaceSmall,
-                        Visibility(
-                            visible: mainList.isNotEmpty,
-                            child: Expanded(
-                              child: ListView.builder(
-                                itemCount: mainList.length,
-                                itemBuilder: (context, mainIndex) {
-                                  return Container(
-                                      margin: EdgeInsets.only(top: 5),
-                                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                                      child: AnimatedContainer(
-                                        padding: EdgeInsets.only(bottom: 5),
-                                        duration: const Duration(milliseconds: 500),
-                                        child: Container(
-                                            margin: const EdgeInsets.all(0),
-                                            child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: c.white,
-                                                  borderRadius: BorderRadius.circular(5),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.grey.withOpacity(0.5), // Shadow color
-                                                      spreadRadius: 3, // Spread radius
-                                                      blurRadius: 5, // Blur radius
-                                                      offset: Offset(3, 3), // Offset from the top-left corner
-                                                    ),
-                                                  ],
-                                                ),
-                                                width: Screen.width(context),
-                                                child: headerCardUIWidget(mainIndex, mainList[mainIndex], model))),
-                                      ));
-                                },
-                              ),
-                            )),
-                        Visibility(
-                            visible: mainList.isEmpty,
-                            child: Expanded(
-                              child: Center(child: Container(margin: EdgeInsets.only(top: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true))),
-                            )),
-                      ],
-                    ));
-          },
-          viewModelBuilder: () => StartUpViewModel()),
-      floatingActionButton: GestureDetector(
-          onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(selectedTaxTypeData: selectedTaxTypeData, flag: "3")));
-          },
-          child: Container(
-            width: 50,
-            height: 50,
-            decoration: UIHelper.circleWithColorWithShadow(30, c.white, c.white, borderColor: c.grey_7, borderWidth: 5),
-            padding: EdgeInsets.all(3),
-            child: Container(decoration: UIHelper.circleWithColorWithShadow(30, c.yellow_new, c.colorPrimaryDark), child: Center(child: UIHelper.titleTextStyle("+", c.white, 28, true, true))),
-          )),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        backgroundColor: c.white,
+        appBar: UIHelper.getBar('addedList'),
+        body: ViewModelBuilder<StartUpViewModel>.reactive(
+            onModelReady: (model) async {
+              await getDemandList(model);
+            },
+            builder: (context, model, child) {
+              return model.isBusy
+                  ? Center(child: Container(margin: EdgeInsets.only(top: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true)))
+                  : Container(
+                      color: c.need_improvement2,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          UIHelper.verticalSpaceSmall,
+                          Visibility(
+                              visible: mainList.isNotEmpty,
+                              child: Expanded(
+                                child: ListView.builder(
+                                  itemCount: mainList.length,
+                                  itemBuilder: (context, mainIndex) {
+                                    return Container(
+                                        margin: EdgeInsets.only(top: 5),
+                                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                        child: AnimatedContainer(
+                                          padding: EdgeInsets.only(bottom: 5),
+                                          duration: const Duration(milliseconds: 500),
+                                          child: Container(
+                                              margin: const EdgeInsets.all(0),
+                                              child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: c.white,
+                                                    borderRadius: BorderRadius.circular(5),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.grey.withOpacity(0.5), // Shadow color
+                                                        spreadRadius: 3, // Spread radius
+                                                        blurRadius: 5, // Blur radius
+                                                        offset: Offset(3, 3), // Offset from the top-left corner
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  width: Screen.width(context),
+                                                  child: headerCardUIWidget(mainIndex, mainList[mainIndex], model))),
+                                        ));
+                                  },
+                                ),
+                              )),
+                          Visibility(
+                              visible: mainList.isEmpty,
+                              child: Expanded(
+                                child: Center(child: Container(margin: EdgeInsets.only(top: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true))),
+                              )),
+                        ],
+                      ));
+            },
+            viewModelBuilder: () => StartUpViewModel()),
+        floatingActionButton: GestureDetector(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(selectedTaxTypeData: selectedTaxTypeData, flag: "3")));
+            },
+            child: Container(
+              width: 50,
+              height: 50,
+              decoration: UIHelper.circleWithColorWithShadow(30, c.white, c.white, borderColor: c.grey_7, borderWidth: 5),
+              padding: EdgeInsets.all(3),
+              child: Container(decoration: UIHelper.circleWithColorWithShadow(30, c.yellow_new, c.colorPrimaryDark), child: Center(child: UIHelper.titleTextStyle("+", c.white, 28, true, true))),
+            )),
+      ),
     );
   }
 
@@ -220,7 +229,16 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                     )
                   ],
                 ),
-
+                 Positioned(
+              right: 0,
+              bottom: 0,
+              child: InkWell(
+                onTap: () async {
+                  await showPopupLocation(getData, model,c.grey_9,context,ContentType.success,"");
+                },
+                child: Padding(padding: EdgeInsets.only(right: 5), child: Icon(Icons.location_on_sharp, color: c.grey_8, size: 25)),
+              ),
+            ),
                 //************************** Down Arrow ***************************/
 
                 // Visibility(
@@ -717,4 +735,280 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
     }
     return flag;
   }
+
+  Future<void> showPopupLocation(
+      dynamic getData,
+      StartUpViewModel model,
+      Color clr,
+      BuildContext mcontext,
+      ContentType contentType,
+      String message, {
+        String? title,
+        String? btnCount,
+        String? btnText,
+        String? btnmsg,
+        double? titleFontSize,
+        double? messageFontSize,
+      }) async {
+    await showDialog<void>(
+      context: mcontext,
+      barrierDismissible: btnCount != null ? false : true, // user must tap button!
+      builder: (BuildContext context) {
+        // Size
+        final size = MediaQuery.of(context).size;
+
+        ContentInfo contentInfo = ContentInfo(title: "Location", assetPath: imagePath.location, color: c.white);
+
+        final hsl = HSLColor.fromColor(contentInfo.color);
+        final hslDark = hsl.withLightness((hsl.lightness - 0.1).clamp(0.0, 1.0));
+
+        return WillPopScope(
+            onWillPop: () async {
+              return btnCount != null ? false : true;
+            },
+            child: Center(
+              child: Container(
+                width: size.width,
+                height: size.width / 1.3,
+                margin: EdgeInsets.symmetric(horizontal: size.width * 0.045),
+                decoration: UIHelper.roundedBorderWithColorWithShadow(20, c.white, c.white),
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  alignment: Alignment.center,
+                  children: [
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(20),
+                        ),
+                        child: SvgPicture.asset(
+                          imagePath.bubbles,
+                          height: size.height * 0.06,
+                          width: size.width * 0.05,
+                          color: c.colorPrimary,
+                          // colorFilter: getColorFilter(hslDark.toColor(), ui.BlendMode.srcIn),
+                        ),
+                      ),
+                    ),
+
+                    // ***********************  Bubble With Icon *********************** //
+                    Positioned(
+                      top: -size.height * 0.030,
+                      left: size.width * 0.08,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Image.asset(
+                            imagePath.location,
+                            color: c.colorPrimary,
+                            height: size.height * 0.08,
+                            // colorFilter: getColorFilter(hslDark.toColor(), ui.BlendMode.srcIn),
+                          ),
+                          Positioned(
+                            top: size.height * 0.025,
+                            child: SvgPicture.asset(
+                              contentInfo.assetPath,
+                              height: size.height * 0.022,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+
+                    // ***********************  Text Content *********************** //
+
+                    Container(
+                      margin: EdgeInsets.only(bottom: size.width * 0.05, left: size.width * 0.05, right: size.width * 0.05, top: size.width * 0.07),
+                      child: Container(
+                        child: Column(
+                          children: [
+                            Container(
+                              child: Text(
+                                "location".tr().toString(),
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  height: 1.5,
+                                  color: c.colorPrimaryDark,
+                                  decoration: TextDecoration.none,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            UIHelper.verticalSpaceMedium,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(
+                                  Icons.location_on,
+                                  color: c.grey_9,
+                                  size: 20,
+                                ),
+                                UIHelper.horizontalSpaceTiny,
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      UIHelper.titleTextStyle(getDoorAndStreetName(getData).trim(), c.grey_9, 14, false, false),
+                                      UIHelper.titleTextStyle(getvillageAndBlockName(getData).trim(), c.grey_9, 14, false, false),
+                                      UIHelper.titleTextStyle(getData[s.key_district_name].trim() ?? '', c.grey_9, 14, false, false)
+                                    ],
+                                  ),
+                                ),
+                                UIHelper.horizontalSpaceSmall,
+                              ],
+                            ),
+                            UIHelper.verticalSpaceMedium,
+                            getData[key_taxtypeid].toString() == "1"
+                                ? Container(
+                              // margin: EdgeInsets.only(left: 20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
+                                  UIHelper.verticalSpaceTiny,
+                                  UIHelper.titleTextStyle(("${'building_licence_number'.tr()} : ${getData[s.key_building_licence_no].toString() ?? ""}"), clr, 13, false, true),
+                                  UIHelper.verticalSpaceTiny,
+                                  UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 13, false, true),
+                                  UIHelper.verticalSpaceTiny,
+                                ],
+                              ),
+                            )
+                                : getData[key_taxtypeid].toString() == "2"
+                                ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
+                                UIHelper.verticalSpaceTiny,
+                                UIHelper.titleTextStyle(("${'water_connection_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 13, false, true),
+                                UIHelper.verticalSpaceTiny,
+                              ],
+                            )
+                                : getData[key_taxtypeid].toString() == "4"
+                                ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
+                                UIHelper.verticalSpaceTiny,
+                                UIHelper.titleTextStyle(("${'financialYear'.tr()} : ${getData['financialyear'].toString() ?? ""}"), clr, 12, false, true),
+                                UIHelper.verticalSpaceTiny,
+                                UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
+                                UIHelper.verticalSpaceTiny,
+                              ],
+                            )
+                                : getData[key_taxtypeid].toString() == "5"
+                                ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
+                                UIHelper.verticalSpaceTiny,
+                                UIHelper.titleTextStyle(("${'lease_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 13, false, true),
+                                UIHelper.verticalSpaceTiny,
+                                UIHelper.titleTextStyle(("${'lease_state'.tr()} : ${getData['lease_statename'].toString() ?? ""}"), clr, 13, false, true),
+                                UIHelper.verticalSpaceTiny,
+                                UIHelper.titleTextStyle(("${'lease_district'.tr()} : ${getData['lease_districtname'].toString() ?? ""}"), clr, 13, false, true),
+                                UIHelper.verticalSpaceTiny,
+                                UIHelper.titleTextStyle(
+                                    ("${'lease_duration'.tr()} : ${getData['from_date'].toString() ?? ""} - ${getData['to_date'].toString() ?? ""}"), clr, 13, false, true),
+                                UIHelper.verticalSpaceTiny,
+                              ],
+                            )
+                                : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
+                                UIHelper.verticalSpaceTiny,
+                                UIHelper.titleTextStyle(("${'traders_code'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 13, false, true),
+                                UIHelper.verticalSpaceTiny,
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // ***********************  Close Icon button *********************** //
+
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: GestureDetector(
+                        onTap: () async {
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.all(10.0),
+                          child: Icon(
+                            Icons.close_rounded,
+                            size: 20,
+                            color: c.colorPrimary,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Row(children: [
+                        Visibility(
+                          visible: true,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                Navigator.of(context).pop();
+                              },
+                              style: ButtonStyle(
+                                elevation: MaterialStateProperty.all(5.0),
+                                backgroundColor: MaterialStateProperty.all(c.white),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0), // Set the desired border radius here
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                "OK",
+                                style: TextStyle(color: c.colorPrimary, fontSize: 12, fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Visibility(
+                          visible: btnCount == '2' ? true : false,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              style: ButtonStyle(
+                                elevation: MaterialStateProperty.all(5.0),
+                                backgroundColor: MaterialStateProperty.all(c.white),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0), // Set the desired border radius here
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                'Cancel',
+                                style: TextStyle(color: contentInfo.color, fontSize: 11),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ]),
+                    )
+                  ],
+                ),
+              ),
+            ));
+      },
+    );
+  }
+
 }

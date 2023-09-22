@@ -20,6 +20,7 @@ import 'package:public_vptax/Services/locator.dart';
 import 'package:stacked/stacked.dart';
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 import '../../Resources/StringsKey.dart';
+import '../Transaction/CheckTransaction.dart';
 
 class AllYourTaxDetails extends StatefulWidget {
   final isHome;
@@ -497,7 +498,13 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
             : getData[key_DEMAND_DETAILS] == "Pending" || getData[key_DEMAND_DETAILS] == null
                 ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-                    child: UIHelper.titleTextStyle('transaction_warning_hint'.tr().toString(), c.red, 12, true, true),
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => CheckTransaction(),
+                        ));
+                      },
+                        child: UIHelper.titleTextStyle('transaction_warning_hint'.tr().toString(), c.red, 12, true, true)),
                   )
                 : AnimatedSize(
                     duration: const Duration(milliseconds: 500),
@@ -1091,12 +1098,18 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
       var responce = await model.authendicationServicesAPIcall(context, requestJson);
       if (responce[key_data] != null && responce[key_data].length > 0) {
         List resList = responce[key_data].toList();
+        resList.sort((a, b) {
+          return int.parse(a[key_assessment_no].toString()).compareTo(int.parse(b[key_assessment_no].toString()));
+        });
         if (widget.isHome) {
           sourceList = resList.where((item) => item[key_taxtypeid].toString() == selectedTaxTypeData['taxtypeid'].toString() && double.parse(item['totaldemand']) != 0).toList();
         } else {
           sourceList = resList.where((item) => item["is_favourite"] != "Y").toList();
         }
         mainList = sourceList.toList();
+        mainList.sort((a, b) {
+          return a[key_taxtypeid].toString().compareTo(b[key_taxtypeid].toString());
+        });
         for (var item in mainList) {
           dynamic getDemandRequest = {
             key_service_id: service_key_getAssessmentDemandList,
@@ -1126,9 +1139,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
             }
           }
         }
-        mainList.sort((a, b) {
-          return int.parse(a[key_assessment_no].toString()).compareTo(int.parse(b[key_assessment_no].toString()));
-        });
+
         print(mainList.toString());
       } else {
         mainList = [];

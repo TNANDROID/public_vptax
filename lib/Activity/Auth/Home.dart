@@ -544,13 +544,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                   onTap: () async {
                                     selected_index = servicesList[index][key_service_id];
                                     if (selected_index == 0) {
-                                      await Navigator.push(context, MaterialPageRoute(builder: (_) => AllYourTaxDetails(isHome: false)));
+                                       Navigator.push(context, MaterialPageRoute(builder: (_) => AllYourTaxDetails(isHome: false))).then((value) => getDemandList());
                                     } else if (selected_index == 1) {
-                                      await Navigator.push(context, MaterialPageRoute(builder: (context) => FavouriteTaxDetails()));
+                                       Navigator.push(context, MaterialPageRoute(builder: (context) => FavouriteTaxDetails())).then((value) => getDemandList());
                                     } else if (selected_index == 2) {
-                                      await Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(appbarTitle: 'quickPay', flag: "2")));
+                                       Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(appbarTitle: 'quickPay', flag: "2"))).then((value) => getDemandList());
                                     } else if (selected_index == 3) {
-                                      await Navigator.push(context, MaterialPageRoute(builder: (context) => CheckTransaction()));
+                                      await Navigator.push(context, MaterialPageRoute(builder: (context) => CheckTransaction())).then((value) => getDemandList());
                                     } else if (selected_index == 4) {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => ViewReceipt()));
                                     } else if (selected_index == 5) {
@@ -558,7 +558,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                     } else if (selected_index == 6) {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => Villagedevelopment()));
                                     }
-                                    initialize();
                                     setState(() {});
                                   },
                                   child: Container(
