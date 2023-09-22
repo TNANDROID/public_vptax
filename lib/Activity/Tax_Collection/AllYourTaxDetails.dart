@@ -1121,7 +1121,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
           }
         }
         mainList.sort((a, b) {
-          return a[key_taxtypeid].compareTo(b[key_taxtypeid]);
+          return a[key_assessment_no].compareTo(b[key_assessment_no]);
         });
       } else {
         mainList = [];
@@ -1168,6 +1168,9 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
             mainList.add(item);
           }
         }
+        mainList.sort((a, b) {
+          return a[key_assessment_no].compareTo(b[key_assessment_no]);
+        });
       } else {
         mainList = [];
       }

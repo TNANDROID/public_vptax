@@ -2,6 +2,7 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:grouped_list/grouped_list.dart';
@@ -40,6 +41,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
   List sourceList = [];
   List taxTypeList = [];
   var selectedTaxTypeData;
+  Utils utils = Utils();
 
   @override
   void initState() {
@@ -297,7 +299,13 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
               ElevatedButton(
                 onPressed: () async {
                   var requestJson = {"service_id": "RemovefavouriteList", "user_id": getData['user_id'], "favourite_assessment_id": getData['favourite_assessment_id']};
-                  var responce = await model.authendicationServicesAPIcall(context, requestJson);
+                  var response = await model.authendicationServicesAPIcall(context, requestJson);
+                  print(response);
+                  if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
+                    utils.showToast(context, response[key_message].toString(), "S");
+                  } else {
+                    utils.showAlert(context, ContentType.fail, response[key_response].toString());
+                  }
                   await getDemandList(model);
                   Navigator.of(context).pop(false);
                 },
