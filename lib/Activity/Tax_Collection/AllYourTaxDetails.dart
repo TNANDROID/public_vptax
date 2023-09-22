@@ -24,7 +24,7 @@ import '../../Resources/StringsKey.dart';
 class AllYourTaxDetails extends StatefulWidget {
   final isHome;
   final selectedTaxTypeData;
-  AllYourTaxDetails({this.selectedTaxTypeData,this.isHome});
+  AllYourTaxDetails({this.selectedTaxTypeData, this.isHome});
 
   @override
   _AllYourTaxDetailsState createState() => _AllYourTaxDetailsState();
@@ -51,9 +51,9 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
       vsync: this,
       duration: Duration(milliseconds: 400),
     );
-    if(widget.isHome){
-      selectedTaxTypeData=widget.selectedTaxTypeData;
-    }else{
+    if (widget.isHome) {
+      selectedTaxTypeData = widget.selectedTaxTypeData;
+    } else {
       dynamic val = {key_taxtypeid: 0, key_taxtypedesc_en: "All Taxes", key_taxtypedesc_ta: "அனைத்து வரிகள்", key_img_path: imagePath.all};
       taxTypeList.add(val);
       taxTypeList.addAll(preferencesService.taxTypeList);
@@ -81,7 +81,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
   Future<void> initialize() async {
     selectedLang = await preferencesService.getUserInfo("lang");
     requestJson[key_mobile_number] = await preferencesService.getUserInfo(key_mobile_number);
-    print(">>>"+requestJson[key_mobile_number].toString());
+    print(">>>" + requestJson[key_mobile_number].toString());
     requestJson[key_language_name] = selectedLang;
     setState(() {});
   }
@@ -110,89 +110,91 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
               return model.isBusy
                   ? Center(child: Container(margin: EdgeInsets.only(top: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true)))
                   : Container(
-                  color: c.need_improvement2,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 5),
-                        padding: const EdgeInsets.only(left: 10,right: 10),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child:Visibility(
-                                visible: false,
-                                child:  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: InkWell(
-                                      onTap: () {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(selectedTaxTypeData: selectedTaxTypeData, flag: "3")));
-                                      },
-                                      child: Container(
-                                        width: MediaQuery.of(context).size.width / 2.5,
-                                        margin: EdgeInsets.only(top: 10, bottom: 15, left: 15),
-                                        decoration: UIHelper.GradientContainer(5, 5, 5, 5, [c.grey_8, c.grey_8]),
-                                        padding: EdgeInsets.fromLTRB(5, 8, 0, 8),
-                                        child: Row(
-                                          // Wrap with Row to add the plus icon
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.add, // Use the icon you prefer (e.g., Icons.add, Icons.add_circle, etc.)
-                                              color: c.white,
-                                              size: 15,
-                                            ),
-                                            SizedBox(width: 3),
-                                            Flexible(
-                                                child: UIHelper.titleTextStyle(
-                                                  "new".tr().toString() + (selectedLang == "en" ? selectedTaxTypeData["taxtypedesc_en"] : selectedTaxTypeData["taxtypedesc_ta"]) + "new2".tr().toString(),
+                      color: c.need_improvement2,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(top: 5),
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: Visibility(
+                                    visible: false,
+                                    child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: InkWell(
+                                          onTap: () {
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(selectedTaxTypeData: selectedTaxTypeData, flag: "3")));
+                                          },
+                                          child: Container(
+                                            width: MediaQuery.of(context).size.width / 2.5,
+                                            margin: EdgeInsets.only(top: 10, bottom: 15, left: 15),
+                                            decoration: UIHelper.GradientContainer(5, 5, 5, 5, [c.grey_8, c.grey_8]),
+                                            padding: EdgeInsets.fromLTRB(5, 8, 0, 8),
+                                            child: Row(
+                                              // Wrap with Row to add the plus icon
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  Icons.add, // Use the icon you prefer (e.g., Icons.add, Icons.add_circle, etc.)
+                                                  color: c.white,
+                                                  size: 15,
+                                                ),
+                                                SizedBox(width: 3),
+                                                Flexible(
+                                                    child: UIHelper.titleTextStyle(
+                                                  "new".tr().toString() +
+                                                      (selectedLang == "en" ? selectedTaxTypeData["taxtypedesc_en"] : selectedTaxTypeData["taxtypedesc_ta"]) +
+                                                      "new2".tr().toString(),
                                                   c.white,
                                                   10,
                                                   true,
                                                   true,
                                                 )) // Add a small space between the icon and the text
-                                            ,
-                                          ],
-                                        ),
-                                      ),
-                                    )),
-                              ),
-                            )
-                            ,    Visibility(
-                              visible: !widget.isHome,
-                              child: Expanded(
-                                child: Container(
-                                  margin: EdgeInsets.only(right: 15),
-                                  decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.white, c.white),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                          width: 30,
-                                          height: 30,
-                                          padding: EdgeInsets.all(5),
-                                          decoration: UIHelper.roundedBorderWithColor(5, 5, 5, 5, c.colorPrimary),
-                                          child: Image.asset(
-                                            selectedTaxTypeData[key_img_path].toString(),
-                                            fit: BoxFit.contain,
-                                            height: 15,
-                                            width: 15,
-                                          )),
-                                      UIHelper.horizontalSpaceSmall,
-                                      Container(width: 100, margin: EdgeInsets.only(left: 5), child: addInputDropdownField()),
-                                    ],
+                                                ,
+                                              ],
+                                            ),
+                                          ),
+                                        )),
                                   ),
                                 ),
-                              ),
+                                Visibility(
+                                  visible: !widget.isHome,
+                                  child: Expanded(
+                                    child: Container(
+                                      margin: EdgeInsets.only(right: 15),
+                                      decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.white, c.white),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                              width: 30,
+                                              height: 30,
+                                              padding: EdgeInsets.all(5),
+                                              decoration: UIHelper.roundedBorderWithColor(5, 5, 5, 5, c.colorPrimary),
+                                              child: Image.asset(
+                                                selectedTaxTypeData[key_img_path].toString(),
+                                                fit: BoxFit.contain,
+                                                height: 15,
+                                                width: 15,
+                                              )),
+                                          UIHelper.horizontalSpaceSmall,
+                                          Container(width: 100, margin: EdgeInsets.only(left: 5), child: addInputDropdownField()),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                      Visibility(
-                        visible: mainList.isNotEmpty,
-                        child: Expanded(
-                            child: GroupedListView<dynamic, String>(
+                          ),
+                          Visibility(
+                            visible: mainList.isNotEmpty,
+                            child: Expanded(
+                                child: GroupedListView<dynamic, String>(
                               elements: mainList,
                               useStickyGroupSeparators: true,
                               floatingHeader: true,
@@ -212,8 +214,8 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                           color: mainList[mainIndex][key_DEMAND_DETAILS] == "Empty"
                                               ? c.yellow_new
                                               : mainList[mainIndex][key_DEMAND_DETAILS] == "Pending"
-                                              ? c.red_new
-                                              : c.green_new,
+                                                  ? c.red_new
+                                                  : c.green_new,
                                           borderRadius: BorderRadius.circular(20)),
                                       child: Stack(
                                         children: [
@@ -226,8 +228,8 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                                   color: mainList[mainIndex][key_DEMAND_DETAILS] == "Empty"
                                                       ? c.yellow_new_light
                                                       : mainList[mainIndex][key_DEMAND_DETAILS] == "Pending"
-                                                      ? c.red_new_light
-                                                      : c.light_green_new,
+                                                          ? c.red_new_light
+                                                          : c.light_green_new,
                                                   borderRadius: BorderRadius.circular(20)),
                                             ),
                                           ),
@@ -260,14 +262,14 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                   )),
                               itemComparator: (item1, item2) => item1[key_assessment_no].compareTo(item2[key_assessment_no]), // optional
                             )),
-                      ),
-                      Visibility(
-                          visible: mainList.isEmpty,
-                          child: Expanded(
-                            child: Center(child: Container(margin: EdgeInsets.only(top: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true))),
-                          )),
-                    ],
-                  ));
+                          ),
+                          Visibility(
+                              visible: mainList.isEmpty,
+                              child: Expanded(
+                                child: Center(child: Container(margin: EdgeInsets.only(top: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true))),
+                              )),
+                        ],
+                      ));
             },
             viewModelBuilder: () => StartUpViewModel()));
   }
@@ -376,16 +378,17 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                 Row(
                   children: [
                     Container(
-                        width:MediaQuery.of(context).size.width/2,
+                        width: MediaQuery.of(context).size.width / 2,
                         alignment: Alignment.centerLeft,
-                        padding: EdgeInsets.only(left: 0,right: 10),
-                        child:UIHelper.titleTextStyle(("${'pending_payment'.tr()} : "), c.grey_10, selectedLang == "ta"?13:15, true, false)),
+                        padding: EdgeInsets.only(left: 0, right: 10),
+                        child: UIHelper.titleTextStyle(("${'pending_payment'.tr()} : "), c.grey_10, selectedLang == "ta" ? 13 : 15, true, false)),
                     Container(
-                        decoration: UIHelper.GradientContainer(10,10,10,10,  [c.need_improvement2,c.need_improvement2]),
-                        padding: EdgeInsets.fromLTRB(5,10,5,10),
-                        width:MediaQuery.of(context).size.width/3,child:UIHelper.titleTextStyle(("\u{20B9} " + getData['totaldemand']), c.text_color, 16, true, true)),
-
-                  ],),
+                        decoration: UIHelper.GradientContainer(10, 10, 10, 10, [c.need_improvement2, c.need_improvement2]),
+                        padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                        width: MediaQuery.of(context).size.width / 3,
+                        child: UIHelper.titleTextStyle(("\u{20B9} " + getData['totaldemand']), c.text_color, 16, true, true)),
+                  ],
+                ),
                 UIHelper.verticalSpaceSmall,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -430,8 +433,8 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                             child: UIHelper.titleTextStyle("pay".tr().toString(), c.white, 12, true, true)),
                       ),
                     )
-
-                  ],),
+                  ],
+                ),
               ],
             ),
 
@@ -471,7 +474,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                     )),
               ),
             ),*/
-           /* Positioned(
+            /* Positioned(
               right: 0,
               child: InkWell(
                 onTap: () async {
@@ -483,28 +486,27 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
 */
 
             //************************** Proceed To Pay Button ***************************/
-
           ],
         ),
         UIHelper.verticalSpaceSmall,
         getData[key_DEMAND_DETAILS] == "Empty" || getData[key_DEMAND_DETAILS] == null
             ? Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 10),
-          child: UIHelper.titleTextStyle('no_demand'.tr().toString(), c.warningYellow, 12, true, false),
-        )
+                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+                child: UIHelper.titleTextStyle('no_demand'.tr().toString(), c.warningYellow, 12, true, false),
+              )
             : getData[key_DEMAND_DETAILS] == "Pending" || getData[key_DEMAND_DETAILS] == null
-            ? Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 10),
-          child: UIHelper.titleTextStyle('transaction_warning_hint'.tr().toString(), c.red, 12, true, true),
-        )
-            : AnimatedSize(
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.linear,
-          child: Visibility(
-            visible: isShowFlag.contains(mainIndex),
-            child: propertyTaxCollectionWidget(mainIndex, getData),
-          ),
-        ),
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+                    child: UIHelper.titleTextStyle('transaction_warning_hint'.tr().toString(), c.red, 12, true, true),
+                  )
+                : AnimatedSize(
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.linear,
+                    child: Visibility(
+                      visible: isShowFlag.contains(mainIndex),
+                      child: propertyTaxCollectionWidget(mainIndex, getData),
+                    ),
+                  ),
       ],
     );
   }
@@ -512,140 +514,140 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
 // ********** App Exit and Logout Widget ***********\\
   Future<bool> showRemovePopup(dynamic getData, StartUpViewModel model) async {
     return await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        content: UIHelper.titleTextStyle('assessment_remove'.tr().toString(), c.black, 13, false, false),
-        actions: [
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(
-              'no'.tr().toString(),
-              style: TextStyle(fontSize: 12),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              var requestJson = {"service_id": "RemovefavouriteList", "user_id": getData['user_id'], "favourite_assessment_id": getData['favourite_assessment_id']};
-              var responce = await model.authendicationServicesAPIcall(context, requestJson);
-
-              try {
-                await getAllDemandList(model);
-              } catch (error) {
-                debugPrint('error : $error has been caught');
-              }
-
-              Navigator.of(context).pop(false);
-            },
-            child: Text(
-              'yes'.tr().toString(),
-              style: TextStyle(fontSize: 12),
-            ),
-          ),
-        ],
-      ),
-    ) ??
-        false; //if showDialouge had returned null, then return false
-  }
-  Future<bool> showlocationPopup(dynamic getData, StartUpViewModel model,Color clr) async {
-    return await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        content: Container(
-          height: MediaQuery.of(context).size.width/2,
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.location_on,
-                    color: c.grey_8,
-                    size: 20,
-                  ),
-                  UIHelper.horizontalSpaceTiny,
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        UIHelper.titleTextStyle(getDoorAndStreetName(getData), c.grey_8, 13, false, false),
-                        UIHelper.titleTextStyle(getvillageAndBlockName(getData), c.grey_8, 13, false, false),
-                        UIHelper.titleTextStyle(getData[s.key_district_name] ?? '', c.grey_8, 13, false, false)
-                      ],
-                    ),
-                  ),
-                  UIHelper.horizontalSpaceSmall,
-                ],
-              ),
-              getData[key_taxtypeid].toString() == "1"
-                  ? Container(
-                // margin: EdgeInsets.only(left: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
-                    UIHelper.verticalSpaceTiny,
-                    UIHelper.titleTextStyle(("${'building_licence_number'.tr()} : ${getData[s.key_building_licence_no].toString() ?? ""}"), clr, 12, false, true),
-                    UIHelper.verticalSpaceTiny,
-                    UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
-                    UIHelper.verticalSpaceTiny,
-                  ],
+          context: context,
+          builder: (context) => AlertDialog(
+            content: UIHelper.titleTextStyle('assessment_remove'.tr().toString(), c.black, 13, false, false),
+            actions: [
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text(
+                  'no'.tr().toString(),
+                  style: TextStyle(fontSize: 12),
                 ),
-              )
-                  : getData[key_taxtypeid].toString() == "2"
-                  ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
-                  UIHelper.verticalSpaceTiny,
-                  UIHelper.titleTextStyle(("${'water_connection_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
-                  UIHelper.verticalSpaceTiny,
-                ],
-              )
-                  : getData[key_taxtypeid].toString() == "4"
-                  ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
-                  UIHelper.verticalSpaceTiny,
-                  UIHelper.titleTextStyle(("${'financialYear'.tr()} : ${getData['financialyear'].toString() ?? ""}"), clr, 12, false, true),
-                  UIHelper.verticalSpaceTiny,
-                  UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
-                  UIHelper.verticalSpaceTiny,
-                ],
-              )
-                  : getData[key_taxtypeid].toString() == "5"
-                  ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
-                  UIHelper.verticalSpaceTiny,
-                  UIHelper.titleTextStyle(("${'lease_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
-                  UIHelper.verticalSpaceTiny,
-                  UIHelper.titleTextStyle(("${'lease_state'.tr()} : ${getData['lease_statename'].toString() ?? ""}"), clr, 12, false, true),
-                  UIHelper.verticalSpaceTiny,
-                  UIHelper.titleTextStyle(("${'lease_district'.tr()} : ${getData['lease_districtname'].toString() ?? ""}"), clr, 12, false, true),
-                  UIHelper.verticalSpaceTiny,
-                  UIHelper.titleTextStyle(("${'lease_duration'.tr()} : ${getData['from_date'].toString() ?? ""} - ${getData['to_date'].toString() ?? ""}"), clr, 12, false, true),
-                  UIHelper.verticalSpaceTiny,
-                ],
-              )
-                  : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
-                  UIHelper.verticalSpaceTiny,
-                  UIHelper.titleTextStyle(("${'traders_code'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
-                  UIHelper.verticalSpaceTiny,
-                ],
-              )
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  var requestJson = {"service_id": "RemovefavouriteList", "user_id": getData['user_id'], "favourite_assessment_id": getData['favourite_assessment_id']};
+                  var responce = await model.authendicationServicesAPIcall(context, requestJson);
 
+                  try {
+                    await getAllDemandList(model);
+                  } catch (error) {
+                    debugPrint('error : $error has been caught');
+                  }
+
+                  Navigator.of(context).pop(false);
+                },
+                child: Text(
+                  'yes'.tr().toString(),
+                  style: TextStyle(fontSize: 12),
+                ),
+              ),
             ],
           ),
-        ),
-      ),
-    ) ??
+        ) ??
+        false; //if showDialouge had returned null, then return false
+  }
+
+  Future<bool> showlocationPopup(dynamic getData, StartUpViewModel model, Color clr) async {
+    return await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: Container(
+              height: MediaQuery.of(context).size.width / 2,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.location_on,
+                        color: c.grey_8,
+                        size: 20,
+                      ),
+                      UIHelper.horizontalSpaceTiny,
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            UIHelper.titleTextStyle(getDoorAndStreetName(getData), c.grey_8, 13, false, false),
+                            UIHelper.titleTextStyle(getvillageAndBlockName(getData), c.grey_8, 13, false, false),
+                            UIHelper.titleTextStyle(getData[s.key_district_name] ?? '', c.grey_8, 13, false, false)
+                          ],
+                        ),
+                      ),
+                      UIHelper.horizontalSpaceSmall,
+                    ],
+                  ),
+                  getData[key_taxtypeid].toString() == "1"
+                      ? Container(
+                          // margin: EdgeInsets.only(left: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
+                              UIHelper.verticalSpaceTiny,
+                              UIHelper.titleTextStyle(("${'building_licence_number'.tr()} : ${getData[s.key_building_licence_no].toString() ?? ""}"), clr, 12, false, true),
+                              UIHelper.verticalSpaceTiny,
+                              UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
+                              UIHelper.verticalSpaceTiny,
+                            ],
+                          ),
+                        )
+                      : getData[key_taxtypeid].toString() == "2"
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
+                                UIHelper.verticalSpaceTiny,
+                                UIHelper.titleTextStyle(("${'water_connection_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
+                                UIHelper.verticalSpaceTiny,
+                              ],
+                            )
+                          : getData[key_taxtypeid].toString() == "4"
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
+                                    UIHelper.verticalSpaceTiny,
+                                    UIHelper.titleTextStyle(("${'financialYear'.tr()} : ${getData['financialyear'].toString() ?? ""}"), clr, 12, false, true),
+                                    UIHelper.verticalSpaceTiny,
+                                    UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
+                                    UIHelper.verticalSpaceTiny,
+                                  ],
+                                )
+                              : getData[key_taxtypeid].toString() == "5"
+                                  ? Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
+                                        UIHelper.verticalSpaceTiny,
+                                        UIHelper.titleTextStyle(("${'lease_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
+                                        UIHelper.verticalSpaceTiny,
+                                        UIHelper.titleTextStyle(("${'lease_state'.tr()} : ${getData['lease_statename'].toString() ?? ""}"), clr, 12, false, true),
+                                        UIHelper.verticalSpaceTiny,
+                                        UIHelper.titleTextStyle(("${'lease_district'.tr()} : ${getData['lease_districtname'].toString() ?? ""}"), clr, 12, false, true),
+                                        UIHelper.verticalSpaceTiny,
+                                        UIHelper.titleTextStyle(("${'lease_duration'.tr()} : ${getData['from_date'].toString() ?? ""} - ${getData['to_date'].toString() ?? ""}"), clr, 12, false, true),
+                                        UIHelper.verticalSpaceTiny,
+                                      ],
+                                    )
+                                  : Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
+                                        UIHelper.verticalSpaceTiny,
+                                        UIHelper.titleTextStyle(("${'traders_code'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
+                                        UIHelper.verticalSpaceTiny,
+                                      ],
+                                    )
+                ],
+              ),
+            ),
+          ),
+        ) ??
         false; //if showDialouge had returned null, then return false
   }
 
@@ -661,7 +663,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
     String street = "";
     switch (getData[key_taxtypeid].toString()) {
       case '1':
-        street = (getData['doorno'] ?? '') + ", " +(selectedLang == 'en' ? (getData[s.key_street_name_en] ?? '') : (getData[s.key_street_name_ta] ?? ''));
+        street = (getData['doorno'] ?? '') + ", " + (selectedLang == 'en' ? (getData[s.key_street_name_en] ?? '') : (getData[s.key_street_name_ta] ?? ''));
         break;
       case '2':
         street = (getData["street_name"] ?? '');
@@ -683,58 +685,58 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
   Widget taxWiseReturnDataWidget(dynamic getData, Color clr) {
     return getData[key_taxtypeid].toString() == "1"
         ? Container(
-      // margin: EdgeInsets.only(left: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
-          UIHelper.verticalSpaceTiny,
-          UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
-          UIHelper.verticalSpaceTiny,
-        ],
-      ),
-    )
+            // margin: EdgeInsets.only(left: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
+                UIHelper.verticalSpaceTiny,
+                UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
+                UIHelper.verticalSpaceTiny,
+              ],
+            ),
+          )
         : getData[key_taxtypeid].toString() == "2"
-        ? Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
-        UIHelper.verticalSpaceTiny,
-        UIHelper.titleTextStyle(("${'water_connection_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
-        UIHelper.verticalSpaceTiny,
-      ],
-    )
-        : getData[key_taxtypeid].toString() == "4"
-        ? Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
-        UIHelper.verticalSpaceTiny,
-        UIHelper.titleTextStyle(("${'financialYear'.tr()} : ${getData['financialyear'].toString() ?? ""}"), clr, 12, false, true),
-        UIHelper.verticalSpaceTiny,
-        UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
-        UIHelper.verticalSpaceTiny,
-      ],
-    )
-        : getData[key_taxtypeid].toString() == "5"
-        ? Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
-        UIHelper.verticalSpaceTiny,
-        UIHelper.titleTextStyle(("${'lease_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
-        UIHelper.verticalSpaceTiny,
-      ],
-    )
-        : Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
-        UIHelper.verticalSpaceTiny,
-        UIHelper.titleTextStyle(("${'traders_code'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
-        UIHelper.verticalSpaceTiny,
-      ],
-    );
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
+                  UIHelper.verticalSpaceTiny,
+                  UIHelper.titleTextStyle(("${'water_connection_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
+                  UIHelper.verticalSpaceTiny,
+                ],
+              )
+            : getData[key_taxtypeid].toString() == "4"
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
+                      UIHelper.verticalSpaceTiny,
+                      UIHelper.titleTextStyle(("${'financialYear'.tr()} : ${getData['financialyear'].toString() ?? ""}"), clr, 12, false, true),
+                      UIHelper.verticalSpaceTiny,
+                      UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
+                      UIHelper.verticalSpaceTiny,
+                    ],
+                  )
+                : getData[key_taxtypeid].toString() == "5"
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
+                          UIHelper.verticalSpaceTiny,
+                          UIHelper.titleTextStyle(("${'lease_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
+                          UIHelper.verticalSpaceTiny,
+                        ],
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
+                          UIHelper.verticalSpaceTiny,
+                          UIHelper.titleTextStyle(("${'traders_code'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
+                          UIHelper.verticalSpaceTiny,
+                        ],
+                      );
   }
 
   Widget propertyTaxCollectionWidget(int mainIndex, dynamic demandData) {
@@ -752,7 +754,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
     return Column(
       children: [
         Container(
-            margin: EdgeInsets.only(top: 0,bottom: 15,right: 5),
+            margin: EdgeInsets.only(top: 0, bottom: 15, right: 5),
             padding: EdgeInsets.only(top: 5),
             decoration: UIHelper.GradientContainer(5, 5, 5, 5, [c.need_improvement2, c.need_improvement2]),
             child: Column(
@@ -773,7 +775,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                         minItemWidth: Screen.width(context) / 4,
                         children: List.generate(
                           taxData.length,
-                              (index) {
+                          (index) {
                             String finYearStr = "";
                             if (demandData[key_taxtypeid].toString() == "4") {
                               finYearStr = taxData[index]['financialyear'];
@@ -1056,12 +1058,12 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
       validator: FormBuilderValidators.compose([FormBuilderValidators.required(errorText: "")]),
       items: taxTypeList
           .map((item) => DropdownMenuItem(
-        value: item,
-        child: Text(
-          selectedLang == "en" ? item[s.key_taxtypedesc_en].toString() : item[s.key_taxtypedesc_ta].toString(),
-          style: TextStyle(fontSize: 11.0, fontWeight: FontWeight.w400, color: c.black),
-        ),
-      ))
+                value: item,
+                child: Text(
+                  selectedLang == "en" ? item[s.key_taxtypedesc_en].toString() : item[s.key_taxtypedesc_ta].toString(),
+                  style: TextStyle(fontSize: 11.0, fontWeight: FontWeight.w400, color: c.black),
+                ),
+              ))
           .toList(),
       onChanged: (value) async {
         isShowFlag = [];
@@ -1089,9 +1091,9 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
       var responce = await model.authendicationServicesAPIcall(context, requestJson);
       if (responce[key_data] != null && responce[key_data].length > 0) {
         List resList = responce[key_data].toList();
-        if(widget.isHome){
+        if (widget.isHome) {
           sourceList = resList.where((item) => item[key_taxtypeid].toString() == selectedTaxTypeData['taxtypeid'].toString() && double.parse(item['totaldemand']) != 0).toList();
-        }else{
+        } else {
           sourceList = resList.where((item) => item["is_favourite"] != "Y").toList();
         }
         mainList = sourceList.toList();
@@ -1125,8 +1127,9 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
           }
         }
         mainList.sort((a, b) {
-          return a[key_assessment_no].compareTo(b[key_assessment_no]);
+          return int.parse(a[key_assessment_no].toString()).compareTo(int.parse(b[key_assessment_no].toString()));
         });
+        print(mainList.toString());
       } else {
         mainList = [];
       }
@@ -1154,14 +1157,20 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
     return flag;
   }
 
-  Future<void> showPopupLocation(dynamic getData, StartUpViewModel model,Color clr,BuildContext mcontext, ContentType contentType, String message,
-      {String? title,
-        String? btnCount,
-        String? btnText,
-        String? btnmsg,
-        double? titleFontSize,
-        double? messageFontSize,
-      }) async {
+  Future<void> showPopupLocation(
+    dynamic getData,
+    StartUpViewModel model,
+    Color clr,
+    BuildContext mcontext,
+    ContentType contentType,
+    String message, {
+    String? title,
+    String? btnCount,
+    String? btnText,
+    String? btnmsg,
+    double? titleFontSize,
+    double? messageFontSize,
+  }) async {
     await showDialog<void>(
       context: mcontext,
       barrierDismissible: btnCount != null ? false : true, // user must tap button!
@@ -1169,9 +1178,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
         // Size
         final size = MediaQuery.of(context).size;
 
-        ContentInfo contentInfo = ContentInfo( title: "Location",
-            assetPath: imagePath.location,
-            color: c.white);
+        ContentInfo contentInfo = ContentInfo(title: "Location", assetPath: imagePath.location, color: c.white);
 
         final hsl = HSLColor.fromColor(contentInfo.color);
         final hslDark = hsl.withLightness((hsl.lightness - 0.1).clamp(0.0, 1.0));
@@ -1183,7 +1190,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
             child: Center(
               child: Container(
                 width: size.width,
-                height: size.width/1.3,
+                height: size.width / 1.3,
                 margin: EdgeInsets.symmetric(horizontal: size.width * 0.045),
                 decoration: UIHelper.roundedBorderWithColorWithShadow(20, c.white, c.white),
                 child: Stack(
@@ -1239,16 +1246,18 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                         child: Column(
                           children: [
                             Container(
-                              child:Text(
+                              child: Text(
                                 "location".tr().toString(),
-                                style: TextStyle(fontSize: 15, height: 1.5, color: c.colorPrimaryDark,decoration: TextDecoration.none,),
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  height: 1.5,
+                                  color: c.colorPrimaryDark,
+                                  decoration: TextDecoration.none,
+                                ),
                                 textAlign: TextAlign.center,
-
                               ),
-
                             ),
                             UIHelper.verticalSpaceMedium,
-
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1275,67 +1284,67 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                             ),
                             getData[key_taxtypeid].toString() == "1"
                                 ? Container(
-                              // margin: EdgeInsets.only(left: 20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
-                                  UIHelper.verticalSpaceTiny,
-                                  UIHelper.titleTextStyle(("${'building_licence_number'.tr()} : ${getData[s.key_building_licence_no].toString() ?? ""}"), clr, 13, false, true),
-                                  UIHelper.verticalSpaceTiny,
-                                  UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 13, false, true),
-                                  UIHelper.verticalSpaceTiny,
-                                ],
-                              ),
-                            )
+                                    // margin: EdgeInsets.only(left: 20),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
+                                        UIHelper.verticalSpaceTiny,
+                                        UIHelper.titleTextStyle(("${'building_licence_number'.tr()} : ${getData[s.key_building_licence_no].toString() ?? ""}"), clr, 13, false, true),
+                                        UIHelper.verticalSpaceTiny,
+                                        UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 13, false, true),
+                                        UIHelper.verticalSpaceTiny,
+                                      ],
+                                    ),
+                                  )
                                 : getData[key_taxtypeid].toString() == "2"
-                                ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
-                                UIHelper.verticalSpaceTiny,
-                                UIHelper.titleTextStyle(("${'water_connection_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 13, false, true),
-                                UIHelper.verticalSpaceTiny,
-                              ],
-                            )
-                                : getData[key_taxtypeid].toString() == "4"
-                                ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
-                                UIHelper.verticalSpaceTiny,
-                                UIHelper.titleTextStyle(("${'financialYear'.tr()} : ${getData['financialyear'].toString() ?? ""}"), clr, 12, false, true),
-                                UIHelper.verticalSpaceTiny,
-                                UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
-                                UIHelper.verticalSpaceTiny,
-                              ],
-                            )
-                                : getData[key_taxtypeid].toString() == "5"
-                                ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
-                                UIHelper.verticalSpaceTiny,
-                                UIHelper.titleTextStyle(("${'lease_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 13, false, true),
-                                UIHelper.verticalSpaceTiny,
-                                UIHelper.titleTextStyle(("${'lease_state'.tr()} : ${getData['lease_statename'].toString() ?? ""}"), clr, 13, false, true),
-                                UIHelper.verticalSpaceTiny,
-                                UIHelper.titleTextStyle(("${'lease_district'.tr()} : ${getData['lease_districtname'].toString() ?? ""}"), clr, 13, false, true),
-                                UIHelper.verticalSpaceTiny,
-                                UIHelper.titleTextStyle(("${'lease_duration'.tr()} : ${getData['from_date'].toString() ?? ""} - ${getData['to_date'].toString() ?? ""}"), clr, 13, false, true),
-                                UIHelper.verticalSpaceTiny,
-                              ],
-                            )
-                                : Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
-                                UIHelper.verticalSpaceTiny,
-                                UIHelper.titleTextStyle(("${'traders_code'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 13, false, true),
-                                UIHelper.verticalSpaceTiny,
-                              ],
-                            )
-
+                                    ? Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
+                                          UIHelper.verticalSpaceTiny,
+                                          UIHelper.titleTextStyle(("${'water_connection_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 13, false, true),
+                                          UIHelper.verticalSpaceTiny,
+                                        ],
+                                      )
+                                    : getData[key_taxtypeid].toString() == "4"
+                                        ? Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
+                                              UIHelper.verticalSpaceTiny,
+                                              UIHelper.titleTextStyle(("${'financialYear'.tr()} : ${getData['financialyear'].toString() ?? ""}"), clr, 12, false, true),
+                                              UIHelper.verticalSpaceTiny,
+                                              UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
+                                              UIHelper.verticalSpaceTiny,
+                                            ],
+                                          )
+                                        : getData[key_taxtypeid].toString() == "5"
+                                            ? Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
+                                                  UIHelper.verticalSpaceTiny,
+                                                  UIHelper.titleTextStyle(("${'lease_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 13, false, true),
+                                                  UIHelper.verticalSpaceTiny,
+                                                  UIHelper.titleTextStyle(("${'lease_state'.tr()} : ${getData['lease_statename'].toString() ?? ""}"), clr, 13, false, true),
+                                                  UIHelper.verticalSpaceTiny,
+                                                  UIHelper.titleTextStyle(("${'lease_district'.tr()} : ${getData['lease_districtname'].toString() ?? ""}"), clr, 13, false, true),
+                                                  UIHelper.verticalSpaceTiny,
+                                                  UIHelper.titleTextStyle(
+                                                      ("${'lease_duration'.tr()} : ${getData['from_date'].toString() ?? ""} - ${getData['to_date'].toString() ?? ""}"), clr, 13, false, true),
+                                                  UIHelper.verticalSpaceTiny,
+                                                ],
+                                              )
+                                            : Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
+                                                  UIHelper.verticalSpaceTiny,
+                                                  UIHelper.titleTextStyle(("${'traders_code'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 13, false, true),
+                                                  UIHelper.verticalSpaceTiny,
+                                                ],
+                                              )
                           ],
                         ),
                       ),
@@ -1383,7 +1392,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                               ),
                               child: Text(
                                 "OK",
-                                style: TextStyle(color: c.colorPrimary, fontSize: 12,fontWeight: FontWeight.w500),
+                                style: TextStyle(color: c.colorPrimary, fontSize: 12, fontWeight: FontWeight.w500),
                               ),
                             ),
                           ),
@@ -1421,5 +1430,4 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
       },
     );
   }
-
 }

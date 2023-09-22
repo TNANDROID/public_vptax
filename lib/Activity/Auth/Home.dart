@@ -222,7 +222,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 // ********** Main Build Widget ***********\\
   @override
   Widget build(BuildContext context) {
-    double totalAmountOfPayable = property_total + water_total + professional_total + non_total + trade_total;
+    double number = property_total + water_total + professional_total + non_total + trade_total;
+    String totalAmountOfPayable = number.toStringAsFixed(2);
     return WillPopScope(
         onWillPop: showExitPopup,
         child: Scaffold(
@@ -626,7 +627,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         total = trade_total.toString();
         break;
     }
-
-    return total;
+    double number = double.parse(total);
+    String formattedString = number.toStringAsFixed(2);
+    return formattedString;
   }
 }
