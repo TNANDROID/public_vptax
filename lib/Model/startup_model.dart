@@ -267,9 +267,7 @@ class StartUpViewModel extends BaseViewModel {
     dynamic requestData = {key_data_content: requestJson};
     if (await Utils().isOnline()) {
       try {
-        print("requestData----:) $requestData");
         var response = await apiServices.mainServiceFunction(requestData);
-        print("response----:) $response");
         setBusy(false);
         return response;
       } catch (error) {

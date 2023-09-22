@@ -11,6 +11,7 @@ import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Model/startup_model.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
+import 'package:public_vptax/Services/Apiservices.dart';
 import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:public_vptax/Utils/utils.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
@@ -101,11 +102,8 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
         appBar: UIHelper.getBar('tax_details_yours'),
         body: ViewModelBuilder<StartUpViewModel>.reactive(
             onModelReady: (model) async {
-              try {
-                await getAllDemandList(model);
-              } catch (error) {
-                debugPrint('error : $error has been caught');
-              }
+              await getAllDemandDetails(context, model);
+              setState(() {});
             },
             builder: (context, model, child) {
               return model.isBusy
@@ -316,7 +314,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
 // *************** Blue Color Main Card Widget ***********
   Widget headerCardUIWidget(int mainIndex, dynamic getData, StartUpViewModel model) {
     List taxData = [];
-    if (getData[key_DEMAND_DETAILS] != "Empty" && getData[key_DEMAND_DETAILS] != "Pending" && getData[key_DEMAND_DETAILS] != null) {
+    if (getData[key_DEMAND_DETAILS] != "Empty" && getData[key_DEMAND_DETAILS] != "Pending" && getData[key_DEMAND_DETAILS] != "Something Went Wrong" && getData[key_DEMAND_DETAILS] != null) {
       taxData = getData[key_DEMAND_DETAILS];
     }
     return Column(
@@ -499,11 +497,11 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                 ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
                     child: InkWell(
-                      onTap: (){
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => CheckTransaction(),
-                        ));
-                      },
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => CheckTransaction(),
+                          ));
+                        },
                         child: UIHelper.titleTextStyle('transaction_warning_hint'.tr().toString(), c.red, 12, true, true)),
                   )
                 : AnimatedSize(
@@ -516,44 +514,6 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                   ),
       ],
     );
-  }
-
-// ********** App Exit and Logout Widget ***********\\
-  Future<bool> showRemovePopup(dynamic getData, StartUpViewModel model) async {
-    return await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            content: UIHelper.titleTextStyle('assessment_remove'.tr().toString(), c.black, 13, false, false),
-            actions: [
-              ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: Text(
-                  'no'.tr().toString(),
-                  style: TextStyle(fontSize: 12),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  var requestJson = {"service_id": "RemovefavouriteList", "user_id": getData['user_id'], "favourite_assessment_id": getData['favourite_assessment_id']};
-                  var responce = await model.authendicationServicesAPIcall(context, requestJson);
-
-                  try {
-                    await getAllDemandList(model);
-                  } catch (error) {
-                    debugPrint('error : $error has been caught');
-                  }
-
-                  Navigator.of(context).pop(false);
-                },
-                child: Text(
-                  'yes'.tr().toString(),
-                  style: TextStyle(fontSize: 12),
-                ),
-              ),
-            ],
-          ),
-        ) ??
-        false; //if showDialouge had returned null, then return false
   }
 
   Future<bool> showlocationPopup(dynamic getData, StartUpViewModel model, Color clr) async {
@@ -1093,61 +1053,71 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
     return selectedTaxitem[0][s.key_img_path].toString();
   }
 
-  Future getAllDemandList(StartUpViewModel model) async {
-    try {
-      var responce = await model.authendicationServicesAPIcall(context, requestJson);
-      if (responce[key_data] != null && responce[key_data].length > 0) {
-        List resList = responce[key_data].toList();
-        resList.sort((a, b) {
-          return int.parse(a[key_assessment_no].toString()).compareTo(int.parse(b[key_assessment_no].toString()));
-        });
-        if (widget.isHome) {
-          sourceList = resList.where((item) => item[key_taxtypeid].toString() == selectedTaxTypeData['taxtypeid'].toString() && double.parse(item['totaldemand']) != 0).toList();
-        } else {
-          sourceList = resList.where((item) => item["is_favourite"] != "Y").toList();
-        }
-        mainList = sourceList.toList();
-        mainList.sort((a, b) {
-          return a[key_taxtypeid].toString().compareTo(b[key_taxtypeid].toString());
-        });
-        for (var item in mainList) {
-          dynamic getDemandRequest = {
-            key_service_id: service_key_getAssessmentDemandList,
-            key_taxtypeid: item[key_taxtypeid],
-            key_assessment_id: item[key_assessment_id],
-            key_dcode: item[key_dcode],
-            key_bcode: item[key_bcode],
-            key_pvcode: item[key_lbcode],
-            key_language_name: selectedLang,
-          };
-          if (item[key_taxtypeid] == 4) {
-            getDemandRequest[key_fin_year] = item[key_financialyear];
-          }
-          var getDemandResponce = await model.authendicationServicesAPIcall(context, getDemandRequest);
-
-          if (getDemandResponce[key_response] == key_fail) {
-            if (getDemandResponce[key_message] == "Demand Details Not Found") {
-              item[key_DEMAND_DETAILS] = "Empty";
-            } else if (getDemandResponce[key_message] == "Your previous transaction is pending. Please try after 60 minutes") {
-              item[key_DEMAND_DETAILS] = "Pending";
-            } else {
-              item[key_DEMAND_DETAILS] = "Something Went Wrong...";
-            }
+  //Auth Service API Call
+  Future getAllDemandDetails(BuildContext context, StartUpViewModel model) async {
+    if (await Utils().isOnline()) {
+      Utils().showProgress(context, 1);
+      try {
+        var response = await model.demandServicesAPIcall(context, requestJson);
+        if (response[key_data] != null && response[key_data].length > 0) {
+          List resList = response[key_data].toList();
+          resList.sort((a, b) {
+            return int.parse(a[key_assessment_no].toString()).compareTo(int.parse(b[key_assessment_no].toString()));
+          });
+          if (widget.isHome) {
+            sourceList = resList.where((item) => item[key_taxtypeid].toString() == selectedTaxTypeData['taxtypeid'].toString() && double.parse(item['totaldemand']) != 0).toList();
           } else {
-            if (getDemandResponce[key_data] != null && getDemandResponce[key_data].length > 0) {
-              item[key_DEMAND_DETAILS] = getDemandResponce[key_data];
+            sourceList = resList.where((item) => item["is_favourite"] != "Y").toList();
+          }
+          mainList = sourceList.toList();
+          mainList.sort((a, b) {
+            return a[key_taxtypeid].toString().compareTo(b[key_taxtypeid].toString());
+          });
+          for (var item in mainList) {
+            dynamic getDemandRequest = {
+              key_service_id: service_key_getAssessmentDemandList,
+              key_taxtypeid: item[key_taxtypeid],
+              key_assessment_id: item[key_assessment_id],
+              key_dcode: item[key_dcode],
+              key_bcode: item[key_bcode],
+              key_pvcode: item[key_lbcode],
+              key_language_name: await preferencesService.getUserInfo("lang"),
+            };
+            if (item[key_taxtypeid] == 4) {
+              getDemandRequest[key_fin_year] = item[key_financialyear];
+            }
+            var getDemandResponce = await model.demandServicesAPIcall(context, getDemandRequest);
+            if (getDemandResponce[key_response] == key_fail) {
+              if (getDemandResponce[key_message] == "Demand Details Not Found") {
+                item[key_DEMAND_DETAILS] = "Empty";
+              } else if (getDemandResponce[key_message] == "Your previous transaction is pending. Please try after 60 minutes") {
+                item[key_DEMAND_DETAILS] = "Pending";
+              } else {
+                item[key_DEMAND_DETAILS] = "Something Went Wrong";
+              }
+            } else {
+              if (getDemandResponce[key_data] != null && getDemandResponce[key_data].length > 0) {
+                item[key_DEMAND_DETAILS] = getDemandResponce[key_data];
+              }
             }
           }
+        } else {
+          mainList = [];
         }
 
-        print(mainList.toString());
-      } else {
-        mainList = [];
+        Utils().hideProgress(context);
+        return "true";
+      } catch (error) {
+        Utils().hideProgress(context);
+        debugPrint('error : $error has been caught');
       }
-    } catch (error) {
-      debugPrint('error : $error has been caught');
+    } else {
+      Utils().showAlert(
+        context,
+        ContentType.fail,
+        "noInternet".tr().toString(),
+      );
     }
-    setState(() {});
   }
 
   bool getFlagStatus(String assId) {
