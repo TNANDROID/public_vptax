@@ -24,7 +24,7 @@ import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/utils.dart';
-
+import 'package:public_vptax/Utils/ContentInfo.dart';
 import '../Tax_Collection/favourite_list.dart';
 
 class Home extends StatefulWidget {
@@ -347,7 +347,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
                     child: Column(
                       children: [
-                        UIHelper.verticalSpaceMedium,
+                        UIHelper.verticalSpaceSmall,
                         Container(
                             padding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
                             alignment: Alignment.centerLeft,
@@ -380,13 +380,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                       setState(() {});
                                     },
                                     onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (_) => AllYourTaxDetails(
-                                                    selectedTaxTypeData: taxTypeList[currentSelectedTax],
-                                                    isHome: true,
-                                                  )));
+                                      String Taxamount = gettotal(taxTypeList[currentSelectedTax][key_taxtypeid].toString());
+                                      double txtToDouAmt = double.parse(Taxamount);
+                                      if (txtToDouAmt > 0) {
+                                        Navigator.push(context, MaterialPageRoute(builder: (_) => AllYourTaxDetails(selectedTaxTypeData: taxTypeList[currentSelectedTax], isHome: true)));
+                                      } else {
+                                        utils.showAlert(context, ContentType.fail, 'no_pending_due'.tr().toString());
+                                      }
                                     },
                                     child: Container(
                                         width: Screen.width(context) / 1.5,
@@ -543,18 +543,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                   onTap: () async {
                                     selected_index = servicesList[index][key_service_id];
                                     if (selected_index == 0) {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (_) => AllYourTaxDetails(
-                                                    isHome: false,
-                                                  )));
+                                      await Navigator.push(context, MaterialPageRoute(builder: (_) => AllYourTaxDetails(isHome: false)));
                                     } else if (selected_index == 1) {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => FavouriteTaxDetails()));
+                                      await Navigator.push(context, MaterialPageRoute(builder: (context) => FavouriteTaxDetails()));
                                     } else if (selected_index == 2) {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(appbarTitle: 'quickPay', flag: "2")));
+                                      await Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(appbarTitle: 'quickPay', flag: "2")));
                                     } else if (selected_index == 3) {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => CheckTransaction()));
+                                      await Navigator.push(context, MaterialPageRoute(builder: (context) => CheckTransaction()));
                                     } else if (selected_index == 4) {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => ViewReceipt()));
                                     } else if (selected_index == 5) {
@@ -562,6 +557,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                     } else if (selected_index == 6) {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => Villagedevelopment()));
                                     }
+                                    initialize();
                                     setState(() {});
                                   },
                                   child: Container(
