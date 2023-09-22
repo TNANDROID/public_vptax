@@ -7,7 +7,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:public_vptax/Activity/Auth/Splash.dart';
 import 'package:public_vptax/Layout/customgradientbutton.dart';
-import 'package:public_vptax/Layout/number_keyboard.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Layout/verification.dart';
@@ -20,6 +19,8 @@ import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:public_vptax/Utils/utils.dart';
+
+import '../../Layout/number_keyboard.dart';
 
 class SignUpView extends StatefulWidget {
   bool isSignup;
@@ -96,7 +97,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: Stack(
-          alignment: Alignment.topCenter,
+          alignment: Alignment.bottomCenter,
           children: [
             // ****************************** Background Color alone Field ****************************** //
 
@@ -110,138 +111,142 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
               btnPadding: 0,
             ),
 
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                // ****************************** Back Arrow ****************************** //
-
-                Container(
-                  alignment: Alignment.centerLeft,
-                  margin: EdgeInsets.only(top: Screen.width(context) * 0.15, left: Screen.width(context) * 0.07),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Icon(
-                      Icons.arrow_circle_left_outlined,
-                      size: 30,
-                      color: c.white,
-                    ),
+            Positioned(
+              top: 0,
+              left: 0,
+              child: Container(
+                alignment: Alignment.centerLeft,
+                margin: EdgeInsets.only(top: Screen.width(context) * 0.15, left: Screen.width(context) * 0.07),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Icon(
+                    Icons.arrow_circle_left_outlined,
+                    size: 30,
+                    color: c.white,
                   ),
                 ),
+              ),
+            ),
 
-                // ****************************** Upper Card Image Design Field ****************************** //
+            // ****************************** Upper Card Image Design Field ****************************** //
 
-                Column(
+            Positioned(
+              top: Screen.height(context) * 0.10,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Visibility(
+                      visible: registerStep == 1,
+                      child: Container(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        width: Screen.width(context) - 150,
+                        height: Screen.width(context) - 150,
+                        decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
+                        child: ClipRect(
+                          child: SizedBox(
+                            height: Screen.width(context) - 50,
+                            width: Screen.width(context) - 50,
+                            child: Image.asset(
+                              imagepath.loginEnc,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      )),
+                  Visibility(
+                      visible: registerStep != 1,
+                      child: Container(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        margin: EdgeInsets.only(top: Screen.height(context) * 0.02),
+                        width: Screen.width(context) - 150,
+                        height: Screen.width(context) - 150,
+                        decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
+                        child: ClipRect(
+                          child: SizedBox(
+                            height: Screen.width(context) - 50,
+                            width: Screen.width(context) - 50,
+                            child: AnimatedBuilder(
+                                animation: _rightToLeftAnimation,
+                                builder: (context, child) {
+                                  return SlideTransition(
+                                    position: _rightToLeftAnimation,
+                                    child: Image.asset(
+                                      imagepath.loginPass,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  );
+                                }),
+                          ),
+                        ),
+                      )),
+                  UIHelper.verticalSpaceSmall,
+                  UIHelper.titleTextStyle(signUpFlag ? 'signUP' : 'signIN', c.white, 25, true, true)
+                ],
+              ),
+            ),
+
+            // ****************************** Log in Field ****************************** //
+            Positioned(
+              bottom: isShowKeyboard ? 330 : Screen.width(context) * 0.10,
+              child: Container(
+                // margin: EdgeInsets.only(top: signUpFlag ? Screen.width(context) * 0.10 : Screen.width(context) * 0.20),
+                width: Screen.width(context) - 50,
+                padding: EdgeInsets.all(15),
+                decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Visibility(
-                        visible: registerStep == 1,
-                        child: Container(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          width: Screen.width(context) - 150,
-                          height: Screen.width(context) - 150,
-                          decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
-                          child: ClipRect(
-                            child: SizedBox(
-                              height: Screen.width(context) - 50,
-                              width: Screen.width(context) - 50,
-                              child: Image.asset(
-                                imagepath.loginEnc,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ),
-                        )),
-                    Visibility(
-                        visible: registerStep != 1 && !isShowKeyboard,
-                        child: Container(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          margin: EdgeInsets.only(top: Screen.height(context) * 0.02),
-                          width: Screen.width(context) - 150,
-                          height: Screen.width(context) - 150,
-                          decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
-                          child: ClipRect(
-                            child: SizedBox(
-                              height: Screen.width(context) - 50,
-                              width: Screen.width(context) - 50,
-                              child: AnimatedBuilder(
-                                  animation: _rightToLeftAnimation,
-                                  builder: (context, child) {
-                                    return SlideTransition(
-                                      position: _rightToLeftAnimation,
-                                      child: Image.asset(
-                                        imagepath.loginPass,
-                                        fit: BoxFit.contain,
-                                      ),
-                                    );
-                                  }),
-                            ),
-                          ),
-                        )),
-                    UIHelper.verticalSpaceSmall,
-                    UIHelper.titleTextStyle(signUpFlag ? 'signUP' : 'signIN', c.white, 25, true, true)
-                  ],
-                ),
+                    if (verifyOTPFlag && registerStep == 1) UIHelper.titleTextStyle(titleText, c.text_color, 15, true, false),
+                    if (registerStep == 1) formControls(context),
+                    if (registerStep == 2) otpControls(model),
+                    if (registerStep == 3) appKeyControls(),
+                    UIHelper.verticalSpaceMedium,
 
-                // ****************************** Log in Field ****************************** //
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(top: signUpFlag ? Screen.width(context) * 0.10 : Screen.width(context) * 0.20),
-                      width: Screen.width(context) - 50,
-                      padding: EdgeInsets.all(15),
-                      decoration: UIHelper.roundedBorderWithColorWithShadow(30.0, c.white, c.white),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          if (verifyOTPFlag && registerStep == 1) UIHelper.titleTextStyle(titleText, c.text_color, 15, true, false),
-                          if (registerStep == 1) formControls(context),
-                          if (registerStep == 2) otpControls(model),
-                          if (registerStep == 3) appKeyControls(),
-                          UIHelper.verticalSpaceMedium,
-
-                          // ****************************** Submit Action Field ****************************** //
-                          CustomGradientButton(
-                            onPressed: () async {
-                              finalValidation(model);
-                            },
-                            width: Screen.width(context) - 100,
-                            height: 50,
-                            child: Container(
-                              alignment: Alignment.center,
-                              child: Text(
-                                'submit'.tr().toString(),
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
+                    // ****************************** Submit Action Field ****************************** //
+                    CustomGradientButton(
+                      onPressed: () async {
+                        finalValidation(model);
+                      },
+                      width: Screen.width(context) - 100,
+                      height: 50,
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'submit'.tr().toString(),
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                    if (isShowKeyboard) ...{
-                      CustomNumberBoard(
-                        initialValue: finalOTP,
-                        length: 6,
-                        onChanged: (value) {
-                          finalOTP = value;
-                          setState(() {});
-                        },
-                        onCompleted: () {
-                          isShowKeyboard = false;
-                          setState(() {});
-                        },
-                      ),
-                    }
                   ],
-                )
-              ],
-            )
+                ),
+              ),
+            ),
+
+            Visibility(
+              visible: isShowKeyboard,
+              child: SizedBox(
+                height: 330,
+                width: Screen.width(context),
+                child: CustomNumberBoard(
+                  initialValue: finalOTP,
+                  length: 6,
+                  onChanged: (value) {
+                    finalOTP = value;
+                    setState(() {});
+                  },
+                  onCompleted: () {
+                    isShowKeyboard = false;
+                    setState(() {});
+                  },
+                ),
+              ),
+            ),
           ],
         ),
       ),
