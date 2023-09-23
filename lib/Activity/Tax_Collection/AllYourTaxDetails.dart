@@ -420,8 +420,18 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                       child: InkWell(
                         onTap: () {
                           isSelectAll.add(mainIndex);
-                          for (var item in taxData) {
-                            item[s.key_flag] = true;
+                          for (int i = 0; i < mainList.length; i++) {
+                            if (mainList[i][key_DEMAND_DETAILS] != "Empty" && mainList[i][key_DEMAND_DETAILS] != "Pending") {
+                              if (i == mainIndex) {
+                                for (var item in mainList[i][key_DEMAND_DETAILS]) {
+                                  item[s.key_flag] = true;
+                                }
+                              } else {
+                                for (var item in mainList[i][key_DEMAND_DETAILS]) {
+                                  item[s.key_flag] = false;
+                                }
+                              }
+                            }
                           }
                           Utils().settingModalBottomSheet(context, [getData]);
                         },
@@ -753,22 +763,29 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                             bool isStatus = taxData[index][s.key_flag] ?? false;
                             return GestureDetector(
                                 onTap: () {
-                                  if (!getFlagStatus(demandData[key_assessment_id].toString())) {
-                                    if (index == 0 || taxData[index - 1][s.key_flag] == true) {
-                                      if (taxData[index][key_flag] == true) {
-                                        for (int i = 0; i < taxData.length; i++) {
-                                          if (i >= index) {
-                                            taxData[i][key_flag] = false;
-                                          }
+                                  for (int i = 0; i < mainList.length; i++) {
+                                    if (mainList[i][key_DEMAND_DETAILS] != "Empty" && mainList[i][key_DEMAND_DETAILS] != "Pending") {
+                                      if (i != mainIndex) {
+                                        isSelectAll.remove(i);
+                                        for (var item in mainList[i][key_DEMAND_DETAILS]) {
+                                          item[s.key_flag] = false;
                                         }
-                                      } else {
-                                        taxData[index][key_flag] = true;
+                                      }
+                                    }
+                                  }
+
+                                  if (index == 0 || taxData[index - 1][s.key_flag] == true) {
+                                    if (taxData[index][key_flag] == true) {
+                                      for (int i = 0; i < taxData.length; i++) {
+                                        if (i >= index) {
+                                          taxData[i][key_flag] = false;
+                                        }
                                       }
                                     } else {
-                                      Utils().showAlert(context, ContentType.fail, 'pay_pending_year'.tr().toString());
+                                      taxData[index][key_flag] = true;
                                     }
                                   } else {
-                                    Utils().showAlert(context, ContentType.fail, 'pay_previous'.tr().toString());
+                                    Utils().showAlert(context, ContentType.fail, 'pay_pending_year'.tr().toString());
                                   }
 
                                   int countActiveItems = taxData.where((item) => item[s.key_flag] == true).length;
@@ -920,21 +937,31 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
   Widget selectAllWidget(String title, int mainIndex, List taxData) {
     return GestureDetector(
         onTap: () {
-          if (!getFlagStatus(mainList[mainIndex][key_assessment_id].toString())) {
-            if (isSelectAll.contains(mainIndex)) {
-              isSelectAll.remove(mainIndex);
-              for (var item in taxData) {
-                item[s.key_flag] = false;
-              }
-            } else {
-              isSelectAll.add(mainIndex);
-              for (var item in taxData) {
-                item[s.key_flag] = true;
+          //  if (!getFlagStatus(mainList[mainIndex][key_assessment_id].toString())) {
+          for (int i = 0; i < mainList.length; i++) {
+            if (mainList[i][key_DEMAND_DETAILS] != "Empty" && mainList[i][key_DEMAND_DETAILS] != "Pending") {
+              if (i != mainIndex) {
+                isSelectAll.remove(i);
+                for (var item in mainList[i][key_DEMAND_DETAILS]) {
+                  item[s.key_flag] = false;
+                }
               }
             }
-          } else {
-            Utils().showAlert(context, ContentType.fail, 'pay_previous'.tr().toString());
           }
+          if (isSelectAll.contains(mainIndex)) {
+            isSelectAll.remove(mainIndex);
+            for (var item in taxData) {
+              item[s.key_flag] = false;
+            }
+          } else {
+            isSelectAll.add(mainIndex);
+            for (var item in taxData) {
+              item[s.key_flag] = true;
+            }
+          }
+          // } else {
+          //   Utils().showAlert(context, ContentType.fail, 'pay_previous'.tr().toString());
+          // }
           repeatOnce();
           setState(() {});
         },
