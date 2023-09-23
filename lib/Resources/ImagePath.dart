@@ -59,6 +59,11 @@ String warning_png = "assets/images/warning.png";
 String delete_png = "assets/images/delete.png";
 String location = "assets/images/location.png";
 String datepicker_icon = "assets/images/datepicker_icon.png";
+String history = "assets/images/history.png";
+String currency = "assets/images/currency.png";
+String add_user = "assets/images/add_user.png";
+String download_ic = "assets/images/download.png";
+String currency_ic = "assets/images/currency_ic.png";
 
 String help = 'assets/images/help.svg';
 String failure = 'assets/images/failure.svg';

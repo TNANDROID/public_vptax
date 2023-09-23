@@ -41,11 +41,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   List taxTypeList = [];
   int currentSelectedTax = 0;
   List servicesList = [
-    {'service_id': 0, 'service_name': 'your_tax_details', 'img_path': imagePath.due4},
-    {'service_id': 1, 'service_name': 'addedList', 'img_path': imagePath.group},
+    {'service_id': 0, 'service_name': 'your_tax_details', 'img_path': imagePath.currency_ic},
+    {'service_id': 1, 'service_name': 'addedList', 'img_path': imagePath.add_user},
     {'service_id': 2, 'service_name': 'quickPay', 'img_path': imagePath.quick_pay1},
-    {'service_id': 3, 'service_name': 'payment_transaction_history', 'img_path': imagePath.transaction_history},
-    {'service_id': 4, 'service_name': 'view_receipt_details', 'img_path': imagePath.download_receipt},
+    {'service_id': 3, 'service_name': 'payment_transaction_history', 'img_path': imagePath.history},
+    {'service_id': 4, 'service_name': 'view_receipt_details', 'img_path': imagePath.download_ic},
     /* {'service_id': 5, 'service_name': 'know_about_your_village', 'img_path': imagePath.village},
     {'service_id': 6, 'service_name': 'village_development_works', 'img_path': imagePath.village_development}, */
   ];
@@ -566,19 +566,20 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                     width: (Screen.height(context) / 2) - 10,
                                     alignment: Alignment.center,
                                     margin: EdgeInsets.all(5),
-                                    decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.colorPrimaryDark, c.colorAccentverylight, borderWidth: 0),
+                                    decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.white, c.white, borderWidth: 0),
                                     child: Column(
                                       children: [
                                         Container(
                                           child: Image.asset(
                                             servicesList[index][key_img_path],
+                                            color: c.colorPrimary,
                                           ),
                                           height: MediaQuery.of(context).size.width * 0.13,
                                           margin: EdgeInsets.only(
                                             left: MediaQuery.of(context).size.width / 20,
                                             right: MediaQuery.of(context).size.width / 20,
                                           ),
-                                          padding: EdgeInsets.all(5),
+                                          padding: EdgeInsets.all(index==4?8:5),
                                           width: MediaQuery.of(context).size.width,
                                         ),
                                         Container(
@@ -586,7 +587,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                           margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
                                           child: Text(
                                             servicesList[index][key_service_name].toString().tr().toString(),
-                                            style: TextStyle(fontSize: 11, height: 1.2, color: c.white),
+                                            style: TextStyle(fontSize: 11, height: 1.2, color: c.text_color),
                                             textAlign: TextAlign.center,
                                           ),
                                         ),
