@@ -65,7 +65,7 @@ class CustomGradientButton extends StatelessWidget {
                 end: Alignment.bottomRight,
                 stops: const [0.2, 0.8],
                 colors:
-                    gradientColors ?? [c.colorAccent, c.colorPrimaryDark],
+                    gradientColors ?? [c.colorPrimary, c.colorPrimaryDark],
               ),
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(topright ?? 15),
