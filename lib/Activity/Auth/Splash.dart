@@ -37,35 +37,34 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
       await preferencesService.setUserInfo(key_isLogin, "yes");
     }
     ////********************  Need to Remove ********************************************////
-    // /*******/ await preferencesService.setUserInfo(key_mobile_number, "9875235654"); //**////
+    /*******/ await preferencesService.setUserInfo(key_mobile_number, "9875235654"); //**////
     // /*******/ await preferencesService.setUserInfo(key_secretKey, "1111"); //**////
     // /*******/ await preferencesService.setUserInfo(key_name, "Test"); //**////
     // /*******/ await preferencesService.setUserInfo(key_email, "Test@gmail.com"); //**////
     ////*********************************************************************************////
 
     if (await utils.isOnline()) {
-      Future.delayed(
-        const Duration(seconds: 2, milliseconds: 350),
-        () {
-          Navigator.of(context).pushReplacement(
-            PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) => getPrefesecrectKey.isNotEmpty ? const SecretKeyView() : const AuthModeView(),
-              transitionDuration: const Duration(seconds: 2),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                const begin = Offset(1.0, 0.0); // Start position
-                const end = Offset.zero; // End position
-                const curve = Curves.easeInOut; // Transition curve
-                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                var offsetAnimation = animation.drive(tween);
+      if (getPrefesecrectKey.isNotEmpty) {
+        await Utils().apiCalls(context);
+      }
 
-                return SlideTransition(
-                  position: offsetAnimation,
-                  child: child,
-                );
-              },
-            ),
-          );
-        },
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => getPrefesecrectKey.isNotEmpty ? const SecretKeyView() : const AuthModeView(),
+          transitionDuration: const Duration(seconds: 2),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0); // Start position
+            const end = Offset.zero; // End position
+            const curve = Curves.easeInOut; // Transition curve
+            var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+        ),
       );
     } else {
       utils.showAlert(context, ContentType.fail, 'No Internet');

@@ -592,7 +592,7 @@ class Utils {
   }
 
   Future<void> apiCalls(BuildContext context) async {
-    showProgress(context, 1);
+    //  showProgress(context, 1);
     try {
       await StartUpViewModel().getOpenServiceList("District", context);
       await StartUpViewModel().getOpenServiceList("Block", context);
@@ -601,10 +601,10 @@ class Utils {
       await StartUpViewModel().getMainServiceList("FinYear", context: context);
       await StartUpViewModel().getMainServiceList("PaymentTypeList", dcode: "1", bcode: "1", pvcode: "1", context: context);
       await StartUpViewModel().getMainServiceList("GatewayList", context: context);
-      hideProgress(context);
+      // hideProgress(context);
     } catch (error) {
       debugPrint('error (${error.toString()}) has been caught');
-      hideProgress(context);
+      //   hideProgress(context);
     }
   }
 

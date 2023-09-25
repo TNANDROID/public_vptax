@@ -108,6 +108,7 @@ class StartUpViewModel extends BaseViewModel {
     } else if (type == "CollectionPaymentTokenList") {
       requestData = requestDataValue;
     }
+    print("requestData collection ${jsonEncode(requestData)}");
     var response = await demandServicesAPIcall(context, requestData);
 
     if (type == "TaxType") {
