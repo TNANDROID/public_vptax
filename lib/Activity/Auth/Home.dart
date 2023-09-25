@@ -356,7 +356,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               child: Row(
                 children: [
                   Expanded(flex: 2, child: UIHelper.titleTextStyle('tax_due'.tr().toString() + " : ", c.grey_10, selectedLang == "ta"?12:13, true, false)),
-                  Expanded(flex: 1, child: UIHelper.titleTextStyle("\u{20B9} $totalAmountOfPayable", c.red_new, 16, true, false))
+                  Expanded(flex: 1, child: UIHelper.titleTextStyle("\u{20B9} $totalAmountOfPayable", c.red_new, 17, true, false))
                 ],
               )),
           Row(
