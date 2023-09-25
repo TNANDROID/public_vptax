@@ -1,11 +1,9 @@
 // ignore_for_file: non_constant_identifier_names, prefer_const_constructors, use_full_hex_values_for_flutter_colors, file_names
 import 'dart:ui';
 
-/*
 Color colorPrimary = Color(0xff4c59a2);
 Color colorPrimaryDark = Color(0xFF3F51B5);
 Color colorAccent = Color(0xFF9FA8DA);
-*/
 /*Color colorPrimary = Color(0xff2979FF);
 Color colorPrimaryDark = Color(0xFF2962FF);
 Color colorAccent = Color(0xFF90CAF9);*/
@@ -17,9 +15,9 @@ Color colorAccent = Color(0xFF4DB6AC);
 /*Color colorPrimary = Color(0xff0091ff);
 Color colorPrimaryDark = Color(0xFF0082ff);
 Color colorAccent = Color(0xFF54b3ff);*/
-Color colorPrimary = Color(0xff8D6E63);
+/*Color colorPrimary = Color(0xff8D6E63);
 Color colorPrimaryDark = Color(0xFF79564A);
-Color colorAccent = Color(0xFFBCAAA4);
+Color colorAccent = Color(0xFFBCAAA4);*/
 /*Color colorPrimary = Color(0xff8D6E63);
 Color colorPrimaryDark = Color(0xFF79564A);
 Color colorAccent = Color(0xFFC2BCBA);*/
