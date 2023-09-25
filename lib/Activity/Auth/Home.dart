@@ -234,7 +234,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             child: Container(
                 padding: EdgeInsets.only(top: 20),
                 height: 70,
-                decoration: UIHelper.GradientContainer(0, 0, 30, 30, [c.colorAccentlight, c.colorPrimaryDark]),
+                decoration: UIHelper.GradientContainer(0, 0, 30, 30, [c.colorPrimary, c.colorPrimaryDark]),
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
@@ -330,7 +330,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       Container(
                         width: Screen.width(context) / 1.6,
                         padding: EdgeInsets.only(top: 10, bottom: 10),
-                        decoration: UIHelper.GradientContainer(20, 0, 20, 0, [c.colorAccentlight, c.colorPrimaryDark]),
+                        decoration: UIHelper.GradientContainer(20, 0, 20, 0, [c.colorPrimary, c.colorPrimaryDark]),
                         child: Text(
                           textAlign: TextAlign.center,
                           "appName".tr().toString(),
@@ -474,7 +474,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                     Container(
                                     alignment: Alignment.center,
                                     margin: EdgeInsets.fromLTRB(20,5,5,20),
-                                    decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.colorPrimaryDark, c.colorAccentlight, borderWidth: 0),
+                                    decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.colorPrimaryDark, c.colorAccent, borderWidth: 0),
                                     ),
                                       Container(
                                         alignment: Alignment.center,
@@ -515,7 +515,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                           width: 15,
                                           alignment: Alignment.center,
                                           margin: EdgeInsets.all(5),
-                                          decoration: UIHelper.roundedBorderWithColorWithoutShadow(10, c.colorAccentlight, c.colorAccentlight, borderWidth: 0),
+                                          decoration: UIHelper.roundedBorderWithColorWithoutShadow(10, c.colorAccent, c.colorAccent, borderWidth: 0),
                                       ),),
                                     ],
                                   ),
@@ -535,12 +535,17 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
   //Custom Card Design
   Widget customCardDesign() {
-    return Column(children: [
+    return Column(
+
+        children: [
       Container(
         decoration: UIHelper.GradientContainer(20, 20, 20, 20, [c.grey_2, c.grey_1], borderColor: c.white, intwid: 4),
-        height: 210,
+        height: Screen.height(context) / 3.5,
         width: Screen.width(context) / 1.6,
-        child: Column(children: [
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
           UIHelper.verticalSpaceSmall,
           Container(
             height: 55,
@@ -569,7 +574,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         border: Border.all(
                           color: c.grey,
                         ),
-                        color: c.colorAccent,
+                        color: c.colorPrimaryDark,
                         borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10), bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
                       ),
                         alignment: Alignment.center,

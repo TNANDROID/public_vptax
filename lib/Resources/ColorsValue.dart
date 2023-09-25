@@ -1,13 +1,15 @@
 // ignore_for_file: non_constant_identifier_names, prefer_const_constructors, use_full_hex_values_for_flutter_colors, file_names
 import 'dart:ui';
 
-Color colorPrimary = Color(0xFFff8a66);
-Color colorPrimaryDark = Color(0xFFff7371);
-Color colorAccentlight = Color(0xFFff8f60);
-Color card1 = Color(0xFFff8f60);
-Color card2 = Color(0xFFFFFFFF);
-Color colorAccentverylight = Color(0xfff89a42);
-Color colorAccentverylight2 = Color(0xfff6d3b2);
+Color colorPrimary = Color(0xff303F9F);
+Color colorPrimaryDark = Color(0xFF1A237E);
+Color colorAccent = Color(0xFF5C6BC0);
+/*Color colorPrimary = Color(0xff0091ff);
+Color colorPrimaryDark = Color(0xFF0082ff);
+Color colorAccent = Color(0xFF54b3ff);*/
+/*Color colorPrimary = Color(0xff945af8);
+Color colorPrimaryDark = Color(0xFF7E3FF2);
+Color colorAccent = Color(0xFFb794f6);*/
 Color red = Color(0xFFB71C1C);
 Color failureRed = Color(0xffc72c41);
 Color yellow_new = Color(0xFFFFC947);
@@ -53,9 +55,6 @@ Color light_green_new = Color.fromARGB(255, 232, 252, 232);
 
 //*********Un Used Variables**************/
 
-Color colorAccent = Color(0xFFfe776e);
-Color colorAccentveryverylight = Color(0xFFff735c);
-Color colorAccentveryverylight2 = Color(0xFFfd7361);
 Color ca = Color(0xFFf5fbfb);
 Color ca1 = Color(0xFFebf8f7);
 Color ca2 = Color(0xFFe1f5f4);

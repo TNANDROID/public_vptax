@@ -165,7 +165,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
               height: 50,
               decoration: UIHelper.circleWithColorWithShadow(30, c.white, c.white, borderColor: c.grey_7, borderWidth: 5),
               padding: EdgeInsets.all(3),
-              child: Container(decoration: UIHelper.circleWithColorWithShadow(30, c.yellow_new, c.colorPrimaryDark), child: Center(child: UIHelper.titleTextStyle("+", c.white, 28, true, true))),
+              child: Container(decoration: UIHelper.circleWithColorWithShadow(30, c.colorPrimary, c.colorPrimaryDark), child: Center(child: UIHelper.titleTextStyle("+", c.white, 28, true, true))),
             )),
       ),
     );

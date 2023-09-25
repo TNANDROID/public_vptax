@@ -191,13 +191,14 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
                 Image.asset(
                   imagepath.logo,
                   fit: BoxFit.cover,
-                  height: 70,
-                  width: 70,
+                  height: 100,
+                  width: 100,
                 ),
                 Text(
                   'appName'.tr().toString(),
+                  textAlign: TextAlign.start,
                   style: TextStyle(
-                    fontSize: 25.0,
+                    fontSize: 30,
                     fontWeight: FontWeight.bold,
                     color: c.text_color,
                     fontStyle: FontStyle.normal,

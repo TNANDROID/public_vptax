@@ -143,7 +143,7 @@ class Utils {
                       const SizedBox(
                         height: 15,
                       ),
-                      UIHelper.titleTextStyle(message, c.card1, 12, true, false)
+                      UIHelper.titleTextStyle(message, c.colorAccent, 12, true, false)
                     ],
                   ),
                 ],
@@ -1216,7 +1216,7 @@ class Utils {
         firstDate: index == 0 ? DateTime(2000) : initialDate,
         lastDate: DateTime.now(),
         currentDate: initialDate,
-        selectedDayHighlightColor: c.colorAccentlight,
+        selectedDayHighlightColor: c.colorAccent,
         weekdayLabels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
         weekdayLabelTextStyle: const TextStyle(color: Color(0xFF07b3a5), fontWeight: FontWeight.bold, fontSize: 10),
         firstDayOfWeek: 1,

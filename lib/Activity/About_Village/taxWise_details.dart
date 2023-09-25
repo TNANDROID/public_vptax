@@ -19,7 +19,7 @@ class DCBView extends StatefulWidget {
 
 class _DCBViewState extends State<DCBView> {
   PreferenceService preferencesService = locator<PreferenceService>();
-  List<Color> colorsList = [c.followers, c.need_improvement_color, c.followingBg, c.colorAccentveryverylight, c.dot_light_screen1];
+  List<Color> colorsList = [c.followers, c.need_improvement_color, c.followingBg, c.colorPrimaryDark, c.dot_light_screen1];
   List imgList = [imagepath.house, imagepath.water, imagepath.professional, imagepath.nontax1, imagepath.trade];
 
   String selectedFinYear = "";

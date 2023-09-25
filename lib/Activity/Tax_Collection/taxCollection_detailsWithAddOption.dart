@@ -146,7 +146,7 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
               decoration: UIHelper.circleWithColorWithShadow(30, c.white, c.white, borderColor: c.grey_7, borderWidth: 5),
               padding: EdgeInsets.all(3),
               child: Container(
-                  decoration: UIHelper.circleWithColorWithShadow(30, c.yellow_new, c.colorPrimaryDark),
+                  decoration: UIHelper.circleWithColorWithShadow(30, c.colorPrimary, c.colorPrimaryDark),
                   child: Center(child: UIHelper.titleTextStyle(selectedList.length.toString(), c.white, 18, true, true))),
             )
           : SizedBox(),

@@ -201,7 +201,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
       child: Container(
         margin: EdgeInsets.only(left: MediaQuery.of(context).size.width / 4, right: MediaQuery.of(context).size.width / 4),
         padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-        decoration: UIHelper.roundedBorderWithColor(20, 20, 20, 20, c.primary_text_color2),
+        decoration: UIHelper.roundedBorderWithColor(20, 20, 20, 20, c.colorPrimary),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,

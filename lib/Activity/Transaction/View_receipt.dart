@@ -392,7 +392,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                 child: Stack(children: [
                               Container(
                                 height: 220,
-                                decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.colorAccentlight, c.white, stop1: 0.25, stop2: 0.1),
+                                decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.colorAccent, c.white, stop1: 0.25, stop2: 0.1),
                                 child: Center(
                                     child: Container(
                                         margin: EdgeInsets.all(10.0),
