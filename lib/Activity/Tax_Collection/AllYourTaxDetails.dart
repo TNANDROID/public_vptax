@@ -419,20 +419,23 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                       visible: !isShowFlag.contains(mainIndex) && getData[key_DEMAND_DETAILS] != "Empty" && getData[key_DEMAND_DETAILS] != "Pending",
                       child: InkWell(
                         onTap: () {
-                          isSelectAll.add(mainIndex);
+                          isShowFlag.add(mainIndex);
                           for (int i = 0; i < mainList.length; i++) {
                             if (mainList[i][key_DEMAND_DETAILS] != "Empty" && mainList[i][key_DEMAND_DETAILS] != "Pending") {
                               if (i == mainIndex) {
                                 for (var item in mainList[i][key_DEMAND_DETAILS]) {
                                   item[s.key_flag] = true;
+                                  isSelectAll.add(i);
                                 }
                               } else {
                                 for (var item in mainList[i][key_DEMAND_DETAILS]) {
                                   item[s.key_flag] = false;
+                                  isSelectAll.remove(i);
                                 }
                               }
                             }
                           }
+                          setState(() {});
                           Utils().settingModalBottomSheet(context, [getData]);
                         },
                         child: Container(
