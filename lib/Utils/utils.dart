@@ -853,8 +853,8 @@ class Utils {
                               height: 40,
                               child: Container(
                                 alignment: Alignment.center,
-                                child: const Text(
-                                  "CONTINUE",
+                                child: Text(
+                                  "continue".tr().toString(),
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontSize: 14,

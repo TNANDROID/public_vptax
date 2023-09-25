@@ -134,7 +134,7 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
                           child: Container(
                             margin: EdgeInsets.fromLTRB(3, 3, 3, 0),
                             decoration: UIHelper.roundedBorderWithColor(60, 60, 0, 0, c.colorPrimary),
-                            child: Center(child: UIHelper.titleTextStyle("Add to Pay List", c.white, 14, true, true)),
+                            child: Center(child: UIHelper.titleTextStyle('add_to_pay'.tr().toString(), c.white, 14, true, true)),
                           )))
                   : SizedBox(),
             ],

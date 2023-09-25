@@ -89,6 +89,22 @@ class UIHelper {
           )
         ]);
   }
+  //Container Style Provider with shadow
+  static BoxDecoration roundedBorderWithColorWithoutShadow(double radius, Color backgroundColor, Color backgroundColor2,
+      {Color borderColor = Colors.transparent, double borderWidth = 1, stop1 = 0.0, double stop2 = 0.7}) {
+    return BoxDecoration(
+        borderRadius: BorderRadius.circular(radius),
+        border: Border.all(width: borderWidth, color: borderColor),
+        gradient: LinearGradient(
+            colors: [
+              backgroundColor,
+              backgroundColor2,
+            ],
+            begin: const FractionalOffset(0.0, 0.0),
+            end: const FractionalOffset(1.0, 0.0),
+            stops: [stop1, stop2],
+            tileMode: TileMode.clamp),);
+  }
 
   static BoxDecoration circleWithColorWithShadow(double radius, Color backgroundColor, Color backgroundColor2, {Color borderColor = Colors.transparent, double borderWidth = 1}) {
     return BoxDecoration(

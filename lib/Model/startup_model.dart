@@ -66,7 +66,9 @@ class StartUpViewModel extends BaseViewModel {
     }
     if (await Utils().isOnline()) {
       try {
+        print("requestData----:) $requestData");
         response = await apiServices.openServiceFunction(requestData);
+        print("response----:) $response");
       } catch (error) {
         debugPrint('error (${error.toString()}) has been caught');
       }

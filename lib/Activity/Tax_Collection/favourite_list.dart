@@ -135,9 +135,9 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                                                     boxShadow: [
                                                       BoxShadow(
                                                         color: Colors.grey.withOpacity(0.5), // Shadow color
-                                                        spreadRadius: 3, // Spread radius
-                                                        blurRadius: 5, // Blur radius
-                                                        offset: Offset(3, 3), // Offset from the top-left corner
+                                                        spreadRadius: 1, // Spread radius
+                                                        blurRadius: 1, // Blur radius
+                                                        offset: Offset(1, 1), // Offset from the top-left corner
                                                       ),
                                                     ],
                                                   ),

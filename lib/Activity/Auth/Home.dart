@@ -41,7 +41,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   List taxTypeList = [];
   int currentSelectedTax = 0;
   List servicesList = [
-    {'service_id': 0, 'service_name': 'your_tax_details', 'img_path': imagePath.currency_ic},
+    {'service_id': 0, 'service_name': 'your_tax_details', 'img_path': imagePath.vptax1},
     {'service_id': 1, 'service_name': 'addedList', 'img_path': imagePath.add_user},
     {'service_id': 2, 'service_name': 'quickPay', 'img_path': imagePath.quick_pay1},
     {'service_id': 3, 'service_name': 'payment_transaction_history', 'img_path': imagePath.history},
@@ -344,178 +344,86 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   )
                 ]),
                 if (taxTypeList.length > 0)
-                  Container(
-                    decoration: UIHelper.GradientContainer(20, 20, 20, 20, [c.white, c.white]),
-                    margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
-                    child: Column(
-                      children: [
-                        UIHelper.verticalSpaceSmall,
-                        Container(
-                            padding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
-                            alignment: Alignment.centerLeft,
-                            child: Row(
-                              children: [
-                                Expanded(flex: 2, child: UIHelper.titleTextStyle('tax_due'.tr().toString() + " : ", c.grey_10, 12, true, false)),
-                                Expanded(flex: 1, child: UIHelper.titleTextStyle("\u{20B9} $totalAmountOfPayable", c.red_new, 18, true, false))
-                              ],
-                            )),
-                        Stack(
-                          children: [
-                            Container(
-                              height: MediaQuery.of(context).size.width / 2,
-                              padding: EdgeInsets.only(left: 0, right: 0),
-                              child: Transform.scale(
-                                  scale: _animation.value,
-                                  child: GestureDetector(
-                                    onHorizontalDragEnd: (details) {
-                                      if (details.primaryVelocity == null) return;
-                                      if (details.primaryVelocity! > 0) {
-                                        if (currentSelectedTax != 0) {
-                                          currentSelectedTax--;
-                                        }
-                                      } else if (details.primaryVelocity! < 0) {
-                                        if (currentSelectedTax != 4) {
-                                          currentSelectedTax++;
-                                        }
-                                      }
-                                      repeatOnce();
-                                      setState(() {});
-                                    },
-                                    onTap: () {
-                                      String Taxamount = gettotal(taxTypeList[currentSelectedTax][key_taxtypeid].toString());
-                                      double txtToDouAmt = double.parse(Taxamount);
-                                      if (txtToDouAmt > 0) {
-                                        Navigator.push(context, MaterialPageRoute(builder: (_) => AllYourTaxDetails(selectedTaxTypeData: taxTypeList[currentSelectedTax], isHome: true)));
-                                      } else {
-                                        utils.showAlert(context, ContentType.fail, 'no_pending_due'.tr().toString());
-                                      }
-                                    },
-                                    child: Container(
-                                        width: Screen.width(context) / 1.5,
-                                        // decoration: BoxDecoration(
-                                        //   color: c.white,
-                                        //   borderRadius: BorderRadius.circular(20),
-                                        //   border: Border.all(color: c.colorPrimaryDark, width: 2),
-                                        // ),
-                                        decoration: UIHelper.GradientContainer(20, 20, 20, 20, [c.white, c.white], borderColor: c.colorPrimaryDark, intwid: 2),
-                                        alignment: Alignment.center,
-                                        margin: EdgeInsets.fromLTRB(30, 10, 30, 10),
-                                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                                // width: Screen.width(context),
-                                                transform: Matrix4.translationValues(0.0, -10, 0.0),
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    ClipPath(
-                                                      clipper: LeftTriangleClipper1(),
-                                                      child: Container(
-                                                        width: 10,
-                                                        height: 10,
-                                                        color: c.red,
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      width: Screen.width(context) / 2,
-                                                      height: 40,
-                                                      // decoration: UIHelper.GradientContainer(0, 0, 20, 20, [c.pr, c.colorPrimaryDark], borderColor: c.colorPrimaryDark, intwid: 2),
-                                                      decoration: UIHelper.roundedBorderWithColor(
-                                                        0,
-                                                        0,
-                                                        20,
-                                                        20,
-                                                        c.colorPrimaryDark,
-                                                      ),
-                                                      child: Center(
-                                                          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                                                        Image.asset(
-                                                          taxTypeList[currentSelectedTax][key_img_path],
-                                                          width: 30,
-                                                        ),
-                                                        UIHelper.horizontalSpaceTiny,
-                                                        UIHelper.titleTextStyle(
-                                                            selectedLang == 'en' ? taxTypeList[currentSelectedTax][key_taxtypedesc_en] : taxTypeList[currentSelectedTax][key_taxtypedesc_ta],
-                                                            c.white,
-                                                            12,
-                                                            true,
-                                                            true)
-                                                      ])),
-                                                    ),
-                                                    ClipPath(
-                                                      clipper: RightTriangleClipper1(),
-                                                      child: Container(
-                                                        width: 10,
-                                                        height: 10,
-                                                        color: c.red,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                )),
-                                            UIHelper.verticalSpaceSmall,
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                UIHelper.titleTextStyle('pending_payment'.tr().toString(), c.text_color, 12, true, true),
-                                                UIHelper.verticalSpaceSmall,
-                                                Container(
-                                                    margin: EdgeInsets.symmetric(horizontal: 30),
-                                                    padding: EdgeInsets.all(10),
-                                                    decoration: UIHelper.GradientContainer(10, 10, 10, 10, [c.primary_text_color2, c.primary_text_color2]),
-                                                    alignment: Alignment.center,
-                                                    child: UIHelper.titleTextStyle("\u{20B9} ${gettotal(taxTypeList[currentSelectedTax][key_taxtypeid].toString())}", c.white, 18, true, true)),
-                                              ],
-                                            ),
-                                            UIHelper.verticalSpaceSmall,
-                                            Container(
-                                                alignment: Alignment.bottomRight, child: UIHelper.titleTextStyle("payTo".tr().toString(), c.green_new, selectedLang == "ta" ? 12 : 13, true, true)),
-                                          ],
-                                        )),
-                                  )),
-                            ),
-                            Visibility(
-                                visible: currentSelectedTax != 0,
-                                child: Positioned(
-                                  left: 1,
-                                  child: InkWell(
-                                    onTap: () {
-                                      currentSelectedTax--;
-                                      repeatOnce();
-                                      setState(() {});
-                                    },
-                                    child: Container(
-                                      alignment: Alignment.centerLeft,
-                                      color: c.full_transparent,
-                                      margin: EdgeInsets.only(left: 0, right: 20, top: 80, bottom: 100),
-                                      child: Image.asset(imagePath.left_arrow, height: 25, color: c.text_color),
-                                    ),
-                                  ),
-                                )),
-                            Visibility(
-                                visible: currentSelectedTax != 4,
-                                child: Positioned(
-                                  right: 1,
-                                  child: InkWell(
-                                    onTap: () {
-                                      currentSelectedTax++;
-                                      repeatOnce();
-                                      setState(() {});
-                                    },
-                                    child: Container(
-                                      alignment: Alignment.centerLeft,
-                                      color: c.full_transparent,
-                                      margin: EdgeInsets.only(left: 20, right: 0, top: 80, bottom: 100),
-                                      child: Image.asset(imagePath.right_arrow, height: 25, color: c.text_color),
-                                    ),
-                                  ),
-                                ))
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+            Container(
+            decoration: UIHelper.GradientContainer(20, 20, 20, 20, [c.white, c.white]),
+      margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
+      child: Column(
+        children: [
+          UIHelper.verticalSpaceSmall,
+          Container(
+              padding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+              alignment: Alignment.centerLeft,
+              child: Row(
+                children: [
+                  Expanded(flex: 2, child: UIHelper.titleTextStyle('tax_due'.tr().toString() + " : ", c.grey_10, selectedLang == "ta"?12:13, true, false)),
+                  Expanded(flex: 1, child: UIHelper.titleTextStyle("\u{20B9} $totalAmountOfPayable", c.red_new, 16, true, false))
+                ],
+              )),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              InkWell(
+                onTap: currentSelectedTax != 0
+                    ? () {
+                  currentSelectedTax--;
+                  repeatOnce();
+                  setState(() {});
+                }
+                    : null,
+                child: Container(
+                  color: c.full_transparent,
+                  child: Image.asset(imagePath.left_arrow, height: 25, color: currentSelectedTax != 0 ? c.text_color : c.white),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 0, right: 0, bottom: 10),
+                child: Transform.scale(
+                    scale: _animation.value,
+                    child: GestureDetector(
+                      onHorizontalDragEnd: (details) {
+                        if (details.primaryVelocity == null) return;
+                        if (details.primaryVelocity! > 0) {
+                          if (currentSelectedTax != 0) {
+                            currentSelectedTax--;
+                          }
+                        } else if (details.primaryVelocity! < 0) {
+                          if (currentSelectedTax != 4) {
+                            currentSelectedTax++;
+                          }
+                        }
+                        repeatOnce();
+                        setState(() {});
+                      },
+                      onTap: () {
+                        String Taxamount = gettotal(taxTypeList[currentSelectedTax][key_taxtypeid].toString());
+                        double txtToDouAmt = double.parse(Taxamount);
+                        if (txtToDouAmt > 0) {
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => AllYourTaxDetails(selectedTaxTypeData: taxTypeList[currentSelectedTax], isHome: true)));
+                        } else {
+                          utils.showAlert(context, ContentType.fail, 'no_pending_due'.tr().toString());
+                        }
+                      },
+                      child: customCardDesign(),
+                    )),
+              ),
+              InkWell(
+                onTap: currentSelectedTax != 4
+                    ? () {
+                  currentSelectedTax++;
+                  repeatOnce();
+                  setState(() {});
+                }
+                    : null,
+                child: Container(
+                  color: c.full_transparent,
+                  child: Image.asset(imagePath.right_arrow, height: 25, color: currentSelectedTax != 4 ? c.text_color : c.white),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
 
                 Container(
                   padding: EdgeInsets.only(left: 20, right: 20, top: 10),
@@ -561,38 +469,55 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                     }
                                     setState(() {});
                                   },
-                                  child: Container(
-                                    height: (Screen.height(context) / 4) - 10,
-                                    width: (Screen.height(context) / 2) - 10,
+                                  child: Stack(
+                                    children: [
+                                    Container(
                                     alignment: Alignment.center,
-                                    margin: EdgeInsets.all(5),
-                                    decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.white, c.white, borderWidth: 0),
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          child: Image.asset(
-                                            servicesList[index][key_img_path],
-                                            color: c.colorPrimary,
-                                          ),
-                                          height: MediaQuery.of(context).size.width * 0.13,
-                                          margin: EdgeInsets.only(
-                                            left: MediaQuery.of(context).size.width / 20,
-                                            right: MediaQuery.of(context).size.width / 20,
-                                          ),
-                                          padding: EdgeInsets.all(index==4?8:5),
-                                          width: MediaQuery.of(context).size.width,
-                                        ),
-                                        Container(
-                                          alignment: Alignment.center,
-                                          margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                                          child: Text(
-                                            servicesList[index][key_service_name].toString().tr().toString(),
-                                            style: TextStyle(fontSize: 11, height: 1.2, color: c.text_color),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ],
+                                    margin: EdgeInsets.fromLTRB(20,5,5,20),
+                                    decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.colorPrimaryDark, c.colorAccentlight, borderWidth: 0),
                                     ),
+                                      Container(
+                                        alignment: Alignment.center,
+                                        margin: EdgeInsets.fromLTRB(5,10,10,5),
+                                        decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.white, c.white, borderWidth: 0),
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              child: Image.asset(
+                                                servicesList[index][key_img_path],
+                                                color: c.colorPrimary,
+                                              ),
+                                              height: MediaQuery.of(context).size.width * 0.12,
+                                              margin: EdgeInsets.only(
+                                                left: MediaQuery.of(context).size.width / 20,
+                                                right: MediaQuery.of(context).size.width / 20,
+                                              ),
+                                              padding: EdgeInsets.all(index==4?8:5),
+                                              width: MediaQuery.of(context).size.width,
+                                            ),
+                                            Container(
+                                              alignment: Alignment.center,
+                                              margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                                              child: Text(
+                                                servicesList[index][key_service_name].toString().tr().toString(),
+                                                style: TextStyle(fontSize: 11, height: 1.2, color: c.text_color),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Positioned(
+                                        top: 0,
+                                        right: 0,
+                                        child:  Container(
+                                          height: 15,
+                                          width: 15,
+                                          alignment: Alignment.center,
+                                          margin: EdgeInsets.all(5),
+                                          decoration: UIHelper.roundedBorderWithColorWithoutShadow(10, c.colorAccentlight, c.colorAccentlight, borderWidth: 0),
+                                      ),),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -608,7 +533,79 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           ),
         ));
   }
+  //Custom Card Design
+  Widget customCardDesign() {
+    return Column(children: [
+      Container(
+        decoration: UIHelper.GradientContainer(20, 20, 20, 20, [c.grey_2, c.grey_1], borderColor: c.white, intwid: 4),
+        height: 210,
+        width: Screen.width(context) / 1.6,
+        child: Column(children: [
+          UIHelper.verticalSpaceSmall,
+          Container(
+            height: 55,
+            width: 55,
+            padding: EdgeInsets.all(5),
+            decoration: UIHelper.circleWithColorWithShadow(0, c.white, c.grey_3),
+            child: Image.asset(
+              taxTypeList[currentSelectedTax][key_img_path],
+            ),
+          ),
+          UIHelper.verticalSpaceSmall,
+          UIHelper.titleTextStyle(selectedLang == 'en' ? taxTypeList[currentSelectedTax][key_taxtypedesc_en] : taxTypeList[currentSelectedTax][key_taxtypedesc_ta], c.colorPrimaryDark, selectedLang == "ta" ? 16 : 18, true, true),
+          UIHelper.verticalSpaceSmall,
+          UIHelper.titleTextStyle('pending_payment'.tr().toString(), c.text_color, selectedLang == "ta" ? 12 : 14, true, true),
+          UIHelper.verticalSpaceSmall,
+            Container(
+              width: Screen.width(context),
+              child: Stack(
+                children: [
+                  Center(
+                    child: Container(
+                      width: Screen.width(context) / 3,
+                      height: 45,
+                      transform: Matrix4.skewX(-.3),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: c.grey,
+                        ),
+                        color: c.colorAccent,
+                        borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10), bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
+                      ),
+                        alignment: Alignment.center,
+                        child: UIHelper.titleTextStyle("\u{20B9} ${gettotal(taxTypeList[currentSelectedTax][key_taxtypeid].toString())}", c.white, 18, true, true)
+                    ),
+                  ),
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      margin: EdgeInsets.only(right: 20),
+                      child: Image.asset(
+                        imagePath.tap,
+                        height: 30 ,
+                        width: 25,
+                        color: c.account_status_green_color,
+                        // colorFilter: getColorFilter(hslDark.toColor(), ui.BlendMode.srcIn),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
 
+
+/*          Container(
+              width: Screen.width(context) / 2,
+              height: 45,
+              decoration: UIHelper.roundedBorderWithColor(30, 0, 0, 30, Colors.blue, borderWidth: 0),
+              alignment: Alignment.center,
+              child: UIHelper.titleTextStyle("\u{20B9} ${gettotal(taxTypeList[currentSelectedTax][key_taxtypeid].toString())}", c.white, 20, true, true))*/,
+          // Container(padding: EdgeInsets.all(10), alignment: Alignment.bottomRight, child: UIHelper.titleTextStyle("payTo".tr().toString(), c.green_new, selectedLang == "ta" ? 12 : 14, true, true)),
+        ]),
+      ),
+    ]);
+  }
   String gettotal(taxtypeid) {
     String total = '';
     switch (taxtypeid) {

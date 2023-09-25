@@ -64,6 +64,9 @@ String currency = "assets/images/currency.png";
 String add_user = "assets/images/add_user.png";
 String download_ic = "assets/images/download.png";
 String currency_ic = "assets/images/currency_ic.png";
+String vptax = "assets/images/vptax.png";
+String vptax1 = "assets/images/vptax1.png";
+String tap = "assets/images/tap.png";
 
 String help = 'assets/images/help.svg';
 String failure = 'assets/images/failure.svg';

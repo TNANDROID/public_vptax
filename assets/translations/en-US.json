@@ -220,5 +220,7 @@
   "tax_due":"Pending Dues for All Taxes",
   "payed_by":"Tax receipts Paid by you",
   "view_receipt":"Download Receipt",
-  "no_pending_due": "No Pending Due"
+  "no_pending_due": "No Pending Due",
+  "add_to_pay": "Add to Favourite List",
+  "continue": "CONTINUE"
 }
