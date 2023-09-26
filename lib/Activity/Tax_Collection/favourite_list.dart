@@ -10,6 +10,7 @@ import 'package:public_vptax/Model/startup_model.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:public_vptax/Utils/utils.dart';
+import 'package:public_vptax/stream/extended_asyncwidgets.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
 import '../../Resources/StringsKey.dart' as s;
 import 'package:public_vptax/Services/Preferenceservices.dart';
@@ -83,37 +84,29 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
     _controller.dispose();
   }
 
-  Future<bool> _onWillPop() async {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const Home()));
-    return true;
-  }
-
   // ********* Main Widget for this Class **********
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: Scaffold(
-        backgroundColor: c.white,
-        appBar: UIHelper.getBar('addedList'),
-        body: ViewModelBuilder<StartUpViewModel>.reactive(
-            onModelReady: (model) async {
-              await getAllDemandDetails(context, model);
-            },
-            builder: (context, model, child) {
-              return model.isBusy
-                  ? Center(child: Container(margin: EdgeInsets.only(top: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true)))
-                  : Container(
-                      color: c.need_improvement2,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          UIHelper.verticalSpaceSmall,
-                          Visibility(
-                              visible: mainList.isNotEmpty,
-                              child: Expanded(
-                                child: ListView.builder(
+    return Scaffold(
+      backgroundColor: c.white,
+      appBar: UIHelper.getBar('addedList'),
+      body: ViewModelBuilder<StartUpViewModel>.reactive(
+          onModelReady: (model) async {},
+          builder: (context, model, child) {
+            return Container(
+                color: c.need_improvement2,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    UIHelper.verticalSpaceSmall,
+                    StreamedWidget<List<dynamic>?>(
+                        stream: preferencesService.taxListStream!.outStream!,
+                        builder: (context, snapshot) {
+                          mainList = preferencesService.taxListStream!.value!.where((item) => item["is_favourite"] == "Y").toList();
+                          return mainList.length > 0
+                              ? Expanded(
+                                  child: ListView.builder(
                                   itemCount: mainList.length,
                                   itemBuilder: (context, mainIndex) {
                                     return Container(
@@ -138,37 +131,34 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                                                     ],
                                                   ),
                                                   width: Screen.width(context),
-                                                  child: headerCardUIWidget(mainIndex, mainList[mainIndex], model))),
+                                                  child: headerCardUIWidget(context, mainIndex, mainList[mainIndex], model))),
                                         ));
                                   },
-                                ),
-                              )),
-                          Visibility(
-                              visible: mainList.isEmpty,
-                              child: Expanded(
-                                child: Center(child: Container(margin: EdgeInsets.only(top: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true))),
-                              )),
-                        ],
-                      ));
-            },
-            viewModelBuilder: () => StartUpViewModel()),
-        floatingActionButton: GestureDetector(
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(selectedTaxTypeData: selectedTaxTypeData, flag: "3")));
-            },
-            child: Container(
-              width: 50,
-              height: 50,
-              decoration: UIHelper.circleWithColorWithShadow(30, c.white, c.white, borderColor: c.grey_7, borderWidth: 5),
-              padding: EdgeInsets.all(3),
-              child: Container(decoration: UIHelper.circleWithColorWithShadow(30, c.colorPrimary, c.colorPrimaryDark), child: Center(child: UIHelper.titleTextStyle("+", c.white, 28, true, true))),
-            )),
-      ),
+                                ))
+                              : Expanded(
+                                  child: Center(child: Container(margin: EdgeInsets.only(top: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true))),
+                                );
+                        }),
+                  ],
+                ));
+          },
+          viewModelBuilder: () => StartUpViewModel()),
+      floatingActionButton: GestureDetector(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(selectedTaxTypeData: selectedTaxTypeData, flag: "3")));
+          },
+          child: Container(
+            width: 50,
+            height: 50,
+            decoration: UIHelper.circleWithColorWithShadow(30, c.white, c.white, borderColor: c.grey_7, borderWidth: 5),
+            padding: EdgeInsets.all(3),
+            child: Container(decoration: UIHelper.circleWithColorWithShadow(30, c.colorPrimary, c.colorPrimaryDark), child: Center(child: UIHelper.titleTextStyle("+", c.white, 28, true, true))),
+          )),
     );
   }
 
 // *************** Blue Color Main Card Widget ***********
-  Widget headerCardUIWidget(int mainIndex, dynamic getData, StartUpViewModel model) {
+  Widget headerCardUIWidget(BuildContext mccontext, int mainIndex, dynamic getData, StartUpViewModel model) {
     List taxData = [];
     if (getData[key_DEMAND_DETAILS] != "Empty" && getData[key_DEMAND_DETAILS] != "Pending" && getData[key_DEMAND_DETAILS] != null) {
       taxData = getData[key_DEMAND_DETAILS];
@@ -266,7 +256,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                   right: 0,
                   child: InkWell(
                     onTap: () async {
-                      await showRemovePopup(getData, model);
+                      await showRemovePopup(mccontext, getData, model);
                     },
                     child: Padding(padding: EdgeInsets.only(right: 5, top: 10), child: Icon(Icons.delete, color: c.red, size: 25)),
                   ),
@@ -298,7 +288,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
   }
 
 // ********** App Exit and Logout Widget ***********\\
-  Future<bool> showRemovePopup(dynamic getData, StartUpViewModel model) async {
+  Future<bool> showRemovePopup(BuildContext mccontext, dynamic getData, StartUpViewModel model) async {
     return await showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -321,8 +311,11 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                   } else {
                     utils.showAlert(context, ContentType.fail, response[key_response].toString());
                   }
-                  await getAllDemandDetails(context, model);
                   Navigator.of(context).pop(false);
+
+                  Utils().showProgress(mccontext, 1);
+                  await model.getDemandList(mccontext);
+                  Utils().hideProgress(mccontext);
                 },
                 child: Text(
                   'yes'.tr().toString(),
@@ -648,7 +641,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
               child: InkWell(
                 onTap: () {
                   if (mainList[mainIndex][key_tax_total] > 0) {
-                    Utils().settingModalBottomSheet(context, [payableData]);
+                    //   Utils().settingModalBottomSheet(context, [payableData]);
                   } else {
                     Utils().showAlert(context, ContentType.warning, 'select_demand'.tr().toString());
                   }
@@ -665,64 +658,6 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
         UIHelper.verticalSpaceSmall,
       ],
     );
-  }
-
-  //Auth Service API Call
-  Future getAllDemandDetails(BuildContext context, StartUpViewModel model) async {
-    if (await Utils().isOnline()) {
-      Utils().showProgress(context, 1);
-      try {
-        var response = await model.demandServicesAPIcall(context, requestJson);
-        if (response[key_data] != null && response[key_data].length > 0) {
-          List resList = response[key_data].toList();
-          resList.sort((a, b) {
-            return int.parse(a[key_assessment_no].toString()).compareTo(int.parse(b[key_assessment_no].toString()));
-          });
-          sourceList = resList.where((item) => item["is_favourite"] == "Y").toList();
-
-          mainList = sourceList.toList();
-          mainList.sort((a, b) {
-            return a[key_taxtypeid].toString().compareTo(b[key_taxtypeid].toString());
-          });
-          // for (var item in mainList) {
-          //   dynamic getDemandRequest = {
-          //     key_service_id: service_key_getAssessmentDemandList,
-          //     key_taxtypeid: item[key_taxtypeid],
-          //     key_assessment_id: item[key_assessment_id],
-          //     key_dcode: item[key_dcode],
-          //     key_bcode: item[key_bcode],
-          //     key_pvcode: item[key_lbcode],
-          //     key_language_name: await preferencesService.getUserInfo("lang"),
-          //   };
-          //   if (item[key_taxtypeid] == 4) {
-          //     getDemandRequest[key_fin_year] = item[key_financialyear];
-          //   }
-          //   var getDemandResponce = await model.demandServicesAPIcall(context, getDemandRequest);
-          //   if (getDemandResponce[key_response] == key_fail) {
-          //     if (getDemandResponce[key_message] == "Demand Details Not Found") {
-          //       item[key_DEMAND_DETAILS] = "Empty";
-          //     } else if (getDemandResponce[key_message] == "Your previous transaction is pending. Please try after 60 minutes") {
-          //       item[key_DEMAND_DETAILS] = "Pending";
-          //     } else {
-          //       item[key_DEMAND_DETAILS] = "Something Went Wrong";
-          //     }
-          //   } else {
-          //     if (getDemandResponce[key_data] != null && getDemandResponce[key_data].length > 0) {
-          //       item[key_DEMAND_DETAILS] = getDemandResponce[key_data];
-          //     }
-          //   }
-          // }
-        } else {
-          mainList = [];
-        }
-
-        Utils().hideProgress(context);
-        return "true";
-      } catch (error) {
-        Utils().hideProgress(context);
-        debugPrint('error : $error has been caught');
-      }
-    }
   }
 
   String getTaxImage(int typeId) {

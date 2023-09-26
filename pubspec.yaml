@@ -55,6 +55,8 @@ dependencies:
   datetime_setting: ^2.0.2
   grouped_list: ^5.1.2
   calendar_date_picker2: ^0.5.2
+  rxdart: ^0.27.7
+  progress_indicators: ^1.0.0
 
 
 

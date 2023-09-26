@@ -19,6 +19,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:progress_indicators/progress_indicators.dart';
 import 'package:public_vptax/Activity/Auth/Splash.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
@@ -125,26 +126,17 @@ class Utils {
         return WillPopScope(
           onWillPop: () async => false,
           child: Center(
-            child: SizedBox(
+            child: Container(
+              decoration: UIHelper.roundedBorderWithColor(10, 10, 10, 10, c.white),
               height: 100,
               width: 100,
-              child: Stack(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Center(
-                        child: Image.asset(
-                          imagePath.spinner1,
-                          height: 70,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      UIHelper.titleTextStyle(message, c.colorAccent, 12, true, false)
-                    ],
-                  ),
+                  Center(child: HeartbeatProgressIndicator(duration: Duration(milliseconds: 250), child: Image.asset(imagePath.logo, height: 60))),
+                  UIHelper.verticalSpaceSmall,
+                  JumpingText(message, style: TextStyle(color: c.text_color, fontSize: 12, decoration: TextDecoration.none)),
+                  UIHelper.verticalSpaceSmall,
                 ],
               ),
             ),
@@ -272,20 +264,32 @@ class Utils {
                         onTap: () async {
                           Navigator.of(context).pop();
                           if (btnmsg == 'payment') {
-                            String selectedLang = await preferencesService.getUserInfo("lang");
-                            await StartUpViewModel().getReceipt(mcontext, receiptList, 'payment', selectedLang);
-                            Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                  builder: (context) => const Home(),
-                                ),
-                                (route) => false);
+                            Navigator.of(context).pop();
+                            if (preferencesService.paymentType == "Favourite Pay") {
+                              showProgress(mcontext, 1);
+                              await StartUpViewModel().getDemandList(mcontext);
+                              hideProgress(mcontext);
+                            } else {
+                              if (await preferencesService.getUserInfo(s.key_isLogin) == "yes") {
+                                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);
+                              } else {
+                                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Splash()), (route) => false);
+                              }
+                            }
                           } else if (btnmsg == 'receipt') {
                             openFilePath(file_path!);
                           } else if (btnmsg == 'canceled') {
-                            if (await preferencesService.getUserInfo(s.key_isLogin) == "yes") {
-                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);
+                            Navigator.of(context).pop();
+                            if (preferencesService.paymentType == "Favourite Pay") {
+                              showProgress(mcontext, 1);
+                              await StartUpViewModel().getDemandList(mcontext);
+                              hideProgress(mcontext);
                             } else {
-                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Splash()), (route) => false);
+                              if (await preferencesService.getUserInfo(s.key_isLogin) == "yes") {
+                                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);
+                              } else {
+                                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Splash()), (route) => false);
+                              }
                             }
                           }
                         },
@@ -315,20 +319,33 @@ class Utils {
                                 if (btnmsg == 'payment') {
                                   String selectedLang = await preferencesService.getUserInfo("lang");
                                   Navigator.of(context).pop();
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                        builder: (context) => const Home(),
-                                      ),
-                                      (route) => false);
+                                  if (preferencesService.paymentType == "Favourite Pay") {
+                                    showProgress(mcontext, 1);
+                                    await StartUpViewModel().getDemandList(mcontext);
+                                    hideProgress(mcontext);
+                                  } else {
+                                    if (await preferencesService.getUserInfo(s.key_isLogin) == "yes") {
+                                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);
+                                    } else {
+                                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Splash()), (route) => false);
+                                    }
+                                  }
                                   await StartUpViewModel().getReceipt(mcontext, receiptList, 'payment', selectedLang);
                                 } else if (btnmsg == 'receipt') {
                                   Navigator.of(context).pop();
                                   openFilePath(file_path!);
                                 } else if (btnmsg == 'canceled') {
-                                  if (await preferencesService.getUserInfo(s.key_isLogin) == "yes") {
-                                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);
+                                  Navigator.of(context).pop();
+                                  if (preferencesService.paymentType == "Favourite Pay") {
+                                    showProgress(mcontext, 1);
+                                    await StartUpViewModel().getDemandList(mcontext);
+                                    hideProgress(mcontext);
                                   } else {
-                                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Splash()), (route) => false);
+                                    if (await preferencesService.getUserInfo(s.key_isLogin) == "yes") {
+                                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);
+                                    } else {
+                                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Splash()), (route) => false);
+                                    }
                                   }
                                 } else {
                                   performAction(btnmsg ?? '', context);
@@ -716,9 +733,10 @@ class Utils {
   TextEditingController emailTextController = TextEditingController();
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
   bool _isKeyboardFocused = false;
-  Future<void> settingModalBottomSheet(BuildContext mcontext, List finalList) async {
+  Future<void> settingModalBottomSheet(BuildContext mcontext, List finalList, String payType) async {
     int selected_id = -1;
     String isLogin = await preferencesService.getUserInfo(key_isLogin);
+    preferencesService.paymentType = payType;
     if (isLogin == "yes") {
       nameTextController.text = await preferencesService.getUserInfo(key_name);
       mobileTextController.text = await preferencesService.getUserInfo(key_mobile_number);

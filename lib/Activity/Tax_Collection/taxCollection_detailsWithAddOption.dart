@@ -11,6 +11,7 @@ import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
+import 'package:public_vptax/Utils/utils.dart';
 
 class TaxCollectionDetailsWithAdd extends StatefulWidget {
   final selectedTaxTypeData;
@@ -27,7 +28,7 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
   String selectedLang = "";
   List mainList = [];
   List selectedList = [];
-
+  Utils utils = Utils();
   var selectedTaxTypeData;
 
   @override
@@ -103,7 +104,9 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
                           selectedDataList.add(sendData);
                         }
                         var requestJson = {key_service_id: service_key_AddfavouriteList, key_favourite_assessment_list: selectedDataList};
-                        var response = await StartUpViewModel().authendicationServicesAPIcall(context, requestJson);
+                        Utils().showProgress(context, 1);
+
+                        var response = await StartUpViewModel().demandServicesAPIcall(context, requestJson);
 
                         if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -113,8 +116,11 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
                               style: TextStyle(color: c.white),
                             ),
                           ));
+                          await await StartUpViewModel().getDemandList(context);
+                          Utils().hideProgress(context);
                           Navigator.pop(context);
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FavouriteTaxDetails()));
+
+                          //  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FavouriteTaxDetails()));
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             backgroundColor: c.subscription_type_red_color,

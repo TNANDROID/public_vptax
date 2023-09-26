@@ -110,7 +110,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       context.setLocale(Locale('ta', 'IN'));
       langText = 'தமிழ்';
     }
-    await getDemandList();
+    Utils().showProgress(context, 1);
+    await model.getDemandList(context);
+    Utils().hideProgress(context);
     setState(() {});
   }
 
@@ -342,87 +344,75 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   )
                 ]),
                 if (taxTypeList.length > 0)
-                  Container(
-                    decoration: UIHelper.GradientContainer(20, 20, 20, 20, [c.white, c.white]),
-                    margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
-                    child: Column(
-                      children: [
-                        UIHelper.verticalSpaceSmall,
-                        Container(
-                            padding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
-                            alignment: Alignment.centerLeft,
-                            child: Row(
+                  StreamBuilder<Map<String, dynamic>?>(
+                    stream: preferencesService.totalAmountStream!.outStream!,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.active) {
+                        final data = snapshot.data;
+                        if (data != null) {
+                          return Container(
+                            decoration: UIHelper.GradientContainer(20, 20, 20, 20, [c.white, c.white]),
+                            margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
+                            child: Column(
                               children: [
-                                Expanded(flex: 2, child: UIHelper.titleTextStyle('tax_due'.tr().toString() + " : ", c.grey_10, selectedLang == "ta" ? 12 : 13, true, false)),
-                                Expanded(flex: 1, child: UIHelper.titleTextStyle("\u{20B9} $totalAmountOfPayable", c.red_new, 17, true, false))
+                                UIHelper.verticalSpaceSmall,
+                                Container(
+                                    padding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                                    alignment: Alignment.centerLeft,
+                                    child: Row(
+                                      children: [
+                                        Expanded(flex: 2, child: UIHelper.titleTextStyle('tax_due'.tr().toString() + " : ", c.grey_10, selectedLang == "ta" ? 12 : 13, true, false)),
+                                        Expanded(flex: 1, child: UIHelper.titleTextStyle("\u{20B9} " + gettotal(data, 5), c.red_new, 17, true, false))
+                                      ],
+                                    )),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    InkWell(
+                                      onTap: currentSelectedTax != 0
+                                          ? () {
+                                              currentSelectedTax--;
+                                              repeatOnce();
+                                              setState(() {});
+                                            }
+                                          : null,
+                                      child: Container(
+                                        color: c.full_transparent,
+                                        child: Image.asset(imagePath.left_arrow, height: 25, color: currentSelectedTax != 0 ? c.text_color : c.white),
+                                      ),
+                                    ),
+                                    Container(
+                                        padding: EdgeInsets.only(left: 0, right: 0, bottom: 10),
+                                        child: Transform.scale(
+                                          scale: _animation.value,
+                                          child: customCardDesign(data),
+                                        )),
+                                    InkWell(
+                                      onTap: currentSelectedTax != 4
+                                          ? () {
+                                              currentSelectedTax++;
+                                              repeatOnce();
+                                              setState(() {});
+                                            }
+                                          : null,
+                                      child: Container(
+                                        color: c.full_transparent,
+                                        child: Image.asset(imagePath.right_arrow, height: 25, color: currentSelectedTax != 4 ? c.text_color : c.white),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ],
-                            )),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            InkWell(
-                              onTap: currentSelectedTax != 0
-                                  ? () {
-                                      currentSelectedTax--;
-                                      repeatOnce();
-                                      setState(() {});
-                                    }
-                                  : null,
-                              child: Container(
-                                color: c.full_transparent,
-                                child: Image.asset(imagePath.left_arrow, height: 25, color: currentSelectedTax != 0 ? c.text_color : c.white),
-                              ),
                             ),
-                            Container(
-                              padding: EdgeInsets.only(left: 0, right: 0, bottom: 10),
-                              child: Transform.scale(
-                                  scale: _animation.value,
-                                  child: GestureDetector(
-                                    onHorizontalDragEnd: (details) {
-                                      if (details.primaryVelocity == null) return;
-                                      if (details.primaryVelocity! > 0) {
-                                        if (currentSelectedTax != 0) {
-                                          currentSelectedTax--;
-                                        }
-                                      } else if (details.primaryVelocity! < 0) {
-                                        if (currentSelectedTax != 4) {
-                                          currentSelectedTax++;
-                                        }
-                                      }
-                                      repeatOnce();
-                                      setState(() {});
-                                    },
-                                    onTap: () {
-                                      String Taxamount = gettotal(taxTypeList[currentSelectedTax][key_taxtypeid].toString());
-                                      double txtToDouAmt = double.parse(Taxamount);
-                                      if (txtToDouAmt > 0) {
-                                        Navigator.push(context, MaterialPageRoute(builder: (_) => AllYourTaxDetails(selectedTaxTypeData: taxTypeList[currentSelectedTax], isHome: true)));
-                                      } else {
-                                        utils.showAlert(context, ContentType.fail, 'no_pending_due'.tr().toString());
-                                      }
-                                    },
-                                    child: customCardDesign(),
-                                  )),
-                            ),
-                            InkWell(
-                              onTap: currentSelectedTax != 4
-                                  ? () {
-                                      currentSelectedTax++;
-                                      repeatOnce();
-                                      setState(() {});
-                                    }
-                                  : null,
-                              child: Container(
-                                color: c.full_transparent,
-                                child: Image.asset(imagePath.right_arrow, height: 25, color: currentSelectedTax != 4 ? c.text_color : c.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          );
+                        } else {
+                          return Text('No Data');
+                        }
+                      } else {
+                        return CircularProgressIndicator();
+                      }
+                    },
                   ),
-
                 Container(
                   padding: EdgeInsets.only(left: 20, right: 20, top: 10),
                   alignment: Alignment.centerLeft,
@@ -451,13 +441,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                   onTap: () async {
                                     selected_index = servicesList[index][key_service_id];
                                     if (selected_index == 0) {
-                                      Navigator.push(context, MaterialPageRoute(builder: (_) => AllYourTaxDetails(isHome: false))).then((value) => getDemandList());
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => AllYourTaxDetails(isHome: false)));
                                     } else if (selected_index == 1) {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => FavouriteTaxDetails())).then((value) => getDemandList());
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => FavouriteTaxDetails()));
                                     } else if (selected_index == 2) {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(appbarTitle: 'quickPay', flag: "2"))).then((value) => getDemandList());
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(appbarTitle: 'quickPay', flag: "2")));
                                     } else if (selected_index == 3) {
-                                      await Navigator.push(context, MaterialPageRoute(builder: (context) => CheckTransaction())).then((value) => getDemandList());
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => CheckTransaction()));
                                     } else if (selected_index == 4) {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => ViewReceipt()));
                                     } else if (selected_index == 5) {
@@ -465,7 +455,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                     } else if (selected_index == 6) {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => Villagedevelopment()));
                                     }
-                                    setState(() {});
                                   },
                                   child: Stack(
                                     children: [
@@ -533,101 +522,124 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         ));
   }
 
-  //Custom Card Design
-  Widget customCardDesign() {
-    return Column(children: [
-      Container(
-        decoration: UIHelper.GradientContainer(20, 20, 20, 20, [c.grey_2, c.grey_1], borderColor: c.white, intwid: 4),
-        height: Screen.height(context) / 3.5,
-        width: Screen.width(context) / 1.6,
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-          UIHelper.verticalSpaceSmall,
+//Custom Card Design
+  Widget customCardDesign(dynamic data) {
+    return GestureDetector(
+        onHorizontalDragEnd: (details) {
+          if (details.primaryVelocity == null) return;
+          if (details.primaryVelocity! > 0) {
+            if (currentSelectedTax != 0) {
+              currentSelectedTax--;
+            }
+          } else if (details.primaryVelocity! < 0) {
+            if (currentSelectedTax != 4) {
+              currentSelectedTax++;
+            }
+          }
+          repeatOnce();
+          setState(() {});
+        },
+        onTap: () {
+          String Taxamount = gettotal(data, currentSelectedTax);
+          double txtToDouAmt = double.parse(Taxamount);
+          if (txtToDouAmt > 0) {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => AllYourTaxDetails(selectedTaxTypeData: taxTypeList[currentSelectedTax], isHome: true)));
+          } else {
+            utils.showAlert(context, ContentType.fail, 'no_pending_due'.tr().toString());
+          }
+        },
+        child: Column(children: [
           Container(
-            height: 55,
-            width: 55,
-            padding: EdgeInsets.all(5),
-            decoration: UIHelper.circleWithColorWithShadow(0, c.white, c.grey_3),
-            child: Image.asset(
-              taxTypeList[currentSelectedTax][key_img_path],
-            ),
-          ),
-          UIHelper.verticalSpaceSmall,
-          UIHelper.titleTextStyle(selectedLang == 'en' ? taxTypeList[currentSelectedTax][key_taxtypedesc_en] : taxTypeList[currentSelectedTax][key_taxtypedesc_ta], c.colorPrimaryDark,
-              selectedLang == "ta" ? 16 : 18, true, true),
-          UIHelper.verticalSpaceSmall,
-          UIHelper.titleTextStyle('pending_payment'.tr().toString(), c.text_color, selectedLang == "ta" ? 12 : 14, true, true),
-          UIHelper.verticalSpaceSmall,
-          Container(
-            width: Screen.width(context),
-            child: Stack(
-              children: [
-                Center(
-                  child: Container(
-                      width: Screen.width(context) / 3,
-                      height: 45,
-                      transform: Matrix4.skewX(-.3),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: c.grey,
-                        ),
-                        color: c.colorPrimaryDark,
-                        borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10), bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
-                      ),
-                      alignment: Alignment.center,
-                      child: UIHelper.titleTextStyle("\u{20B9} ${gettotal(taxTypeList[currentSelectedTax][key_taxtypeid].toString())}", c.white, 18, true, true)),
+            decoration: UIHelper.GradientContainer(20, 20, 20, 20, [c.grey_2, c.grey_1], borderColor: c.white, intwid: 4),
+            height: Screen.height(context) / 3.5,
+            width: Screen.width(context) / 1.6,
+            child: Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+              UIHelper.verticalSpaceSmall,
+              Container(
+                height: 55,
+                width: 55,
+                padding: EdgeInsets.all(5),
+                decoration: UIHelper.circleWithColorWithShadow(0, c.white, c.grey_3),
+                child: Image.asset(
+                  taxTypeList[currentSelectedTax][key_img_path],
                 ),
-                Positioned(
-                  right: 0,
-                  bottom: 0,
-                  child: Container(
-                    margin: EdgeInsets.only(right: 20),
-                    child: Image.asset(
-                      imagePath.tap,
-                      height: 30,
-                      width: 25,
-                      color: c.account_status_green_color,
-                      // colorFilter: getColorFilter(hslDark.toColor(), ui.BlendMode.srcIn),
+              ),
+              UIHelper.verticalSpaceSmall,
+              UIHelper.titleTextStyle(selectedLang == 'en' ? taxTypeList[currentSelectedTax][key_taxtypedesc_en] : taxTypeList[currentSelectedTax][key_taxtypedesc_ta], c.colorPrimaryDark,
+                  selectedLang == "ta" ? 16 : 18, true, true),
+              UIHelper.verticalSpaceSmall,
+              UIHelper.titleTextStyle('pending_payment'.tr().toString(), c.text_color, selectedLang == "ta" ? 12 : 14, true, true),
+              UIHelper.verticalSpaceSmall,
+              Container(
+                width: Screen.width(context),
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Container(
+                          width: Screen.width(context) / 3,
+                          height: 45,
+                          transform: Matrix4.skewX(-.3),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: c.grey,
+                            ),
+                            color: c.colorPrimaryDark,
+                            borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10), bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
+                          ),
+                          alignment: Alignment.center,
+                          child: UIHelper.titleTextStyle("\u{20B9} ${gettotal(data, currentSelectedTax)}", c.white, 18, true, true)),
                     ),
-                  ),
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: Container(
+                        margin: EdgeInsets.only(right: 20),
+                        child: Image.asset(
+                          imagePath.tap,
+                          height: 30,
+                          width: 25,
+                          color: c.account_status_green_color,
+                          // colorFilter: getColorFilter(hslDark.toColor(), ui.BlendMode.srcIn),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          )
-
-/*          Container(
-              width: Screen.width(context) / 2,
-              height: 45,
-              decoration: UIHelper.roundedBorderWithColor(30, 0, 0, 30, Colors.blue, borderWidth: 0),
-              alignment: Alignment.center,
-              child: UIHelper.titleTextStyle("\u{20B9} ${gettotal(taxTypeList[currentSelectedTax][key_taxtypeid].toString())}", c.white, 20, true, true))*/
-          ,
-          // Container(padding: EdgeInsets.all(10), alignment: Alignment.bottomRight, child: UIHelper.titleTextStyle("payTo".tr().toString(), c.green_new, selectedLang == "ta" ? 12 : 14, true, true)),
-        ]),
-      ),
-    ]);
+              )
+            ]),
+          ),
+        ]));
   }
 
-  String gettotal(taxtypeid) {
+  String gettotal(dynamic data, int index) {
     String total = '';
-    switch (taxtypeid) {
-      case '1':
-        total = property_total.toString();
+    switch (index) {
+      case 0:
+        total = data['property_total'].toString();
         break;
-      case '2':
-        total = water_total.toString();
+      case 1:
+        total = data['water_total'].toString();
         break;
-      case '4':
-        total = professional_total.toString();
+      case 2:
+        total = data['professional_total'].toString();
         break;
-      case '5':
-        total = non_total.toString();
+      case 3:
+        total = data['non_total'].toString();
         break;
-      case '6':
-        total = trade_total.toString();
+      case 4:
+        total = data['trade_total'].toString();
+        break;
+      case 5:
+        total = data['totalAmount'].toString();
         break;
     }
-    double number = double.parse(total);
-    String formattedString = number.toStringAsFixed(2);
+
+    String formattedString = "";
+    if (total.toString() != "null") {
+      double number = double.parse(total);
+      formattedString = number.toStringAsFixed(2);
+    }
+
     return formattedString;
   }
 }

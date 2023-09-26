@@ -361,7 +361,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                     for (var item in taxData) {
                       item[s.key_flag] = true;
                     }
-                    Utils().settingModalBottomSheet(context, [getData]);
+                    Utils().settingModalBottomSheet(context, [getData], "Quick Pay");
                   },
                   child: Container(
                       margin: EdgeInsets.only(top: 0, right: 10, bottom: 10),
@@ -673,7 +673,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
               child: InkWell(
                 onTap: () {
                   if (mainList[mainIndex][key_tax_total] > 0) {
-                    Utils().settingModalBottomSheet(context, [payableData]);
+                    Utils().settingModalBottomSheet(context, [payableData], "Quick Pay");
                   } else {
                     Utils().showAlert(context, ContentType.warning, 'select_demand'.tr().toString());
                   }

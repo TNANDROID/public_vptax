@@ -555,10 +555,12 @@ class _CheckTransactionState extends State<CheckTransaction> {
       Utils().showProgress(context, 1);
       var requestData = {key_service_id: service_key_CheckTransaction, key_transaction_id: transID, key_language_name: lang};
       var response = await model.demandServicesAPIcall(context, requestData);
+      await model.getDemandList(context);
+
       Utils().hideProgress(context);
       if (response[key_status] == key_success && response[key_response] == key_success) {
         Utils().showAlert(context, ContentType.help, '${response[key_message]}');
-        await model.getTransactionStatus(context);
+
         initialize();
       }
     }

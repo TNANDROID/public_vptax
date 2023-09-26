@@ -350,4 +350,89 @@ class StartUpViewModel extends BaseViewModel {
 
     await launch(encodedParams.toString());
   }
+
+  Future getDemandList(BuildContext context) async {
+    double property_total = 0.0;
+    double water_total = 0.0;
+    double professional_total = 0.0;
+    double non_total = 0.0;
+    double trade_total = 0.0;
+    List sourceList = [];
+    preferencesService.totalAmountStream.clear();
+    preferencesService.taxListStream!.clear();
+    try {
+      dynamic requestJson = {
+        key_service_id: service_key_getAllTaxAssessmentList,
+        key_mobile_number: await preferencesService.getUserInfo(key_mobile_number),
+        key_language_name: await preferencesService.getUserInfo("lang")
+      };
+      var responce = await demandServicesAPIcall(context, requestJson);
+      if (responce[key_data] != null && responce[key_data].length > 0) {
+        sourceList = responce[key_data].toList();
+
+        for (var item in sourceList) {
+          switch (item[key_taxtypeid].toString()) {
+            case '1':
+              property_total = property_total + double.parse(item["totaldemand"]);
+              break;
+            case '2':
+              water_total = water_total + double.parse(item["totaldemand"]);
+              break;
+            case '4':
+              professional_total = professional_total + double.parse(item["totaldemand"]);
+              break;
+            case '5':
+              non_total = non_total + double.parse(item["totaldemand"]);
+              break;
+            case '6':
+              trade_total = trade_total + double.parse(item["totaldemand"]);
+              break;
+          }
+        }
+
+        for (var item in sourceList) {
+          dynamic getDemandRequest = {
+            key_service_id: service_key_getAssessmentDemandList,
+            key_taxtypeid: item[key_taxtypeid],
+            key_assessment_id: item[key_assessment_id],
+            key_dcode: item[key_dcode],
+            key_bcode: item[key_bcode],
+            key_pvcode: item[key_lbcode],
+            key_language_name: await preferencesService.getUserInfo("lang"),
+          };
+          if (item[key_taxtypeid] == 4) {
+            getDemandRequest[key_fin_year] = item[key_financialyear];
+          }
+          var getDemandResponce = await demandServicesAPIcall(context, getDemandRequest);
+          if (getDemandResponce[key_response] == key_fail) {
+            if (getDemandResponce[key_message] == "Demand Details Not Found") {
+              item[key_DEMAND_DETAILS] = "Empty";
+            } else if (getDemandResponce[key_message] == "Your previous transaction is pending. Please try after 60 minutes") {
+              item[key_DEMAND_DETAILS] = "Pending";
+            } else {
+              item[key_DEMAND_DETAILS] = "Something Went Wrong";
+            }
+          } else {
+            if (getDemandResponce[key_data] != null && getDemandResponce[key_data].length > 0) {
+              item[key_DEMAND_DETAILS] = getDemandResponce[key_data];
+            }
+          }
+        }
+        sourceList.sort((a, b) {
+          return a[key_taxtypeid].toString().compareTo(b[key_taxtypeid].toString());
+        });
+        preferencesService.totalAmountStream.value = {
+          "property_total": property_total,
+          "water_total": water_total,
+          "professional_total": professional_total,
+          "non_total": non_total,
+          "trade_total": trade_total,
+          "totalAmount": property_total + water_total + professional_total + non_total + trade_total,
+        };
+        preferencesService.taxListStream!.value = sourceList.toList();
+      }
+    } catch (error) {
+      debugPrint('error : $error has been caught');
+    }
+  }
 }

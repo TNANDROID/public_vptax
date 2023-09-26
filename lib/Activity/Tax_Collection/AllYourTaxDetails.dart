@@ -13,6 +13,8 @@ import 'package:public_vptax/Model/startup_model.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:public_vptax/Utils/utils.dart';
+import 'package:public_vptax/stream/extended_asyncwidgets.dart';
+import 'package:public_vptax/stream/streamed_list.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
 import '../../Resources/StringsKey.dart' as s;
 import 'package:public_vptax/Services/Preferenceservices.dart';
@@ -100,175 +102,183 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
         backgroundColor: c.white,
         appBar: UIHelper.getBar('tax_details_yours'),
         body: ViewModelBuilder<StartUpViewModel>.reactive(
-            onModelReady: (model) async {
-              await getAllDemandDetails(context, model);
-              setState(() {});
-            },
+            onModelReady: (model) async {},
             builder: (context, model, child) {
-              return model.isBusy
-                  ? Center(child: Container(margin: EdgeInsets.only(top: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true)))
-                  : Container(
-                      color: c.need_improvement2,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(top: 5),
-                            padding: const EdgeInsets.only(left: 10, right: 10),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Visibility(
-                                    visible: false,
-                                    child: Align(
-                                        alignment: Alignment.centerRight,
-                                        child: InkWell(
-                                          onTap: () {
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(selectedTaxTypeData: selectedTaxTypeData, flag: "3")));
-                                          },
-                                          child: Container(
-                                            width: MediaQuery.of(context).size.width / 2.5,
-                                            margin: EdgeInsets.only(top: 10, bottom: 15, left: 15),
-                                            decoration: UIHelper.GradientContainer(5, 5, 5, 5, [c.grey_8, c.grey_8]),
-                                            padding: EdgeInsets.fromLTRB(5, 8, 0, 8),
-                                            child: Row(
-                                              // Wrap with Row to add the plus icon
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.add, // Use the icon you prefer (e.g., Icons.add, Icons.add_circle, etc.)
-                                                  color: c.white,
-                                                  size: 15,
-                                                ),
-                                                SizedBox(width: 3),
-                                                Flexible(
-                                                    child: UIHelper.titleTextStyle(
-                                                  "new".tr().toString() +
-                                                      (selectedLang == "en" ? selectedTaxTypeData["taxtypedesc_en"] : selectedTaxTypeData["taxtypedesc_ta"]) +
-                                                      "new2".tr().toString(),
-                                                  c.white,
-                                                  10,
-                                                  true,
-                                                  true,
-                                                )) // Add a small space between the icon and the text
-                                                ,
-                                              ],
+              return Container(
+                  color: c.need_improvement2,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(top: 5),
+                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Visibility(
+                                visible: false,
+                                child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(selectedTaxTypeData: selectedTaxTypeData, flag: "3")));
+                                      },
+                                      child: Container(
+                                        width: MediaQuery.of(context).size.width / 2.5,
+                                        margin: EdgeInsets.only(top: 10, bottom: 15, left: 15),
+                                        decoration: UIHelper.GradientContainer(5, 5, 5, 5, [c.grey_8, c.grey_8]),
+                                        padding: EdgeInsets.fromLTRB(5, 8, 0, 8),
+                                        child: Row(
+                                          // Wrap with Row to add the plus icon
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.add, // Use the icon you prefer (e.g., Icons.add, Icons.add_circle, etc.)
+                                              color: c.white,
+                                              size: 15,
                                             ),
-                                          ),
-                                        )),
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: !widget.isHome,
-                                  child: Expanded(
-                                    child: Container(
-                                      margin: EdgeInsets.only(right: 15),
-                                      decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.white, c.white),
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                              width: 30,
-                                              height: 30,
-                                              padding: EdgeInsets.all(5),
-                                              decoration: UIHelper.roundedBorderWithColor(5, 5, 5, 5, c.colorPrimary),
-                                              child: Image.asset(
-                                                selectedTaxTypeData[key_img_path].toString(),
-                                                fit: BoxFit.contain,
-                                                color: selectedTaxTypeData[key_taxtypeid].toString() == "2" || selectedTaxTypeData[key_taxtypeid].toString() == "5" ? c.white : null,
-                                                height: 15,
-                                                width: 15,
-                                              )),
-                                          UIHelper.horizontalSpaceSmall,
-                                          Container(width: 100, margin: EdgeInsets.only(left: 5), child: addInputDropdownField()),
-                                        ],
+                                            SizedBox(width: 3),
+                                            Flexible(
+                                                child: UIHelper.titleTextStyle(
+                                              "new".tr().toString() + (selectedLang == "en" ? selectedTaxTypeData["taxtypedesc_en"] : selectedTaxTypeData["taxtypedesc_ta"]) + "new2".tr().toString(),
+                                              c.white,
+                                              10,
+                                              true,
+                                              true,
+                                            )) // Add a small space between the icon and the text
+                                            ,
+                                          ],
+                                        ),
                                       ),
-                                    ),
+                                    )),
+                              ),
+                            ),
+                            Visibility(
+                              visible: !widget.isHome,
+                              child: Expanded(
+                                child: Container(
+                                  margin: EdgeInsets.only(right: 15),
+                                  decoration: UIHelper.roundedBorderWithColorWithShadow(5, c.white, c.white),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                          width: 30,
+                                          height: 30,
+                                          padding: EdgeInsets.all(5),
+                                          decoration: UIHelper.roundedBorderWithColor(5, 5, 5, 5, c.colorPrimary),
+                                          child: Image.asset(
+                                            selectedTaxTypeData[key_img_path].toString(),
+                                            fit: BoxFit.contain,
+                                            color: selectedTaxTypeData[key_taxtypeid].toString() == "2" || selectedTaxTypeData[key_taxtypeid].toString() == "5" ? c.white : null,
+                                            height: 15,
+                                            width: 15,
+                                          )),
+                                      UIHelper.horizontalSpaceSmall,
+                                      Container(width: 100, margin: EdgeInsets.only(left: 5), child: addInputDropdownField()),
+                                    ],
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                          Visibility(
-                            visible: mainList.isNotEmpty,
-                            child: Expanded(
-                                child: GroupedListView<dynamic, String>(
-                              elements: mainList,
-                              useStickyGroupSeparators: true,
-                              floatingHeader: true,
-                              shrinkWrap: true,
-                              groupBy: (element) => element[key_taxtypeid].toString(),
-                              groupSeparatorBuilder: (element) => stickyHeader(element),
-                              indexedItemBuilder: (context, dynamic element, mainIndex) => Container(
-                                  margin: EdgeInsets.only(top: 5),
-                                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                                  child: AnimatedContainer(
-                                    padding: EdgeInsets.only(bottom: 5),
-                                    duration: const Duration(milliseconds: 500),
-                                    child: Container(
-                                      padding: EdgeInsets.only(bottom: 5),
-                                      width: Screen.width(context),
-                                      decoration: BoxDecoration(
-                                          color: mainList[mainIndex][key_DEMAND_DETAILS] == "Empty"
-                                              ? c.yellow_new
-                                              : mainList[mainIndex][key_DEMAND_DETAILS] == "Pending"
-                                                  ? c.red_new
-                                                  : c.green_new,
-                                          borderRadius: BorderRadius.circular(20)),
-                                      child: Stack(
-                                        children: [
-                                          Positioned(
-                                            top: 0,
-                                            right: 0,
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: StreamedWidget<List<dynamic>?>(
+                            stream: preferencesService.taxListStream!.outStream!,
+                            builder: (context, snapshot) {
+                              if (widget.isHome) {
+                                sourceList = preferencesService.taxListStream!.value!
+                                    .where((item) => item[key_taxtypeid].toString() == selectedTaxTypeData['taxtypeid'].toString() && double.parse(item['totaldemand']) != 0)
+                                    .toList();
+                              } else {
+                                sourceList = preferencesService.taxListStream!.value!.where((item) => item["is_favourite"] != "Y").toList();
+                              }
+
+                              if (selectedTaxTypeData['taxtypeid'].toString() == "0") {
+                                mainList = sourceList;
+                              } else {
+                                mainList = sourceList.where((element) => element[s.key_taxtypeid].toString() == selectedTaxTypeData['taxtypeid'].toString()).toList();
+                              }
+
+                              return mainList.length > 0
+                                  ? GroupedListView<dynamic, String>(
+                                      elements: mainList,
+                                      useStickyGroupSeparators: true,
+                                      floatingHeader: true,
+                                      shrinkWrap: true,
+                                      groupBy: (element) => element[key_taxtypeid].toString(),
+                                      groupSeparatorBuilder: (element) => stickyHeader(element),
+                                      indexedItemBuilder: (context, dynamic element, mainIndex) => Container(
+                                          margin: EdgeInsets.only(top: 5),
+                                          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                          child: AnimatedContainer(
+                                            padding: EdgeInsets.only(bottom: 5),
+                                            duration: const Duration(milliseconds: 500),
                                             child: Container(
-                                              constraints: const BoxConstraints(maxWidth: 130, maxHeight: 80),
+                                              padding: EdgeInsets.only(bottom: 5),
+                                              width: Screen.width(context),
                                               decoration: BoxDecoration(
                                                   color: mainList[mainIndex][key_DEMAND_DETAILS] == "Empty"
-                                                      ? c.yellow_new_light
+                                                      ? c.yellow_new
                                                       : mainList[mainIndex][key_DEMAND_DETAILS] == "Pending"
-                                                          ? c.red_new_light
-                                                          : c.light_green_new,
+                                                          ? c.red_new
+                                                          : c.green_new,
                                                   borderRadius: BorderRadius.circular(20)),
-                                            ),
-                                          ),
-                                          Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                  margin: const EdgeInsets.all(0),
-                                                  child: Container(
-                                                      padding: EdgeInsets.fromLTRB(15, 15, 5, 0),
+                                              child: Stack(
+                                                children: [
+                                                  Positioned(
+                                                    top: 0,
+                                                    right: 0,
+                                                    child: Container(
+                                                      constraints: const BoxConstraints(maxWidth: 130, maxHeight: 80),
                                                       decoration: BoxDecoration(
-                                                        color: c.white,
-                                                        borderRadius: BorderRadius.circular(20),
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                            color: Colors.grey.withOpacity(0.5), // Shadow color
-                                                            spreadRadius: 3, // Spread radius
-                                                            blurRadius: 5, // Blur radius
-                                                            offset: Offset(3, 3), // Offset from the top-left corner
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      width: Screen.width(context) - 40,
-                                                      child: headerCardUIWidget(mainIndex, mainList[mainIndex], model))),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )),
-                              itemComparator: (item1, item2) => item1[key_assessment_no].compareTo(item2[key_assessment_no]), // optional
-                            )),
-                          ),
-                          Visibility(
-                              visible: mainList.isEmpty,
-                              child: Expanded(
-                                child: Center(child: Container(margin: EdgeInsets.only(top: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true))),
-                              )),
-                        ],
-                      ));
+                                                          color: mainList[mainIndex][key_DEMAND_DETAILS] == "Empty"
+                                                              ? c.yellow_new_light
+                                                              : mainList[mainIndex][key_DEMAND_DETAILS] == "Pending"
+                                                                  ? c.red_new_light
+                                                                  : c.light_green_new,
+                                                          borderRadius: BorderRadius.circular(20)),
+                                                    ),
+                                                  ),
+                                                  Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Container(
+                                                          margin: const EdgeInsets.all(0),
+                                                          child: Container(
+                                                              padding: EdgeInsets.fromLTRB(15, 15, 5, 0),
+                                                              decoration: BoxDecoration(
+                                                                color: c.white,
+                                                                borderRadius: BorderRadius.circular(20),
+                                                                boxShadow: [
+                                                                  BoxShadow(
+                                                                    color: Colors.grey.withOpacity(0.5), // Shadow color
+                                                                    spreadRadius: 3, // Spread radius
+                                                                    blurRadius: 5, // Blur radius
+                                                                    offset: Offset(3, 3), // Offset from the top-left corner
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              width: Screen.width(context) - 40,
+                                                              child: headerCardUIWidget(mainIndex, mainList[mainIndex], model))),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          )),
+                                      itemComparator: (item1, item2) => item1[key_assessment_no].compareTo(item2[key_assessment_no]), // optional
+                                    )
+                                  : Expanded(
+                                      child: Center(child: Container(margin: EdgeInsets.only(top: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true))),
+                                    );
+                            }),
+                      ),
+                    ],
+                  ));
             },
             viewModelBuilder: () => StartUpViewModel()));
   }
@@ -436,7 +446,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                             }
                           }
                           setState(() {});
-                          Utils().settingModalBottomSheet(context, [getData]);
+                          Utils().settingModalBottomSheet(context, [getData], "Favourite Pay");
                         },
                         child: Container(
                             margin: EdgeInsets.only(top: 5, right: 0, bottom: 10),
@@ -1008,7 +1018,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
               child: InkWell(
                 onTap: () {
                   if (mainList[mainIndex][key_tax_total] > 0) {
-                    Utils().settingModalBottomSheet(context, [payableData]);
+                    Utils().settingModalBottomSheet(context, [payableData], "Favourite Pay");
                   } else {
                     Utils().showAlert(context, ContentType.warning, 'select_demand'.tr().toString());
                   }
@@ -1066,11 +1076,11 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
         isShowFlag = [];
         isSelectAll = [];
         selectedTaxTypeData = value;
-        if (selectedTaxTypeData['taxtypeid'].toString() == "0") {
-          mainList = sourceList;
-        } else {
-          mainList = sourceList.where((element) => element[s.key_taxtypeid].toString() == selectedTaxTypeData['taxtypeid'].toString()).toList();
-        }
+        // if (selectedTaxTypeData['taxtypeid'].toString() == "0") {
+        //   mainList = preferencesService.taxListStream!.value!;
+        // } else {
+        //   mainList = preferencesService.taxListStream!.value!.where((element) => element[s.key_taxtypeid].toString() == selectedTaxTypeData['taxtypeid'].toString()).toList();
+        // }
         setState(() {});
       },
       name: 'TaxType',
@@ -1081,73 +1091,6 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
     String taxTypeID = mainList[typeId][s.key_taxtypeid].toString();
     List selectedTaxitem = taxTypeList.where((element) => element[s.key_taxtypeid].toString() == taxTypeID).toList();
     return selectedTaxitem[0][s.key_img_path].toString();
-  }
-
-  //Auth Service API Call
-  Future getAllDemandDetails(BuildContext context, StartUpViewModel model) async {
-    if (await Utils().isOnline()) {
-      Utils().showProgress(context, 1);
-      try {
-        var response = await model.demandServicesAPIcall(context, requestJson);
-        if (response[key_data] != null && response[key_data].length > 0) {
-          List resList = response[key_data].toList();
-          resList.sort((a, b) {
-            return int.parse(a[key_assessment_no].toString()).compareTo(int.parse(b[key_assessment_no].toString()));
-          });
-          if (widget.isHome) {
-            sourceList = resList.where((item) => item[key_taxtypeid].toString() == selectedTaxTypeData['taxtypeid'].toString() && double.parse(item['totaldemand']) != 0).toList();
-          } else {
-            sourceList = resList.where((item) => item["is_favourite"] != "Y").toList();
-          }
-          mainList = sourceList.toList();
-          mainList.sort((a, b) {
-            return a[key_taxtypeid].toString().compareTo(b[key_taxtypeid].toString());
-          });
-          for (var item in mainList) {
-            dynamic getDemandRequest = {
-              key_service_id: service_key_getAssessmentDemandList,
-              key_taxtypeid: item[key_taxtypeid],
-              key_assessment_id: item[key_assessment_id],
-              key_dcode: item[key_dcode],
-              key_bcode: item[key_bcode],
-              key_pvcode: item[key_lbcode],
-              key_language_name: await preferencesService.getUserInfo("lang"),
-            };
-            if (item[key_taxtypeid] == 4) {
-              getDemandRequest[key_fin_year] = item[key_financialyear];
-            }
-            var getDemandResponce = await model.demandServicesAPIcall(context, getDemandRequest);
-            if (getDemandResponce[key_response] == key_fail) {
-              if (getDemandResponce[key_message] == "Demand Details Not Found") {
-                item[key_DEMAND_DETAILS] = "Empty";
-              } else if (getDemandResponce[key_message] == "Your previous transaction is pending. Please try after 60 minutes") {
-                item[key_DEMAND_DETAILS] = "Pending";
-              } else {
-                item[key_DEMAND_DETAILS] = "Something Went Wrong";
-              }
-            } else {
-              if (getDemandResponce[key_data] != null && getDemandResponce[key_data].length > 0) {
-                item[key_DEMAND_DETAILS] = getDemandResponce[key_data];
-              }
-            }
-          }
-        } else {
-          mainList = [];
-        }
-
-        Utils().hideProgress(context);
-        return "true";
-      } catch (error) {
-        Utils().hideProgress(context);
-        debugPrint('error : $error has been caught');
-      }
-    } else {
-      Utils().showAlert(
-        context,
-        ContentType.fail,
-        "noInternet".tr().toString(),
-      );
-    }
   }
 
   bool getFlagStatus(String assId) {

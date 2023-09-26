@@ -1,10 +1,13 @@
 // ignore_for_file: file_names
 
+import 'package:public_vptax/stream/streamed_list.dart';
+import 'package:public_vptax/stream/streamed_map.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceService {
   String userName = 'public';
   String userPassKey = '45af1c702e5c46acb5f4192cbeaba27c';
+  String paymentType = "";
 
   List<dynamic> districtList = [];
   List<dynamic> blockList = [];
@@ -16,6 +19,9 @@ class PreferenceService {
   List<dynamic> addedTaxPayList = [];
   List<dynamic> taxCollectionDetailsList = [];
   List<dynamic> TransactionList = [];
+
+  final StreamedList<dynamic>? taxListStream = StreamedList<dynamic>(initialData: []);
+  final StreamedMap<String, dynamic> totalAmountStream = StreamedMap<String, dynamic>(initialData: {});
 
   //Set User Info
   Future<bool> setUserInfo(String key, String value) async {
@@ -36,16 +42,8 @@ class PreferenceService {
 
 //Remove all Data
   Future cleanAllPreferences() async {
-    districtList = [];
-    blockList = [];
-    villageList = [];
-    taxTypeList = [];
-    finYearList = [];
-    PaymentTypeList = [];
-    GatewayList = [];
-    addedTaxPayList = [];
-    taxCollectionDetailsList = [];
-    TransactionList = [];
+    totalAmountStream.clear();
+    taxListStream!.clear();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
   }
