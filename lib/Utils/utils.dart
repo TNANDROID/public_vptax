@@ -18,7 +18,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:open_file/open_file.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:public_vptax/Activity/Auth/Splash.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
@@ -386,7 +385,7 @@ class Utils {
   }
 
   void openFilePath(String path) async {
-    final result = await OpenFile.open(path);
+    // final result = await OpenFile.open(path);
   }
 
   performAction(String type, BuildContext context) async {

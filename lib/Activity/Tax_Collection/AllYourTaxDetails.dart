@@ -177,6 +177,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                               child: Image.asset(
                                                 selectedTaxTypeData[key_img_path].toString(),
                                                 fit: BoxFit.contain,
+                                                color: selectedTaxTypeData[key_taxtypeid].toString() == "2" || selectedTaxTypeData[key_taxtypeid].toString() == "5"?c.white:null,
                                                 height: 15,
                                                 width: 15,
                                               )),

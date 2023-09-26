@@ -52,9 +52,6 @@ dependencies:
   dart_jsonwebtoken: ^2.7.1
   webview_flutter: ^3.0.4
   device_info_plus: ^8.1.0
-  syncfusion_flutter_pdfviewer: ^21.1.38
-  path_provider: ^2.0.13
-  open_file: ^3.3.1
   datetime_setting: ^2.0.2
   grouped_list: ^5.1.2
   calendar_date_picker2: ^0.5.2
