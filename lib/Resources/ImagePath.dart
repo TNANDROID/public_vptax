@@ -77,3 +77,4 @@ String back = 'assets/images/back.svg';
 String bubbles = 'assets/images/bubbles.svg';
 
 String spinner = 'assets/images/spinner.gif';
+String spinner1 = 'assets/images/spinner1.gif';

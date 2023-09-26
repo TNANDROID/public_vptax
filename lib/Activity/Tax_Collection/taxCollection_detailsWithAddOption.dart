@@ -2,7 +2,6 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:public_vptax/Activity/Tax_Collection/AllYourTaxDetails.dart';
 import 'package:public_vptax/Activity/Tax_Collection/favourite_list.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
@@ -98,12 +97,12 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
                           sendData[key_pvcode] = mainList[item][key_lbcode];
                           sendData[key_taxtypeid] = mainList[item][key_taxtypeid];
                           sendData[key_assessment_no] = mainList[item][key_assessment_no];
-                          if (mainList[item][key_taxtypeid] == 4) {
-                            sendData[key_fin_year] = item[key_financialyear];
+                          if (mainList[item][key_taxtypeid].toString() == '4') {
+                            sendData[key_fin_year] = mainList[item][key_financialyear];
                           }
                           selectedDataList.add(sendData);
                         }
-                        var requestJson = {"service_id": "AddfavouriteList", "favourite_assessment_list": selectedDataList};
+                        var requestJson = {key_service_id: service_key_AddfavouriteList, key_favourite_assessment_list: selectedDataList};
                         var response = await StartUpViewModel().authendicationServicesAPIcall(context, requestJson);
 
                         if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
@@ -116,7 +115,7 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
                           ));
                           Navigator.pop(context);
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FavouriteTaxDetails()));
-                        }else{
+                        } else {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             backgroundColor: c.subscription_type_red_color,
                             content: Text(

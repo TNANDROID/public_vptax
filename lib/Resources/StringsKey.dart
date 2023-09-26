@@ -136,7 +136,9 @@ String key_demand_id = "demand_id";
 String key_amount_to_pay = "amount_to_pay";
 String key_totaldemand = "totaldemand";
 String key_secretKey = "secretKey";
-
+String key_user_id = "user_id";
+String key_favourite_assessment_id = "favourite_assessment_id";
+String key_favourite_assessment_list = "favourite_assessment_list";
 
 // ************************** Service Key Strings ************************** //
 
@@ -159,3 +161,6 @@ String service_key_TransactionidWiseGetReceipt = "TransactionidWiseGetReceipt";
 String service_key_TransactionHistory = "TransactionHistory";
 String service_key_getAssessmentDemandList = "getAssessmentDemandList";
 String service_key_getAllTaxAssessmentList = "getAllTaxAssessmentList";
+String service_key_AddfavouriteList = "AddfavouriteList";
+String service_key_RemovefavouriteList = "RemovefavouriteList";
+String service_key_ReceiptBillDetails = "ReceiptBillDetails";

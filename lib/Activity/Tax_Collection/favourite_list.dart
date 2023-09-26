@@ -2,11 +2,7 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:grouped_list/grouped_list.dart';
 import 'package:public_vptax/Activity/Tax_Collection/taxCollection_view_request_screen.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
@@ -35,7 +31,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
   late AnimationController _controller;
   late Animation<double> _animation;
   PreferenceService preferencesService = locator<PreferenceService>();
-  dynamic requestJson = {"service_id": "getAllTaxAssessmentList"};
+  dynamic requestJson = {key_service_id: service_key_getAllTaxAssessmentList};
   List isSelectAll = [];
   String selectedLang = "";
   List isShowFlag = [];
@@ -317,7 +313,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
               ),
               ElevatedButton(
                 onPressed: () async {
-                  var requestJson = {"service_id": "RemovefavouriteList", "user_id": getData['user_id'], "favourite_assessment_id": getData['favourite_assessment_id']};
+                  var requestJson = {key_service_id: service_key_RemovefavouriteList, key_user_id: getData['user_id'], key_favourite_assessment_id: getData['favourite_assessment_id']};
                   var response = await model.authendicationServicesAPIcall(context, requestJson);
                   print(response);
                   if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {

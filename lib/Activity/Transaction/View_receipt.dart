@@ -22,6 +22,8 @@ import '../../Resources/StringsKey.dart';
 import '../../Services/Apiservices.dart';
 
 class ViewReceipt extends StatefulWidget {
+  const ViewReceipt({super.key});
+
   @override
   State<ViewReceipt> createState() => _ViewReceiptState();
 }
@@ -116,10 +118,10 @@ class _ViewReceiptState extends State<ViewReceipt> {
         focusedBorder: UIHelper.getInputBorder(0, borderColor: c.full_transparent, radius: 40),
         focusedErrorBorder: UIHelper.getInputBorder(0, borderColor: Colors.red, radius: 40),
         errorBorder: UIHelper.getInputBorder(0, borderColor: Colors.red, radius: 40),
-        errorStyle: TextStyle(fontSize: 10),
-        contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 10), // Optional: Adjust padding
+        errorStyle: const TextStyle(fontSize: 10),
+        contentPadding: const EdgeInsets.symmetric(vertical: 1, horizontal: 10), // Optional: Adjust padding
       ),
-      icon: Container(width: 0, height: 0),
+      icon: SizedBox(width: 0, height: 0),
       name: fieldName,
       initialValue: initValue,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -128,7 +130,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
           .map((item) => DropdownMenuItem(
               value: item[keyCode],
               child: Padding(
-                padding: EdgeInsets.only(left: 10, top: 5),
+                padding: const EdgeInsets.only(left: 10, top: 5),
                 child: Text(
                   selectedLang == "en" ? item[titleText].toString() : item[titleTextTamil].toString(),
                   overflow: TextOverflow.ellipsis,
@@ -148,7 +150,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
           _formKey.currentState!.patchValue({'dcode': "", 'bcode': "", 'pvcode': ""});
           model.selectedBlockList.clear();
           model.selectedVillageList.clear();
-          Future.delayed(Duration(milliseconds: 500), () {
+          Future.delayed(const Duration(milliseconds: 500), () {
             selectedTaxType = value.toString();
 
             setState(() {});
@@ -161,7 +163,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
           selectedBlock = "";
           selectedvillage = "";
           _formKey.currentState!.patchValue({'bcode': "", 'pvcode': ""});
-          Future.delayed(Duration(milliseconds: 500), () {
+          Future.delayed(const Duration(milliseconds: 500), () {
             model.loadUIBlock(selectedDistrict);
             setState(() {});
             Utils().hideProgress(context);
@@ -171,7 +173,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
           selectedvillage = "";
           _formKey.currentState!.patchValue({'pvcode': ""});
           model.selectedVillageList.clear();
-          Future.delayed(Duration(milliseconds: 500), () {
+          Future.delayed(const Duration(milliseconds: 500), () {
             model.loadUIVillage(selectedDistrict, selectedBlock);
 
             setState(() {});
@@ -179,7 +181,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
           });
         } else if (index == 3) {
           selectedvillage = value.toString();
-          Future.delayed(Duration(milliseconds: 200), () {
+          Future.delayed(const Duration(milliseconds: 200), () {
             Utils().hideProgress(context);
           });
         } else {
@@ -209,15 +211,15 @@ class _ViewReceiptState extends State<ViewReceipt> {
         floatingLabelBehavior: FloatingLabelBehavior.never,
         labelStyle: TextStyle(fontSize: 10.0, fontWeight: FontWeight.w400, color: c.grey_7),
         filled: true,
-        constraints: BoxConstraints(maxHeight: 35),
+        constraints: const BoxConstraints(maxHeight: 35),
         fillColor: c.white,
         enabledBorder: UIHelper.getInputBorder(0, borderColor: c.white, radius: 20),
         disabledBorder: UIHelper.getInputBorder(0, borderColor: c.grey_5, radius: 20),
         focusedBorder: UIHelper.getInputBorder(0, borderColor: c.white, radius: 20),
         focusedErrorBorder: UIHelper.getInputBorder(0, borderColor: Colors.red, radius: 20),
         errorBorder: UIHelper.getInputBorder(0, borderColor: Colors.red, radius: 20),
-        errorStyle: TextStyle(fontSize: 10),
-        contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 10), // Optional: Adjust padding
+        errorStyle: const TextStyle(fontSize: 10),
+        contentPadding: const EdgeInsets.symmetric(vertical: 1, horizontal: 10), // Optional: Adjust padding
       ),
       inputFormatters: nameField == "assessment_no"
           ? [
@@ -260,8 +262,8 @@ class _ViewReceiptState extends State<ViewReceipt> {
       ),
       Container(
           transform: Matrix4.translationValues(-6.0, -120.0, 10.0),
-          margin: EdgeInsets.only(left: 25, right: 15, top: 5),
-          padding: EdgeInsets.only(top: 10, left: 5, right: 5, bottom: 50),
+          margin: const EdgeInsets.only(left: 25, right: 15, top: 5),
+          padding: const EdgeInsets.only(top: 10, left: 5, right: 5, bottom: 50),
           decoration: UIHelper.roundedBorderWithColorWithShadow(15, c.white, c.white, borderColor: Colors.transparent, borderWidth: 5),
           child: FormBuilder(
               key: _formKey,
@@ -277,37 +279,34 @@ class _ViewReceiptState extends State<ViewReceipt> {
                 if (selectedvillage.isNotEmpty)
                   Container(
                       decoration: UIHelper.roundedBorderWithColorWithShadow(15, c.need_improvement2, c.need_improvement2, borderColor: Colors.transparent, borderWidth: 5),
-                      padding: EdgeInsets.only(top: 15, bottom: 10, left: 10, right: 10),
+                      padding: const EdgeInsets.only(top: 15, bottom: 10, left: 10, right: 10),
                       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                         headingWithDropdownWidget('assesmentNumber', addInputFormControl("assessment_no")),
                         UIHelper.verticalSpaceSmall,
                         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                           Text(
-                            "(" + 'or'.tr().toString() + ")",
-                            style: TextStyle(fontSize: 12),
+                            "(${'or'.tr()})",
+                            style: const TextStyle(fontSize: 12),
                           )
                         ]),
                         UIHelper.verticalSpaceSmall,
                         headingWithDropdownWidget('receiptno', addInputFormControl("receipt_no")),
                         UIHelper.verticalSpaceSmall,
-                        invalidReceiptNumber
-                            ? UIHelper.titleTextStyle('receiptno'.tr().toString() + "/" + 'assesmentNumber'.tr().toString() + " " + 'isEmpty'.tr().toString(), c.red, 10, false, false)
-                            : SizedBox()
+                        invalidReceiptNumber ? UIHelper.titleTextStyle("${'receiptno'.tr()}/${'assesmentNumber'.tr()} ${'isEmpty'.tr()}", c.red, 10, false, false) : const SizedBox()
                       ])),
               ]))),
       Container(
         transform: Matrix4.translationValues(5.0, -150.0, 10.0),
         child: TextButton(
-          child: Padding(padding: EdgeInsets.only(left: 5, right: 5), child: Text("submit".tr().toString(), style: TextStyle(color: c.white, fontSize: 13))),
-          style: TextButton.styleFrom(fixedSize: const Size(130, 20), shape: StadiumBorder(), backgroundColor: c.colorPrimary),
+          style: TextButton.styleFrom(fixedSize: const Size(130, 20), shape: const StadiumBorder(), backgroundColor: c.colorPrimary),
           onPressed: () async {
             validateForm();
             if (_formKey.currentState!.saveAndValidate() && !invalidReceiptNumber) {
               Map<String, dynamic> postParams = Map.from(_formKey.currentState!.value);
-              postParams['service_id'] = "ReceiptBillDetails";
-              postParams['language_name'] = selectedLang;
-              postParams['assessment_no'] = assessmentController.text;
-              postParams['receipt_no'] = receiptController.text;
+              postParams[key_service_id] = service_key_ReceiptBillDetails;
+              postParams[key_language_name] = selectedLang;
+              postParams[key_assessment_no] = assessmentController.text;
+              postParams[key_receipt_no] = receiptController.text;
               print("Ra--->>>>>$postParams");
               postParams.removeWhere((key, value) {
                 return value == null || (value is String && value.isEmpty);
@@ -328,11 +327,12 @@ class _ViewReceiptState extends State<ViewReceipt> {
             setState(() {});
             scrollController.animateTo(
               400,
-              duration: Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 500),
               curve: Curves.linearToEaseOut,
             );
             setState(() {});
           },
+          child: Padding(padding: EdgeInsets.only(left: 5, right: 5), child: Text("submit".tr().toString(), style: TextStyle(color: c.white, fontSize: 13))),
         ),
       ),
     ]);
@@ -348,7 +348,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
           Container(
               width: Screen.width(context) / 1.5,
               height: 60,
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.white, c.white, borderColor: c.full_transparent, borderWidth: 0),
               child: Center(child: UIHelper.titleTextStyle(title, c.text_color, 12, false, true))),
           Container(
@@ -370,10 +370,10 @@ class _ViewReceiptState extends State<ViewReceipt> {
 
   ///This [widget] Used for set of [getReceiptDownloadWidget] are used.
   Widget listview(BuildContext context, StartUpViewModel model) {
-    return receiptList.length > 0
+    return receiptList.isNotEmpty
         ? Container(
             transform: Matrix4.translationValues(-5.0, -100.0, 10.0),
-            padding: EdgeInsets.only(left: 22, right: 22),
+            padding: const EdgeInsets.only(left: 22, right: 22),
             child: Column(
               children: [
                 AnimationLimiter(
@@ -395,15 +395,15 @@ class _ViewReceiptState extends State<ViewReceipt> {
                                 decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.colorAccent, c.white, stop1: 0.25, stop2: 0.1),
                                 child: Center(
                                     child: Container(
-                                        margin: EdgeInsets.all(10.0),
+                                        margin: const EdgeInsets.all(10.0),
                                         child: Column(
                                           children: [
                                             UIHelper.titleTextStyle('receiptno'.tr().toString(), c.primary_text_color, 12, false, true),
                                             UIHelper.titleTextStyle(receiptList[index]['receipt_no'].toString(), c.text_color, 12, true, true),
                                             UIHelper.verticalSpaceMedium,
-                                            getReceiptDownloadWidget(context, 'download_tamil'.tr().toString() + "\n" + 'tamil_1'.tr().toString(), receiptList[index], "ta", model),
+                                            getReceiptDownloadWidget(context, "${'download_tamil'.tr()}\n${'tamil_1'.tr()}", receiptList[index], "ta", model),
                                             UIHelper.verticalSpaceMedium,
-                                            getReceiptDownloadWidget(context, 'download_english'.tr().toString() + "\n" + 'english_1'.tr().toString(), receiptList[index], "en", model),
+                                            getReceiptDownloadWidget(context, "${'download_english'.tr()}\n${'english_1'.tr()}", receiptList[index], "en", model),
                                           ],
                                         ))),
                               ),
@@ -420,8 +420,10 @@ class _ViewReceiptState extends State<ViewReceipt> {
           )
         : noDataFound
             ? Container(
-                transform: Matrix4.translationValues(-5.0, -100.0, 10.0), padding: EdgeInsets.only(left: 22, right: 22), child: UIHelper.titleTextStyle('no_record', c.text_color, 12, true, true))
-            : SizedBox();
+                transform: Matrix4.translationValues(-5.0, -100.0, 10.0),
+                padding: const EdgeInsets.only(left: 22, right: 22),
+                child: UIHelper.titleTextStyle('no_record', c.text_color, 12, true, true))
+            : const SizedBox();
   }
 
   /// Main Build Widget of this class

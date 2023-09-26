@@ -11,7 +11,6 @@ import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Model/startup_model.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
-import 'package:public_vptax/Services/Apiservices.dart';
 import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:public_vptax/Utils/utils.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
@@ -83,7 +82,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
   Future<void> initialize() async {
     selectedLang = await preferencesService.getUserInfo("lang");
     requestJson[key_mobile_number] = await preferencesService.getUserInfo(key_mobile_number);
-    print(">>>" + requestJson[key_mobile_number].toString());
+    print(">>>${requestJson[key_mobile_number]}");
     requestJson[key_language_name] = selectedLang;
     setState(() {});
   }
@@ -177,7 +176,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                               child: Image.asset(
                                                 selectedTaxTypeData[key_img_path].toString(),
                                                 fit: BoxFit.contain,
-                                                color: selectedTaxTypeData[key_taxtypeid].toString() == "2" || selectedTaxTypeData[key_taxtypeid].toString() == "5"?c.white:null,
+                                                color: selectedTaxTypeData[key_taxtypeid].toString() == "2" || selectedTaxTypeData[key_taxtypeid].toString() == "5" ? c.white : null,
                                                 height: 15,
                                                 width: 15,
                                               )),
@@ -534,7 +533,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
     return await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            content: Container(
+            content: SizedBox(
               height: MediaQuery.of(context).size.width / 2,
               child: Column(
                 children: [
@@ -767,10 +766,10 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                             bool isStatus = taxData[index][s.key_flag] ?? false;
                             return GestureDetector(
                                 onTap: () {
+                                  isSelectAll.clear();
                                   for (int i = 0; i < mainList.length; i++) {
                                     if (mainList[i][key_DEMAND_DETAILS] != "Empty" && mainList[i][key_DEMAND_DETAILS] != "Pending") {
                                       if (i != mainIndex) {
-                                        isSelectAll.remove(i);
                                         for (var item in mainList[i][key_DEMAND_DETAILS]) {
                                           item[s.key_flag] = false;
                                         }

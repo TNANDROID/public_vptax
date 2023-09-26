@@ -135,7 +135,7 @@ class Utils {
                     children: [
                       Center(
                         child: Image.asset(
-                          imagePath.spinner,
+                          imagePath.spinner1,
                           height: 70,
                         ),
                       ),
@@ -855,7 +855,7 @@ class Utils {
                                 child: Text(
                                   "continue".tr().toString(),
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
