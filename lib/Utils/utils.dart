@@ -264,7 +264,6 @@ class Utils {
                         onTap: () async {
                           Navigator.of(context).pop();
                           if (btnmsg == 'payment') {
-                            Navigator.of(context).pop();
                             if (preferencesService.paymentType == "Favourite Pay") {
                               showProgress(mcontext, 1);
                               await StartUpViewModel().getDemandList(mcontext);
@@ -279,7 +278,6 @@ class Utils {
                           } else if (btnmsg == 'receipt') {
                             openFilePath(file_path!);
                           } else if (btnmsg == 'canceled') {
-                            Navigator.of(context).pop();
                             if (preferencesService.paymentType == "Favourite Pay") {
                               showProgress(mcontext, 1);
                               await StartUpViewModel().getDemandList(mcontext);
