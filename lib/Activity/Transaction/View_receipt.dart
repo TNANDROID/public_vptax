@@ -29,7 +29,6 @@ class ViewReceipt extends StatefulWidget {
 }
 
 class _ViewReceiptState extends State<ViewReceipt> {
-  @override
   Utils utils = Utils();
   ApiServices apiServices = ApiServices();
   PreferenceService preferencesService = locator<PreferenceService>();

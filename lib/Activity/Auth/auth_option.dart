@@ -256,13 +256,16 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
 
               //  ****************** Image Container ****************** //
 
-              Align(
+            Container(
+              height: MediaQuery.sizeOf(context).height/2.8,
+              child:Align(
                 alignment: Alignment.bottomCenter,
                 child: Image.asset(
                   imagepath.splash, // Replace with your image path
                   fit: BoxFit.cover,
                 ),
               ),
+            )
             ],
           ),
         ),
