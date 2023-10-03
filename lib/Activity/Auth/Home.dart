@@ -524,6 +524,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
 //Custom Card Design
   Widget customCardDesign(dynamic data) {
+    String taxamount = gettotal(data, currentSelectedTax);
     return GestureDetector(
         onHorizontalDragEnd: (details) {
           if (details.primaryVelocity == null) return;
@@ -540,8 +541,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           setState(() {});
         },
         onTap: () {
-          String Taxamount = gettotal(data, currentSelectedTax);
-          double txtToDouAmt = double.parse(Taxamount);
+          double txtToDouAmt = double.parse(taxamount);
           if (txtToDouAmt > 0) {
             Navigator.push(context, MaterialPageRoute(builder: (_) => AllYourTaxDetails(selectedTaxTypeData: taxTypeList[currentSelectedTax], isHome: true)));
           } else {
@@ -587,7 +587,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10), bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
                           ),
                           alignment: Alignment.center,
-                          child: UIHelper.titleTextStyle("\u{20B9} ${gettotal(data, currentSelectedTax)}", c.white, 18, true, true)),
+                          child: UIHelper.titleTextStyle("\u{20B9} ${taxamount}", c.white, 18, true, true)),
                     ),
                     Positioned(
                       right: 0,
@@ -638,6 +638,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     if (total.toString() != "null") {
       double number = double.parse(total);
       formattedString = number.toStringAsFixed(2);
+    }
+
+    if (formattedString.isEmpty) {
+      formattedString = "0.00";
     }
 
     return formattedString;
