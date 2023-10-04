@@ -1,12 +1,9 @@
 // ignore_for_file: use_build_context_synchronously, file_names, unused_field
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Utils/utils.dart';
-import 'package:responsive_grid_list/responsive_grid_list.dart';
 
 class VerificationView extends StatefulWidget {
   final int fixedlength;

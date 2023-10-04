@@ -36,7 +36,13 @@ class UIHelper {
   static Widget titleTextStyle(String title, Color clr, double fntsize, bool isBold, bool isCenterAliignment, {bool isUnderline = false}) {
     return Text(
       title.tr().toString(),
-      style: TextStyle(color: clr, fontSize: fntsize, decoration: isUnderline ? TextDecoration.underline : TextDecoration.none, fontWeight: isBold ? FontWeight.bold : FontWeight.normal,fontFamily: 'RobotoSlab',),
+      style: TextStyle(
+        color: clr,
+        fontSize: fntsize,
+        decoration: isUnderline ? TextDecoration.underline : TextDecoration.none,
+        fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+        fontFamily: 'RobotoSlab',
+      ),
       textAlign: isCenterAliignment
           ? TextAlign.center
           : title.contains("\u{20B9}")
@@ -89,21 +95,23 @@ class UIHelper {
           )
         ]);
   }
+
   //Container Style Provider with shadow
   static BoxDecoration roundedBorderWithColorWithoutShadow(double radius, Color backgroundColor, Color backgroundColor2,
       {Color borderColor = Colors.transparent, double borderWidth = 1, stop1 = 0.0, double stop2 = 0.7}) {
     return BoxDecoration(
-        borderRadius: BorderRadius.circular(radius),
-        border: Border.all(width: borderWidth, color: borderColor),
-        gradient: LinearGradient(
-            colors: [
-              backgroundColor,
-              backgroundColor2,
-            ],
-            begin: const FractionalOffset(0.0, 0.0),
-            end: const FractionalOffset(1.0, 0.0),
-            stops: [stop1, stop2],
-            tileMode: TileMode.clamp),);
+      borderRadius: BorderRadius.circular(radius),
+      border: Border.all(width: borderWidth, color: borderColor),
+      gradient: LinearGradient(
+          colors: [
+            backgroundColor,
+            backgroundColor2,
+          ],
+          begin: const FractionalOffset(0.0, 0.0),
+          end: const FractionalOffset(1.0, 0.0),
+          stops: [stop1, stop2],
+          tileMode: TileMode.clamp),
+    );
   }
 
   static BoxDecoration circleWithColorWithShadow(double radius, Color backgroundColor, Color backgroundColor2, {Color borderColor = Colors.transparent, double borderWidth = 1}) {
@@ -151,78 +159,12 @@ class UIHelper {
         ]);
   }
 
-//Neumorphic Container Style Provider
-  static BoxDecoration NeumorphicContainer(double radius, Color clr, {Color borderColor = Colors.transparent}) {
-    return BoxDecoration(color: clr, borderRadius: BorderRadius.circular(radius), boxShadow: [
-      BoxShadow(
-        //  color: Color(0xFFBEBEBE),
-        color: c.grey,
-        offset: Offset(5, 5),
-        blurRadius: 2,
-        spreadRadius: 1,
-      ),
-      const BoxShadow(
-        color: Colors.white,
-        offset: Offset(-5, -5),
-        blurRadius: 2,
-        spreadRadius: 1,
-      ),
-    ]);
-  }
-
-  //Container Style Provider with Background image
-  static BoxDecoration roundedBorderWithColorWithbgImage(double radius, Color backgroundColor, String img_url,
-      {Color borderColor = Colors.transparent, double borderWidth = 1, double imgOpacity = 0.2}) {
-    return BoxDecoration(
-      borderRadius: BorderRadius.circular(radius),
-      border: Border.all(width: borderWidth, color: borderColor),
-      color: backgroundColor,
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black26,
-          offset: Offset(2, 2),
-          blurRadius: 3.0,
-        )
-      ],
-      image: DecorationImage(
-        image: AssetImage(img_url), // Replace with your image path
-        fit: BoxFit.cover, // Image fit mode
-        colorFilter: ColorFilter.mode(
-          Colors.white.withOpacity(imgOpacity), // Adjust opacity of the watermark
-          BlendMode.dstATop,
-        ),
-      ),
-    );
-  }
-
-//Container Style Provider with shadow
-  static BoxDecoration leftBorderContainer(Color leftBorderclr, Color bottomBorderclr) {
-    return BoxDecoration(
-      border: Border(
-        left: BorderSide(
-          color: leftBorderclr, // Choose your desired border color here
-          width: 5.0, // Choose your desired border width here
-        ),
-        bottom: BorderSide(color: bottomBorderclr, width: 2),
-      ),
-    );
-  }
-
 //Container Style Provider with shadow
   static BoxDecoration BottomBorderContainer(Color bottomBorderclr) {
     return BoxDecoration(
       border: Border(
         bottom: BorderSide(color: bottomBorderclr, width: 3),
       ),
-    );
-  }
-
-//small Line Style Provider
-  static Widget tinyLinewidget({Color borderColor = const Color(0x88A5A5A5)}) {
-    return Container(
-      margin: EdgeInsets.only(top: 0, bottom: 6),
-      color: borderColor,
-      height: 1,
     );
   }
 }

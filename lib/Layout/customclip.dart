@@ -1,41 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:public_vptax/Resources/ColorsValue.dart' as c;
-
-class CustomClip extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final path = Path();
-    path.lineTo(1, size.height); // Start at the bottom-left corner
-    path.lineTo(size.width * 0.85, size.height); // Line to the 65% width of the container
-    path.lineTo(size.width * 0.65, 0); // Line to the 75% width of the container
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) {
-    return false;
-  }
-}
-
-class TriangleClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final path = Path()
-      ..lineTo(size.width - 40, 0) // Top-right point of the card
-      ..lineTo(size.width, size.height / 2) // Right-middle point of the card
-      ..lineTo(size.width - 40, size.height) // Bottom-right point of the card
-      ..lineTo(0, size.height) // Bottom-left point of the card
-      ..close(); // Close the path to complete the shape
-
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
-    return false;
-  }
-}
 
 class LeftTriangleClipper extends CustomClipper<Path> {
   @override
@@ -108,56 +71,6 @@ class RightTriangleClipper1 extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
-    return false;
-  }
-}
-
-class RightTriangleClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final path = Path()
-      ..moveTo(
-        0,
-        0,
-      ) // Top-left point of the card
-      ..lineTo(size.width - 40, 0) // Top-right point of the card
-      ..lineTo(size.width, size.height / 2) // Right-middle point of the card
-      ..lineTo(size.width - 40, size.height) // Bottom-right point of the card
-      ..lineTo(0, size.height) // Bottom-left point of the card
-      ..close(); // Close the path to complete the shape
-
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
-    return false;
-  }
-}
-
-class BorderPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = c.colorPrimary // Set the color of the border
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.0; // Set the width of the border
-
-    final path = Path()
-      ..moveTo(size.width, size.height / 2) // Right-middle point of the card
-      ..lineTo(size.width - 40, size.height) // Bottom-right point of the card
-      ..close();
-
-    final path2 = Path()
-      ..moveTo(size.width, size.height / 2) // Right-middle point of the card
-      ..lineTo(size.width - 40, 0) // Top-right point of the card
-      ..close();
-    canvas.drawPath(path, paint);
-    canvas.drawPath(path2, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return false;
   }
 }

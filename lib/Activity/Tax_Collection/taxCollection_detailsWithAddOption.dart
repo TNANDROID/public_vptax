@@ -44,6 +44,7 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
     setState(() {});
   }
 
+  // ********* Main Widget for this Class **********
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -158,6 +159,7 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
     );
   }
 
+// *************** Main Card Widget ***********
   Widget headerCardUIWidget(int mainIndex) {
     return Stack(
       children: [
@@ -242,6 +244,7 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
     );
   }
 
+// *************** Selected Demand Widget ***********
   Widget selectedDemandWidget(String title, int mainIndex) {
     return GestureDetector(
         onTap: () {
@@ -267,6 +270,7 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
         ));
   }
 
+// *************** Tax based  Data Get Widget***********
   Widget taxWiseReturnDataWidget(int mainIndex, Color clr) {
     return selectedTaxTypeData[key_taxtypeid] == 1
         ? Column(
@@ -330,12 +334,14 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
                       );
   }
 
+// *************** Village Name Get Widget ***********
   String getvillageAndBlockName(int mainIndex, String taxTypeId) {
     String street = "";
     street = ((mainList[mainIndex][key_localbody_name] ?? '') + ", " + (mainList[mainIndex][key_bname] ?? ''));
     return street;
   }
 
+// *************** Door Number and Street Get Widget ***********
   String getDoorAndStreetName(int mainIndex, String taxTypeId) {
     String street = "";
     switch (taxTypeId) {

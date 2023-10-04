@@ -8,17 +8,14 @@ import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Model/startup_model.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
+import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
+import 'package:public_vptax/Resources/StringsKey.dart';
+import 'package:public_vptax/Services/Preferenceservices.dart';
+import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:public_vptax/Utils/utils.dart';
 import 'package:public_vptax/stream/extended_asyncwidgets.dart';
-import 'package:responsive_grid_list/responsive_grid_list.dart';
-import '../../Resources/StringsKey.dart' as s;
-import 'package:public_vptax/Services/Preferenceservices.dart';
-import 'package:public_vptax/Services/locator.dart';
 import 'package:stacked/stacked.dart';
-import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
-import '../../Resources/StringsKey.dart';
-import '../Auth/Home.dart';
 
 class FavouriteTaxDetails extends StatefulWidget {
   FavouriteTaxDetails({Key? key});
@@ -28,16 +25,10 @@ class FavouriteTaxDetails extends StatefulWidget {
 }
 
 class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerProviderStateMixin {
-  //Animation
-  late AnimationController _controller;
-  late Animation<double> _animation;
   PreferenceService preferencesService = locator<PreferenceService>();
   dynamic requestJson = {key_service_id: service_key_getAllTaxAssessmentList};
-  List isSelectAll = [];
   String selectedLang = "";
-  List isShowFlag = [];
   List mainList = [];
-  List sourceList = [];
   List taxTypeList = [];
   var selectedTaxTypeData;
   Utils utils = Utils();
@@ -45,30 +36,12 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 400),
-    );
-    _animation = CurvedAnimation(parent: _controller, curve: Curves.bounceOut);
 
     dynamic val = {key_taxtypeid: 0, key_taxtypedesc_en: "All Taxes", key_taxtypedesc_ta: "அனைத்து வரிகள்", key_img_path: imagePath.all};
     taxTypeList.add(val);
     taxTypeList.addAll(preferencesService.taxTypeList);
     selectedTaxTypeData = taxTypeList[0];
-
-    // Add a listener to rebuild the widget when the animation value changes
-    _animation.addListener(() {
-      setState(() {});
-    });
-
-    // Start the animation
-    _controller.forward();
     initialize();
-  }
-
-  void repeatOnce() {
-    _controller.reset();
-    _controller.forward();
   }
 
   Future<void> initialize() async {
@@ -81,7 +54,6 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
   @override
   void dispose() {
     super.dispose();
-    _controller.dispose();
   }
 
   // ********* Main Widget for this Class **********
@@ -159,10 +131,6 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
 
 // *************** Blue Color Main Card Widget ***********
   Widget headerCardUIWidget(BuildContext mcontext, int mainIndex, dynamic getData, StartUpViewModel model) {
-    List taxData = [];
-    if (getData[key_DEMAND_DETAILS] != "Empty" && getData[key_DEMAND_DETAILS] != "Pending" && getData[key_DEMAND_DETAILS] != null) {
-      taxData = getData[key_DEMAND_DETAILS];
-    }
     return Container(
         decoration: BoxDecoration(
           color: c.white,
@@ -200,7 +168,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                               width: 35,
                             )),
                         UIHelper.horizontalSpaceSmall,
-                        Flexible(child: UIHelper.titleTextStyle(getData[s.key_name] ?? '', c.grey_9, 12, true, false))
+                        Flexible(child: UIHelper.titleTextStyle(getData[key_name] ?? '', c.grey_9, 12, true, false))
                       ],
                     ),
                     UIHelper.verticalSpaceTiny,
@@ -226,32 +194,6 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                     child: Padding(padding: EdgeInsets.only(right: 5), child: Icon(Icons.location_on_sharp, color: c.grey_8, size: 25)),
                   ),
                 ),
-                //************************** Down Arrow ***************************/
-
-                // Visibility(
-                //     visible: getData[key_DEMAND_DETAILS] != "Empty" && getData[key_DEMAND_DETAILS] != "Pending",
-                //     child: Positioned(
-                //       bottom: 0,
-                //       right: 0,
-                //       child: InkWell(
-                //         onTap: () {
-                //           setState(() {
-                //             if (isShowFlag.contains(mainIndex)) {
-                //               isShowFlag.remove(mainIndex);
-                //             } else {
-                //               isShowFlag.add(mainIndex);
-                //             }
-                //           });
-                //         },
-                //         child: Icon(
-                //           isShowFlag.contains(mainIndex) ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
-                //           size: 30,
-                //         ),
-                //       ),
-                //     )),
-
-                //************************** Proceed To Pay Button ***************************/
-
                 Positioned(
                   right: 0,
                   child: InkWell(
@@ -264,25 +206,6 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
               ],
             ),
             UIHelper.verticalSpaceSmall,
-            // getData[key_DEMAND_DETAILS] == "Empty" || getData[key_DEMAND_DETAILS] == null
-            //     ? Padding(
-            //         padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            //         child: UIHelper.titleTextStyle('no_demand'.tr().toString(), c.warningYellow, 12, true, false),
-            //       )
-            //     : getData[key_DEMAND_DETAILS] == "Pending" || getData[key_DEMAND_DETAILS] == null
-            //         ? Padding(
-            //             padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            //             child: UIHelper.titleTextStyle('transaction_warning_hint'.tr().toString(), c.red, 12, true, true),
-            //           )
-            //         : AnimatedSize(
-            //             duration: const Duration(milliseconds: 200),
-            //             curve: Curves.linear,
-            //             child: Visibility(
-            //               visible: isShowFlag.contains(mainIndex),
-            //               child: propertyTaxCollectionWidget(mainIndex, getData),
-            //             ),
-            //           ),
-            // UIHelper.verticalSpaceSmall,
           ],
         ));
   }
@@ -325,7 +248,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
 // *************** Village Name Get Widget ***********
   String getvillageAndBlockName(dynamic getData) {
     String street = "";
-    street = ((getData[s.key_localbody_name] ?? '') + ", " + (getData[s.key_bname] ?? ''));
+    street = ((getData[key_localbody_name] ?? '') + ", " + (getData[key_bname] ?? ''));
     return street;
   }
 
@@ -334,7 +257,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
     String street = "";
     switch (getData[key_taxtypeid].toString()) {
       case '1':
-        street = selectedLang == 'en' ? (getData[s.key_street_name_en] ?? '') : (getData[s.key_street_name_ta] ?? '');
+        street = selectedLang == 'en' ? (getData[key_street_name_en] ?? '') : (getData[key_street_name_ta] ?? '');
         break;
       case '2':
         street = (getData["street_name"] ?? '');
@@ -358,326 +281,23 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
+          UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
           UIHelper.verticalSpaceTiny,
-          UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
+          UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
           UIHelper.verticalSpaceTiny,
         ],
       ),
     );
   }
 
-  Widget propertyTaxCollectionWidget(int mainIndex, dynamic demandData) {
-    List taxData = demandData[key_DEMAND_DETAILS];
-    dynamic calcOfHeight = taxData.length / 2;
-    int roundedValueOfHeight = calcOfHeight.ceil();
-    double selectedAmount = 0;
-    List selectedList = taxData.where((item) => item[s.key_flag] == true).toList();
-    for (var taxItem in selectedList) {
-      String getAmount = Utils().getDemadAmount(taxItem, demandData[key_taxtypeid]);
-      selectedAmount = selectedAmount + double.parse(getAmount);
-    }
-    demandData[s.key_tax_total] = selectedAmount;
-
-    return Container(
-        margin: EdgeInsets.all(10),
-        padding: EdgeInsets.only(top: 5),
-        decoration: UIHelper.GradientContainer(5, 5, 5, 5, [c.need_improvement2, c.need_improvement2]),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Visibility(
-                visible: taxData.isNotEmpty,
-                child: Row(
-                  children: [Expanded(child: selectAllWidget('select_All', mainIndex, taxData))],
-                )),
-            UIHelper.verticalSpaceSmall,
-            SizedBox(
-                height: roundedValueOfHeight * 72,
-                child: ResponsiveGridList(
-                    listViewBuilderOptions: ListViewBuilderOptions(physics: NeverScrollableScrollPhysics()),
-                    horizontalGridMargin: 15,
-                    verticalGridMargin: 0,
-                    minItemWidth: Screen.width(context) / 4,
-                    children: List.generate(
-                      taxData.length,
-                      (index) {
-                        String finYearStr = "";
-                        if (demandData[key_taxtypeid].toString() == "4") {
-                          finYearStr = taxData[index]['financialyear'];
-                        } else {
-                          finYearStr = taxData[index][key_fin_year];
-                        }
-                        String durationStr = taxData[index][key_installment_group_name].toString().trim();
-                        bool isStatus = taxData[index][s.key_flag] ?? false;
-                        return GestureDetector(
-                            onTap: () {
-                              if (!getFlagStatus(demandData[key_assessment_id].toString())) {
-                                if (index == 0 || taxData[index - 1][s.key_flag] == true) {
-                                  if (taxData[index][key_flag] == true) {
-                                    for (int i = 0; i < taxData.length; i++) {
-                                      if (i >= index) {
-                                        taxData[i][key_flag] = false;
-                                      }
-                                    }
-                                  } else {
-                                    taxData[index][key_flag] = true;
-                                  }
-                                } else {
-                                  Utils().showAlert(context, ContentType.fail, 'pay_pending_year'.tr().toString());
-                                }
-                              } else {
-                                Utils().showAlert(context, ContentType.fail, 'pay_previous'.tr().toString());
-                              }
-
-                              int countActiveItems = taxData.where((item) => item[s.key_flag] == true).length;
-                              if (countActiveItems == taxData.length) {
-                                isSelectAll.add(mainIndex);
-                              } else {
-                                isSelectAll.remove(mainIndex);
-                              }
-                              repeatOnce();
-                              setState(() {});
-                            },
-                            child: Stack(
-                              children: [
-                                Column(
-                                  children: [
-                                    SizedBox(height: 5),
-                                    Container(
-                                        padding: EdgeInsets.all(5.0),
-                                        decoration: isStatus
-                                            ? UIHelper.roundedBorderWithColorWithShadow(5, c.need_improvement, c.need_improvement)
-                                            : UIHelper.roundedBorderWithColorWithShadow(5, c.white, c.white),
-                                        height: 50,
-                                        child: Column(
-                                          children: [
-                                            Expanded(
-                                              child: Text(
-                                                "$finYearStr ( $durationStr )",
-                                                style: TextStyle(fontSize: 10, fontWeight: FontWeight.normal, color: isStatus ? c.white : c.grey_8),
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Container(
-                                                  padding: EdgeInsets.all(0),
-                                                  child: Center(
-                                                      child: UIHelper.titleTextStyle("\u{20B9} ${Utils().getDemadAmount(taxData[index], mainList[mainIndex][key_taxtypeid].toString())}",
-                                                          isStatus ? c.white : c.grey_10, 12, false, false))),
-                                            ),
-                                          ],
-                                        ))
-                                  ],
-                                ),
-                                Positioned(
-                                    right: 5,
-                                    child: Container(
-                                        decoration: isStatus
-                                            ? UIHelper.circleWithColorWithShadow(0, c.green_new, c.satisfied, borderColor: c.white, borderWidth: 2)
-                                            : UIHelper.circleWithColorWithShadow(0, c.yello, c.unsatisfied1, borderColor: c.white, borderWidth: 2),
-                                        height: 14,
-                                        width: 14))
-                              ],
-                            ));
-                      },
-                    ))),
-
-            demandCalculationWidget(mainIndex, demandData),
-            // Visibility(
-            //     visible: swmData.isNotEmpty && mainList[mainIndex][key_taxtypeid].toString() == "1",
-            //     child: Column(
-            //       children: [
-            //         UIHelper.verticalSpaceSmall,
-            //         UIHelper.titleTextStyle("swmUserCharges".tr().toString(), c.grey_9, 11, false, true),
-            //         UIHelper.verticalSpaceSmall,
-            //         Container(
-            //             margin: EdgeInsets.only(top: 5),
-            //             height: swmHeight + 0.02,
-            //             child: ListView.builder(
-            //               physics: NeverScrollableScrollPhysics(),
-            //               itemCount: swmData.length,
-            //               itemBuilder: (context, rowIndex) {
-            //                 int siNo = rowIndex + 1;
-            //                 return SizedBox(
-            //                     height: 30,
-            //                     child: Row(
-            //                       children: [
-            //                         Expanded(
-            //                           flex: 1,
-            //                           child: Container(padding: EdgeInsets.all(8.0), child: Center(child: UIHelper.titleTextStyle("$siNo", c.grey_8, 12, false, true))),
-            //                         ),
-            //                         Expanded(
-            //                             flex: 3,
-            //                             child: Container(padding: EdgeInsets.all(8.0), child: Center(child: UIHelper.titleTextStyle(swmData[rowIndex]['fin_year'], c.grey_8, 12, false, true)))),
-            //                         Expanded(
-            //                           flex: 2,
-            //                           child: Container(
-            //                               padding: EdgeInsets.all(8.0),
-            //                               child: Center(
-            //                                   child: UIHelper.titleTextStyle(Utils().getDemadAmount(swmData[rowIndex], mainList[mainIndex][key_taxtypeid].toString()), c.grey_8, 12, false, true))),
-            //                         ),
-            //                         rowIndex == 0 || taxData[rowIndex - 1][s.key_flag] == true
-            //                             ? Expanded(
-            //                                 flex: 1,
-            //                                 child: Container(
-            //                                     padding: EdgeInsets.all(8.0),
-            //                                     child: Center(
-            //                                       child: Checkbox(
-            //                                         side: BorderSide(width: 1, color: c.grey_6),
-            //                                         value: swmData[rowIndex][s.key_flag],
-            //                                         onChanged: (v) {
-            //                                           if (!getFlagStatus(mainList[mainIndex][key_assessment_id].toString())) {
-            //                                             if (rowIndex == 0 || swmData[rowIndex - 1][s.key_flag] == true) {
-            //                                               if (swmData[rowIndex][s.key_flag] == true) {
-            //                                                 for (int i = 0; i < swmData.length; i++) {
-            //                                                   if (i >= rowIndex) {
-            //                                                     swmData[i][s.key_flag] = false;
-            //                                                     mainList[mainIndex][s.key_swm_total] = mainList[mainIndex][s.key_swm_total] -
-            //                                                         double.parse(Utils().getDemadAmount(swmData[i], mainList[mainIndex][key_taxtypeid].toString()));
-            //                                                     mainList[mainIndex][s.key_swm_pay] = getTotal(mainList[mainIndex][s.key_swm_total], mainList[mainIndex][s.key_swm_available_advance]);
-            //                                                   }
-            //                                                 }
-            //                                               } else {
-            //                                                 swmData[rowIndex][s.key_flag] = true;
-            //                                                 mainList[mainIndex][s.key_swm_total] = mainList[mainIndex][s.key_swm_total] +
-            //                                                     double.parse(Utils().getDemadAmount(swmData[rowIndex], mainList[mainIndex][key_taxtypeid].toString()));
-            //                                                 mainList[mainIndex][s.key_swm_pay] = getTotal(mainList[mainIndex][s.key_swm_total], mainList[mainIndex][s.key_swm_available_advance]);
-            //                                               }
-            //                                             } else {
-            //                                               Utils().showAlert(context, ContentType.fail, 'pay_pending_year'.tr().toString());
-            //                                             }
-            //                                           } else {
-            //                                             Utils().showAlert(context, ContentType.fail, 'pay_previous'.tr().toString());
-            //                                           }
-
-            //                                           setState(() {
-            //                                             getCount();
-            //                                             repeatOnce();
-            //                                           });
-            //                                         },
-            //                                       ),
-            //                                     )),
-            //                               )
-            //                             : Expanded(
-            //                                 child: SizedBox(
-            //                                 width: 5,
-            //                               )),
-            //                       ],
-            //                     ));
-            //               },
-            //             )),
-            //         UIHelper.verticalSpaceSmall,
-            //       ],
-            //     )),
-          ],
-        ));
-  }
-
-  Widget selectAllWidget(String title, int mainIndex, List taxData) {
-    return GestureDetector(
-        onTap: () {
-          if (!getFlagStatus(mainList[mainIndex][key_assessment_id].toString())) {
-            if (isSelectAll.contains(mainIndex)) {
-              isSelectAll.remove(mainIndex);
-              for (var item in taxData) {
-                item[s.key_flag] = false;
-              }
-            } else {
-              isSelectAll.add(mainIndex);
-              for (var item in taxData) {
-                item[s.key_flag] = true;
-              }
-            }
-          } else {
-            Utils().showAlert(context, ContentType.fail, 'pay_previous'.tr().toString());
-          }
-          repeatOnce();
-          setState(() {});
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            UIHelper.titleTextStyle(title.toString().tr(), c.text_color, 12, false, true),
-            UIHelper.horizontalSpaceSmall,
-            Image.asset(
-              isSelectAll.contains(mainIndex) ? imagePath.tick : imagePath.unchecked,
-              color: isSelectAll.contains(mainIndex) ? c.account_status_green_color : c.text_color,
-              height: 20,
-              width: 20,
-            ),
-            UIHelper.horizontalSpaceSmall,
-          ],
-        ));
-  }
-
-  Widget demandCalculationWidget(int mainIndex, dynamic payableData) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0),
-              child: Column(
-                children: [
-                  UIHelper.titleTextStyle('selected'.tr(), c.black, 12, false, false),
-                  UIHelper.verticalSpaceTiny,
-                  Transform.scale(
-                    scale: _animation.value,
-                    child: UIHelper.titleTextStyle("\u{20B9} ${payableData[s.key_tax_total]}", c.grey_10, 13, true, false),
-                  )
-                ],
-              ),
-            ),
-            Visibility(
-              visible: isShowFlag.contains(mainIndex),
-              child: InkWell(
-                onTap: () {
-                  if (mainList[mainIndex][key_tax_total] > 0) {
-                    //   Utils().settingModalBottomSheet(context, [payableData]);
-                  } else {
-                    Utils().showAlert(context, ContentType.warning, 'select_demand'.tr().toString());
-                  }
-                },
-                child: Container(
-                    margin: EdgeInsets.only(top: 0, right: 10, bottom: 10),
-                    decoration: UIHelper.GradientContainer(5, 5, 5, 5, [c.account_status_green_color, c.account_status_green_color]),
-                    padding: EdgeInsets.fromLTRB(10, 5, 10, 7),
-                    child: UIHelper.titleTextStyle("pay".tr().toString(), c.white, 11, true, true)),
-              ),
-            ),
-          ],
-        ),
-        UIHelper.verticalSpaceSmall,
-      ],
-    );
-  }
-
+// *************** Tax based Image Render Widget***********
   String getTaxImage(int typeId) {
-    String taxTypeID = mainList[typeId][s.key_taxtypeid].toString();
-    List selectedTaxitem = taxTypeList.where((element) => element[s.key_taxtypeid].toString() == taxTypeID).toList();
-    return selectedTaxitem[0][s.key_img_path].toString();
+    String taxTypeID = mainList[typeId][key_taxtypeid].toString();
+    List selectedTaxitem = taxTypeList.where((element) => element[key_taxtypeid].toString() == taxTypeID).toList();
+    return selectedTaxitem[0][key_img_path].toString();
   }
 
-  bool getFlagStatus(String assId) {
-    bool flag = false;
-    if (mainList.isNotEmpty) {
-      for (var data in mainList) {
-        if (data[key_assessment_id].toString() != assId) {
-          if (data[s.key_DEMAND_DETAILS] != "Empty" && data[s.key_DEMAND_DETAILS] != "Pending") {
-            for (var demanData in data[s.key_DEMAND_DETAILS]) {
-              if (demanData[s.key_flag] == true) {
-                flag = true;
-              }
-            }
-          }
-        }
-      }
-    }
-    return flag;
-  }
-
+// *************** Location Popup***********
   Future<void> showPopupLocation(
     dynamic getData,
     StartUpViewModel model,
@@ -796,7 +416,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                                     children: [
                                       UIHelper.titleTextStyle(getDoorAndStreetName(getData).trim(), c.grey_9, 14, false, false),
                                       UIHelper.titleTextStyle(getvillageAndBlockName(getData).trim(), c.grey_9, 14, false, false),
-                                      UIHelper.titleTextStyle(getData[s.key_district_name].trim() ?? '', c.grey_9, 14, false, false)
+                                      UIHelper.titleTextStyle(getData[key_district_name].trim() ?? '', c.grey_9, 14, false, false)
                                     ],
                                   ),
                                 ),
@@ -810,11 +430,11 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
+                                        UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
                                         UIHelper.verticalSpaceTiny,
-                                        UIHelper.titleTextStyle(("${'building_licence_number'.tr()} : ${getData[s.key_building_licence_no].toString() ?? ""}"), clr, 13, false, true),
+                                        UIHelper.titleTextStyle(("${'building_licence_number'.tr()} : ${getData[key_building_licence_no].toString() ?? ""}"), clr, 13, false, true),
                                         UIHelper.verticalSpaceTiny,
-                                        UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 13, false, true),
+                                        UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[key_assessment_no].toString() ?? ""}"), clr, 13, false, true),
                                         UIHelper.verticalSpaceTiny,
                                       ],
                                     ),
@@ -823,9 +443,9 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                                     ? Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
+                                          UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
                                           UIHelper.verticalSpaceTiny,
-                                          UIHelper.titleTextStyle(("${'water_connection_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 13, false, true),
+                                          UIHelper.titleTextStyle(("${'water_connection_number'.tr()} : ${getData[key_assessment_no].toString() ?? ""}"), clr, 13, false, true),
                                           UIHelper.verticalSpaceTiny,
                                         ],
                                       )
@@ -833,11 +453,11 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                                         ? Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
+                                              UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
                                               UIHelper.verticalSpaceTiny,
                                               UIHelper.titleTextStyle(("${'financialYear'.tr()} : ${getData['financialyear'].toString() ?? ""}"), clr, 12, false, true),
                                               UIHelper.verticalSpaceTiny,
-                                              UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
+                                              UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
                                               UIHelper.verticalSpaceTiny,
                                             ],
                                           )
@@ -845,9 +465,9 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                                             ? Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
+                                                  UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
                                                   UIHelper.verticalSpaceTiny,
-                                                  UIHelper.titleTextStyle(("${'lease_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 13, false, true),
+                                                  UIHelper.titleTextStyle(("${'lease_number'.tr()} : ${getData[key_assessment_no].toString() ?? ""}"), clr, 13, false, true),
                                                   UIHelper.verticalSpaceTiny,
                                                   UIHelper.titleTextStyle(("${'lease_state'.tr()} : ${getData['lease_statename'].toString() ?? ""}"), clr, 13, false, true),
                                                   UIHelper.verticalSpaceTiny,
@@ -861,9 +481,9 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                                             : Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
+                                                  UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString() ?? ""}"), clr, 13, false, true),
                                                   UIHelper.verticalSpaceTiny,
-                                                  UIHelper.titleTextStyle(("${'traders_code'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 13, false, true),
+                                                  UIHelper.titleTextStyle(("${'traders_code'.tr()} : ${getData[key_assessment_no].toString() ?? ""}"), clr, 13, false, true),
                                                   UIHelper.verticalSpaceTiny,
                                                 ],
                                               )
