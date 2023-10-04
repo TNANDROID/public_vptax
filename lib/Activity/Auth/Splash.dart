@@ -33,6 +33,8 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
 
   Future<void> initialize() async {
     String getPrefesecrectKey = await preferencesService.getUserInfo(key_secretKey);
+    await preferencesService.setUserInfo("lang", "ta");
+
     if (getPrefesecrectKey.isNotEmpty) {
       await preferencesService.setUserInfo(key_isLogin, "yes");
     }

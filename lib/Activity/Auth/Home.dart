@@ -315,7 +315,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //  Text()
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Row( children: [
                   Container(
                     margin: EdgeInsets.all(20),
                     child: Image.asset(
@@ -338,8 +338,16 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         ),
                       ),
                       UIHelper.verticalSpaceSmall,
-                      Container(margin: EdgeInsets.only(right: 20), child: UIHelper.titleTextStyle("Hi " + userName, c.text_color, 14, true, true)),
-                      UIHelper.verticalSpaceTiny,
+                      Container(margin: EdgeInsets.only(right: 20),
+                          child:
+                      // UIHelper.titleTextStyle("Hi " + "userName fg fdgdf df dfg fdg  dfgd dfg ", c.text_color, 14, true, true)),
+                      Text(
+                        "Hi " + "userName fg fdgdf df dfg fdg  dfgd dfg ",
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        style: TextStyle(color: c.text_color ,fontSize:selectedLang == "ta" ? 13 : 14 ),
+                      )),
+
                     ],
                   )
                 ]),

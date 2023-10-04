@@ -67,6 +67,7 @@ String currency_ic = "assets/images/currency_ic.png";
 String vptax = "assets/images/vptax.png";
 String vptax1 = "assets/images/vptax1.png";
 String tap = "assets/images/tap.png";
+String lock_ic = "assets/images/lock_ic.png";
 
 String help = 'assets/images/help.svg';
 String failure = 'assets/images/failure.svg';

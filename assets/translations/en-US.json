@@ -222,5 +222,6 @@
   "view_receipt":"Download Receipt",
   "no_pending_due": "No Pending Due",
   "add_to_pay": "Add to Favourite List",
-  "continue": "CONTINUE"
+  "continue": "CONTINUE",
+  "hi": "Hi"
 }

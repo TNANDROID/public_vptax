@@ -88,16 +88,32 @@ class _SecretKeyViewState extends State<SecretKeyView> with TickerProviderStateM
             VerificationView(fixedlength: 4, pinString: secretPin, secureText: true),
             if (!pinIsValid) UIHelper.verticalSpaceSmall,
             if (!pinIsValid) UIHelper.titleTextStyle('invalid_Pin'.tr().toString(), c.red_new, 12, true, true),
-            UIHelper.verticalSpaceMedium,
+            const SizedBox(height: 40.0),
             GestureDetector(
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpView(isSignup: false)));
               },
-              child: Container(
-                width: Screen.width(context),
-                margin: const EdgeInsets.only(right: 15),
+              child: Align(
                 alignment: Alignment.centerRight,
-                child: UIHelper.titleTextStyle('forgot_secret_Pin'.tr().toString(), c.primary_text_color2, 12, true, false),
+                child: Container(
+                  padding: EdgeInsets.only(
+                    bottom: 5, // Space between underline and text
+                  ), margin: EdgeInsets.only(
+                    right: 10, // Space between underline and text
+                  ),
+                  decoration: BoxDecoration(
+                      border: Border(bottom: BorderSide(
+                        color: c.primary_text_color2,
+                        width: 1.0, // Underline thickness
+                      ))
+                  ),
+                  child: Text(
+                    'forgot_secret_Pin'.tr().toString(),
+                    style: TextStyle(
+                      color: c.primary_text_color2,
+                    ),
+                  ),
+                ),
               ),
             ),
             const Expanded(child: SizedBox()),
