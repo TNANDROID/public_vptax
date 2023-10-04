@@ -712,7 +712,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
       if (item[key_taxtypeid] == 4) {
         getDemandRequest[key_fin_year] = item[key_financialyear];
       }
-      var getDemandResponce = await model.authendicationServicesAPIcall(context, getDemandRequest);
+      var getDemandResponce = await model.overAllMainService(context, getDemandRequest);
 
       if (getDemandResponce[key_response] == key_fail) {
         if (getDemandResponce[key_message] == "Demand Details Not Found") {

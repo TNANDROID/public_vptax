@@ -106,7 +106,7 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
                         var requestJson = {key_service_id: service_key_AddfavouriteList, key_favourite_assessment_list: selectedDataList};
                         Utils().showProgress(context, 1);
 
-                        var response = await StartUpViewModel().demandServicesAPIcall(context, requestJson);
+                        var response = await StartUpViewModel().overAllMainService(context, requestJson);
 
                         if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(

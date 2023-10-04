@@ -548,7 +548,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
               if (selectedTaxTypeData[key_taxtypeid] == 4) key_fin_year: selectedFinYear
             }
           };
-          var response = await StartUpViewModel().authendicationServicesAPIcall(context, request);
+          var response = await StartUpViewModel().overAllMainService(context, request);
           if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
             List resData = [];
             if (response["DATA"] != null) {

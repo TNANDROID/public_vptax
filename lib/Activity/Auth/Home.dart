@@ -148,7 +148,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     Utils().showProgress(context, 1);
     try {
       dynamic requestJson = {key_service_id: service_key_getAllTaxAssessmentList, key_mobile_number: mobile_number, key_language_name: selectedLang};
-      var responce = await model.demandServicesAPIcall(context, requestJson);
+      var responce = await model.overAllMainService(context, requestJson);
       if (responce[key_data] != null && responce[key_data].length > 0) {
         sourceList = responce[key_data].toList();
 
@@ -560,9 +560,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 width: 55,
                 padding: EdgeInsets.all(5),
                 decoration: UIHelper.circleWithColorWithShadow(0, c.white, c.grey_3),
-                child: Image.asset(
-                  taxTypeList[currentSelectedTax][key_img_path],
-                ),
+                child: Image.asset(taxTypeList[currentSelectedTax][key_img_path]),
               ),
               UIHelper.verticalSpaceSmall,
               UIHelper.titleTextStyle(selectedLang == 'en' ? taxTypeList[currentSelectedTax][key_taxtypedesc_en] : taxTypeList[currentSelectedTax][key_taxtypedesc_ta], c.colorPrimaryDark,
@@ -612,38 +610,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   String gettotal(dynamic data, int index) {
-    String total = '';
-    switch (index) {
-      case 0:
-        total = data['property_total'].toString();
-        break;
-      case 1:
-        total = data['water_total'].toString();
-        break;
-      case 2:
-        total = data['professional_total'].toString();
-        break;
-      case 3:
-        total = data['non_total'].toString();
-        break;
-      case 4:
-        total = data['trade_total'].toString();
-        break;
-      case 5:
-        total = data['totalAmount'].toString();
-        break;
-    }
-
-    String formattedString = "";
-    if (total.toString() != "null") {
+    List amount = [data['property_total'], data['water_total'], data['professional_total'], data['non_total'], data['trade_total'], data['totalAmount']];
+    String total = amount[index].toString();
+    if (total != "null" && total.isNotEmpty) {
       double number = double.parse(total);
-      formattedString = number.toStringAsFixed(2);
+      return number.toStringAsFixed(2);
+    } else {
+      return "0.00";
     }
-
-    if (formattedString.isEmpty) {
-      formattedString = "0.00";
-    }
-
-    return formattedString;
   }
 }

@@ -312,7 +312,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
               });
               print("Ra---)))))))$postParams");
               Utils().showProgress(context, 1);
-              var response = await model.demandServicesAPIcall(context, postParams);
+              var response = await model.overAllMainService(context, postParams);
               if (response[key_response] == key_fail) {
                 receiptList = [];
                 noDataFound = true;

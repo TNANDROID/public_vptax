@@ -304,7 +304,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
               ElevatedButton(
                 onPressed: () async {
                   var requestJson = {key_service_id: service_key_RemovefavouriteList, key_user_id: getData['user_id'], key_favourite_assessment_id: getData['favourite_assessment_id']};
-                  var response = await model.authendicationServicesAPIcall(context, requestJson);
+                  var response = await model.overAllMainService(context, requestJson);
                   print(response);
                   if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
                     utils.showToast(context, response[key_message].toString(), "S");

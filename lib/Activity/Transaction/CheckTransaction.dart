@@ -65,12 +65,17 @@ class _CheckTransactionState extends State<CheckTransaction> {
 
   Future<void> initialize() async {
     selectLang = await preferencesService.getUserInfo('lang');
-    await model.getTransactionStatus(context);
-
-    defaultWorklist = preferencesService.TransactionList;
-
+    dynamic requestData = {key_service_id: service_key_TransactionHistory, key_mobile_no: await preferencesService.getUserInfo(key_mobile_number), key_email_id: ''};
+    Utils().showProgress(context, 1);
+    var response = await model.overAllMainService(context, requestData);
+    Utils().hideProgress(context);
+    List res_jsonArray = [];
+    if (response[key_status] == key_success && response[key_response] == key_success) {
+      defaultWorklist = response[key_data];
+    } else {
+      Utils().showAlert(context, ContentType.warning, response[key_response].toString());
+    }
     FilterList();
-
     setState(() {});
   }
 
@@ -554,7 +559,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
     } else {
       Utils().showProgress(context, 1);
       var requestData = {key_service_id: service_key_CheckTransaction, key_transaction_id: transID, key_language_name: lang};
-      var response = await model.demandServicesAPIcall(context, requestData);
+      var response = await model.overAllMainService(context, requestData);
       await model.getDemandList(context);
 
       Utils().hideProgress(context);

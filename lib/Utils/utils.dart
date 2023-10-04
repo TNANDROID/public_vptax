@@ -608,13 +608,13 @@ class Utils {
   Future<void> apiCalls(BuildContext context) async {
     //  showProgress(context, 1);
     try {
-      await StartUpViewModel().getOpenServiceList("District", context);
-      await StartUpViewModel().getOpenServiceList("Block", context);
-      await StartUpViewModel().getOpenServiceList("Village", context);
-      await StartUpViewModel().getMainServiceList("TaxType", context: context);
-      await StartUpViewModel().getMainServiceList("FinYear", context: context);
-      await StartUpViewModel().getMainServiceList("PaymentTypeList", dcode: "1", bcode: "1", pvcode: "1", context: context);
-      await StartUpViewModel().getMainServiceList("GatewayList", context: context);
+      await StartUpViewModel().getOpenServiceList(service_key_district_list_all, context);
+      await StartUpViewModel().getOpenServiceList(service_key_block_list_all, context);
+      await StartUpViewModel().getOpenServiceList(service_key_village_list_all, context);
+      await StartUpViewModel().getMainServiceList("TaxType", context);
+      await StartUpViewModel().getMainServiceList("FinYear", context);
+      await StartUpViewModel().getMainServiceList("PaymentTypeList", context);
+      await StartUpViewModel().getMainServiceList("GatewayList", context);
       // hideProgress(context);
     } catch (error) {
       debugPrint('error (${error.toString()}) has been caught');
@@ -1007,7 +1007,7 @@ class Utils {
         'assessment_demand_list': assessment_demand_list,
       };
       dynamic response =
-          await StartUpViewModel().getMainServiceList("CollectionPaymentTokenList", requestDataValue: request, context: context, taxType: finalList[0][s.key_taxtypeid].toString(), lang: selectedLang);
+          await StartUpViewModel().getMainServiceList("CollectionPaymentTokenList", context, requestDataValue: request, taxType: finalList[0][s.key_taxtypeid].toString(), lang: selectedLang);
       Utils().hideProgress(context);
       print("response2>>$response");
       var status = response[key_status];
