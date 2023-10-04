@@ -86,7 +86,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
 
   // ********* Main Widget for this Class **********
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext mcontext) {
     return Scaffold(
       backgroundColor: c.white,
       appBar: UIHelper.getBar('addedList'),
@@ -131,7 +131,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                                                     ],
                                                   ),
                                                   width: Screen.width(context),
-                                                  child: headerCardUIWidget(context, mainIndex, mainList[mainIndex], model))),
+                                                  child: headerCardUIWidget(mcontext, mainIndex, mainList[mainIndex], model))),
                                         ));
                                   },
                                 ))
@@ -158,7 +158,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
   }
 
 // *************** Blue Color Main Card Widget ***********
-  Widget headerCardUIWidget(BuildContext mccontext, int mainIndex, dynamic getData, StartUpViewModel model) {
+  Widget headerCardUIWidget(BuildContext mcontext, int mainIndex, dynamic getData, StartUpViewModel model) {
     List taxData = [];
     if (getData[key_DEMAND_DETAILS] != "Empty" && getData[key_DEMAND_DETAILS] != "Pending" && getData[key_DEMAND_DETAILS] != null) {
       taxData = getData[key_DEMAND_DETAILS];
@@ -256,7 +256,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                   right: 0,
                   child: InkWell(
                     onTap: () async {
-                      await showRemovePopup(mccontext, getData, model);
+                      await showRemovePopup(mcontext, getData, model);
                     },
                     child: Padding(padding: EdgeInsets.only(right: 5, top: 10), child: Icon(Icons.delete, color: c.red, size: 25)),
                   ),
@@ -290,7 +290,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
 // ********** App Exit and Logout Widget ***********\\
   Future<bool> showRemovePopup(BuildContext mccontext, dynamic getData, StartUpViewModel model) async {
     return await showDialog(
-          context: context,
+          context: mccontext,
           builder: (context) => AlertDialog(
             content: UIHelper.titleTextStyle('assessment_remove'.tr().toString(), c.black, 13, false, false),
             actions: [
@@ -303,17 +303,11 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
               ),
               ElevatedButton(
                 onPressed: () async {
+                  Navigator.of(context).pop(false);
+                  Utils().showProgress(mccontext, 1);
                   var requestJson = {key_service_id: service_key_RemovefavouriteList, key_user_id: getData['user_id'], key_favourite_assessment_id: getData['favourite_assessment_id']};
                   var response = await model.overAllMainService(context, requestJson);
-                  print(response);
-                  if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
-                    utils.showToast(context, response[key_message].toString(), "S");
-                  } else {
-                    utils.showAlert(context, ContentType.fail, response[key_response].toString());
-                  }
-                  Navigator.of(context).pop(false);
 
-                  Utils().showProgress(mccontext, 1);
                   await model.getDemandList(mccontext);
                   Utils().hideProgress(mccontext);
                 },

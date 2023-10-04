@@ -40,18 +40,10 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
   @override
   void initState() {
     super.initState();
-
-    // *************************** Future Functionality  *************************** //
-
     _rightToLeftAnimController = AnimationController(vsync: this, duration: const Duration(seconds: 2));
-
     _rightToLeftAnimation = Tween<Offset>(begin: const Offset(1.0, 0.0), end: const Offset(0.0, 0.0)).animate(CurvedAnimation(parent: _rightToLeftAnimController, curve: Curves.easeInOut));
-
     _rightToLeftAnimController.forward();
-
     initialize();
-
-    // *************************** Future Functionality  *************************** //
 
     // Top-to-bottom slide animation
     _topAnimationController = AnimationController(
@@ -70,12 +62,9 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
     _topAnimationController.forward();
   }
 
-  // *************************** Future Functionality  *************************** //
-
   Future<void> initialize() async {
     selectedLang == "en" ? preferencesService.setUserInfo("lang", "en") : preferencesService.setUserInfo("lang", "ta");
     selectedLanguage = await selectedLang == "en" ? langItems[0][key_langCode] : langItems[1][key_langCode];
-
     setState(() {});
   }
 
@@ -252,20 +241,18 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
                 ),
               ),
 
-              // *************************** Future Functionality  *************************** //
-
               //  ****************** Image Container ****************** //
 
-            Container(
-              height: MediaQuery.sizeOf(context).height/2.8,
-              child:Align(
-                alignment: Alignment.bottomCenter,
-                child: Image.asset(
-                  imagepath.splash, // Replace with your image path
-                  fit: BoxFit.cover,
+              Container(
+                height: MediaQuery.sizeOf(context).height / 2.8,
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Image.asset(
+                    imagepath.splash, // Replace with your image path
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-            )
+              )
             ],
           ),
         ),
@@ -274,8 +261,6 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
   }
 
 //  ****************** Qucik Action Buttons Common Wdget  ****************** //
-
-// *************************** Future Functionality  *************************** //
 
   Widget actionButton(int flag, String btnText, String imgPath) {
     return CustomGradientButton(

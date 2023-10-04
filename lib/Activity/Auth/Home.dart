@@ -1,7 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, sort_child_properties_last, prefer_const_constructors, use_build_context_synchronously
 
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +13,6 @@ import 'package:public_vptax/Activity/Tax_Collection/AllYourTaxDetails.dart';
 import 'package:public_vptax/Activity/Tax_Collection/taxCollection_view_request_screen.dart';
 import 'package:public_vptax/Activity/Transaction/CheckTransaction.dart';
 import 'package:public_vptax/Activity/Transaction/View_receipt.dart';
-import 'package:public_vptax/Layout/customclip.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Model/startup_model.dart';
@@ -23,8 +21,9 @@ import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
-import 'package:public_vptax/Utils/utils.dart';
 import 'package:public_vptax/Utils/ContentInfo.dart';
+import 'package:public_vptax/Utils/utils.dart';
+
 import '../Tax_Collection/favourite_list.dart';
 
 class Home extends StatefulWidget {
@@ -49,18 +48,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     /* {'service_id': 5, 'service_name': 'know_about_your_village', 'img_path': imagePath.village},
     {'service_id': 6, 'service_name': 'village_development_works', 'img_path': imagePath.village_development}, */
   ];
-  int selected_index = -1;
   String langText = 'தமிழ்';
   String selectedLang = "";
   String userName = "";
-  String mobile_number = "";
-  bool flag = true;
-  List sourceList = [];
-  double property_total = 0.0;
-  double water_total = 0.0;
-  double professional_total = 0.0;
-  double non_total = 0.0;
-  double trade_total = 0.0;
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -99,7 +89,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   Future<void> initialize() async {
     selectedLang = await preferencesService.getUserInfo("lang");
     userName = await preferencesService.getUserInfo(key_name);
-    mobile_number = await preferencesService.getUserInfo(key_mobile_number);
     taxTypeList = preferencesService.taxTypeList;
 
     if (selectedLang != "" && selectedLang == "en") {
@@ -136,48 +125,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         });
         break;
     }
-  }
-
-  Future getDemandList() async {
-    property_total = 0.0;
-    water_total = 0.0;
-    professional_total = 0.0;
-    non_total = 0.0;
-    trade_total = 0.0;
-    sourceList.clear();
-    Utils().showProgress(context, 1);
-    try {
-      dynamic requestJson = {key_service_id: service_key_getAllTaxAssessmentList, key_mobile_number: mobile_number, key_language_name: selectedLang};
-      var responce = await model.overAllMainService(context, requestJson);
-      if (responce[key_data] != null && responce[key_data].length > 0) {
-        sourceList = responce[key_data].toList();
-
-        for (var item in sourceList) {
-          switch (item[key_taxtypeid].toString()) {
-            case '1':
-              property_total = property_total + double.parse(item["totaldemand"]);
-              break;
-            case '2':
-              water_total = water_total + double.parse(item["totaldemand"]);
-              break;
-            case '4':
-              professional_total = professional_total + double.parse(item["totaldemand"]);
-              break;
-            case '5':
-              non_total = non_total + double.parse(item["totaldemand"]);
-              break;
-            case '6':
-              trade_total = trade_total + double.parse(item["totaldemand"]);
-              break;
-          }
-        }
-      }
-      Utils().hideProgress(context);
-    } catch (error) {
-      Utils().hideProgress(context);
-      debugPrint('error : $error has been caught');
-    }
-    setState(() {});
   }
 
 // ********** App Exit and Logout Widget ***********\\
@@ -223,8 +170,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 // ********** Main Build Widget ***********\\
   @override
   Widget build(BuildContext context) {
-    double number = property_total + water_total + professional_total + non_total + trade_total;
-    String totalAmountOfPayable = number.toStringAsFixed(2);
     return WillPopScope(
         onWillPop: showExitPopup,
         child: Scaffold(
@@ -315,7 +260,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //  Text()
-                Row( children: [
+                Row(children: [
                   Container(
                     margin: EdgeInsets.all(20),
                     child: Image.asset(
@@ -338,16 +283,16 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         ),
                       ),
                       UIHelper.verticalSpaceSmall,
-                      Container(margin: EdgeInsets.only(right: 20),
+                      Container(
+                          margin: EdgeInsets.only(right: 20),
                           child:
-                      // UIHelper.titleTextStyle("Hi " + "userName fg fdgdf df dfg fdg  dfgd dfg ", c.text_color, 14, true, true)),
-                      Text(
-                        "Hi " + "userName fg fdgdf df dfg fdg  dfgd dfg ",
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: TextStyle(color: c.text_color ,fontSize:selectedLang == "ta" ? 13 : 14 ),
-                      )),
-
+                              // UIHelper.titleTextStyle("Hi " + "userName fg fdgdf df dfg fdg  dfgd dfg ", c.text_color, 14, true, true)),
+                              Text(
+                            "Hi " + "userName fg fdgdf df dfg fdg  dfgd dfg ",
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            style: TextStyle(color: c.text_color, fontSize: selectedLang == "ta" ? 13 : 14),
+                          )),
                     ],
                   )
                 ]),
@@ -447,7 +392,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                               child: FadeInAnimation(
                                 child: InkWell(
                                   onTap: () async {
-                                    selected_index = servicesList[index][key_service_id];
+                                    int selected_index = servicesList[index][key_service_id];
                                     if (selected_index == 0) {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => AllYourTaxDetails(isHome: false)));
                                     } else if (selected_index == 1) {

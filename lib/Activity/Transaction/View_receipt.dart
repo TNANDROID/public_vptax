@@ -59,6 +59,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
   initialize() async {
     selectedLang = await preferencesService.getUserInfo("lang");
     mobile_number = await preferencesService.getUserInfo(key_mobile_number);
+    setState(() {});
   }
 
   //Dropdown Input Field Widget

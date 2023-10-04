@@ -419,7 +419,9 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
               }
 
               var sendData = {key_service_id: serviceid, key_mobile_number: postParams[key_mobile_number].toString()};
+              Utils().showProgress(context, 1);
               var response = await model.overAllMainService(context, sendData);
+              Utils().hideProgress(context);
               if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
                 utils.showToast(context, 'otp_resent_success'.tr().toString(), "S");
               } else {
@@ -460,7 +462,10 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
           serviceId = verifyOTPFlag ? "ResendOtp" : "SendOTPforGeneratePIN";
         }
         postParams[key_service_id] = serviceId;
+        Utils().showProgress(context, 1);
         var response = await model.overAllMainService(context, postParams);
+        Utils().hideProgress(context);
+
         if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
           utils.showToast(context, 'otp_resent_success'.tr().toString(), "S");
           registerStep++;
@@ -492,7 +497,10 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
         }
 
         var sendData = {key_service_id: serviceId, key_mobile_number: postParams[key_mobile_number].toString(), "mobile_otp": finalOTP};
+        Utils().showProgress(context, 1);
         var response = await model.overAllMainService(context, sendData);
+        Utils().hideProgress(context);
+
         if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
           dynamic resData = response['DATA'];
           await preferencesService.setUserInfo("userId", resData['id'].toString());
