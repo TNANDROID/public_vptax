@@ -93,6 +93,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
               await getDemandList(model);
             },
             builder: (context, model, child) {
+              double marginSpace = Screen.width(context) / 4;
               return model.isBusy
                   ? Center(child: Container(margin: EdgeInsets.only(top: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true)))
                   : Container(
@@ -111,7 +112,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                               floatingHeader: true,
                               shrinkWrap: true,
                               groupBy: (element) => element[key_taxtypeid].toString(),
-                              groupSeparatorBuilder: (element) => stickyHeader(element),
+                              groupSeparatorBuilder: (element) => UIHelper.stickyHeader(element, selectedLang, mainList, marginSpace),
                               indexedItemBuilder: (context, dynamic element, mainIndex) => Container(
                                   margin: EdgeInsets.only(top: 5),
                                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
@@ -183,44 +184,6 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                       ));
             },
             viewModelBuilder: () => StartUpViewModel()));
-  }
-
-// *************** Sticky Header Widget ***********
-  Widget stickyHeader(var taxTypeId) {
-    var TaxList = preferencesService.taxTypeList;
-    String TaxHeader = '';
-    for (var list in TaxList) {
-      if (list[key_taxtypeid].toString() == taxTypeId) {
-        TaxHeader = selectedLang == 'en' ? list[key_taxtypedesc_en] : list[key_taxtypedesc_ta];
-      }
-    }
-    int totalCount = mainList.where((item) => item[s.key_taxtypeid] == taxTypeId).length;
-
-    return Container(
-      margin: EdgeInsets.only(top: 0),
-      padding: EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 0),
-      child: Container(
-        margin: EdgeInsets.only(left: MediaQuery.of(context).size.width / 4, right: MediaQuery.of(context).size.width / 4),
-        padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-        decoration: UIHelper.roundedBorderWithColor(20, 20, 20, 20, c.colorPrimary),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(child: UIHelper.titleTextStyle(TaxHeader, c.white, 12, true, true)),
-            Container(
-              width: 25,
-              height: 25,
-              padding: EdgeInsets.all(4),
-              decoration: BoxDecoration(color: c.white, border: Border.all(width: 1, color: c.white), borderRadius: BorderRadius.circular(20)),
-              child: Center(
-                child: UIHelper.titleTextStyle("$totalCount", c.grey_10, 12, true, false),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
   }
 
 // *************** Blue Color Main Card Widget ***********
@@ -383,13 +346,13 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
             : getData[key_DEMAND_DETAILS] == "Pending"
                 ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child:  InkWell(
-    onTap: () {
-    Navigator.of(context).push(MaterialPageRoute(
-    builder: (context) => CheckTransaction(),
-    ));
-    },
-    child: UIHelper.titleTextStyle('transaction_warning_hint'.tr().toString(), c.red, 12, true, true)),
+                    child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => CheckTransaction(),
+                          ));
+                        },
+                        child: UIHelper.titleTextStyle('transaction_warning_hint'.tr().toString(), c.red, 12, true, true)),
                   )
                 : AnimatedSize(
                     duration: const Duration(milliseconds: 500),

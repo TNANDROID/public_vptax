@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, file_names, unused_field
+// ignore_for_file: use_build_context_synchronously, file_names, unused_field, must_be_immutable, non_constant_identifier_names
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +11,7 @@ import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Model/startup_model.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
-import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
+import 'package:public_vptax/Resources/imagepath.dart' as imagepath;
 import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
@@ -21,10 +21,10 @@ import 'package:public_vptax/Utils/utils.dart';
 class PaymentGateWayView extends StatefulWidget {
   List<dynamic> dataList;
   BuildContext mcContext;
-  PaymentGateWayView({Key? key, required this.dataList, required this.mcContext});
+  PaymentGateWayView({super.key, required this.dataList, required this.mcContext});
 
   @override
-  _PaymentGateWayViewState createState() => _PaymentGateWayViewState();
+  State<PaymentGateWayView> createState() => _PaymentGateWayViewState();
 }
 
 class _PaymentGateWayViewState extends State<PaymentGateWayView> {
@@ -34,7 +34,7 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
   TextEditingController mobileTextController = TextEditingController();
   TextEditingController emailTextController = TextEditingController();
 
-  int selected_id = -1;
+  int selectedid = -1;
   String selectedLang = "en";
   String isLogin = "";
   List list = [];
@@ -79,61 +79,60 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
                     margin: const EdgeInsets.only(top: 5, left: 20, bottom: 5),
                     child: Text('select_payment_gateway'.tr().toString(), style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.black))),
               ),
-              Container(
-                  child: AnimationLimiter(
-                      child: ListView.builder(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: list.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return AnimationConfiguration.staggeredList(
-                                position: index,
-                                duration: const Duration(milliseconds: 800),
-                                child: SlideAnimation(
-                                  horizontalOffset: 200.0,
-                                  child: FlipAnimation(
-                                    child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                                        child: InkWell(
-                                          onTap: () {
-                                            selected_id = list[index][key_gateway_id];
-                                            setState(() {});
-                                          },
-                                          child: Row(
-                                            children: [
-                                              Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: selected_id == list[index][key_gateway_id]
-                                                    ? Image.asset(
-                                                        imagePath.tick,
-                                                        color: c.account_status_green_color,
-                                                        height: 25,
-                                                        width: 25,
-                                                      )
-                                                    : Image.asset(
-                                                        imagePath.unchecked,
-                                                        color: c.grey_9,
-                                                        height: 25,
-                                                        width: 25,
-                                                      ),
-                                              ),
-                                              IconButton(
-                                                  onPressed: () {},
-                                                  icon: Image.asset(
-                                                    imagePath.payment_gateway,
+              AnimationLimiter(
+                  child: ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: list.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return AnimationConfiguration.staggeredList(
+                            position: index,
+                            duration: const Duration(milliseconds: 800),
+                            child: SlideAnimation(
+                              horizontalOffset: 200.0,
+                              child: FlipAnimation(
+                                child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                    child: InkWell(
+                                      onTap: () {
+                                        selectedid = list[index][key_gateway_id];
+                                        setState(() {});
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: selectedid == list[index][key_gateway_id]
+                                                ? Image.asset(
+                                                    imagepath.tick,
+                                                    color: c.account_status_green_color,
                                                     height: 25,
                                                     width: 25,
-                                                  )),
-                                              Text(
-                                                list[index][key_gateway_name],
-                                                style: TextStyle(fontWeight: FontWeight.normal, fontSize: 12, color: c.grey_9),
-                                              ),
-                                            ],
+                                                  )
+                                                : Image.asset(
+                                                    imagepath.unchecked,
+                                                    color: c.grey_9,
+                                                    height: 25,
+                                                    width: 25,
+                                                  ),
                                           ),
-                                        )),
-                                  ),
-                                ));
-                          }))),
+                                          IconButton(
+                                              onPressed: () {},
+                                              icon: Image.asset(
+                                                imagepath.payment_gateway,
+                                                height: 25,
+                                                width: 25,
+                                              )),
+                                          Text(
+                                            list[index][key_gateway_name],
+                                            style: TextStyle(fontWeight: FontWeight.normal, fontSize: 12, color: c.grey_9),
+                                          ),
+                                        ],
+                                      ),
+                                    )),
+                              ),
+                            ));
+                      })),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
@@ -161,7 +160,7 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
                   margin: const EdgeInsets.only(left: 5, right: 20, bottom: 20),
                   child: CustomGradientButton(
                     onPressed: () async {
-                      if (selected_id > 0) {
+                      if (selectedid > 0) {
                         if (_formKey.currentState!.saveAndValidate()) {
                           Map<String, dynamic> postParams = Map.from(_formKey.currentState!.value);
                           postParams.removeWhere((key, value) => value == null);
@@ -294,7 +293,7 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
         key_name: nameTextController.text,
         key_mobile_no: mobileTextController.text,
         key_email_id: emailTextController.text,
-        key_payment_gateway: selected_id,
+        key_payment_gateway: selectedid,
         'assessment_demand_list': assessment_demand_list,
       };
       Utils().showProgress(widget.mcContext, 1);
@@ -305,15 +304,13 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
       String response_value = response[key_response];
       if (status == key_success && response_value == key_success) {
         dynamic pay_params = response['pay_params'];
-        String transaction_unique_id = Utils().decodeBase64(pay_params['a'].toString());
+        // String transaction_unique_id = Utils().decodeBase64(pay_params['a'].toString());
+        //  String req_payment_amount = Utils().decodeBase64(pay_params['c'].toString());
+        // String txmStartTime = Utils().decodeBase64(pay_params['f'].toString());
         String atomTokenId = Utils().decodeBase64(pay_params['b'].toString());
-        String req_payment_amount = Utils().decodeBase64(pay_params['c'].toString());
         String public_transaction_email_id = Utils().decodeBase64(pay_params['d'].toString());
         String public_transaction_mobile_no = Utils().decodeBase64(pay_params['e'].toString());
-        String txmStartTime = Utils().decodeBase64(pay_params['f'].toString());
         String merchId = Utils().decodeBase64(pay_params['g'].toString());
-        print("response2>> transaction_unique_id= $transaction_unique_id, atomTokenId= $atomTokenId, req_payment_amount= $req_payment_amount, public_transaction_email_id= $public_transaction_email_id"
-            ", public_transaction_mobile_no= $public_transaction_mobile_no, txmStartTime= $txmStartTime, merchId= $merchId");
 
         await Utils().openNdpsPG(widget.mcContext, atomTokenId, merchId, public_transaction_email_id, public_transaction_mobile_no);
       } else if (response_value == key_fail) {

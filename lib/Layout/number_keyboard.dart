@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, file_names, unused_field
+// ignore_for_file: use_build_context_synchronously, file_names, unused_field, prefer_typing_uninitialized_variables
 
 import 'package:flutter/material.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
@@ -14,7 +14,7 @@ class CustomNumberBoard extends StatefulWidget {
   const CustomNumberBoard({super.key, required this.initialValue, required this.length, required this.onChanged, required this.onCompleted});
 
   @override
-  _CustomNumberBoardState createState() => _CustomNumberBoardState();
+  State<CustomNumberBoard> createState() => _CustomNumberBoardState();
 }
 
 class _CustomNumberBoardState extends State<CustomNumberBoard> with TickerProviderStateMixin {

@@ -4,6 +4,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
+import 'package:public_vptax/Resources/StringsKey.dart';
+import 'package:public_vptax/Services/Preferenceservices.dart';
+import 'package:public_vptax/Services/locator.dart';
 
 class UIHelper {
   // Vertically Space Provider
@@ -164,6 +167,41 @@ class UIHelper {
     return BoxDecoration(
       border: Border(
         bottom: BorderSide(color: bottomBorderclr, width: 3),
+      ),
+    );
+  }
+
+// *************** Sticky Header Widget ***********
+  static Widget stickyHeader(var taxTypeId, String selectedLang, List data, double marginSpace) {
+    PreferenceService preferencesService = locator<PreferenceService>();
+    var TaxList = preferencesService.taxTypeList;
+    String TaxHeader = '';
+    for (var list in TaxList) {
+      if (list[key_taxtypeid].toString() == taxTypeId) {
+        TaxHeader = selectedLang == 'en' ? list[key_taxtypedesc_en] : list[key_taxtypedesc_ta];
+      }
+    }
+    int totalCount = data.where((item) => item[key_taxtypeid] == taxTypeId).length;
+
+    return Container(
+      margin: EdgeInsets.fromLTRB(marginSpace, 10, marginSpace, 5.0),
+      padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+      decoration: UIHelper.roundedBorderWithColor(20, 20, 20, 20, c.colorPrimary),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(child: UIHelper.titleTextStyle(TaxHeader, c.white, 12, true, true)),
+          Container(
+            width: 25,
+            height: 25,
+            padding: EdgeInsets.all(4),
+            decoration: BoxDecoration(color: c.white, border: Border.all(width: 1, color: c.white), borderRadius: BorderRadius.circular(20)),
+            child: Center(
+              child: UIHelper.titleTextStyle("$totalCount", c.grey_10, 12, true, false),
+            ),
+          )
+        ],
       ),
     );
   }

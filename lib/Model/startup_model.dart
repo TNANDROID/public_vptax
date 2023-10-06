@@ -61,7 +61,7 @@ class StartUpViewModel extends BaseViewModel {
   }
 
 //------------Main Service Based List Fetch Function---------------//
-  Future getMainServiceList(String type, BuildContext context, {String taxType = "1", String lang = "en", dynamic requestDataValue}) async {
+  Future getMainServiceList(String type, BuildContext context, {String taxType = "1", String lang = "en"}) async {
     dynamic requestData = {};
     if (type == "TaxType") {
       requestData = {key_service_id: service_key_TaxTypeList};
@@ -71,14 +71,12 @@ class StartUpViewModel extends BaseViewModel {
       requestData = {key_service_id: service_key_PaymentTypeList, key_dcode: "1", key_bcode: "1", key_pvcode: "1"};
     } else if (type == "GatewayList") {
       requestData = {key_service_id: service_key_GatewayList};
-    } else if (type == "CollectionPaymentTokenList") {
-      requestData = requestDataValue;
     }
     var response = await overAllMainService(context, requestData);
 
     List res_jsonArray = [];
     if (response[key_status] == key_success && response[key_response] == key_success) {
-      res_jsonArray = response[key_data]?? [];
+      res_jsonArray = response[key_data] ?? [];
     } else {
       Utils().showAlert(context, ContentType.warning, response[key_response].toString());
     }
@@ -112,8 +110,8 @@ class StartUpViewModel extends BaseViewModel {
       preferencesService.PaymentTypeList = res_jsonArray.toList();
     } else if (type == "GatewayList") {
       preferencesService.GatewayList = res_jsonArray.toList();
-    } else if (type == "CollectionPaymentTokenList") {
-      return response;
+    } else {
+      return null;
     }
   }
 

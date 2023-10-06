@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
@@ -14,13 +13,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:public_vptax/Activity/Auth/Splash.dart';
+import 'package:public_vptax/Activity/Tax_Collection/payment_mode_view.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
@@ -28,14 +25,10 @@ import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/atom_paynets_service.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../Resources/StringsKey.dart' as s;
-
 import '../Activity/Auth/Home.dart';
-import '../Layout/customgradientbutton.dart';
 import '../Model/startup_model.dart';
 import '../Resources/StringsKey.dart';
 import 'ContentInfo.dart';
-import 'package:public_vptax/Layout/screen_size.dart';
 
 class Utils {
   PreferenceService preferencesService = locator<PreferenceService>();
@@ -62,10 +55,6 @@ class Utils {
       isAutoDatetimeisEnable = true;
     }
     return isAutoDatetimeisEnable;
-  }
-
-  bool isPasswordValid(value) {
-    return RegExp("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#%^&+=])(?=\\S+).{4,}").hasMatch(value);
   }
 
   launchURL(String url) async {
@@ -111,14 +100,6 @@ class Utils {
   }
 
   Future<void> showProgress(BuildContext context, int i) async {
-    i == 1 ? showLoading(context, 'loading'.tr().toString()) : showLoading(context, 'downloading'.tr().toString());
-  }
-
-  Future<void> hideProgress(BuildContext context) async {
-    Navigator.pop(context, true);
-  }
-
-  Future<void> showLoading(BuildContext context, String message) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -135,7 +116,7 @@ class Utils {
                 children: [
                   Center(child: HeartbeatProgressIndicator(duration: Duration(milliseconds: 250), child: Image.asset(imagePath.logo, height: 60))),
                   UIHelper.verticalSpaceSmall,
-                  JumpingText(message, style: TextStyle(color: c.text_color, fontSize: 12, decoration: TextDecoration.none)),
+                  JumpingText(i == 1 ? 'loading'.tr().toString() : 'downloading'.tr().toString(), style: TextStyle(color: c.text_color, fontSize: 12, decoration: TextDecoration.none)),
                   UIHelper.verticalSpaceSmall,
                 ],
               ),
@@ -146,10 +127,8 @@ class Utils {
     );
   }
 
-  Color getDarkerColor(Color color) {
-    final hsl = HSLColor.fromColor(color);
-    final hslDark = hsl.withLightness((hsl.lightness - 0.1).clamp(0.0, 1.0));
-    return hslDark.toColor();
+  Future<void> hideProgress(BuildContext context) async {
+    Navigator.pop(context, true);
   }
 
   ui.ColorFilter? getColorFilter(Color? color, ui.BlendMode colorBlendMode) {
@@ -269,7 +248,7 @@ class Utils {
                               await StartUpViewModel().getDemandList(mcontext);
                               hideProgress(mcontext);
                             } else {
-                              if (await preferencesService.getUserInfo(s.key_isLogin) == "yes") {
+                              if (await preferencesService.getUserInfo(key_isLogin) == "yes") {
                                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);
                               } else {
                                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Splash()), (route) => false);
@@ -283,7 +262,7 @@ class Utils {
                               await StartUpViewModel().getDemandList(mcontext);
                               hideProgress(mcontext);
                             } else {
-                              if (await preferencesService.getUserInfo(s.key_isLogin) == "yes") {
+                              if (await preferencesService.getUserInfo(key_isLogin) == "yes") {
                                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);
                               } else {
                                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Splash()), (route) => false);
@@ -322,7 +301,7 @@ class Utils {
                                     await StartUpViewModel().getDemandList(mcontext);
                                     hideProgress(mcontext);
                                   } else {
-                                    if (await preferencesService.getUserInfo(s.key_isLogin) == "yes") {
+                                    if (await preferencesService.getUserInfo(key_isLogin) == "yes") {
                                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);
                                     } else {
                                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Splash()), (route) => false);
@@ -339,7 +318,7 @@ class Utils {
                                     await StartUpViewModel().getDemandList(mcontext);
                                     hideProgress(mcontext);
                                   } else {
-                                    if (await preferencesService.getUserInfo(s.key_isLogin) == "yes") {
+                                    if (await preferencesService.getUserInfo(key_isLogin) == "yes") {
                                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);
                                     } else {
                                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Splash()), (route) => false);
@@ -424,21 +403,12 @@ class Utils {
     }
   }
 
-  String notNullString(String text) {
-    if (text == "" || text == "null") {
-      return "";
-    } else {
-      return text;
-    }
-  }
-
   String encryption(String plainText, String ENCRYPTION_KEY) {
     String ENCRYPTION_IV = '2SN22SkJGDyOAXUU';
     final key = encrypt.Key.fromUtf8(fixKey(ENCRYPTION_KEY));
     final iv = encrypt.IV.fromUtf8(ENCRYPTION_IV);
     final encrypter = encrypt.Encrypter(encrypt.AES(key, mode: encrypt.AESMode.cbc, padding: 'PKCS7'));
     final encrypted = encrypter.encrypt(plainText, iv: iv);
-
     return "${encrypted.base64}:${iv.base64}";
   }
 
@@ -446,71 +416,26 @@ class Utils {
     final dateList = plainText.split(":");
     final key = encrypt.Key.fromUtf8(fixKey(ENCRYPTION_KEY));
     final iv = encrypt.IV.fromBase64(dateList[1]);
-
     final encrypter = encrypt.Encrypter(encrypt.AES(key, mode: encrypt.AESMode.cbc, padding: 'PKCS7'));
     final decrypted = encrypter.decrypt(encrypt.Encrypted.from64(dateList[0]), iv: iv);
-
     return decrypted;
   }
 
   String fixKey(String key) {
     if (key.length < 16) {
       int numPad = 16 - key.length;
-
       for (int i = 0; i < numPad; i++) {
         key += "0"; //0 pad to len 16 bytes
       }
-
       return key;
     }
-
     if (key.length > 16) {
       return key.substring(0, 16); //truncate to 16 bytes
     }
-
     return key;
   }
 
-  String getSha256(String value1, String user_password) {
-    String value = textToMd5(user_password) + value1;
-    var bytes = utf8.encode(value);
-    return sha256.convert(bytes).toString();
-  }
-
-  String textToMd5(String text) {
-    var bytes = utf8.encode(text);
-    Digest md5Result = md5.convert(bytes);
-    return md5Result.toString();
-  }
-
-  String generateRandomString(int length) {
-    final random = Random();
-    const availableChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    final randomString = List.generate(length, (index) => availableChars[random.nextInt(availableChars.length)]).join();
-
-    return randomString;
-  }
-
-  String checkNull(dynamic value) {
-    return value == null ? '' : value.toString();
-  }
-
-  String splitStringByLength(String str, int length) {
-    String streetname = '';
-
-    for (int i = 0; i < str.length; i++) {
-      if (i == (length + 1) || i == (length + 1) * 2 || i == (length + 1) * 3) {
-        streetname += "\n${str[i]}";
-      } else {
-        streetname += str[i];
-      }
-    }
-
-    return streetname;
-  }
-
   void closeKeypad(BuildContext context) {
-    // Unfocus the current focus node to close the keypad
     FocusScope.of(context).unfocus();
   }
 
@@ -528,85 +453,58 @@ class Utils {
     String hashData = "";
     var key = utf8.encode(S_key);
     var jsonData = utf8.encode(message);
-
     var hmacSha256 = Hmac(sha256, key);
     var digest = hmacSha256.convert(jsonData);
-
     hashData = digest.toString();
-
     if (flag) {
       String encodedhashData = base64.encode(utf8.encode(hashData));
       return encodedhashData;
     }
-
     return hashData;
   }
 
   String jwt_Encode(String secretKey, String userName, String encodedhashData) {
     String token = "";
-
     DateTime currentTime = DateTime.now();
-
     DateTime expirationTime = currentTime.add(const Duration(minutes: 20));
-
     String exp = (expirationTime.millisecondsSinceEpoch / 1000).toString();
-
-    Map payload = {
-      "exp": exp,
-      "signature": encodedhashData,
-    };
-
+    Map payload = {"exp": exp, "signature": encodedhashData};
     final jwt = JWT(payload, issuer: "tnrd.tn.gov.in");
-
     token = jwt.sign(SecretKey(secretKey));
-
     debugPrint('Signed token: Bearer $token\n');
-
     return token;
   }
 
   String encodeBase64(String data) {
     String encoded = "";
-
     Codec<String, String> stringToBase64 = utf8.fuse(base64);
     encoded = stringToBase64.encode(data); // dXNlcm5hbWU6cGFzc3dvcmQ=
     String decoded = stringToBase64.decode(encoded);
-
     return encoded;
   }
 
   String decodeBase64(String data) {
     String decoded = "";
-
     Codec<String, String> stringToBase64 = utf8.fuse(base64);
     decoded = stringToBase64.decode(data);
-
     return decoded;
   }
 
   String jwt_Decode(String secretKey, String jwtToken) {
     String signature = "";
-
     try {
-      // Verify a token
       final jwt = JWT.verify(jwtToken, SecretKey(secretKey));
-
       Map<String, dynamic> headerJWT = jwt.payload;
-
       String head_sign = headerJWT['signature'];
-
       List<int> bytes = base64.decode(head_sign);
-
       signature = utf8.decode(bytes);
     } on Exception catch (e) {
       debugPrint(e.toString());
     }
-
     return signature;
   }
 
   Future<void> apiCalls(BuildContext context) async {
-    //  showProgress(context, 1);
     try {
       await StartUpViewModel().getOpenServiceList(service_key_district_list_all, context);
       await StartUpViewModel().getOpenServiceList(service_key_block_list_all, context);
@@ -615,10 +513,8 @@ class Utils {
       await StartUpViewModel().getMainServiceList("FinYear", context);
       await StartUpViewModel().getMainServiceList("PaymentTypeList", context);
       await StartUpViewModel().getMainServiceList("GatewayList", context);
-      // hideProgress(context);
     } catch (error) {
       debugPrint('error (${error.toString()}) has been caught');
-      //   hideProgress(context);
     }
   }
 
@@ -626,10 +522,8 @@ class Utils {
   Future<void> openNdpsPG(mcontext, String atomTokenId, String merchId, String emailId, String mobileNumber) async {
     // String returnUrl = "https://payment.atomtech.in/mobilesdk/param"; ////return url production
     String returnUrl = "https://pgtest.atomtech.in/mobilesdk/param";
-
-    // String payDetails = '{"atomTokenId": "15000000411719", "merchId": "8952", "emailId": "sd@gmail.com", "mobileNumber": "9698547875", "returnUrl": "$returnUrl"}';
     Map payDetails = {key_atomTokenId: atomTokenId, key_merchId: merchId, key_emailId: emailId, key_mobileNumber: mobileNumber, key_returnUrl: returnUrl};
-    Navigator.push(mcontext, MaterialPageRoute(builder: (context) => AtomPaynetsView("uat"/*"PROD"*/, json.encode(payDetails), mcontext, emailId, mobileNumber)));
+    Navigator.push(mcontext, MaterialPageRoute(builder: (context) => AtomPaynetsView("uat" /*"PROD"*/, json.encode(payDetails), mcontext, emailId, mobileNumber)));
   }
 
   String getDemadAmount(taxData, String taxTypeId) {
@@ -698,347 +592,19 @@ class Utils {
         break;
     }
 
-    // taxData[rowIndex][s.key_demand].toString();
+    // taxData[rowIndex][key_demand].toString();
     return demandId;
   }
 
-  String getTaxAdvance(taxData, String taxTypeId) {
-    String amount = "";
-    switch (taxTypeId) {
-      case '1':
-        amount = taxData['property_available_advance'].toString();
-        break;
-      case '2':
-        amount = taxData['water_available_advance'].toString();
-        break;
-      case '4':
-        amount = taxData['professional_available_advance'].toString();
-        break;
-      case '5':
-        amount = taxData['non_available_advance'].toString();
-        break;
-      case '6':
-        amount = taxData['trade_available_advance'].toString();
-        break;
-    }
-
-    // taxData[rowIndex][s.key_demand].toString();
-    return amount;
-  }
-
-  TextEditingController nameTextController = TextEditingController();
-  TextEditingController mobileTextController = TextEditingController();
-  TextEditingController emailTextController = TextEditingController();
-  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
-  bool _isKeyboardFocused = false;
-  Future<void> settingModalBottomSheet(BuildContext mcontext, List finalList, String payType) async {
-    int selected_id = -1;
-    String isLogin = await preferencesService.getUserInfo(key_isLogin);
+  Future<void> settingModalBottomSheet(BuildContext context, List finalList, String payType) async {
     preferencesService.paymentType = payType;
-    if (isLogin == "yes") {
-      nameTextController.text = await preferencesService.getUserInfo(key_name);
-      mobileTextController.text = await preferencesService.getUserInfo(key_mobile_number);
-      emailTextController.text = await preferencesService.getUserInfo(key_email);
-    }
-    String selectedLang = await preferencesService.getUserInfo("lang");
-    List list = preferencesService.GatewayList;
-    List paymentType = preferencesService.PaymentTypeList;
     return showModalBottomSheet(
-        context: mcontext,
+        context: context,
         isScrollControlled: true,
         backgroundColor: c.full_transparent,
         builder: (BuildContext bc) {
-          return StatefulBuilder(builder: (BuildContext context, StateSetter mystate) {
-            _isKeyboardFocused = MediaQuery.of(context).viewInsets.bottom > 0;
-            return Wrap(
-              children: <Widget>[
-                Container(
-                    decoration: UIHelper.GradientContainer(50.0, 50, 0, 0, [c.white, c.white]),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                            margin: const EdgeInsets.only(top: 20, bottom: 10),
-                            child: Text(('payment_mode'.tr().toString() + (selectedLang == 'en' ? paymentType[0][key_paymenttype_en] : paymentType[0][key_paymenttype_ta])),
-                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold))),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Container(
-                              margin: const EdgeInsets.only(top: 5, left: 20, bottom: 5),
-                              child: Text('select_payment_gateway'.tr().toString(), style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.black))),
-                        ),
-                        Container(
-                            child: AnimationLimiter(
-                                child: ListView.builder(
-                                    physics: const AlwaysScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: list.length,
-                                    itemBuilder: (BuildContext context, int index) {
-                                      return AnimationConfiguration.staggeredList(
-                                          position: index,
-                                          duration: const Duration(milliseconds: 800),
-                                          child: SlideAnimation(
-                                            horizontalOffset: 200.0,
-                                            child: FlipAnimation(
-                                              child: Padding(
-                                                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      mystate(() {
-                                                        selected_id = list[index][key_gateway_id];
-                                                      });
-                                                    },
-                                                    child: Row(
-                                                      children: [
-                                                        Align(
-                                                          alignment: Alignment.centerLeft,
-                                                          child: selected_id == list[index][key_gateway_id]
-                                                              ? Image.asset(
-                                                                  imagePath.tick,
-                                                                  color: c.account_status_green_color,
-                                                                  height: 25,
-                                                                  width: 25,
-                                                                )
-                                                              : Image.asset(
-                                                                  imagePath.unchecked,
-                                                                  color: c.grey_9,
-                                                                  height: 25,
-                                                                  width: 25,
-                                                                ),
-                                                        ),
-                                                        IconButton(
-                                                            onPressed: () {},
-                                                            icon: Image.asset(
-                                                              imagePath.payment_gateway,
-                                                              height: 25,
-                                                              width: 25,
-                                                            )),
-                                                        Text(
-                                                          list[index][key_gateway_name],
-                                                          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 12, color: c.grey_9),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  )),
-                                            ),
-                                          ));
-                                    }))),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Container(
-                              margin: const EdgeInsets.only(top: 10, left: 20, bottom: 5),
-                              child: Text(isLogin == "yes" ? "Payment Details" : 'enter_the_details'.tr().toString(), style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.black))),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                          child: FormBuilder(
-                              key: _formKey,
-                              child: Column(
-                                children: [
-                                  addInputFormControl('name', 'name'.tr().toString(), key_name, isLogin),
-                                  UIHelper.verticalSpaceSmall,
-                                  addInputFormControl('mobile', 'mobileNumber'.tr().toString(), key_mobile_number, isLogin),
-                                  UIHelper.verticalSpaceSmall,
-                                  addInputFormControl('email', 'emailAddress'.tr().toString(), key_email, isLogin),
-                                  UIHelper.verticalSpaceSmall,
-                                ],
-                              )),
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Container(
-                            margin: const EdgeInsets.only(left: 5, right: 20, bottom: 20),
-                            /*margin: EdgeInsets.only(left: 5, right: 20),
-                      padding: EdgeInsets.only(bottom: 30, right: 10),*/
-                            child: CustomGradientButton(
-                              onPressed: () async {
-                                if (selected_id > 0) {
-                                  if (_formKey.currentState!.saveAndValidate()) {
-                                    Map<String, dynamic> postParams = Map.from(_formKey.currentState!.value);
-                                    postParams.removeWhere((key, value) => value == null);
-                                    Navigator.of(context).pop();
-                                    getPaymentToken(mcontext, finalList, selected_id, selectedLang);
-                                  }
-                                } else {
-                                  Utils().showAlert(context, ContentType.fail, 'select_anyOne_gateway'.tr().toString());
-                                  // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('select_anyOne_gateway'.tr().toString())));
-                                }
-                              },
-                              width: 120,
-                              height: 40,
-                              child: Container(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "continue".tr().toString(),
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: _isKeyboardFocused ? Screen.height(context) * 0.36 : 0,
-                        )
-                      ],
-                    )),
-              ],
-            );
-          });
+          return PaymentGateWayView(dataList: finalList, mcContext: context);
         });
-  }
-
-  Widget addInputFormControl(String nameField, String hintText, String fieldType, String isLogin) {
-    return FormBuilderTextField(
-      enabled: isLogin == "yes" ? false : true,
-      style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.w400, color: c.grey_9),
-      name: nameField,
-      controller: fieldType == key_mobile_number
-          ? mobileTextController
-          : fieldType == key_name
-              ? nameTextController
-              : emailTextController,
-      autocorrect: false,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      onChanged: (value) {},
-      decoration: InputDecoration(
-        labelText: hintText,
-        labelStyle: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w600, color: c.grey_7),
-        filled: true,
-        fillColor: Colors.white,
-        // disabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
-        enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
-        focusedBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
-        focusedErrorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
-        errorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
-        errorStyle: const TextStyle(fontSize: 10),
-        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12), // Optional: Adjust padding
-      ),
-      validator: fieldType == key_mobile_number
-          ? ((value) {
-              if (value == "" || value == null) {
-                return "$hintText ${'isEmpty'.tr()}";
-              }
-              if (!Utils().isNumberValid(value)) {
-                return "$hintText ${'isInvalid'.tr()}";
-              }
-              return null;
-            })
-          : fieldType == key_email
-              ? ((value) {
-                  if (value == "" || value == null) {
-                    return "$hintText ${'isEmpty'.tr()}";
-                  }
-                  if (!Utils().isEmailValid(value)) {
-                    return "$hintText ${'isInvalid'.tr()}";
-                  }
-                  return null;
-                })
-              : FormBuilderValidators.compose([
-                  FormBuilderValidators.required(errorText: "$hintText ${'isEmpty'.tr()}"),
-                ]),
-      inputFormatters: fieldType == key_mobile_number
-          ? [
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(10),
-            ]
-          : [],
-      keyboardType: fieldType == key_mobile_number || fieldType == key_number ? TextInputType.number : TextInputType.text,
-    );
-  }
-
-  Future<void> getPaymentToken(BuildContext context, List selList, int selected_id, String selectedLang) async {
-    List finalList = selList;
-    Utils().showProgress(context, 1);
-
-    try {
-      dynamic request = {};
-
-      String taxType = finalList[0][s.key_taxtypeid].toString();
-      var property_demand_id = [];
-
-      for (var data in finalList[0][s.key_DEMAND_DETAILS]) {
-        if (data[s.key_flag] == true) {
-          if (taxType == "2") {
-            String demandId = Utils().getDemandId(data, taxType);
-            String amountToPay = data[key_watercharges];
-
-            Map<String, String> details = {
-              key_demand_id: demandId,
-              key_amount_to_pay: amountToPay,
-            };
-
-            property_demand_id.add(details);
-          } else {
-            property_demand_id.add(Utils().getDemandId(data, taxType));
-          }
-        }
-      }
-
-      String demand_id = Utils().getPaymentTokenDemandId(taxType);
-
-      List Assessment_Details = [
-        {
-          s.key_assessment_no: finalList[0][s.key_assessment_no].toString(),
-          demand_id: property_demand_id,
-        }
-      ];
-      dynamic assessment_demand_list = {
-        'Assessment_Details': Assessment_Details,
-      };
-      request = {
-        s.key_service_id: s.service_key_CollectionPaymentTokenList,
-        s.key_language_name: selectedLang,
-        s.key_taxtypeid: finalList[0][s.key_taxtypeid].toString(),
-        s.key_dcode: finalList[0][s.key_dcode].toString(),
-        s.key_bcode: finalList[0][s.key_bcode].toString(),
-        s.key_pvcode: finalList[0][s.key_lbcode].toString(),
-        if (finalList[0][s.key_taxtypeid].toString() == "4") s.key_fin_year: finalList[0][s.key_financialyear].toString(),
-        s.key_assessment_no: finalList[0][s.key_assessment_no].toString(),
-        s.key_paymenttypeid: 5,
-        s.key_name: nameTextController.text,
-        s.key_mobile_no: mobileTextController.text,
-        s.key_email_id: emailTextController.text,
-        s.key_payment_gateway: selected_id,
-        'assessment_demand_list': assessment_demand_list,
-      };
-      var response =
-          await StartUpViewModel().getMainServiceList("CollectionPaymentTokenList", context, requestDataValue: request, taxType: finalList[0][s.key_taxtypeid].toString(), lang: selectedLang);
-      print("response2>>$response");
-
-      Utils().hideProgress(context);
-      Utils().hideProgress(context);
-      print("response3>>$response");
-      var status = response[key_status];
-      String response_value = response[key_response];
-      if (status == key_success && response_value == key_success) {
-        dynamic pay_params = response['pay_params'];
-        String transaction_unique_id = Utils().decodeBase64(pay_params['a'].toString());
-        String atomTokenId = Utils().decodeBase64(pay_params['b'].toString());
-        String req_payment_amount = Utils().decodeBase64(pay_params['c'].toString());
-        String public_transaction_email_id = Utils().decodeBase64(pay_params['d'].toString());
-        String public_transaction_mobile_no = Utils().decodeBase64(pay_params['e'].toString());
-        String txmStartTime = Utils().decodeBase64(pay_params['f'].toString());
-        String merchId = Utils().decodeBase64(pay_params['g'].toString());
-        print("response2>> transaction_unique_id= $transaction_unique_id, atomTokenId= $atomTokenId, req_payment_amount= $req_payment_amount, public_transaction_email_id= $public_transaction_email_id"
-            ", public_transaction_mobile_no= $public_transaction_mobile_no, txmStartTime= $txmStartTime, merchId= $merchId");
-
-        await Utils().openNdpsPG(context, atomTokenId, merchId, public_transaction_email_id, public_transaction_mobile_no);
-      } else if (response_value == key_fail) {
-        Utils().showAlert(context, ContentType.warning, response[key_message].toString());
-      } else {
-        Utils().showAlert(context, ContentType.warning, response_value.toString());
-      }
-
-      // throw ('000');
-    } catch (error) {
-      Utils().hideProgress(context);
-      debugPrint('error (${error.toString()}) has been caught');
-    }
   }
 
   DateTime? selectedFromDate;
