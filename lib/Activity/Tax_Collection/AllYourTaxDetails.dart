@@ -183,98 +183,97 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                           ],
                         ),
                       ),
-                      Expanded(
-                        child: StreamedWidget<List<dynamic>?>(
-                            stream: preferencesService.taxListStream!.outStream!,
-                            builder: (context, snapshot) {
-                              if (widget.isHome) {
-                                sourceList = preferencesService.taxListStream!.value!
-                                    .where((item) => item[key_taxtypeid].toString() == selectedTaxTypeData['taxtypeid'].toString() && double.parse(item['totaldemand']) != 0)
-                                    .toList();
-                              } else {
-                                sourceList = preferencesService.taxListStream!.value!.where((item) => item["is_favourite"] != "Y").toList();
-                              }
+                      StreamedWidget<List<dynamic>?>(
+                          stream: preferencesService.taxListStream!.outStream!,
+                          builder: (context, snapshot) {
+                            if (widget.isHome) {
+                              sourceList = preferencesService.taxListStream!.value!
+                                  .where((item) => item[key_taxtypeid].toString() == selectedTaxTypeData['taxtypeid'].toString() && double.parse(item['totaldemand']) != 0)
+                                  .toList();
+                            } else {
+                              sourceList = preferencesService.taxListStream!.value!.where((item) => item["is_favourite"] != "Y").toList();
+                            }
 
-                              if (selectedTaxTypeData['taxtypeid'].toString() == "0") {
-                                mainList = sourceList;
-                              } else {
-                                mainList = sourceList.where((element) => element[key_taxtypeid].toString() == selectedTaxTypeData['taxtypeid'].toString()).toList();
-                              }
+                            if (selectedTaxTypeData['taxtypeid'].toString() == "0") {
+                              mainList = sourceList;
+                            } else {
+                              mainList = sourceList.where((element) => element[key_taxtypeid].toString() == selectedTaxTypeData['taxtypeid'].toString()).toList();
+                            }
 
-                              return mainList.length > 0
-                                  ? GroupedListView<dynamic, String>(
-                                      elements: mainList,
-                                      useStickyGroupSeparators: true,
-                                      floatingHeader: true,
-                                      shrinkWrap: true,
-                                      groupBy: (element) => element[key_taxtypeid].toString(),
-                                      groupSeparatorBuilder: (element) => stickyHeader(element),
-                                      indexedItemBuilder: (context, dynamic element, mainIndex) => Container(
-                                          margin: EdgeInsets.only(top: 5),
-                                          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                                          child: AnimatedContainer(
+                            return mainList.length > 0
+                                ? Expanded(
+                                    child: GroupedListView<dynamic, String>(
+                                    elements: mainList,
+                                    useStickyGroupSeparators: true,
+                                    floatingHeader: true,
+                                    shrinkWrap: true,
+                                    groupBy: (element) => element[key_taxtypeid].toString(),
+                                    groupSeparatorBuilder: (element) => stickyHeader(element),
+                                    indexedItemBuilder: (context, dynamic element, mainIndex) => Container(
+                                        margin: EdgeInsets.only(top: 5),
+                                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                        child: AnimatedContainer(
+                                          padding: EdgeInsets.only(bottom: 5),
+                                          duration: const Duration(milliseconds: 500),
+                                          child: Container(
                                             padding: EdgeInsets.only(bottom: 5),
-                                            duration: const Duration(milliseconds: 500),
-                                            child: Container(
-                                              padding: EdgeInsets.only(bottom: 5),
-                                              width: Screen.width(context),
-                                              decoration: BoxDecoration(
-                                                  color: mainList[mainIndex][key_DEMAND_DETAILS] == "Empty"
-                                                      ? c.yellow_new
-                                                      : mainList[mainIndex][key_DEMAND_DETAILS] == "Pending"
-                                                          ? c.red_new
-                                                          : c.green_new,
-                                                  borderRadius: BorderRadius.circular(20)),
-                                              child: Stack(
-                                                children: [
-                                                  Positioned(
-                                                    top: 0,
-                                                    right: 0,
-                                                    child: Container(
-                                                      constraints: const BoxConstraints(maxWidth: 130, maxHeight: 80),
-                                                      decoration: BoxDecoration(
-                                                          color: mainList[mainIndex][key_DEMAND_DETAILS] == "Empty"
-                                                              ? c.yellow_new_light
-                                                              : mainList[mainIndex][key_DEMAND_DETAILS] == "Pending"
-                                                                  ? c.red_new_light
-                                                                  : c.light_green_new,
-                                                          borderRadius: BorderRadius.circular(20)),
-                                                    ),
+                                            width: Screen.width(context),
+                                            decoration: BoxDecoration(
+                                                color: mainList[mainIndex][key_DEMAND_DETAILS] == "Empty"
+                                                    ? c.yellow_new
+                                                    : mainList[mainIndex][key_DEMAND_DETAILS] == "Pending"
+                                                        ? c.red_new
+                                                        : c.green_new,
+                                                borderRadius: BorderRadius.circular(20)),
+                                            child: Stack(
+                                              children: [
+                                                Positioned(
+                                                  top: 0,
+                                                  right: 0,
+                                                  child: Container(
+                                                    constraints: const BoxConstraints(maxWidth: 130, maxHeight: 80),
+                                                    decoration: BoxDecoration(
+                                                        color: mainList[mainIndex][key_DEMAND_DETAILS] == "Empty"
+                                                            ? c.yellow_new_light
+                                                            : mainList[mainIndex][key_DEMAND_DETAILS] == "Pending"
+                                                                ? c.red_new_light
+                                                                : c.light_green_new,
+                                                        borderRadius: BorderRadius.circular(20)),
                                                   ),
-                                                  Column(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                      Container(
-                                                          margin: const EdgeInsets.all(0),
-                                                          child: Container(
-                                                              padding: EdgeInsets.fromLTRB(15, 15, 5, 0),
-                                                              decoration: BoxDecoration(
-                                                                color: c.white,
-                                                                borderRadius: BorderRadius.circular(20),
-                                                                boxShadow: [
-                                                                  BoxShadow(
-                                                                    color: Colors.grey.withOpacity(0.5), // Shadow color
-                                                                    spreadRadius: 3, // Spread radius
-                                                                    blurRadius: 5, // Blur radius
-                                                                    offset: Offset(3, 3), // Offset from the top-left corner
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              width: Screen.width(context) - 40,
-                                                              child: headerCardUIWidget(mainIndex, mainList[mainIndex], model))),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
+                                                ),
+                                                Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                        margin: const EdgeInsets.all(0),
+                                                        child: Container(
+                                                            padding: EdgeInsets.fromLTRB(15, 15, 5, 0),
+                                                            decoration: BoxDecoration(
+                                                              color: c.white,
+                                                              borderRadius: BorderRadius.circular(20),
+                                                              boxShadow: [
+                                                                BoxShadow(
+                                                                  color: Colors.grey.withOpacity(0.5), // Shadow color
+                                                                  spreadRadius: 3, // Spread radius
+                                                                  blurRadius: 5, // Blur radius
+                                                                  offset: Offset(3, 3), // Offset from the top-left corner
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            width: Screen.width(context) - 40,
+                                                            child: headerCardUIWidget(mainIndex, mainList[mainIndex], model))),
+                                                  ],
+                                                ),
+                                              ],
                                             ),
-                                          )),
-                                      itemComparator: (item1, item2) => item1[key_assessment_no].compareTo(item2[key_assessment_no]), // optional
-                                    )
-                                  : Expanded(
-                                      child: Center(child: Container(margin: EdgeInsets.only(top: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true))),
-                                    );
-                            }),
-                      ),
+                                          ),
+                                        )),
+                                    itemComparator: (item1, item2) => item1[key_assessment_no].compareTo(item2[key_assessment_no]), // optional
+                                  ))
+                                : Expanded(
+                                    child: Center(child: Container(margin: EdgeInsets.only(top: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true))),
+                                  );
+                          }),
                     ],
                   ));
             },

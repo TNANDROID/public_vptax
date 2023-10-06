@@ -3,6 +3,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:grouped_list/grouped_list.dart';
 import 'package:public_vptax/Activity/Tax_Collection/taxCollection_view_request_screen.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
@@ -78,34 +79,16 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                           mainList = preferencesService.taxListStream!.value!.where((item) => item["is_favourite"] == "Y").toList();
                           return mainList.length > 0
                               ? Expanded(
-                                  child: ListView.builder(
-                                  itemCount: mainList.length,
-                                  itemBuilder: (context, mainIndex) {
-                                    return Container(
-                                        margin: EdgeInsets.only(top: 5),
-                                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                                        child: AnimatedContainer(
-                                          padding: EdgeInsets.only(bottom: 5),
-                                          duration: const Duration(milliseconds: 500),
-                                          child: Container(
-                                              margin: const EdgeInsets.all(0),
-                                              child: Container(
-                                                  decoration: BoxDecoration(
-                                                    color: c.white,
-                                                    borderRadius: BorderRadius.circular(5),
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: Colors.grey.withOpacity(0.5), // Shadow color
-                                                        spreadRadius: 1, // Spread radius
-                                                        blurRadius: 1, // Blur radius
-                                                        offset: Offset(1, 1), // Offset from the top-left corner
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  width: Screen.width(context),
-                                                  child: headerCardUIWidget(mcontext, mainIndex, mainList[mainIndex], model))),
-                                        ));
-                                  },
+                                  child: GroupedListView<dynamic, String>(
+                                  elements: mainList,
+                                  useStickyGroupSeparators: true,
+                                  floatingHeader: true,
+                                  shrinkWrap: true,
+                                  groupBy: (element) => element[key_taxtypeid].toString(),
+                                  groupSeparatorBuilder: (element) => stickyHeader(element),
+                                  indexedItemBuilder: (context, dynamic element, mainIndex) =>
+                                      Container(margin: EdgeInsets.fromLTRB(15, 5, 15, 5), child: headerCardUIWidget(mcontext, mainIndex, mainList[mainIndex], model)),
+                                  itemComparator: (item1, item2) => item1[key_assessment_no].compareTo(item2[key_assessment_no]), // optional
                                 ))
                               : Expanded(
                                   child: Center(child: Container(margin: EdgeInsets.only(top: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true))),
@@ -126,6 +109,44 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
             padding: EdgeInsets.all(3),
             child: Container(decoration: UIHelper.circleWithColorWithShadow(30, c.colorPrimary, c.colorPrimaryDark), child: Center(child: UIHelper.titleTextStyle("+", c.white, 28, true, true))),
           )),
+    );
+  }
+
+// *************** Sticky Header Widget ***********
+  Widget stickyHeader(var taxTypeId) {
+    var TaxList = preferencesService.taxTypeList;
+    String TaxHeader = '';
+    for (var list in TaxList) {
+      if (list[key_taxtypeid].toString() == taxTypeId) {
+        TaxHeader = selectedLang == 'en' ? list[key_taxtypedesc_en] : list[key_taxtypedesc_ta];
+      }
+    }
+    int totalCount = mainList.where((item) => item[key_taxtypeid] == taxTypeId).length;
+
+    return Container(
+      margin: EdgeInsets.only(top: 10, bottom: 5),
+      padding: EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 0),
+      child: Container(
+        margin: EdgeInsets.only(left: MediaQuery.of(context).size.width / 4, right: MediaQuery.of(context).size.width / 4),
+        padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+        decoration: UIHelper.roundedBorderWithColor(20, 20, 20, 20, c.colorPrimary),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(child: UIHelper.titleTextStyle(TaxHeader, c.white, 12, true, true)),
+            Container(
+              width: 25,
+              height: 25,
+              padding: EdgeInsets.all(4),
+              decoration: BoxDecoration(color: c.white, border: Border.all(width: 1, color: c.white), borderRadius: BorderRadius.circular(20)),
+              child: Center(
+                child: UIHelper.titleTextStyle("$totalCount", c.grey_10, 12, true, false),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 
