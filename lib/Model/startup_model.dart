@@ -78,7 +78,7 @@ class StartUpViewModel extends BaseViewModel {
 
     List res_jsonArray = [];
     if (response[key_status] == key_success && response[key_response] == key_success) {
-      res_jsonArray = response[key_data];
+      res_jsonArray = response[key_data]?? [];
     } else {
       Utils().showAlert(context, ContentType.warning, response[key_response].toString());
     }

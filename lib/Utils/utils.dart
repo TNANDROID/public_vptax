@@ -629,7 +629,7 @@ class Utils {
 
     // String payDetails = '{"atomTokenId": "15000000411719", "merchId": "8952", "emailId": "sd@gmail.com", "mobileNumber": "9698547875", "returnUrl": "$returnUrl"}';
     Map payDetails = {key_atomTokenId: atomTokenId, key_merchId: merchId, key_emailId: emailId, key_mobileNumber: mobileNumber, key_returnUrl: returnUrl};
-    Navigator.push(mcontext, MaterialPageRoute(builder: (context) => AtomPaynetsView("uat", json.encode(payDetails), mcontext, emailId, mobileNumber)));
+    Navigator.push(mcontext, MaterialPageRoute(builder: (context) => AtomPaynetsView("uat"/*"PROD"*/, json.encode(payDetails), mcontext, emailId, mobileNumber)));
   }
 
   String getDemadAmount(taxData, String taxTypeId) {
@@ -1006,10 +1006,13 @@ class Utils {
         s.key_payment_gateway: selected_id,
         'assessment_demand_list': assessment_demand_list,
       };
-      dynamic response =
+      var response =
           await StartUpViewModel().getMainServiceList("CollectionPaymentTokenList", context, requestDataValue: request, taxType: finalList[0][s.key_taxtypeid].toString(), lang: selectedLang);
-      Utils().hideProgress(context);
       print("response2>>$response");
+
+      Utils().hideProgress(context);
+      Utils().hideProgress(context);
+      print("response3>>$response");
       var status = response[key_status];
       String response_value = response[key_response];
       if (status == key_success && response_value == key_success) {
@@ -1021,6 +1024,8 @@ class Utils {
         String public_transaction_mobile_no = Utils().decodeBase64(pay_params['e'].toString());
         String txmStartTime = Utils().decodeBase64(pay_params['f'].toString());
         String merchId = Utils().decodeBase64(pay_params['g'].toString());
+        print("response2>> transaction_unique_id= $transaction_unique_id, atomTokenId= $atomTokenId, req_payment_amount= $req_payment_amount, public_transaction_email_id= $public_transaction_email_id"
+            ", public_transaction_mobile_no= $public_transaction_mobile_no, txmStartTime= $txmStartTime, merchId= $merchId");
 
         await Utils().openNdpsPG(context, atomTokenId, merchId, public_transaction_email_id, public_transaction_mobile_no);
       } else if (response_value == key_fail) {

@@ -97,7 +97,7 @@ class _SecretKeyViewState extends State<SecretKeyView> with TickerProviderStateM
                 alignment: Alignment.centerRight,
                 child: Container(
                   padding: EdgeInsets.only(
-                    bottom: 5, // Space between underline and text
+                    bottom: 2, // Space between underline and text
                   ), margin: EdgeInsets.only(
                     right: 10, // Space between underline and text
                   ),

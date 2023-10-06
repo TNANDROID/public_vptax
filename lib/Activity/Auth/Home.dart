@@ -260,7 +260,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //  Text()
-                Row(children: [
+                Row(
+                    children: [
                   Container(
                     margin: EdgeInsets.all(20),
                     child: Image.asset(
@@ -268,32 +269,36 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       height: MediaQuery.of(context).size.height / 10,
                     ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Container(
-                        width: Screen.width(context) / 1.6,
-                        padding: EdgeInsets.only(top: 10, bottom: 10),
-                        decoration: UIHelper.GradientContainer(20, 0, 20, 0, [c.colorPrimary, c.colorPrimaryDark]),
-                        child: Text(
-                          textAlign: TextAlign.center,
-                          "appName".tr().toString(),
-                          style: TextStyle(color: c.white, fontSize: 14, fontWeight: FontWeight.bold),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Container(
+                          width: Screen.width(context) / 1.6,
+                          padding: EdgeInsets.only(top: 10, bottom: 10),
+                          decoration: UIHelper.GradientContainer(20, 0, 20, 0, [c.colorPrimary, c.colorPrimaryDark]),
+                          child: Text(
+                            textAlign: TextAlign.center,
+                            "appName".tr().toString(),
+                            style: TextStyle(color: c.white, fontSize: 14, fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
-                      UIHelper.verticalSpaceSmall,
-                      Container(
-                          margin: EdgeInsets.only(right: 20),
-                          child:
-                              // UIHelper.titleTextStyle("Hi " + "userName fg fdgdf df dfg fdg  dfgd dfg ", c.text_color, 14, true, true)),
-                              Text(
-                            "Hi " + "userName fg fdgdf df dfg fdg  dfgd dfg ",
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            style: TextStyle(color: c.text_color, fontSize: selectedLang == "ta" ? 13 : 14),
-                          )),
-                    ],
+                        UIHelper.verticalSpaceSmall,
+                        Container(
+                          width: MediaQuery.of(context).size.width/2,
+                            margin: EdgeInsets.only(right: 20),
+                            child:
+                                // UIHelper.titleTextStyle("Hi " + "userName", c.text_color, 14, true, true)),
+                                Text(
+                              'hi'.tr().toString()+" " + userName+",",
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              textAlign: TextAlign.end,
+                              style: TextStyle(color: c.text_color, fontSize: selectedLang == "ta" ? 13 : 14,fontWeight: FontWeight.bold),
+                            )),
+                      ],
+                    ),
                   )
                 ]),
                 if (taxTypeList.length > 0)

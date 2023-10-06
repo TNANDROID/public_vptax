@@ -19,6 +19,7 @@ import 'package:public_vptax/Services/locator.dart';
 import 'package:stacked/stacked.dart';
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 import '../../Resources/StringsKey.dart';
+import '../Transaction/CheckTransaction.dart';
 
 class TaxCollectionDetailsView extends StatefulWidget {
   final responseData;
@@ -382,7 +383,13 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
             : getData[key_DEMAND_DETAILS] == "Pending"
                 ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: UIHelper.titleTextStyle('transaction_warning_hint'.tr().toString(), c.red, 12, true, true),
+                    child:  InkWell(
+    onTap: () {
+    Navigator.of(context).push(MaterialPageRoute(
+    builder: (context) => CheckTransaction(),
+    ));
+    },
+    child: UIHelper.titleTextStyle('transaction_warning_hint'.tr().toString(), c.red, 12, true, true)),
                   )
                 : AnimatedSize(
                     duration: const Duration(milliseconds: 500),
