@@ -333,8 +333,8 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          UIHelper.titleTextStyle(getDoorAndStreetName(getData).trim(), c.grey_9, 12, false, false),
-                          UIHelper.titleTextStyle(getvillageAndBlockName(getData).trim(), c.grey_9, 12, false, false),
+                          UIHelper.titleTextStyle(Utils().getDoorAndStreetName(getData, selectedLang).trim(), c.grey_9, 12, false, false),
+                          UIHelper.titleTextStyle(Utils().getvillageAndBlockName(getData).trim(), c.grey_9, 12, false, false),
                           UIHelper.titleTextStyle(getData[key_district_name].trim() ?? '', c.grey_9, 12, false, false)
                         ],
                       ),
@@ -446,36 +446,6 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                   ),
       ],
     );
-  }
-
-// *************** Village Name Get Widget ***********
-  String getvillageAndBlockName(dynamic getData) {
-    String street = "";
-    street = ((getData[key_localbody_name] ?? '') + ", " + (getData[key_bname] ?? ''));
-    return street;
-  }
-
-// *************** Door Number and Street Get Widget ***********
-  String getDoorAndStreetName(dynamic getData) {
-    String street = "";
-    switch (getData[key_taxtypeid].toString()) {
-      case '1':
-        street = (getData['doorno'] ?? '') + ", " + (selectedLang == 'en' ? (getData[key_street_name_en] ?? '') : (getData[key_street_name_ta] ?? ''));
-        break;
-      case '2':
-        street = (getData["street_name"] ?? '');
-        break;
-      case '4':
-        street = (getData['doorno'] ?? '') + ", " + (selectedLang == 'en' ? (getData["street_name_t"] ?? '') : (getData["street_name_t"] ?? ''));
-        break;
-      case '5':
-        street = (getData['doorno'] ?? '') + ", " + (selectedLang == 'en' ? (getData["street_name"] ?? '') : (getData["street_name"] ?? ''));
-        break;
-      case '6':
-        street = selectedLang == 'en' ? (getData["street_name_en"] ?? '') : (getData["street_name_ta"] ?? '');
-        break;
-    }
-    return street;
   }
 
 // *************** Tax based  Data Get Widget***********

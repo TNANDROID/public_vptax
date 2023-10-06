@@ -72,7 +72,7 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
                               itemBuilder: (context, mainIndex) {
                                 return Column(
                                   children: [
-                                    headerCardUIWidget(mainIndex),
+                                    headerCardUIWidget(mainIndex, mainList[mainIndex]),
                                     UIHelper.verticalSpaceMedium,
                                   ],
                                 );
@@ -160,7 +160,7 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
   }
 
 // *************** Main Card Widget ***********
-  Widget headerCardUIWidget(int mainIndex) {
+  Widget headerCardUIWidget(int mainIndex, dynamic getData) {
     return Stack(
       children: [
         Container(
@@ -223,9 +223,9 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                UIHelper.titleTextStyle(getDoorAndStreetName(mainIndex, selectedTaxTypeData['taxtypeid'].toString()), c.grey_8, 11, false, false),
-                                UIHelper.titleTextStyle(getvillageAndBlockName(mainIndex, selectedTaxTypeData['taxtypeid'].toString()), c.grey_8, 11, false, false),
-                                UIHelper.titleTextStyle(mainList[mainIndex][key_district_name] ?? '', c.grey_8, 11, false, false)
+                                UIHelper.titleTextStyle(Utils().getDoorAndStreetName(getData, selectedLang), c.grey_8, 11, false, false),
+                                UIHelper.titleTextStyle(Utils().getvillageAndBlockName(getData), c.grey_8, 11, false, false),
+                                UIHelper.titleTextStyle(getData[key_district_name] ?? '', c.grey_8, 11, false, false)
                               ],
                             ),
                           ),
@@ -332,35 +332,5 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
                           UIHelper.verticalSpaceTiny,
                         ],
                       );
-  }
-
-// *************** Village Name Get Widget ***********
-  String getvillageAndBlockName(int mainIndex, String taxTypeId) {
-    String street = "";
-    street = ((mainList[mainIndex][key_localbody_name] ?? '') + ", " + (mainList[mainIndex][key_bname] ?? ''));
-    return street;
-  }
-
-// *************** Door Number and Street Get Widget ***********
-  String getDoorAndStreetName(int mainIndex, String taxTypeId) {
-    String street = "";
-    switch (taxTypeId) {
-      case '1':
-        street = (mainList[mainIndex][key_door_no] ?? '') + ", " + (selectedLang == 'en' ? (mainList[mainIndex][key_street_name_en] ?? '') : (mainList[mainIndex][key_street_name_ta] ?? ''));
-        break;
-      case '2':
-        street = selectedLang == 'en' ? (mainList[mainIndex]["street_name"] ?? '') : (mainList[mainIndex]["street_name"] ?? '');
-        break;
-      case '4':
-        street = (mainList[mainIndex]['doorno'] ?? '') + ", " + (selectedLang == 'en' ? (mainList[mainIndex]["street_name_t"] ?? '') : (mainList[mainIndex]["street_name_t"] ?? ''));
-        break;
-      case '5':
-        street = (mainList[mainIndex]['doorno'] ?? '') + ", " + (selectedLang == 'en' ? (mainList[mainIndex]["street_name"] ?? '') : (mainList[mainIndex]["street_name"] ?? ''));
-        break;
-      case '6':
-        street = selectedLang == 'en' ? (mainList[mainIndex]["street_name_en"] ?? '') : (mainList[mainIndex]["street_name_ta"] ?? '');
-        break;
-    }
-    return street;
   }
 }

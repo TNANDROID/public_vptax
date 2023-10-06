@@ -92,10 +92,6 @@ class Utils {
       backgroundColor: type == "S" ? c.account_status_green_color : c.grey_10,
       content: UIHelper.titleTextStyle(msg, type == "S" ? c.white : c.white, 13, true, false),
       duration: const Duration(seconds: 1),
-/*      action: SnackBarAction(
-        label: 'ACTION',
-        onPressed: () {},
-      ),*/
     ));
   }
 
@@ -605,6 +601,36 @@ class Utils {
         builder: (BuildContext bc) {
           return PaymentGateWayView(dataList: finalList, mcContext: context);
         });
+  }
+
+// *************** Village Name Get Widget ***********
+  String getvillageAndBlockName(dynamic getData) {
+    String street = "";
+    street = ((getData[key_localbody_name] ?? '') + ", " + (getData[key_bname] ?? ''));
+    return street;
+  }
+
+// *************** Door Number and Street Get Widget ***********
+  String getDoorAndStreetName(dynamic getData, String selectedLang) {
+    String street = "";
+    switch (getData[key_taxtypeid].toString()) {
+      case '1':
+        street = (getData['doorno'] ?? '') + ", " + (selectedLang == 'en' ? (getData[key_street_name_en] ?? '') : (getData[key_street_name_ta] ?? ''));
+        break;
+      case '2':
+        street = (getData["street_name"] ?? '');
+        break;
+      case '4':
+        street = (getData['doorno'] ?? '') + ", " + (getData["street_name_t"] ?? '');
+        break;
+      case '5':
+        street = (getData['doorno'] ?? '') + ", " + (getData["street_name"] ?? '');
+        break;
+      case '6':
+        street = selectedLang == 'en' ? (getData["street_name_en"] ?? '') : (getData["street_name_ta"] ?? '');
+        break;
+    }
+    return street;
   }
 
   DateTime? selectedFromDate;
