@@ -862,10 +862,4 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
       name: 'TaxType',
     );
   }
-
-  String getTaxImage(int typeId) {
-    String taxTypeID = mainList[typeId][key_taxtypeid].toString();
-    List selectedTaxitem = taxTypeList.where((element) => element[key_taxtypeid].toString() == taxTypeID).toList();
-    return selectedTaxitem[0][key_img_path].toString();
-  }
 }

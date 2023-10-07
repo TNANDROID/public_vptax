@@ -31,20 +31,16 @@ class _CheckTransactionState extends State<CheckTransaction> {
   StartUpViewModel model = StartUpViewModel();
 
   Utils utils = Utils();
-
-  List successList = [];
-  List failureList = [];
-  List pendingList = [];
   List defaultWorklist = [];
-
-  Iterable filteredWorklist = [];
-
-  int statusFlag = 0;
-
-  String _searchQuery = '';
+  List filterList = [];
   String selectLang = '';
-
-  bool searchEnable = false;
+  String selectedFilter = "All";
+  List typeList = [
+    {"key": 'All', "title": "all".tr().toString()},
+    {"key": 'Success', "title": "success".tr().toString()},
+    {"key": 'Pending', "title": "pending".tr().toString()},
+    {"key": 'Failed', "title": "failed".tr().toString()}
+  ];
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -53,29 +49,19 @@ class _CheckTransactionState extends State<CheckTransaction> {
     initialize();
   }
 
-  onSearchQueryChanged() {
-    _searchQuery = searchController.text.toLowerCase();
-
-    filteredWorklist = defaultWorklist.where((item) {
-      final trans_id = item[key_transaction_id].toString();
-      return trans_id.contains(_searchQuery);
-    });
-    setState(() {});
-  }
-
   Future<void> initialize() async {
     selectLang = await preferencesService.getUserInfo('lang');
     dynamic requestData = {key_service_id: service_key_TransactionHistory, key_mobile_no: await preferencesService.getUserInfo(key_mobile_number), key_email_id: ''};
     Utils().showProgress(context, 1);
     var response = await model.overAllMainService(context, requestData);
     Utils().hideProgress(context);
-    List res_jsonArray = [];
+
     if (response[key_status] == key_success && response[key_response] == key_success) {
       defaultWorklist = response[key_data];
+      filterList = defaultWorklist.toList();
     } else {
       Utils().showAlert(context, ContentType.warning, response[key_response].toString());
     }
-    FilterList();
     setState(() {});
   }
 
@@ -85,198 +71,183 @@ class _CheckTransactionState extends State<CheckTransaction> {
       appBar: UIHelper.getBar('payment_transaction_history'.tr().toString()),
       body: SizedBox(
         height: Screen.height(context),
-        child: Stack(
-          alignment: Alignment.topCenter,
+        child: Column(
           children: [
-            SingleChildScrollView(
-                child: Container(
-              margin: EdgeInsets.only(top: Screen.width(context) * 0.35),
+            Container(
+                margin: EdgeInsets.all(15),
+                child: Row(children: [
+                  Expanded(
+                      child: Card(
+                          elevation: 5,
+                          shadowColor: c.black,
+                          color: c.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: FormBuilderTextField(
+                            onChanged: (value) {
+                              getSearchData(value.toString());
+                            },
+                            name: 'search',
+                            controller: searchController,
+                            keyboardType: TextInputType.number,
+                            textAlign: TextAlign.left,
+                            decoration: InputDecoration(
+                              hintText: 'transaction_id'.tr(),
+                              hintStyle: TextStyle(fontSize: 11),
+                              filled: true,
+                              contentPadding: EdgeInsets.all(10),
+                              focusedBorder: UIHelper.getInputBorder(0, borderColor: c.white, radius: 20),
+                              enabledBorder: UIHelper.getInputBorder(0, borderColor: c.white, radius: 20),
+                              suffixIcon: searchController.text.isNotEmpty
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        searchController.text = "";
+                                        Utils().hideSoftKeyBoard(context);
+                                        getSearchData("");
+                                      },
+                                      child: Icon(Icons.highlight_off, color: c.red))
+                                  : GestureDetector(onTap: () {}, child: Icon(Icons.search, color: c.helpBlue)),
+                              fillColor: c.white,
+                            ),
+                            style: TextStyle(fontSize: 13),
+                          ))),
+                  SizedBox(width: 20),
+                  PopupMenuButton<dynamic>(
+                    color: c.white,
+                    child: Container(margin: EdgeInsets.only(right: 10), child: Icon(Icons.menu_outlined, color: c.black)),
+                    onSelected: (value) {
+                      getFilterData(value.toString());
+                    },
+                    itemBuilder: (BuildContext context) {
+                      return typeList
+                          .map((item) => PopupMenuItem(
+                                value: item["key"],
+                                child: Text(
+                                  item["title"],
+                                  style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: c.text_color),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ))
+                          .toList();
+                    },
+                  ),
+                ])),
+            // Positioned(
+            //   top: 0,
+            //   child: SizedBox(
+            //     width: Screen.width(context) * 0.95,
+            //     height: 75,
+            //     child: Card(
+            //       elevation: 5,
+            //       shadowColor: c.black,
+            //       color: c.white,
+            //       margin: EdgeInsets.all(15),
+            //       shape: RoundedRectangleBorder(
+            //         borderRadius: BorderRadius.circular(20),
+            //       ),
+            //       child: Row(
+            //         children: [TabBar('Success'), TabBar('Pending'), TabBar('Failed')],
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            Expanded(
+                child: SingleChildScrollView(
               child: ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: searchEnable ? filteredWorklist.length : defaultWorklist.length,
+                  itemCount: filterList.length,
                   itemBuilder: (context, mainIndex) {
-                    var item = searchEnable ? filteredWorklist.elementAt(mainIndex) : defaultWorklist[mainIndex];
+                    var item = filterList[mainIndex];
                     return Container(
                       margin: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                       child: buildTransactionStatusCard(item),
                     );
                   }),
             )),
-            Positioned(
-              top: Screen.width(context) * 0.15,
-              child: SizedBox(
-                width: Screen.width(context) * 0.95,
-                height: 75,
-                child: Card(
-                  elevation: 5,
-                  shadowColor: c.black,
-                  color: c.white,
-                  margin: EdgeInsets.all(15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: FormBuilderTextField(
-                        onChanged: (value) {
-                          if (value == '') {
-                            searchEnable = false;
-                          }
-                          setState(() {});
-                        },
-                        name: 'search',
-                        controller: searchController,
-                        keyboardType: TextInputType.number,
-                        textAlign: TextAlign.left,
-                        decoration: InputDecoration(
-                          hintText: 'transaction_id'.tr(),
-                          hintStyle: TextStyle(fontSize: 11),
-                          filled: true,
-                          contentPadding: EdgeInsets.all(10),
-                          focusedBorder: UIHelper.getInputBorder(0, borderColor: c.white, radius: 20),
-                          enabledBorder: UIHelper.getInputBorder(0, borderColor: c.white, radius: 20),
-                          fillColor: c.white,
-                        ),
-                        style: TextStyle(fontSize: 13),
-                      )),
-                      IconButton(
-                        icon: Icon(
-                          Icons.search,
-                          color: c.helpBlue,
-                        ),
-                        onPressed: () {
-                          Utils().hideSoftKeyBoard(context);
-                          if (searchController.text.isNotEmpty) {
-                            searchEnable = true;
-                            onSearchQueryChanged();
-                          } else {
-                            searchEnable = false;
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: 0,
-              child: SizedBox(
-                width: Screen.width(context) * 0.95,
-                height: 75,
-                child: Card(
-                  elevation: 5,
-                  shadowColor: c.black,
-                  color: c.white,
-                  margin: EdgeInsets.all(15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    children: [
-                      TabBar('Success', () {
-                        statusFlag = 1;
-                        defaultWorklist = successList;
-                        setState(() {});
-                      }, statusFlag == 1 ? true : false),
-                      TabBar('Pending', () {
-                        defaultWorklist = pendingList;
-                        statusFlag = 2;
-                        setState(() {});
-                      }, statusFlag == 2 ? true : false),
-                      TabBar('Failed', () {
-                        defaultWorklist = failureList;
-                        statusFlag = 3;
-                        setState(() {});
-                      }, statusFlag == 3 ? true : false)
-                    ],
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),
     );
   }
 
-  Expanded TabBar(String type, Function onPressed, bool isActive) {
-    String headerText = '';
-    Color bgColor;
-    if (type == 'Success') {
-      headerText = "success".tr();
-      bgColor = c.light_green_new;
-    } else if (type == 'Pending') {
-      headerText = "pending".tr();
-      bgColor = c.yellow_new_light;
-    } else {
-      headerText = "failed".tr();
-      bgColor = c.red_new_light;
-    }
-    return Expanded(
-      flex: 1,
-      child: Container(
-        decoration: BoxDecoration(
-          color: isActive ? bgColor : null,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Center(
-          child: TextButton(
-            onPressed: () {
-              onPressed();
-            },
-            style: ButtonStyle(
-              shape: MaterialStateProperty.all<OutlinedBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  decoration: type == 'Failed'
-                      ? BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: c.red_new,
-                            width: 1,
-                          ),
-                        )
-                      : null,
-                  child: Icon(
-                    type == 'Success'
-                        ? Icons.check_circle_outline_rounded
-                        : type == 'Failed'
-                            ? Icons.clear
-                            : Icons.error_outline_rounded,
-                    size: type == 'Failed' ? 10 : 15,
-                    color: type == 'Success'
-                        ? c.green_new
-                        : type == 'Failed'
-                            ? c.red_new
-                            : c.warningYellow,
-                  ),
-                ),
-                SizedBox(width: 3),
-                Flexible(
-                  child: Text(
-                    headerText,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: TextStyle(color: c.text_color, fontSize: selectLang == 'ta' ? 10 : 13),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  // Expanded TabBar(String type) {
+  //   String headerText = '';
+  //   Color bgColor;
+  //   if (type == 'Success') {
+  //     headerText = "success".tr();
+  //     bgColor = c.light_green_new;
+  //   } else if (type == 'Pending') {
+  //     headerText = "pending".tr();
+  //     bgColor = c.yellow_new_light;
+  //   } else {
+  //     headerText = "failed".tr();
+  //     bgColor = c.red_new_light;
+  //   }
+  //   return Expanded(
+  //     flex: 1,
+  //     child: Container(
+  //       decoration: BoxDecoration(
+  //         color: selectedFilter == type ? bgColor : null,
+  //         borderRadius: BorderRadius.circular(20),
+  //       ),
+  //       child: Center(
+  //         child: TextButton(
+  //           onPressed: () {
+  //             selectedFilter = type;
+  //             getFilterData(type);
+  //           },
+  //           style: ButtonStyle(
+  //             shape: MaterialStateProperty.all<OutlinedBorder>(
+  //               RoundedRectangleBorder(
+  //                 borderRadius: BorderRadius.circular(15),
+  //               ),
+  //             ),
+  //           ),
+  //           child: Row(
+  //             mainAxisAlignment: MainAxisAlignment.center,
+  //             children: [
+  //               Container(
+  //                 decoration: type == 'Failed'
+  //                     ? BoxDecoration(
+  //                         shape: BoxShape.circle,
+  //                         border: Border.all(
+  //                           color: c.red_new,
+  //                           width: 1,
+  //                         ),
+  //                       )
+  //                     : null,
+  //                 child: Icon(
+  //                   type == 'Success'
+  //                       ? Icons.check_circle_outline_rounded
+  //                       : type == 'Failed'
+  //                           ? Icons.clear
+  //                           : Icons.error_outline_rounded,
+  //                   size: type == 'Failed' ? 10 : 15,
+  //                   color: type == 'Success'
+  //                       ? c.green_new
+  //                       : type == 'Failed'
+  //                           ? c.red_new
+  //                           : c.warningYellow,
+  //                 ),
+  //               ),
+  //               SizedBox(width: 3),
+  //               Flexible(
+  //                 child: Text(
+  //                   headerText,
+  //                   overflow: TextOverflow.ellipsis,
+  //                   maxLines: 1,
+  //                   style: TextStyle(color: c.text_color, fontSize: selectLang == 'ta' ? 10 : 13),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Stack buildTransactionStatusCard(var item) {
     String headerText = '';
@@ -494,57 +465,25 @@ class _CheckTransactionState extends State<CheckTransaction> {
     );
   }
 
-  FilterList() {
-    successList = [];
-    failureList = [];
-    pendingList = [];
-
-    for (var item in defaultWorklist) {
-      var transactionStatus = item[key_transaction_status] ?? '';
-
-      if (transactionStatus == "SUCCESS") {
-        successList.add(item);
-      } else if (transactionStatus == "PENDING" || transactionStatus == "") {
-        pendingList.add(item);
-      } else if (transactionStatus == "FAILED") {
-        failureList.add(item);
-      }
+  getFilterData(String type) {
+    print("$type");
+    if (type == "Pending") {
+      filterList = defaultWorklist.where((item) => item[key_transaction_status] != "SUCCESS" && item[key_transaction_status] != "FAILED").toList();
+    } else if (type == "All") {
+      filterList = defaultWorklist.toList();
+    } else {
+      filterList = defaultWorklist.where((item) => item[key_transaction_status].toString().toLowerCase() == type.toLowerCase()).toList();
     }
     setState(() {});
   }
 
-/*
-  Future<void> checkReceiptStatus(String flag, String transID, String lang, String taxType, BuildContext context) async {
-    Utils().showProgress(context, 1);
-    var requestData = {
-      if (flag == "SUCCESS") key_service_id: service_key_TransactionidWiseGetReceipt else key_service_id: service_key_CheckTransaction,
-      if (flag == "SUCCESS") key_taxtypeid: taxType,
-      key_transaction_id: transID,
-      key_language_name: lang
-    };
-  
-    Utils().hideProgress(context);
-    if (response[key_status] == key_success && response[key_response] == key_success) {
-      if (flag == "SUCCESS") {
-        var receiptResponce = response[key_data];
-        var pdftoString = receiptResponce[key_receipt_content];
-        Uint8List? pdf = const Base64Codec().decode(pdftoString);
-        Navigator.of(context).push(
-          MaterialPageRoute(
-              builder: (context) => PDF_Viewer(
-                    pdfBytes: pdf,
-                  )),
-        );
-      } else {
-        Utils().showAlert(context, ContentType.help, '${response[key_message]}');
-        await model.getTransactionStatus(context */
-/* , widget.mobileNumber, widget.emailID */ /*
-);
-        initialize();
-      }
-    }
+  getSearchData(String value) {
+    filterList = defaultWorklist.where((item) {
+      return item[key_transaction_id].toString().startsWith(value);
+    }).toList();
+    setState(() {});
   }
-*/
+
   Future<void> checkReceiptStatus(String flag, String transID, String lang, String taxType, BuildContext context) async {
     if (flag == "SUCCESS") {
       String urlParams = "taxtypeid=${base64Encode(utf8.encode(taxType))}&transaction_id=${base64Encode(utf8.encode(transID))}&language_name=${base64Encode(utf8.encode(lang))}";

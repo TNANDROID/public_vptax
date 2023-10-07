@@ -279,16 +279,8 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
             if (await utils.isOnline()) {
               await Utils().apiCalls(context);
               preferencesService.taxTypeList.isNotEmpty
-                  ? Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => TaxCollectionView(
-                        flag: "2",
-                      ),
-                    ))
-                  : utils.showAlert(
-                      context,
-                      ContentType.fail,
-                      "fail".tr().toString(),
-                    );
+                  ? Navigator.of(context).push(MaterialPageRoute(builder: (context) => TaxCollectionView(flag: "2")))
+                  : utils.showAlert(context, ContentType.fail, "fail".tr().toString());
             } else {
               utils.showAlert(
                 context,
