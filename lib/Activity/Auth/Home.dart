@@ -106,25 +106,27 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
 // ********** Language Selection Function ***********\\
   void handleClick(String value) {
-    switch (value) {
-      case 'தமிழ்':
-        setState(() {
-          langText = value;
-          preferencesService.selectedLanguage = "ta";
-          preferencesService.setUserInfo("lang", "ta");
-          context.setLocale(Locale('ta', 'IN'));
-        });
-        break;
-      case 'English':
-        setState(() {
-          langText = value;
-          preferencesService.selectedLanguage = "en";
-          preferencesService.setUserInfo("lang", "en");
-          context.setLocale(Locale('en', 'US'));
-        });
-        break;
+    if (value != langText) {
+      switch (value) {
+        case 'தமிழ்':
+          setState(() {
+            langText = value;
+            preferencesService.selectedLanguage = "ta";
+            preferencesService.setUserInfo("lang", "ta");
+            context.setLocale(Locale('ta', 'IN'));
+          });
+          break;
+        case 'English':
+          setState(() {
+            langText = value;
+            preferencesService.selectedLanguage = "en";
+            preferencesService.setUserInfo("lang", "en");
+            context.setLocale(Locale('en', 'US'));
+          });
+          break;
+      }
+      apicalls();
     }
-    apicalls();
   }
 
 // ********** App Exit and Logout Widget ***********\\

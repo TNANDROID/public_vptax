@@ -604,7 +604,6 @@ class Utils {
 
 // *************** Village Name Get Widget ***********
   String getvillageAndBlockName(dynamic getData) {
-    print("Tamil------$getData");
     String street = "";
     street = ((getData[key_localbody_name] ?? '') + ", " + (getData[key_bname] ?? ''));
     return street;

@@ -47,17 +47,9 @@ class _ViewReceiptState extends State<ViewReceipt> {
 //  OtpFieldController OTPcontroller = OtpFieldController();
   TextEditingController assessmentController = TextEditingController();
   TextEditingController receiptController = TextEditingController();
-
-  String mobile_number = "";
   @override
   void initState() {
     super.initState();
-    initialize();
-  }
-
-  initialize() async {
-    mobile_number = await preferencesService.getUserInfo(key_mobile_number);
-    setState(() {});
   }
 
   //Dropdown Input Field Widget
