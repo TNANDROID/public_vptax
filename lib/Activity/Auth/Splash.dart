@@ -24,7 +24,7 @@ class Splash extends StatefulWidget {
 class _SplashState extends State<Splash> with TickerProviderStateMixin {
   PreferenceService preferencesService = locator<PreferenceService>();
   Utils utils = Utils();
-  String selectedLang = "en";
+
   @override
   void initState() {
     super.initState();
@@ -33,7 +33,10 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
 
   Future<void> initialize() async {
     String getPrefesecrectKey = await preferencesService.getUserInfo(key_secretKey);
-    await preferencesService.setUserInfo("lang", "ta");
+
+    if (await preferencesService.getUserInfo("lang") != '') {
+      preferencesService.selectedLanguage = await preferencesService.getUserInfo("lang");
+    }
 
     if (getPrefesecrectKey.isNotEmpty) {
       await preferencesService.setUserInfo(key_isLogin, "yes");

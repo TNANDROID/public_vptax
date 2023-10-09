@@ -33,7 +33,6 @@ class _CheckTransactionState extends State<CheckTransaction> {
   Utils utils = Utils();
   List defaultWorklist = [];
   List filterList = [];
-  String selectLang = '';
   String selectedFilter = "All";
   List typeList = [
     {"key": 'All', "title": "all".tr().toString()},
@@ -50,7 +49,6 @@ class _CheckTransactionState extends State<CheckTransaction> {
   }
 
   Future<void> initialize() async {
-    selectLang = await preferencesService.getUserInfo('lang');
     dynamic requestData = {key_service_id: service_key_TransactionHistory, key_mobile_no: await preferencesService.getUserInfo(key_mobile_number), key_email_id: ''};
     Utils().showProgress(context, 1);
     var response = await model.overAllMainService(context, requestData);
@@ -238,7 +236,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
   //                   headerText,
   //                   overflow: TextOverflow.ellipsis,
   //                   maxLines: 1,
-  //                   style: TextStyle(color: c.text_color, fontSize: selectLang == 'ta' ? 10 : 13),
+  //                   style: TextStyle(color: c.text_color, fontSize: preferencesService.selectedLanguage == 'ta' ? 10 : 13),
   //                 ),
   //               ),
   //             ],
@@ -358,7 +356,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
                                 )
                               : ElevatedButton(
                                   onPressed: () {
-                                    checkReceiptStatus(status, transID, selectLang, taxTypeID, context);
+                                    checkReceiptStatus(status, transID, preferencesService.selectedLanguage, taxTypeID, context);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     fixedSize: Size(160, 30),
@@ -371,14 +369,14 @@ class _CheckTransactionState extends State<CheckTransaction> {
                                           ? Icon(
                                               Icons.download_rounded,
                                               color: c.white,
-                                              size: selectLang == 'ta' ? 16 : 18,
+                                              size: preferencesService.selectedLanguage == 'ta' ? 16 : 18,
                                             )
                                           : SizedBox(),
                                       Text(
                                         status == 'SUCCESS' ? 'download_receipt'.tr() : 'check_status'.tr(),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(fontSize: selectLang == 'ta' ? 10 : 12, color: c.white, fontWeight: FontWeight.w600),
+                                        style: TextStyle(fontSize: preferencesService.selectedLanguage == 'ta' ? 10 : 12, color: c.white, fontWeight: FontWeight.w600),
                                       ),
                                     ],
                                   ),

@@ -163,7 +163,7 @@ class StartUpViewModel extends BaseViewModel {
       dynamic requestJson = {
         key_service_id: service_key_getAllTaxAssessmentList,
         key_mobile_number: await preferencesService.getUserInfo(key_mobile_number),
-        key_language_name: await preferencesService.getUserInfo("lang")
+        key_language_name: preferencesService.selectedLanguage
       };
       var responce = await overAllMainService(context, requestJson);
       if (responce[key_data] != null && responce[key_data].length > 0) {
@@ -197,7 +197,7 @@ class StartUpViewModel extends BaseViewModel {
             key_dcode: item[key_dcode],
             key_bcode: item[key_bcode],
             key_pvcode: item[key_lbcode],
-            key_language_name: await preferencesService.getUserInfo("lang"),
+            key_language_name: preferencesService.selectedLanguage,
           };
           if (item[key_taxtypeid] == 4) {
             getDemandRequest[key_fin_year] = item[key_financialyear];

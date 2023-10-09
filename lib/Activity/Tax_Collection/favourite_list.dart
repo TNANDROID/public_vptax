@@ -28,7 +28,6 @@ class FavouriteTaxDetails extends StatefulWidget {
 class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerProviderStateMixin {
   PreferenceService preferencesService = locator<PreferenceService>();
   dynamic requestJson = {key_service_id: service_key_getAllTaxAssessmentList};
-  String selectedLang = "";
   List mainList = [];
   List taxTypeList = [];
   var selectedTaxTypeData;
@@ -46,9 +45,8 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
   }
 
   Future<void> initialize() async {
-    selectedLang = await preferencesService.getUserInfo("lang");
     requestJson[key_mobile_number] = await preferencesService.getUserInfo(key_mobile_number);
-    requestJson[key_language_name] = selectedLang;
+    requestJson[key_language_name] = preferencesService.selectedLanguage;
     setState(() {});
   }
 
@@ -81,7 +79,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                                   floatingHeader: true,
                                   shrinkWrap: true,
                                   groupBy: (element) => element[key_taxtypeid].toString(),
-                                  groupSeparatorBuilder: (element) => UIHelper.stickyHeader(element, selectedLang, mainList, marginSpace),
+                                  groupSeparatorBuilder: (element) => UIHelper.stickyHeader(element, preferencesService.selectedLanguage, mainList, marginSpace),
                                   indexedItemBuilder: (context, dynamic element, mainIndex) =>
                                       Container(margin: EdgeInsets.fromLTRB(15, 5, 15, 5), child: headerCardUIWidget(mcontext, mainIndex, mainList[mainIndex], model)),
                                   itemComparator: (item1, item2) => item1[key_assessment_no].compareTo(item2[key_assessment_no]), // optional
@@ -354,7 +352,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    UIHelper.titleTextStyle(Utils().getDoorAndStreetName(getData, selectedLang).trim(), c.grey_9, 14, false, false),
+                                    UIHelper.titleTextStyle(Utils().getDoorAndStreetName(getData, preferencesService.selectedLanguage).trim(), c.grey_9, 14, false, false),
                                     UIHelper.titleTextStyle(Utils().getvillageAndBlockName(getData).trim(), c.grey_9, 14, false, false),
                                     UIHelper.titleTextStyle(getData[key_district_name].trim() ?? '', c.grey_9, 14, false, false)
                                   ],

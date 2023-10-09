@@ -32,7 +32,6 @@ class AtomPaynetsView extends StatefulWidget {
 class AtomPaynetsViewState extends State<AtomPaynetsView> {
   ApiServices apiServices = locator<ApiServices>();
   StartUpViewModel model = StartUpViewModel();
-  String selectedLang = "";
 
   final mode;
   final payDetails;
@@ -50,11 +49,6 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
     super.initState();
     // Enable hybrid composition.
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
-    initialize();
-  }
-
-  Future<void> initialize() async {
-    selectedLang = await preferencesService.getUserInfo("lang");
   }
 
   AtomPaynetsViewState(this.mode, this.payDetails, this.mcontext);

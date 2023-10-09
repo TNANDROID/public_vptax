@@ -37,7 +37,6 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
   PreferenceService preferencesService = locator<PreferenceService>();
   dynamic requestJson = {key_service_id: service_key_getAllTaxAssessmentList};
   List isSelectAll = [];
-  String selectedLang = "";
   List isShowFlag = [];
   List mainList = [];
   List sourceList = [];
@@ -79,10 +78,9 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
   }
 
   Future<void> initialize() async {
-    selectedLang = await preferencesService.getUserInfo("lang");
     requestJson[key_mobile_number] = await preferencesService.getUserInfo(key_mobile_number);
     print(">>>${requestJson[key_mobile_number]}");
-    requestJson[key_language_name] = selectedLang;
+    requestJson[key_language_name] = preferencesService.selectedLanguage;
     setState(() {});
   }
 
@@ -139,7 +137,9 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                             SizedBox(width: 3),
                                             Flexible(
                                                 child: UIHelper.titleTextStyle(
-                                              "new".tr().toString() + (selectedLang == "en" ? selectedTaxTypeData["taxtypedesc_en"] : selectedTaxTypeData["taxtypedesc_ta"]) + "new2".tr().toString(),
+                                              "new".tr().toString() +
+                                                  (preferencesService.selectedLanguage == "en" ? selectedTaxTypeData["taxtypedesc_en"] : selectedTaxTypeData["taxtypedesc_ta"]) +
+                                                  "new2".tr().toString(),
                                               c.white,
                                               10,
                                               true,
@@ -207,7 +207,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                                     floatingHeader: true,
                                     shrinkWrap: true,
                                     groupBy: (element) => element[key_taxtypeid].toString(),
-                                    groupSeparatorBuilder: (element) => UIHelper.stickyHeader(element, selectedLang, mainList, marginSpace),
+                                    groupSeparatorBuilder: (element) => UIHelper.stickyHeader(element, preferencesService.selectedLanguage, mainList, marginSpace),
                                     indexedItemBuilder: (context, dynamic element, mainIndex) => Container(
                                         margin: EdgeInsets.only(top: 5),
                                         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
@@ -333,7 +333,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          UIHelper.titleTextStyle(Utils().getDoorAndStreetName(getData, selectedLang).trim(), c.grey_9, 12, false, false),
+                          UIHelper.titleTextStyle(Utils().getDoorAndStreetName(getData, preferencesService.selectedLanguage).trim(), c.grey_9, 12, false, false),
                           UIHelper.titleTextStyle(Utils().getvillageAndBlockName(getData).trim(), c.grey_9, 12, false, false),
                           UIHelper.titleTextStyle(getData[key_district_name].trim() ?? '', c.grey_9, 12, false, false)
                         ],
@@ -348,7 +348,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                         width: MediaQuery.of(context).size.width / 2,
                         alignment: Alignment.centerLeft,
                         padding: EdgeInsets.only(left: 0, right: 10),
-                        child: UIHelper.titleTextStyle(("${'pending_payment'.tr()} : "), c.grey_10, selectedLang == "ta" ? 13 : 15, true, false)),
+                        child: UIHelper.titleTextStyle(("${'pending_payment'.tr()} : "), c.grey_10, preferencesService.selectedLanguage == "ta" ? 13 : 15, true, false)),
                     Container(
                         decoration: UIHelper.GradientContainer(10, 10, 10, 10, [c.need_improvement2, c.need_improvement2]),
                         padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
@@ -843,7 +843,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
           .map((item) => DropdownMenuItem(
                 value: item,
                 child: Text(
-                  selectedLang == "en" ? item[key_taxtypedesc_en].toString() : item[key_taxtypedesc_ta].toString(),
+                  preferencesService.selectedLanguage == "en" ? item[key_taxtypedesc_en].toString() : item[key_taxtypedesc_ta].toString(),
                   style: TextStyle(fontSize: 11.0, fontWeight: FontWeight.w400, color: c.black),
                 ),
               ))

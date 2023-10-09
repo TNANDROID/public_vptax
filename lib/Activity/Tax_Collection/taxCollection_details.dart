@@ -35,7 +35,6 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
   late Animation<double> _animation;
   PreferenceService preferencesService = locator<PreferenceService>();
   List isSelectAll = [];
-  String selectedLang = "";
   List isShowFlag = [];
   List mainList = [];
   List taxTypeList = [];
@@ -72,7 +71,6 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
 
   Future<void> initialize() async {
     mainList = widget.responseData;
-    selectedLang = await preferencesService.getUserInfo("lang");
     setState(() {});
   }
 
@@ -112,7 +110,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                               floatingHeader: true,
                               shrinkWrap: true,
                               groupBy: (element) => element[key_taxtypeid].toString(),
-                              groupSeparatorBuilder: (element) => UIHelper.stickyHeader(element, selectedLang, mainList, marginSpace),
+                              groupSeparatorBuilder: (element) => UIHelper.stickyHeader(element, preferencesService.selectedLanguage, mainList, marginSpace),
                               indexedItemBuilder: (context, dynamic element, mainIndex) => Container(
                                   margin: EdgeInsets.only(top: 5),
                                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
@@ -240,7 +238,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          UIHelper.titleTextStyle(Utils().getDoorAndStreetName(getData, selectedLang), c.grey_8, 11, false, false),
+                          UIHelper.titleTextStyle(Utils().getDoorAndStreetName(getData, preferencesService.selectedLanguage), c.grey_8, 11, false, false),
                           UIHelper.titleTextStyle(Utils().getvillageAndBlockName(getData), c.grey_8, 11, false, false),
                           UIHelper.titleTextStyle(getData[s.key_district_name] ?? '', c.grey_8, 11, false, false)
                         ],
@@ -647,7 +645,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
         key_dcode: item[key_dcode],
         key_bcode: item[key_bcode],
         key_pvcode: item[key_lbcode],
-        key_language_name: selectedLang,
+        key_language_name: preferencesService.selectedLanguage,
       };
       if (item[key_taxtypeid] == 4) {
         getDemandRequest[key_fin_year] = item[key_financialyear];

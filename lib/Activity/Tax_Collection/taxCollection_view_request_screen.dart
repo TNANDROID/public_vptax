@@ -35,7 +35,6 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
   PreferenceService preferencesService = locator<PreferenceService>();
   TextEditingController etTextController = TextEditingController();
-  String selectedLang = "";
   String selectedDistrict = "";
   String selectedBlock = "";
   String selectedVillage = "";
@@ -53,7 +52,6 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
   }
 
   Future<void> initialize() async {
-    selectedLang = await preferencesService.getUserInfo("lang");
     taxlist.clear();
     if (widget.flag == "1") {
       selectedTaxTypeData = widget.selectedTaxTypeData;
@@ -121,7 +119,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                                             SizedBox(width: 3),
                                             Flexible(
                                                 child: UIHelper.titleTextStyle(
-                                                  selectedTaxTypeData.isNotEmpty ?("new".tr().toString() + (selectedLang == "en" ? selectedTaxTypeData["taxtypedesc_en"] : selectedTaxTypeData["taxtypedesc_ta"]) + "new2".tr().toString()):"new_tax".tr().toString(),
+                                                  selectedTaxTypeData.isNotEmpty ?("new".tr().toString() + (preferencesService.selectedLanguage == "en" ? selectedTaxTypeData["taxtypedesc_en"] : selectedTaxTypeData["taxtypedesc_ta"]) + "new2".tr().toString()):"new_tax".tr().toString(),
                                                   c.white,
                                                   10,
                                                   true,
@@ -200,7 +198,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
     if (index == 1) {
       dropList = preferencesService.districtList;
       dropList.sort((a, b) {
-        return a[selectedLang == 'en' ? key_dname : key_dname_ta].compareTo(b[selectedLang == 'en' ? key_dname : key_dname_ta]);
+        return a[preferencesService.selectedLanguage == 'en' ? key_dname : key_dname_ta].compareTo(b[preferencesService.selectedLanguage == 'en' ? key_dname : key_dname_ta]);
       });
       keyCode = key_dcode;
       titleText = key_dname;
@@ -209,7 +207,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
     } else if (index == 2) {
       dropList = model.selectedBlockList;
       dropList.sort((a, b) {
-        return a[selectedLang == 'en' ? key_bname : key_bname_ta].compareTo(b[selectedLang == 'en' ? key_bname : key_bname_ta]);
+        return a[preferencesService.selectedLanguage == 'en' ? key_bname : key_bname_ta].compareTo(b[preferencesService.selectedLanguage == 'en' ? key_bname : key_bname_ta]);
       });
       keyCode = key_bcode;
       titleText = key_bname;
@@ -218,7 +216,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
     } else if (index == 3) {
       dropList = model.selectedVillageList;
       dropList.sort((a, b) {
-        return a[selectedLang == 'en' ? key_pvname : key_pvname_ta].compareTo(b[selectedLang == 'en' ? key_pvname : key_pvname_ta]);
+        return a[preferencesService.selectedLanguage == 'en' ? key_pvname : key_pvname_ta].compareTo(b[preferencesService.selectedLanguage == 'en' ? key_pvname : key_pvname_ta]);
       });
       keyCode = key_pvcode;
       titleText = key_pvname;
@@ -258,7 +256,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
           .map((item) => DropdownMenuItem(
                 value: item[keyCode],
                 child: Text(
-                  selectedLang == "en" ? item[titleText].toString() : item[titleTextTamil].toString(),
+                  preferencesService.selectedLanguage == "en" ? item[titleText].toString() : item[titleTextTamil].toString(),
                   style: TextStyle(fontSize: 11.0, fontWeight: FontWeight.w400, color: c.grey_9),
                 ),
               ))
@@ -497,7 +495,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                     width: 15,
                   )),
               UIHelper.horizontalSpaceSmall,
-              Flexible(child: UIHelper.titleTextStyle(selectedLang == "en" ? data[key_taxtypedesc_en] : data[key_taxtypedesc_ta], c.grey_9, 10, true, true)),
+              Flexible(child: UIHelper.titleTextStyle(preferencesService.selectedLanguage == "en" ? data[key_taxtypedesc_en] : data[key_taxtypedesc_ta], c.grey_9, 10, true, true)),
             ],
           ),
         ));
@@ -535,7 +533,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
             key_service_id: service_key_DemandSelectionList,
             key_mode_type: selectedEntryType,
             key_taxtypeid: selectedTaxTypeData[key_taxtypeid].toString(),
-            key_language_name: selectedLang,
+            key_language_name: preferencesService.selectedLanguage,
             if (selectedEntryType == 1)
               key_mobile_number: etTextController.text
             else if (selectedEntryType == 2)

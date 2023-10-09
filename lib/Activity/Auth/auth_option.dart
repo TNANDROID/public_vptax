@@ -9,7 +9,6 @@ import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagepath;
-import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/ContentInfo.dart';
@@ -25,17 +24,8 @@ class AuthModeView extends StatefulWidget {
 class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMixin {
   late AnimationController _rightToLeftAnimController, _topAnimationController;
   late Animation<Offset> _rightToLeftAnimation, _topAnimation;
-
   Utils utils = Utils();
   PreferenceService preferencesService = locator<PreferenceService>();
-
-  String? selectedLanguage;
-  String selectedLang = "en";
-
-  List langItems = [
-    {key_langCode: '1', key_language: 'English'},
-    {key_langCode: '2', key_language: 'தமிழ்'},
-  ];
 
   @override
   void initState() {
@@ -43,7 +33,6 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
     _rightToLeftAnimController = AnimationController(vsync: this, duration: const Duration(seconds: 2));
     _rightToLeftAnimation = Tween<Offset>(begin: const Offset(1.0, 0.0), end: const Offset(0.0, 0.0)).animate(CurvedAnimation(parent: _rightToLeftAnimController, curve: Curves.easeInOut));
     _rightToLeftAnimController.forward();
-    initialize();
 
     // Top-to-bottom slide animation
     _topAnimationController = AnimationController(
@@ -61,31 +50,6 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
 
     _topAnimationController.forward();
   }
-
-  Future<void> initialize() async {
-    selectedLang == "en" ? preferencesService.setUserInfo("lang", "en") : preferencesService.setUserInfo("lang", "ta");
-    selectedLanguage = await selectedLang == "en" ? langItems[0][key_langCode] : langItems[1][key_langCode];
-    setState(() {});
-  }
-
-  void handleClick(String value) async {
-    switch (value) {
-      case '2':
-        setState(() {
-          preferencesService.setUserInfo("lang", "ta");
-          context.setLocale(const Locale('ta', 'IN'));
-        });
-        break;
-      case '1':
-        setState(() {
-          preferencesService.setUserInfo("lang", "en");
-          context.setLocale(const Locale('en', 'US'));
-        });
-        break;
-    }
-  }
-
-  // *************************** Future Functionality  *************************** //
 
   @override
   void dispose() {
@@ -106,55 +70,8 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              //  ****************** Choose Language Conatiner with fixed Height ****************** //
-
-              Visibility(
-                visible: false,
-                child: Container(
-                  width: Screen.width(context),
-                  height: Screen.height(context) / 6,
-                  padding: const EdgeInsets.all(15),
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton(
-                        elevation: 0,
-                        isExpanded: false,
-                        value: selectedLanguage,
-                        icon: const Padding(
-                            padding: EdgeInsets.all(15),
-                            child: Icon(
-                              Icons.arrow_downward_rounded,
-                              size: 15,
-                            )),
-                        style: TextStyle(
-                          color: c.black,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        items: langItems
-                            .map((item) => DropdownMenuItem<String>(
-                                  value: item[key_langCode],
-                                  child: Text(item[key_language]),
-                                ))
-                            .toList(),
-                        onChanged: (newValue) {
-                          setState(() {
-                            selectedLanguage = newValue.toString();
-                            // handleClick(selectedLanguage!);
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
               //  ****************** App Name  ****************** //
 
-              /* SlideTransition(
-                position: _topAnimation,
-                child: */
               Column(children: [
                 UIHelper.verticalSpaceSmall,
                 Image.asset(

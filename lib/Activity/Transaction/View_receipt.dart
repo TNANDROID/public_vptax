@@ -43,7 +43,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
   bool noDataFound = false;
 
   String finalOTP = '';
-  String selectedLang = "";
   final scrollController = ScrollController();
 //  OtpFieldController OTPcontroller = OtpFieldController();
   TextEditingController assessmentController = TextEditingController();
@@ -57,7 +56,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
   }
 
   initialize() async {
-    selectedLang = await preferencesService.getUserInfo("lang");
     mobile_number = await preferencesService.getUserInfo(key_mobile_number);
     setState(() {});
   }
@@ -78,7 +76,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
     } else if (index == 1) {
       dropList = preferencesService.districtList;
       dropList.sort((a, b) {
-        return a[selectedLang == 'en' ? key_dname : key_dname_ta].compareTo(b[selectedLang == 'en' ? key_dname : key_dname_ta]);
+        return a[preferencesService.selectedLanguage == 'en' ? key_dname : key_dname_ta].compareTo(b[preferencesService.selectedLanguage == 'en' ? key_dname : key_dname_ta]);
       });
       keyCode = key_dcode;
       titleText = key_dname;
@@ -87,7 +85,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
     } else if (index == 2) {
       dropList = model.selectedBlockList;
       dropList.sort((a, b) {
-        return a[selectedLang == 'en' ? key_bname : key_bname_ta].compareTo(b[selectedLang == 'en' ? key_bname : key_bname_ta]);
+        return a[preferencesService.selectedLanguage == 'en' ? key_bname : key_bname_ta].compareTo(b[preferencesService.selectedLanguage == 'en' ? key_bname : key_bname_ta]);
       });
       keyCode = key_bcode;
       titleText = key_bname;
@@ -96,7 +94,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
     } else if (index == 3) {
       dropList = model.selectedVillageList;
       dropList.sort((a, b) {
-        return a[selectedLang == 'en' ? key_pvname : key_pvname_ta].compareTo(b[selectedLang == 'en' ? key_pvname : key_pvname_ta]);
+        return a[preferencesService.selectedLanguage == 'en' ? key_pvname : key_pvname_ta].compareTo(b[preferencesService.selectedLanguage == 'en' ? key_pvname : key_pvname_ta]);
       });
       keyCode = key_pvcode;
       titleText = key_pvname;
@@ -132,7 +130,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 10, top: 5),
                 child: Text(
-                  selectedLang == "en" ? item[titleText].toString() : item[titleTextTamil].toString(),
+                  preferencesService.selectedLanguage == "en" ? item[titleText].toString() : item[titleTextTamil].toString(),
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_8),
                 ),
@@ -304,7 +302,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
             if (_formKey.currentState!.saveAndValidate() && !invalidReceiptNumber) {
               Map<String, dynamic> postParams = Map.from(_formKey.currentState!.value);
               postParams[key_service_id] = service_key_ReceiptBillDetails;
-              postParams[key_language_name] = selectedLang;
+              postParams[key_language_name] = preferencesService.selectedLanguage;
               postParams[key_assessment_no] = assessmentController.text;
               postParams[key_receipt_no] = receiptController.text;
               print("Ra--->>>>>$postParams");

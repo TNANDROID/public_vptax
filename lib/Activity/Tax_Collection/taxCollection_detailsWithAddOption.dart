@@ -25,7 +25,6 @@ class TaxCollectionDetailsWithAdd extends StatefulWidget {
 class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAdd> with TickerProviderStateMixin {
   PreferenceService preferencesService = locator<PreferenceService>();
   ScrollController controller_scroll = ScrollController();
-  String selectedLang = "";
   List mainList = [];
   List selectedList = [];
   Utils utils = Utils();
@@ -39,7 +38,6 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
 
   Future<void> initialize() async {
     selectedTaxTypeData = widget.selectedTaxTypeData;
-    selectedLang = await preferencesService.getUserInfo("lang");
     mainList = widget.responseData;
     setState(() {});
   }
@@ -49,7 +47,7 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: c.white,
-      appBar: UIHelper.getBar(selectedLang == "en" ? selectedTaxTypeData["taxtypedesc_en"] : selectedTaxTypeData["taxtypedesc_ta"]),
+      appBar: UIHelper.getBar(preferencesService.selectedLanguage == "en" ? selectedTaxTypeData["taxtypedesc_en"] : selectedTaxTypeData["taxtypedesc_ta"]),
       body: Container(
           color: c.need_improvement2,
           child: Column(
@@ -223,7 +221,7 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                UIHelper.titleTextStyle(Utils().getDoorAndStreetName(getData, selectedLang), c.grey_8, 11, false, false),
+                                UIHelper.titleTextStyle(Utils().getDoorAndStreetName(getData, preferencesService.selectedLanguage), c.grey_8, 11, false, false),
                                 UIHelper.titleTextStyle(Utils().getvillageAndBlockName(getData), c.grey_8, 11, false, false),
                                 UIHelper.titleTextStyle(getData[key_district_name] ?? '', c.grey_8, 11, false, false)
                               ],

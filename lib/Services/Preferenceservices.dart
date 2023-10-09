@@ -8,6 +8,7 @@ class PreferenceService {
   String userName = 'public';
   String userPassKey = '45af1c702e5c46acb5f4192cbeaba27c';
   String paymentType = "";
+  String selectedLanguage = "ta";
 
   List<dynamic> districtList = [];
   List<dynamic> blockList = [];

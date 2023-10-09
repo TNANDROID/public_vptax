@@ -35,7 +35,6 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
   TextEditingController emailTextController = TextEditingController();
 
   int selectedid = -1;
-  String selectedLang = "en";
   String isLogin = "";
   List list = [];
   List paymentType = [];
@@ -50,7 +49,6 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
   Future<void> initialize() async {
     list = preferencesService.GatewayList;
     paymentType = preferencesService.PaymentTypeList;
-    selectedLang = await preferencesService.getUserInfo("lang");
     isLogin = await preferencesService.getUserInfo(key_isLogin);
     if (isLogin == "yes") {
       nameTextController.text = await preferencesService.getUserInfo(key_name);
@@ -71,7 +69,7 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
             children: [
               Container(
                   margin: const EdgeInsets.only(top: 20, bottom: 10),
-                  child: Text(('payment_mode'.tr().toString() + (selectedLang == 'en' ? paymentType[0][key_paymenttype_en] : paymentType[0][key_paymenttype_ta])),
+                  child: Text(('payment_mode'.tr().toString() + (preferencesService.selectedLanguage == 'en' ? paymentType[0][key_paymenttype_en] : paymentType[0][key_paymenttype_ta])),
                       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold))),
               Align(
                 alignment: Alignment.centerLeft,
@@ -282,7 +280,7 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
       dynamic assessment_demand_list = {'Assessment_Details': Assessment_Details};
       dynamic request = {
         key_service_id: service_key_CollectionPaymentTokenList,
-        key_language_name: selectedLang,
+        key_language_name: preferencesService.selectedLanguage,
         key_taxtypeid: finalList[0][key_taxtypeid].toString(),
         key_dcode: finalList[0][key_dcode].toString(),
         key_bcode: finalList[0][key_bcode].toString(),

@@ -290,7 +290,6 @@ class Utils {
                             child: ElevatedButton(
                               onPressed: () async {
                                 if (btnmsg == 'payment') {
-                                  String selectedLang = await preferencesService.getUserInfo("lang");
                                   Navigator.of(context).pop();
                                   if (preferencesService.paymentType == "Favourite Pay") {
                                     showProgress(mcontext, 1);
@@ -303,7 +302,7 @@ class Utils {
                                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Splash()), (route) => false);
                                     }
                                   }
-                                  await StartUpViewModel().getReceipt(mcontext, receiptList, 'payment', selectedLang);
+                                  await StartUpViewModel().getReceipt(mcontext, receiptList, 'payment', preferencesService.selectedLanguage);
                                 } else if (btnmsg == 'receipt') {
                                   Navigator.of(context).pop();
                                   openFilePath(file_path!);
@@ -605,6 +604,7 @@ class Utils {
 
 // *************** Village Name Get Widget ***********
   String getvillageAndBlockName(dynamic getData) {
+    print("Tamil------$getData");
     String street = "";
     street = ((getData[key_localbody_name] ?? '') + ", " + (getData[key_bname] ?? ''));
     return street;

@@ -49,7 +49,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     {'service_id': 6, 'service_name': 'village_development_works', 'img_path': imagePath.village_development}, */
   ];
   String langText = 'தமிழ்';
-  String selectedLang = "";
   String userName = "";
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -87,22 +86,22 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   Future<void> initialize() async {
-    selectedLang = await preferencesService.getUserInfo("lang");
     userName = await preferencesService.getUserInfo(key_name);
     taxTypeList = preferencesService.taxTypeList;
 
-    if (selectedLang != "" && selectedLang == "en") {
-      context.setLocale(Locale('en', 'US'));
+    if (preferencesService.selectedLanguage == "en") {
       langText = 'English';
     } else {
-      preferencesService.setUserInfo("lang", "ta");
-      context.setLocale(Locale('ta', 'IN'));
       langText = 'தமிழ்';
     }
+    apicalls();
+    setState(() {});
+  }
+
+  apicalls() async {
     Utils().showProgress(context, 1);
     await model.getDemandList(context);
     Utils().hideProgress(context);
-    setState(() {});
   }
 
 // ********** Language Selection Function ***********\\
@@ -111,7 +110,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       case 'தமிழ்':
         setState(() {
           langText = value;
-          selectedLang = "ta";
+          preferencesService.selectedLanguage = "ta";
           preferencesService.setUserInfo("lang", "ta");
           context.setLocale(Locale('ta', 'IN'));
         });
@@ -119,12 +118,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       case 'English':
         setState(() {
           langText = value;
-          selectedLang = "en";
+          preferencesService.selectedLanguage = "en";
           preferencesService.setUserInfo("lang", "en");
           context.setLocale(Locale('en', 'US'));
         });
         break;
     }
+    apicalls();
   }
 
 // ********** App Exit and Logout Widget ***********\\
@@ -260,8 +260,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //  Text()
-                Row(
-                    children: [
+                Row(children: [
                   Container(
                     margin: EdgeInsets.all(20),
                     child: Image.asset(
@@ -286,16 +285,16 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         ),
                         UIHelper.verticalSpaceSmall,
                         Container(
-                          width: MediaQuery.of(context).size.width/2,
+                            width: MediaQuery.of(context).size.width / 2,
                             margin: EdgeInsets.only(right: 20),
                             child:
                                 // UIHelper.titleTextStyle("Hi " + "userName", c.text_color, 14, true, true)),
                                 Text(
-                              'hi'.tr().toString()+" " + userName+",",
+                              'hi'.tr().toString() + " " + userName + ",",
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                               textAlign: TextAlign.end,
-                              style: TextStyle(color: c.text_color, fontSize: selectedLang == "ta" ? 13 : 14,fontWeight: FontWeight.bold),
+                              style: TextStyle(color: c.text_color, fontSize: preferencesService.selectedLanguage == "ta" ? 13 : 14, fontWeight: FontWeight.bold),
                             )),
                       ],
                     ),
@@ -319,7 +318,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                     alignment: Alignment.centerLeft,
                                     child: Row(
                                       children: [
-                                        Expanded(flex: 2, child: UIHelper.titleTextStyle('tax_due'.tr().toString() + " : ", c.grey_10, selectedLang == "ta" ? 12 : 13, true, false)),
+                                        Expanded(
+                                            flex: 2, child: UIHelper.titleTextStyle('tax_due'.tr().toString() + " : ", c.grey_10, preferencesService.selectedLanguage == "ta" ? 12 : 13, true, false)),
                                         Expanded(flex: 1, child: UIHelper.titleTextStyle("\u{20B9} " + gettotal(data, 5), c.red_new, 17, true, false))
                                       ],
                                     )),
@@ -521,10 +521,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 child: Image.asset(taxTypeList[currentSelectedTax][key_img_path]),
               ),
               UIHelper.verticalSpaceSmall,
-              UIHelper.titleTextStyle(selectedLang == 'en' ? taxTypeList[currentSelectedTax][key_taxtypedesc_en] : taxTypeList[currentSelectedTax][key_taxtypedesc_ta], c.colorPrimaryDark,
-                  selectedLang == "ta" ? 16 : 18, true, true),
+              UIHelper.titleTextStyle(preferencesService.selectedLanguage == 'en' ? taxTypeList[currentSelectedTax][key_taxtypedesc_en] : taxTypeList[currentSelectedTax][key_taxtypedesc_ta],
+                  c.colorPrimaryDark, preferencesService.selectedLanguage == "ta" ? 16 : 18, true, true),
               UIHelper.verticalSpaceSmall,
-              UIHelper.titleTextStyle('pending_payment'.tr().toString(), c.text_color, selectedLang == "ta" ? 12 : 14, true, true),
+              UIHelper.titleTextStyle('pending_payment'.tr().toString(), c.text_color, preferencesService.selectedLanguage == "ta" ? 12 : 14, true, true),
               UIHelper.verticalSpaceSmall,
               Container(
                 width: Screen.width(context),

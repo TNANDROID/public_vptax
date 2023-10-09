@@ -29,7 +29,6 @@ class Villagedevelopment extends StatefulWidget {
 class _VillagedevelopmentState extends State<Villagedevelopment> {
   PreferenceService preferencesService = locator<PreferenceService>();
   bool isAddressShow = false;
-  String selectedLang = "";
   dynamic selectedDistrict = {};
   dynamic selectedBlock = {};
   dynamic selectedVillage = {};
@@ -58,18 +57,12 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
         setState(() {});
       }
     });
-    initialize();
-  }
-
-  Future<void> initialize() async {
-    selectedLang = await preferencesService.getUserInfo("lang");
-    setState(() {});
   }
 
 //Custom Card Design
   Widget customCardDesign() {
     String address = "";
-    if (selectedLang == "en") {
+    if (preferencesService.selectedLanguage == "en") {
       address = selectedDistrict[key_dname] + ", " + selectedBlock[key_bname] + ", " + selectedVillage[key_pvname] + ". ( " + selectedFinYear[key_fin_year] + " )";
     } else {
       address = selectedDistrict[key_dname_ta].toString().trimRight() +
@@ -135,7 +128,7 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
     if (index == 1) {
       dropList = preferencesService.districtList;
       dropList.sort((a, b) {
-        return a[selectedLang == 'en' ? key_dname : key_dname_ta].compareTo(b[selectedLang == 'en' ? key_dname : key_dname_ta]);
+        return a[preferencesService.selectedLanguage == 'en' ? key_dname : key_dname_ta].compareTo(b[preferencesService.selectedLanguage == 'en' ? key_dname : key_dname_ta]);
       });
       titleText = key_dname;
       titleTextTamil = key_dname_ta;
@@ -143,7 +136,7 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
     } else if (index == 2) {
       dropList = model.selectedBlockList;
       dropList.sort((a, b) {
-        return a[selectedLang == 'en' ? key_bname : key_bname_ta].compareTo(b[selectedLang == 'en' ? key_bname : key_bname_ta]);
+        return a[preferencesService.selectedLanguage == 'en' ? key_bname : key_bname_ta].compareTo(b[preferencesService.selectedLanguage == 'en' ? key_bname : key_bname_ta]);
       });
       titleText = key_bname;
       titleTextTamil = key_bname_ta;
@@ -151,7 +144,7 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
     } else if (index == 3) {
       dropList = model.selectedVillageList;
       dropList.sort((a, b) {
-        return a[selectedLang == 'en' ? key_pvname : key_pvname_ta].compareTo(b[selectedLang == 'en' ? key_pvname : key_pvname_ta]);
+        return a[preferencesService.selectedLanguage == 'en' ? key_pvname : key_pvname_ta].compareTo(b[preferencesService.selectedLanguage == 'en' ? key_pvname : key_pvname_ta]);
       });
       titleText = key_pvname;
       titleTextTamil = key_pvname_ta;
@@ -189,7 +182,7 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
           .map((item) => DropdownMenuItem(
                 value: item,
                 child: Text(
-                  selectedLang == "en" ? item[titleText].toString() : item[titleTextTamil].toString(),
+                  preferencesService.selectedLanguage == "en" ? item[titleText].toString() : item[titleTextTamil].toString(),
                   style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.text_color),
                   overflow: TextOverflow.ellipsis,
                 ),
