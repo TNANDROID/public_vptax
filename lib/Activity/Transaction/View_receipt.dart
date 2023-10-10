@@ -381,15 +381,21 @@ class _ViewReceiptState extends State<ViewReceipt> {
                             child: FlipAnimation(
                                 child: Stack(children: [
                               Container(
-                                height: 220,
+                                padding: EdgeInsets.all(5),
                                 decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.colorAccent, c.white, stop1: 0.25, stop2: 0.1),
                                 child: Center(
                                     child: Container(
                                         margin: const EdgeInsets.all(10.0),
                                         child: Column(
                                           children: [
+                                            UIHelper.titleTextStyle('User Name', c.colorPrimaryDark, 14, true, true),
+                                            Container(width: 150, height: 1, color: c.grey_6),
+                                            UIHelper.verticalSpaceSmall,
                                             UIHelper.titleTextStyle('receiptno'.tr().toString(), c.primary_text_color, 12, false, true),
                                             UIHelper.titleTextStyle(receiptList[index]['receipt_no'].toString(), c.text_color, 12, true, true),
+                                            UIHelper.verticalSpaceSmall,
+                                            UIHelper.titleTextStyle('assesmentNumber'.tr().toString(), c.primary_text_color, 12, false, true),
+                                            UIHelper.titleTextStyle("15589", c.text_color, 12, true, true),
                                             UIHelper.verticalSpaceMedium,
                                             getReceiptDownloadWidget(context, "${'download_tamil'.tr()}\n${'tamil_1'.tr()}", receiptList[index], "ta", model),
                                             UIHelper.verticalSpaceMedium,

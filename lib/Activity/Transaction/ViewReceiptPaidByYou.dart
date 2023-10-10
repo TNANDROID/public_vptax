@@ -273,7 +273,7 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
                             child: FlipAnimation(
                                 child: Stack(children: [
                               Container(
-                                height: 250,
+                                padding: EdgeInsets.all(5),
                                 decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.colorAccent, c.white, stop1: 0.25, stop2: 0.1),
                                 child: Center(
                                     child: Container(
@@ -282,9 +282,15 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
                                           children: [
                                             Align(
                                                 alignment: Alignment.topRight,
-                                                child: UIHelper.titleTextStyle(formatedDate(receiptList[index]['collectiondate'].toString()), c.text_color, 12, false, false)),
+                                                child: Column(mainAxisAlignment: MainAxisAlignment.end, crossAxisAlignment: CrossAxisAlignment.end, children: [
+                                                  UIHelper.titleTextStyle(receiptList[index]['owner_name'].toString(), c.text_color, 13, false, false),
+                                                  UIHelper.titleTextStyle(formatedDate(receiptList[index]['collectiondate'].toString()), c.text_color, 12, false, false)
+                                                ])),
                                             UIHelper.titleTextStyle('receiptno'.tr().toString(), c.primary_text_color, 12, false, true),
                                             UIHelper.titleTextStyle(receiptList[index]['receipt_no'].toString(), c.text_color, 12, true, true),
+                                            UIHelper.verticalSpaceSmall,
+                                            UIHelper.titleTextStyle('assesmentNumber'.tr().toString(), c.primary_text_color, 12, false, true),
+                                            UIHelper.titleTextStyle(receiptList[index]['assessment_no'].toString(), c.text_color, 12, true, true),
                                             UIHelper.verticalSpaceMedium,
                                             getReceiptDownloadWidget(context, 'download_tamil'.tr().toString() + "\n" + 'tamil_1'.tr().toString(), receiptList[index], "ta", model),
                                             UIHelper.verticalSpaceMedium,
@@ -329,34 +335,6 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
               },
               viewModelBuilder: () => StartUpViewModel()),
         ));
-  }
-
-  _DatePicker() {
-    return Container(
-      alignment: Alignment.center,
-      child: TextField(
-          style: TextStyle(fontSize: 14),
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            suffixIconConstraints: BoxConstraints(minHeight: 20, minWidth: 20),
-            contentPadding: EdgeInsets.only(left: 15, right: 5, top: 5, bottom: 5),
-            suffixIcon: Padding(
-              padding: EdgeInsets.all(5),
-              child: Image.asset(
-                imagePath.datepicker_icon,
-                height: 30,
-                width: 30,
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 0.1, color: c.grey_2),
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10), bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
-          ),
-          readOnly: true,
-          onTap: () async {
-            ShowCalenderDialog(context);
-          }),
-    );
   }
 
   ShowCalenderDialog(BuildContext context) async {

@@ -250,8 +250,6 @@ class Utils {
                                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Splash()), (route) => false);
                               }
                             }
-                          } else if (btnmsg == 'receipt') {
-                            openFilePath(file_path!);
                           } else if (btnmsg == 'canceled') {
                             if (preferencesService.paymentType == "Favourite Pay") {
                               showProgress(mcontext, 1);
@@ -264,6 +262,8 @@ class Utils {
                                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Splash()), (route) => false);
                               }
                             }
+                          } else {
+                            debugPrint("....");
                           }
                         },
                         child: Container(
@@ -305,7 +305,6 @@ class Utils {
                                   await StartUpViewModel().getReceipt(mcontext, receiptList, 'payment', preferencesService.selectedLanguage);
                                 } else if (btnmsg == 'receipt') {
                                   Navigator.of(context).pop();
-                                  openFilePath(file_path!);
                                 } else if (btnmsg == 'canceled') {
                                   Navigator.of(context).pop();
                                   if (preferencesService.paymentType == "Favourite Pay") {
@@ -371,10 +370,6 @@ class Utils {
             ));
       },
     );
-  }
-
-  void openFilePath(String path) async {
-    // final result = await OpenFile.open(path);
   }
 
   performAction(String type, BuildContext context) async {
@@ -614,16 +609,18 @@ class Utils {
     String street = "";
     switch (getData[key_taxtypeid].toString()) {
       case '1':
-        street = (getData['doorno'] ?? '') + ", " + (selectedLang == 'en' ? (getData[key_street_name_en] ?? '') : (getData[key_street_name_ta] ?? ''));
+        street = getData['doorno'] != null && getData['doorno'].toString().isNotEmpty
+            ? "${getData['doorno']}, "
+            : "" + (selectedLang == 'en' ? (getData[key_street_name_en] ?? '') : (getData[key_street_name_ta] ?? ''));
         break;
       case '2':
         street = (getData["street_name"] ?? '');
         break;
       case '4':
-        street = (getData['doorno'] ?? '') + ", " + (getData["street_name_t"] ?? '');
+        street = getData['doorno'] != null && getData['doorno'].toString().isNotEmpty ? "${getData['doorno']}, " : "" + (getData["street_name_t"] ?? '');
         break;
       case '5':
-        street = (getData['doorno'] ?? '') + ", " + (getData["street_name"] ?? '');
+        street = getData['doorno'] != null && getData['doorno'].toString().isNotEmpty ? "${getData['doorno']}, " : "" + (getData["street_name"] ?? '');
         break;
       case '6':
         street = selectedLang == 'en' ? (getData["street_name_en"] ?? '') : (getData["street_name_ta"] ?? '');
