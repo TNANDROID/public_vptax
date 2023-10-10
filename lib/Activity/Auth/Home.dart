@@ -12,6 +12,7 @@ import 'package:public_vptax/Activity/Auth/Splash.dart';
 import 'package:public_vptax/Activity/Tax_Collection/AllYourTaxDetails.dart';
 import 'package:public_vptax/Activity/Tax_Collection/taxCollection_view_request_screen.dart';
 import 'package:public_vptax/Activity/Transaction/CheckTransaction.dart';
+import 'package:public_vptax/Activity/Transaction/ViewReceiptPaidByYou.dart';
 import 'package:public_vptax/Activity/Transaction/View_receipt.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
@@ -409,7 +410,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                     } else if (selected_index == 3) {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => CheckTransaction()));
                                     } else if (selected_index == 4) {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => ViewReceipt()));
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => ViewReceiptPaidByYou()));
                                     } else if (selected_index == 5) {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => KYVDashboard()));
                                     } else if (selected_index == 6) {
