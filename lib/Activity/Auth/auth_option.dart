@@ -67,110 +67,112 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
           width: Screen.width(context),
           height: Screen.height(context),
           margin: const EdgeInsets.all(5),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              //  ****************** App Name  ****************** //
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                //  ****************** App Name  ****************** //
 
-              Column(children: [
-                UIHelper.verticalSpaceSmall,
-                Image.asset(
-                  imagepath.tamilnadu_logo,
-                  height: 80,
-                  width: 80,
-                ),
-                UIHelper.verticalSpaceSmall,
-                Text(
-                  'gov_tamilnadu'.tr().toString(),
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                    color: c.text_color,
-                    fontStyle: FontStyle.normal,
-                    decorationStyle: TextDecorationStyle.wavy,
+                Column(children: [
+                  UIHelper.verticalSpaceSmall,
+                  Image.asset(
+                    imagepath.tamilnadu_logo,
+                    height: 80,
+                    width: 80,
                   ),
-                ),
-              ]),
-              // ),
-              UIHelper.verticalSpaceSmall,
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Image.asset(
-                  imagepath.logo,
-                  fit: BoxFit.cover,
-                  height: 100,
-                  width: 100,
-                ),
-                Text(
-                  'appName'.tr().toString(),
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: c.text_color,
-                    fontStyle: FontStyle.normal,
-                    decorationStyle: TextDecorationStyle.wavy,
-                  ),
-                ),
-              ]),
-              UIHelper.verticalSpaceMedium,
-
-              //  ****************** Qucik Action Buttons  ****************** //
-
-              SlideTransition(
-                position: _rightToLeftAnimation,
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        actionButton(1, 'signIN'.tr().toString(), imagepath.login),
-                        UIHelper.horizontalSpaceMedium,
-                        actionButton(2, 'quickPay'.tr().toString(), imagepath.quick_pay1),
-                      ],
+                  UIHelper.verticalSpaceSmall,
+                  Text(
+                    'gov_tamilnadu'.tr().toString(),
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                      color: c.text_color,
+                      fontStyle: FontStyle.normal,
+                      decorationStyle: TextDecorationStyle.wavy,
                     ),
-                    UIHelper.verticalSpaceMedium,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'signupText'.tr().toString(),
-                          style: TextStyle(
-                            color: c.text_color,
-                            fontSize: 16,
-                          ),
-                        ),
-                        UIHelper.horizontalSpaceSmall,
-                        InkWell(
-                          onTap: () => {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpView(isSignup: true))),
-                          },
-                          child: Text(
-                            'signUP'.tr().toString(),
+                  ),
+                ]),
+                // ),
+                UIHelper.verticalSpaceSmall,
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Image.asset(
+                    imagepath.logo,
+                    fit: BoxFit.cover,
+                    height: 100,
+                    width: 100,
+                  ),
+                  Text(
+                    'appName'.tr().toString(),
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: c.text_color,
+                      fontStyle: FontStyle.normal,
+                      decorationStyle: TextDecorationStyle.wavy,
+                    ),
+                  ),
+                ]),
+                UIHelper.verticalSpaceMedium,
+
+                //  ****************** Qucik Action Buttons  ****************** //
+
+                SlideTransition(
+                  position: _rightToLeftAnimation,
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          actionButton(1, 'signIN'.tr().toString(), imagepath.login),
+                          UIHelper.horizontalSpaceMedium,
+                          actionButton(2, 'quickPay'.tr().toString(), imagepath.quick_pay1),
+                        ],
+                      ),
+                      UIHelper.verticalSpaceMedium,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'signupText'.tr().toString(),
                             style: TextStyle(
-                              color: c.sky_blue,
+                              color: c.text_color,
                               fontSize: 16,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              //  ****************** Image Container ****************** //
-
-              Container(
-                height: MediaQuery.sizeOf(context).height / 2.8,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Image.asset(
-                    imagepath.splash, // Replace with your image path
-                    fit: BoxFit.cover,
+                          UIHelper.horizontalSpaceSmall,
+                          InkWell(
+                            onTap: () => {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpView(isSignup: true))),
+                            },
+                            child: Text(
+                              'signUP'.tr().toString(),
+                              style: TextStyle(
+                                color: c.sky_blue,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-              )
-            ],
+
+                //  ****************** Image Container ****************** //
+
+                Container(
+                  height: MediaQuery.sizeOf(context).height / 2.8,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Image.asset(
+                      imagepath.splash, // Replace with your image path
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -218,10 +220,10 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
         label: Center(
           child: Text(
             btnText,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color: c.white,
               fontWeight: FontWeight.bold,
-              decorationStyle: TextDecorationStyle.wavy,
               fontSize: btnText.length > 10 ? 10 : 12,
             ),
           ),
