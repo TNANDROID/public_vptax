@@ -35,8 +35,8 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
   bool noDataFound = false;
   String selectedLang = "";
   final scrollController = ScrollController();
-  TextEditingController dateController = TextEditingController();
 
+  String dateText = "select_from_to_date".tr().toString();
   String from_Date = "";
   String to_Date = "";
   String mobile_number = "";
@@ -145,10 +145,25 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
                 headingWithDropdownWidget('taxType', addInputDropdownField('select_taxtype'.tr().toString(), "taxtypeid", model)),
                 UIHelper.verticalSpaceSmall,
                 if (selectedTaxType.isNotEmpty)
-                  Container(
-                      alignment: Alignment.center,
-                      decoration: UIHelper.roundedBorderWithColorWithShadow(15, c.need_improvement2, c.need_improvement2, borderColor: Colors.transparent, borderWidth: 5),
-                      child: _DatePicker()),
+                  GestureDetector(
+                      onTap: () {
+                        ShowCalenderDialog(context);
+                      },
+                      child: Container(
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                          decoration: UIHelper.roundedBorderWithColorWithShadow(15, c.need_improvement2, c.need_improvement2, borderColor: Colors.transparent, borderWidth: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(child: UIHelper.titleTextStyle(dateText, c.grey_8, 12, true, false)),
+                              Image.asset(
+                                imagePath.datepicker_icon,
+                                height: 30,
+                                width: 30,
+                              ),
+                            ],
+                          ))),
               ]))),
       Container(
         transform: Matrix4.translationValues(5.0, -150.0, 10.0),
@@ -321,7 +336,6 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
       alignment: Alignment.center,
       child: TextField(
           style: TextStyle(fontSize: 14),
-          controller: dateController,
           decoration: InputDecoration(
             border: InputBorder.none,
             suffixIconConstraints: BoxConstraints(minHeight: 20, minWidth: 20),
@@ -352,7 +366,8 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
           return CustomCalenderView(onCompleted: (value) {
             from_Date = DateFormat('dd-MM-yyyy').format(value['fromDate']!);
             to_Date = DateFormat('dd-MM-yyyy').format(value['toDate']!);
-            dateController.text = "$from_Date  To  $to_Date";
+            dateText = "$from_Date  To  $to_Date";
+            setState(() {});
           });
         });
   }
