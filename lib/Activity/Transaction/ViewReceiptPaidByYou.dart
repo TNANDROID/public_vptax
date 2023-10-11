@@ -246,16 +246,14 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
               children: [
                 Row(
                   children: [
-                    Expanded(
-                      child: Text(
-                        'payed_by'.tr().toString(),
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(fontWeight: FontWeight.w800, fontSize: 11, color: c.grey_9),
-                      ),
+                    Text(
+                      'payed_by'.tr().toString(),
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(fontWeight: FontWeight.w800, fontSize: preferencesService.selectedLanguage == "en" ?13:11, color: c.grey_9),
                     ),
                     // UIHelper.titleTextStyle('payed_by'.tr().toString(), c.grey_9, 13, false, true),
-                    UIHelper.titleTextStyle((" ($mobile_number) "), c.primary_text_color2, 14, false, false),
+                    Expanded(child: UIHelper.titleTextStyle((" ($mobile_number) "), c.primary_text_color2, 14, false, false)),
                   ],
                 ),
                 UIHelper.verticalSpaceMedium,
@@ -321,11 +319,11 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(flex: 1, child: UIHelper.titleTextStyle(key, c.grey_8, 12, false, false)),
-            Expanded(flex: 0, child: UIHelper.titleTextStyle(":", c.grey_8, 12, false, false)),
+            Expanded(flex: 2, child: UIHelper.titleTextStyle(key, c.grey_8, 11, false, false)),
+            Expanded(flex: 0, child: UIHelper.titleTextStyle(":", c.grey_8, 11, false, false)),
             UIHelper.horizontalSpaceSmall,
             Expanded(
-              flex: 1,
+              flex: 3,
               child: ExpandableText(value, trimLines: 2, txtcolor: "2"),
             ),
           ],
@@ -338,7 +336,7 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
   Widget customCardDesign(dynamic getData, StartUpViewModel model) {
     return Container(
         margin: EdgeInsets.only(top: 10),
-        height: 200,
+        height: 210,
         decoration: UIHelper.roundedBorderWithColorWithShadow(15, c.white, c.white, borderWidth: 0, borderColor: c.colorAccent),
         width: Screen.width(context),
         child: Column(children: [
@@ -354,7 +352,7 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
           ),
           Expanded(
               child: Container(
-                  margin: EdgeInsets.only(right: 10, left: 30),
+                  margin: EdgeInsets.only(right: 10, left: 20),
                   child: Column(
                     children: [
                       UIHelper.verticalSpaceSmall,
@@ -368,11 +366,18 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
                             height: 15,
                             width: 15,
                           ),
-                          UIHelper.horizontalSpaceSmall,
-                          UIHelper.titleTextStyle(getData['owner_name'].toString(), c.black, 16, true, false),
+                          UIHelper.horizontalSpaceTiny,
+                          Expanded(
+                            child: Text(
+                              getData['owner_name'].toString(),
+                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: c.text_color),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          // UIHelper.titleTextStyle(/*getData['owner_name'].toString()*/"fd gd fg fd dfgrtrtertretret etretert ggggggg gggg", c.text_color, 15, true, false),
                         ],
                       ),
-                      UIHelper.verticalSpaceSmall,
+                      UIHelper.verticalSpaceMedium,
                       keyValueRowWidget('receiptno'.tr().toString(), getData['receipt_no'].toString()),
                       keyValueRowWidget('assesmentNumber'.tr().toString(), getData['assessment_no'].toString()),
                       Row(
