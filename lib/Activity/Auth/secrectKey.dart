@@ -60,63 +60,67 @@ class _SecretKeyViewState extends State<SecretKeyView> with TickerProviderStateM
         body: Container(
           width: Screen.width(context),
           height: Screen.height(context),
-          margin: const EdgeInsets.all(5),
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-            UIHelper.verticalSpaceMedium,
-            UIHelper.verticalSpaceMedium,
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Image.asset(
-                imagepath.logo,
-                fit: BoxFit.cover,
-                height: 70,
-                width: 70,
-              ),
-              Text(
-                'appName'.tr().toString(),
-                style: TextStyle(
-                  fontSize: 25.0,
-                  fontWeight: FontWeight.bold,
-                  color: c.text_color,
-                  fontStyle: FontStyle.normal,
-                  decorationStyle: TextDecorationStyle.wavy,
-                ),
-              ),
-            ]),
-            UIHelper.verticalSpaceMedium,
-            UIHelper.titleTextStyle('enter_your_SecretPin'.tr().toString(), c.text_color, 14, true, true),
-            UIHelper.verticalSpaceMedium,
-            VerificationView(fixedlength: 4, pinString: secretPin, secureText: true),
-            if (!pinIsValid) UIHelper.verticalSpaceSmall,
-            if (!pinIsValid) UIHelper.titleTextStyle('invalid_Pin'.tr().toString(), c.red_new, 12, true, true),
-            const SizedBox(height: 40.0),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpView(isSignup: false)));
-              },
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Container(
-                  padding: EdgeInsets.only(
-                    bottom: 2, // Space between underline and text
-                  ), margin: EdgeInsets.only(
-                    right: 10, // Space between underline and text
+          // margin: const EdgeInsets.only(top: 15),
+          child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Expanded(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                UIHelper.verticalSpaceMedium,
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Image.asset(
+                    imagepath.logo,
+                    fit: BoxFit.cover,
+                    height: 70,
+                    width: 70,
                   ),
-                  decoration: BoxDecoration(
-                      border: Border(bottom: BorderSide(
-                        color: c.primary_text_color2,
-                        width: 1.0, // Underline thickness
-                      ))
-                  ),
-                  child: Text(
-                    'forgot_secret_Pin'.tr().toString(),
+                  Text(
+                    'appName'.tr().toString(),
                     style: TextStyle(
-                      color: c.primary_text_color2,
+                      fontSize: 25.0,
+                      fontWeight: FontWeight.bold,
+                      color: c.text_color,
+                      fontStyle: FontStyle.normal,
+                      decorationStyle: TextDecorationStyle.wavy,
                     ),
                   ),
-                ),
-              ),
-            ),
-            const Expanded(child: SizedBox()),
+                ]),
+                UIHelper.titleTextStyle('enter_your_SecretPin'.tr().toString(), c.text_color, 14, true, true),
+                UIHelper.verticalSpaceSmall,
+                VerificationView(fixedlength: 4, pinString: secretPin, secureText: true),
+                if (!pinIsValid) UIHelper.verticalSpaceSmall,
+                if (!pinIsValid) UIHelper.titleTextStyle('invalid_Pin'.tr().toString(), c.red_new, 12, true, true),
+                UIHelper.verticalSpaceMedium,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpView(isSignup: false)));
+                  },
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Container(
+                      padding: EdgeInsets.only(
+                        bottom: 2, // Space between underline and text
+                      ),
+                      margin: EdgeInsets.only(
+                        right: 10, // Space between underline and text
+                      ),
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                        color: c.primary_text_color2,
+                        width: 1.0, // Underline thickness
+                      ))),
+                      child: Text(
+                        'forgot_secret_Pin'.tr().toString(),
+                        style: TextStyle(
+                          color: c.primary_text_color2,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            )),
             CustomNumberBoard(
               initialValue: secretPin,
               length: 4,
@@ -133,7 +137,6 @@ class _SecretKeyViewState extends State<SecretKeyView> with TickerProviderStateM
                 }
               },
             ),
-            // UIHelper.verticalSpaceMedium,
           ]),
         ),
       ),

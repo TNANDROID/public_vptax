@@ -32,13 +32,13 @@ class _CustomNumberBoardState extends State<CustomNumberBoard> with TickerProvid
   Widget build(BuildContext context) {
     return Container(
         decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.grey_2, c.grey_2),
-        padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-        margin: const EdgeInsets.only(top: 15),
-        height: 330,
+        padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+        // margin: const EdgeInsets.only(top: 15),
+        height: 270,
         child: ResponsiveGridList(
           listViewBuilderOptions: ListViewBuilderOptions(physics: const NeverScrollableScrollPhysics()),
-          horizontalGridMargin: 0,
-          verticalGridMargin: 0,
+          // horizontalGridMargin: 5,
+          // verticalGridMargin: 5,
           minItemWidth: Screen.width(context) / 4,
           children: List.generate(numbers.length, (index) {
             String getData = numbers[index];
@@ -46,7 +46,7 @@ class _CustomNumberBoardState extends State<CustomNumberBoard> with TickerProvid
               children: [
                 getData == "E"
                     ? SizedBox(
-                        height: 50,
+                        height: 40,
                         width: Screen.width(context) / 3,
                       )
                     : ElevatedButton(
@@ -76,7 +76,7 @@ class _CustomNumberBoardState extends State<CustomNumberBoard> with TickerProvid
                           ),
                         ),
                         child: Container(
-                          height: 50,
+                          height: 40,
                           width: Screen.width(context) / 3,
                           padding: const EdgeInsets.all(5),
                           child: Center(
