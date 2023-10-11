@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:public_vptax/Layout/Read_more_or_less.dart';
 import 'package:public_vptax/Layout/customCalender.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
@@ -270,27 +271,33 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
                           duration: const Duration(milliseconds: 800),
                           child: SlideAnimation(
                             horizontalOffset: 200.0,
-                            child:
-                                //FlipAnimation(child: customCardDesign(receiptList[index])
-                                FlipAnimation(
-                                    child: Container(
-                              padding: EdgeInsets.all(5),
-                              decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.colorAccent, c.white, stop1: 0.25, stop2: 0.1),
-                              child: Container(
-                                  margin: EdgeInsets.all(10.0),
-                                  child: Column(
-                                    children: [
-                                      Align(
-                                          alignment: Alignment.topRight, child: UIHelper.titleTextStyle(formatedDate(receiptList[index]['collectiondate'].toString()), c.text_color, 12, false, false)),
-                                      UIHelper.titleTextStyle('receiptno'.tr().toString(), c.primary_text_color, 12, false, true),
-                                      UIHelper.titleTextStyle(receiptList[index]['receipt_no'].toString(), c.text_color, 12, true, true),
-                                      UIHelper.verticalSpaceMedium,
-                                      getReceiptDownloadWidget(context, 'download_tamil'.tr().toString() + "\n" + 'tamil_1'.tr().toString(), receiptList[index], "ta", model),
-                                      UIHelper.verticalSpaceMedium,
-                                      getReceiptDownloadWidget(context, 'download_english'.tr().toString() + "\n" + 'english_1'.tr().toString(), receiptList[index], "en", model),
-                                    ],
-                                  )),
-                            )),
+                            child: FlipAnimation(child: customCardDesign(receiptList[index], model)
+                                // Container(
+                                //   padding: EdgeInsets.all(5),
+                                //   decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.colorAccent, c.white, stop1: 0.25, stop2: 0.1),
+                                //   child: Container(
+                                //       margin: EdgeInsets.all(10.0),
+                                //       child: Column(
+                                //         children: [
+                                //           Align(
+                                //               alignment: Alignment.topRight,
+                                //               child: Column(mainAxisAlignment: MainAxisAlignment.end, crossAxisAlignment: CrossAxisAlignment.end, children: [
+                                //                 UIHelper.titleTextStyle(receiptList[index]['owner_name'].toString(), c.text_color, 13, false, false),
+                                //                 UIHelper.titleTextStyle(formatedDate(receiptList[index]['collectiondate'].toString()), c.text_color, 12, false, false)
+                                //               ])),
+                                //           UIHelper.titleTextStyle('receiptno'.tr().toString(), c.primary_text_color, 12, false, true),
+                                //           UIHelper.titleTextStyle(receiptList[index]['receipt_no'].toString(), c.text_color, 12, true, true),
+                                //           UIHelper.verticalSpaceSmall,
+                                //           UIHelper.titleTextStyle('assesmentNumber'.tr().toString(), c.primary_text_color, 12, false, true),
+                                //           UIHelper.titleTextStyle(receiptList[index]['assessment_no'].toString(), c.text_color, 12, true, true),
+                                //           UIHelper.verticalSpaceMedium,
+                                //           getReceiptDownloadWidget(context, 'download_tamil'.tr().toString() + "\n" + 'tamil_1'.tr().toString(), receiptList[index], "ta", model),
+                                //           UIHelper.verticalSpaceMedium,
+                                //           getReceiptDownloadWidget(context, 'download_english'.tr().toString() + "\n" + 'english_1'.tr().toString(), receiptList[index], "en", model),
+                                //         ],
+                                //       )),
+                                // ),
+                                ),
                           ),
                         ),
                         UIHelper.verticalSpaceSmall
@@ -307,7 +314,28 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
             : SizedBox();
   }
 
-  Widget customCardDesign(dynamic getData) {
+  Widget keyValueRowWidget(String key, String value) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(flex: 1, child: UIHelper.titleTextStyle(key, c.grey_8, 12, false, false)),
+            Expanded(flex: 0, child: UIHelper.titleTextStyle(":", c.grey_8, 12, false, false)),
+            UIHelper.horizontalSpaceSmall,
+            Expanded(
+              flex: 1,
+              child: ExpandableText(value, trimLines: 2, txtcolor: "2"),
+            ),
+          ],
+        ),
+        UIHelper.verticalSpaceSmall
+      ],
+    );
+  }
+
+  Widget customCardDesign(dynamic getData, StartUpViewModel model) {
     return Container(
         margin: EdgeInsets.only(top: 10),
         height: 200,
@@ -325,13 +353,38 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
             decoration: UIHelper.roundedBorderWithColor(0, 0, 10, 10, c.colorPrimaryDark, borderWidth: 0),
           ),
           Expanded(
-              child: Column(
-            children: [
-              UIHelper.verticalSpaceSmall,
-              Align(alignment: Alignment.topRight, child: UIHelper.titleTextStyle(formatedDate(getData['collectiondate'].toString()), c.text_color, 12, false, false)),
-              UIHelper.titleTextStyle(getData['owner_name'].toString(), c.black, 16, true, false),
-            ],
-          )),
+              child: Container(
+                  margin: EdgeInsets.only(right: 10, left: 30),
+                  child: Column(
+                    children: [
+                      UIHelper.verticalSpaceSmall,
+                      Align(alignment: Alignment.topRight, child: UIHelper.titleTextStyle(formatedDate(getData['collectiondate'].toString()), c.text_color, 12, false, false)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            imagePath.user,
+                            color: c.colorPrimaryDark,
+                            height: 15,
+                            width: 15,
+                          ),
+                          UIHelper.horizontalSpaceSmall,
+                          UIHelper.titleTextStyle(getData['owner_name'].toString(), c.black, 16, true, false),
+                        ],
+                      ),
+                      UIHelper.verticalSpaceSmall,
+                      keyValueRowWidget('receiptno'.tr().toString(), getData['receipt_no'].toString()),
+                      keyValueRowWidget('assesmentNumber'.tr().toString(), getData['assessment_no'].toString()),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          getReceiptDownloadWidget1(context, "தமிழ்", getData, "ta", model),
+                          UIHelper.horizontalSpaceMedium,
+                          getReceiptDownloadWidget1(context, "English", getData, "en", model)
+                        ],
+                      ),
+                    ],
+                  ))),
           Container(
             height: 25,
             width: Screen.width(context),
@@ -348,6 +401,35 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
             ),
           ),
         ]));
+  }
+
+  Widget getReceiptDownloadWidget1(BuildContext context, String title, dynamic sendData, String language, StartUpViewModel model) {
+    sendData[key_receipt_id] = sendData['receiptid'];
+    sendData[key_state_code] = sendData['statecode'];
+    return InkWell(
+      child: Stack(
+        children: [
+          Container(
+              width: 100,
+              height: 40,
+              padding: EdgeInsets.all(10),
+              decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.white, c.white, borderColor: c.grey_4, borderWidth: 0),
+              child: Center(child: UIHelper.titleTextStyle(title, c.text_color, 12, true, true))),
+          Container(
+            transform: Matrix4.translationValues(-12, 10, 0),
+            decoration: UIHelper.circleWithColorWithShadow(300, c.white, c.white),
+            child: Image.asset(
+              imagePath.download_img,
+              height: 20,
+              width: 20,
+            ),
+          )
+        ],
+      ),
+      onTap: () {
+        model.getReceipt(context, sendData, 'paymentReceipt', language);
+      },
+    );
   }
 
   /// Main Build Widget of this class

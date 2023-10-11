@@ -39,6 +39,7 @@ class UIHelper {
   static Widget titleTextStyle(String title, Color clr, double fntsize, bool isBold, bool isCenterAliignment, {bool isUnderline = false}) {
     return Text(
       title.tr().toString(),
+      overflow: TextOverflow.ellipsis,
       style: TextStyle(
         color: clr,
         fontSize: fntsize,
