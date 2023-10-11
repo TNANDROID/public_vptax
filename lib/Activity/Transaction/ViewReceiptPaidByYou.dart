@@ -34,7 +34,6 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
   String selectedTaxType = "";
   List<dynamic> receiptList = [];
   bool noDataFound = false;
-  String selectedLang = "";
   final scrollController = ScrollController();
 
   String dateText = "select_from_to_date".tr().toString();
@@ -49,7 +48,6 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
   }
 
   initialize() async {
-    selectedLang = await preferencesService.getUserInfo("lang");
     mobile_number = await preferencesService.getUserInfo(key_mobile_number);
   }
 
@@ -91,7 +89,7 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
               child: Padding(
                 padding: EdgeInsets.only(left: 10, top: 5),
                 child: Text(
-                  selectedLang == "en" ? item[titleText].toString() : item[titleTextTamil].toString(),
+                  preferencesService.selectedLanguage == "en" ? item[titleText].toString() : item[titleTextTamil].toString(),
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_8),
                 ),
@@ -157,7 +155,9 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Expanded(child: UIHelper.titleTextStyle(dateText, c.grey_8, 12, true, false)),
+                              Expanded(
+                                  child: UIHelper.titleTextStyle(
+                                      dateText, c.grey_8, preferencesService.selectedLanguage == "ta" && dateText == "select_from_to_date".tr().toString() ? 10 : 12, true, false)),
                               Image.asset(
                                 imagePath.datepicker_icon,
                                 height: 30,
@@ -175,7 +175,7 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
             if (_formKey.currentState!.saveAndValidate() && from_Date.isNotEmpty && to_Date.isNotEmpty) {
               Map<String, dynamic> postParams = Map.from(_formKey.currentState!.value);
               postParams['service_id'] = "ReceiptBillDetails";
-              postParams['language_name'] = selectedLang;
+              postParams['language_name'] = preferencesService.selectedLanguage;
               postParams['from_date'] = from_Date;
               postParams['to_date'] = to_Date;
               postParams[key_mobile_number] = mobile_number;
@@ -250,10 +250,10 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
                       'payed_by'.tr().toString(),
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.justify,
-                      style: TextStyle(fontWeight: FontWeight.w800, fontSize: preferencesService.selectedLanguage == "en" ?13:11, color: c.grey_9),
+                      style: TextStyle(fontWeight: FontWeight.w800, fontSize: preferencesService.selectedLanguage == "en" ? 13 : 11, color: c.grey_9),
                     ),
-                    // UIHelper.titleTextStyle('payed_by'.tr().toString(), c.grey_9, 13, false, true),
-                    Expanded(child: UIHelper.titleTextStyle((" ($mobile_number) "), c.primary_text_color2, 14, false, false)),
+                    UIHelper.horizontalSpaceSmall,
+                    Expanded(child: UIHelper.titleTextStyle((": ($mobile_number) "), c.primary_text_color2, 14, false, false)),
                   ],
                 ),
                 UIHelper.verticalSpaceMedium,

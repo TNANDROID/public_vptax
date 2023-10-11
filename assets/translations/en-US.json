@@ -212,7 +212,7 @@
   "location":"Location",
   "select_from_to_date" : "Select Form and To Date",
   "select_from_date" : "Please Select From Date",
-  "select_to_date" : "Please Select From Date",
+  "select_to_date" : "Please Select To Date",
   "from_date" : "From Date",
   "to_date" : "To Date",
   "ok" : "Ok",
