@@ -72,7 +72,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
         child: Column(
           children: [
             Container(
-                margin: EdgeInsets.all(15),
+                margin: EdgeInsets.fromLTRB(15, 15, 15, 0),
                 child: Row(children: [
                   Expanded(
                       child: Card(
@@ -110,46 +110,43 @@ class _CheckTransactionState extends State<CheckTransaction> {
                             ),
                             style: TextStyle(fontSize: 13),
                           ))),
-                  SizedBox(width: 20),
-                  PopupMenuButton<dynamic>(
-                    color: c.white,
-                    child: Container(margin: EdgeInsets.only(right: 10), child: Icon(Icons.menu_outlined, color: c.black)),
-                    onSelected: (value) {
-                      getFilterData(value.toString());
-                    },
-                    itemBuilder: (BuildContext context) {
-                      return typeList
-                          .map((item) => PopupMenuItem(
-                                value: item["key"],
-                                child: Text(
-                                  item["title"],
-                                  style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: c.text_color),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ))
-                          .toList();
-                    },
-                  ),
+                  // SizedBox(width: 20),
+                  // PopupMenuButton<dynamic>(
+                  //   color: c.white,
+                  //   child: Container(margin: EdgeInsets.only(right: 10), child: Icon(Icons.menu_outlined, color: c.black)),
+                  //   onSelected: (value) {
+                  //     getFilterData(value.toString());
+                  //   },
+                  //   itemBuilder: (BuildContext context) {
+                  //     return typeList
+                  //         .map((item) => PopupMenuItem(
+                  //               value: item["key"],
+                  //               child: Text(
+                  //                 item["title"],
+                  //                 style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: c.text_color),
+                  //                 overflow: TextOverflow.ellipsis,
+                  //               ),
+                  //             ))
+                  //         .toList();
+                  //   },
+                  // ),
                 ])),
-            // Positioned(
-            //   top: 0,
-            //   child: SizedBox(
-            //     width: Screen.width(context) * 0.95,
-            //     height: 75,
-            //     child: Card(
-            //       elevation: 5,
-            //       shadowColor: c.black,
-            //       color: c.white,
-            //       margin: EdgeInsets.all(15),
-            //       shape: RoundedRectangleBorder(
-            //         borderRadius: BorderRadius.circular(20),
-            //       ),
-            //       child: Row(
-            //         children: [TabBar('Success'), TabBar('Pending'), TabBar('Failed')],
-            //       ),
-            //     ),
-            //   ),
-            // ),
+            SizedBox(
+              width: Screen.width(context) * 0.95,
+              height: 75,
+              child: Card(
+                elevation: 5,
+                shadowColor: c.black,
+                color: c.white,
+                margin: EdgeInsets.all(15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  children: [TabBar('Success'), TabBar('Pending'), TabBar('Failed')],
+                ),
+              ),
+            ),
             Expanded(
                 child: SingleChildScrollView(
               child: ListView.builder(
@@ -170,82 +167,82 @@ class _CheckTransactionState extends State<CheckTransaction> {
     );
   }
 
-  // Expanded TabBar(String type) {
-  //   String headerText = '';
-  //   Color bgColor;
-  //   if (type == 'Success') {
-  //     headerText = "success".tr();
-  //     bgColor = c.light_green_new;
-  //   } else if (type == 'Pending') {
-  //     headerText = "pending".tr();
-  //     bgColor = c.yellow_new_light;
-  //   } else {
-  //     headerText = "failed".tr();
-  //     bgColor = c.red_new_light;
-  //   }
-  //   return Expanded(
-  //     flex: 1,
-  //     child: Container(
-  //       decoration: BoxDecoration(
-  //         color: selectedFilter == type ? bgColor : null,
-  //         borderRadius: BorderRadius.circular(20),
-  //       ),
-  //       child: Center(
-  //         child: TextButton(
-  //           onPressed: () {
-  //             selectedFilter = type;
-  //             getFilterData(type);
-  //           },
-  //           style: ButtonStyle(
-  //             shape: MaterialStateProperty.all<OutlinedBorder>(
-  //               RoundedRectangleBorder(
-  //                 borderRadius: BorderRadius.circular(15),
-  //               ),
-  //             ),
-  //           ),
-  //           child: Row(
-  //             mainAxisAlignment: MainAxisAlignment.center,
-  //             children: [
-  //               Container(
-  //                 decoration: type == 'Failed'
-  //                     ? BoxDecoration(
-  //                         shape: BoxShape.circle,
-  //                         border: Border.all(
-  //                           color: c.red_new,
-  //                           width: 1,
-  //                         ),
-  //                       )
-  //                     : null,
-  //                 child: Icon(
-  //                   type == 'Success'
-  //                       ? Icons.check_circle_outline_rounded
-  //                       : type == 'Failed'
-  //                           ? Icons.clear
-  //                           : Icons.error_outline_rounded,
-  //                   size: type == 'Failed' ? 10 : 15,
-  //                   color: type == 'Success'
-  //                       ? c.green_new
-  //                       : type == 'Failed'
-  //                           ? c.red_new
-  //                           : c.warningYellow,
-  //                 ),
-  //               ),
-  //               SizedBox(width: 3),
-  //               Flexible(
-  //                 child: Text(
-  //                   headerText,
-  //                   overflow: TextOverflow.ellipsis,
-  //                   maxLines: 1,
-  //                   style: TextStyle(color: c.text_color, fontSize: preferencesService.selectedLanguage == 'ta' ? 10 : 13),
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
+  Expanded TabBar(String type) {
+    String headerText = '';
+    Color bgColor;
+    if (type == 'Success') {
+      headerText = "success".tr();
+      bgColor = c.light_green_new;
+    } else if (type == 'Pending') {
+      headerText = "pending".tr();
+      bgColor = c.yellow_new_light;
+    } else {
+      headerText = "failed".tr();
+      bgColor = c.red_new_light;
+    }
+    return Expanded(
+      flex: 1,
+      child: Container(
+        decoration: BoxDecoration(
+          color: selectedFilter == type ? bgColor : null,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Center(
+          child: TextButton(
+            onPressed: () {
+              selectedFilter = type;
+              getFilterData(type);
+            },
+            style: ButtonStyle(
+              shape: MaterialStateProperty.all<OutlinedBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  decoration: type == 'Failed'
+                      ? BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: c.red_new,
+                            width: 1,
+                          ),
+                        )
+                      : null,
+                  child: Icon(
+                    type == 'Success'
+                        ? Icons.check_circle_outline_rounded
+                        : type == 'Failed'
+                            ? Icons.clear
+                            : Icons.error_outline_rounded,
+                    size: type == 'Failed' ? 10 : 15,
+                    color: type == 'Success'
+                        ? c.green_new
+                        : type == 'Failed'
+                            ? c.red_new
+                            : c.warningYellow,
+                  ),
+                ),
+                SizedBox(width: 3),
+                Flexible(
+                  child: Text(
+                    headerText,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: TextStyle(color: c.text_color, fontSize: preferencesService.selectedLanguage == 'ta' ? 10 : 13),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   Stack buildTransactionStatusCard(var item) {
     String headerText = '';
