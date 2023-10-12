@@ -104,13 +104,15 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
                 decorationStyle: TextDecorationStyle.wavy,
               ),
             ),
+            UIHelper.verticalSpaceSmall,
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Image.asset(
                 imagepath.logo,
                 fit: BoxFit.cover,
-                height: 100,
-                width: 100,
+                height: 55,
+                width: 50,
               ),
+              UIHelper.horizontalSpaceSmall,
               Text(
                 'appName'.tr().toString(),
                 style: TextStyle(

@@ -121,14 +121,11 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
 
                           //  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FavouriteTaxDetails()));
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            backgroundColor: c.subscription_type_red_color,
-                            content: Text(
-                              response[key_message].toString(),
-                              style: TextStyle(color: c.white),
-                            ),
-                          ));
+                          Utils().hideProgress(context);
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(backgroundColor: c.subscription_type_red_color, content: Text(response[key_message].toString(), style: TextStyle(color: c.white))));
                         }
+                        Navigator.pop(context);
                         print("response----:)$response");
                       },
                       child: Container(

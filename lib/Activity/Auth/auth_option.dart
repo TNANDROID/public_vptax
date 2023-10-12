@@ -83,7 +83,7 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
               ),
               //  UIHelper.verticalSpaceMedium,
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Image.asset(imagepath.logo, fit: BoxFit.cover, height: 100, width: 100),
+                Image.asset(imagepath.logo, fit: BoxFit.cover, height: 55, width: 50),
                 Text(
                   'appName'.tr().toString(),
                   textAlign: TextAlign.start,

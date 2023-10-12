@@ -68,12 +68,8 @@ class _SecretKeyViewState extends State<SecretKeyView> with TickerProviderStateM
               children: [
                 UIHelper.verticalSpaceMedium,
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Image.asset(
-                    imagepath.logo,
-                    fit: BoxFit.cover,
-                    height: 70,
-                    width: 70,
-                  ),
+                  Image.asset(imagepath.logo, fit: BoxFit.cover, height: 55, width: 50),
+                  UIHelper.horizontalSpaceSmall,
                   Text(
                     'appName'.tr().toString(),
                     style: TextStyle(
@@ -85,6 +81,7 @@ class _SecretKeyViewState extends State<SecretKeyView> with TickerProviderStateM
                     ),
                   ),
                 ]),
+                UIHelper.verticalSpaceSmall,
                 UIHelper.titleTextStyle('enter_your_SecretPin'.tr().toString(), c.text_color, 14, true, true),
                 UIHelper.verticalSpaceSmall,
                 VerificationView(fixedlength: 4, pinString: secretPin, secureText: true),

@@ -110,7 +110,7 @@ class Utils {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Center(child: HeartbeatProgressIndicator(duration: Duration(milliseconds: 250), child: Image.asset(imagePath.logo, height: 60))),
+                  Center(child: HeartbeatProgressIndicator(duration: Duration(milliseconds: 250), child: Image.asset(imagePath.logo, height: 40, width: 30))),
                   UIHelper.verticalSpaceSmall,
                   JumpingText(i == 1 ? 'loading'.tr().toString() : 'downloading'.tr().toString(), style: TextStyle(color: c.text_color, fontSize: 12, decoration: TextDecoration.none)),
                   UIHelper.verticalSpaceSmall,
