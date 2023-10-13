@@ -30,6 +30,7 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
   Utils utils = Utils();
   ApiServices apiServices = ApiServices();
   PreferenceService preferencesService = locator<PreferenceService>();
+  FS fs = locator<FS>();
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
   String selectedTaxType = "";
   List<dynamic> receiptList = [];
@@ -91,7 +92,7 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
                 child: Text(
                   preferencesService.selectedLanguage == "en" ? item[titleText].toString() : item[titleTextTamil].toString(),
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_8),
+                  style: TextStyle(fontSize: fs.h4, fontWeight: FontWeight.w400, color: c.grey_8),
                 ),
               )))
           .toList(),
@@ -112,10 +113,10 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
           flex: 1,
           child: Text(
             title.tr().toString(),
-            style: TextStyle(fontSize: 12, color: c.grey_10),
+            style: TextStyle(fontSize: fs.h4, color: c.grey_10),
           ),
         ),
-        Expanded(flex: 0, child: Text(":  ", style: TextStyle(fontSize: 12, color: c.grey_10))),
+        Expanded(flex: 0, child: Text(":  ", style: TextStyle(fontSize: fs.h4, color: c.grey_10))),
         Expanded(flex: 2, child: dropdownWidget),
       ],
     );
@@ -169,7 +170,7 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
       Container(
         transform: Matrix4.translationValues(5.0, -150.0, 10.0),
         child: TextButton(
-          child: Padding(padding: EdgeInsets.only(left: 5, right: 5), child: Text("submit".tr().toString(), style: TextStyle(color: c.white, fontSize: 13))),
+          child: Padding(padding: EdgeInsets.only(left: 5, right: 5), child: Text("submit".tr().toString(), style: TextStyle(color: c.white, fontSize: fs.h3))),
           style: TextButton.styleFrom(fixedSize: const Size(130, 20), shape: StadiumBorder(), backgroundColor: c.colorPrimary),
           onPressed: () async {
             if (_formKey.currentState!.saveAndValidate() && from_Date.isNotEmpty && to_Date.isNotEmpty) {
@@ -250,10 +251,10 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
                       'payed_by'.tr().toString(),
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.justify,
-                      style: TextStyle(fontWeight: FontWeight.w800, fontSize: preferencesService.selectedLanguage == "en" ? 13 : 11, color: c.grey_9),
+                      style: TextStyle(fontWeight: FontWeight.w800, fontSize: fs.h4, color: c.grey_9),
                     ),
                     UIHelper.horizontalSpaceSmall,
-                    Expanded(child: UIHelper.titleTextStyle((": ($mobile_number) "), c.primary_text_color2, 14, false, false)),
+                    Expanded(child: UIHelper.titleTextStyle((": ($mobile_number) "), c.primary_text_color2, fs.h3, false, false)),
                   ],
                 ),
                 UIHelper.verticalSpaceMedium,
@@ -370,7 +371,7 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
                           Expanded(
                             child: Text(
                               getData['owner_name'].toString(),
-                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: c.text_color),
+                              style: TextStyle(fontSize: fs.h2, fontWeight: FontWeight.bold, color: c.text_color),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),

@@ -34,6 +34,7 @@ class TaxCollectionView extends StatefulWidget {
 class _TaxCollectionViewState extends State<TaxCollectionView> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
   PreferenceService preferencesService = locator<PreferenceService>();
+  FS fs = locator<FS>();
   TextEditingController etTextController = TextEditingController();
   String selectedDistrict = "";
   String selectedBlock = "";
@@ -91,45 +92,9 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                         Expanded(
                             child: SingleChildScrollView(
                           child: Container(
-                            padding: EdgeInsets.all(10),
-                            /*decoration:
-                                UIHelper.roundedBorderWithColorWithShadow(
-                                    20, c.grey_3, c.grey_3),*/
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                /* Visibility(
-                                  visible: true,
-                                  child: Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Container(
-                                        width: MediaQuery.of(context).size.width / 2,
-                                        margin: EdgeInsets.only(top: 0, bottom: 15, right: 10),
-                                        decoration: UIHelper.GradientContainer(5, 5, 5, 5, [c.grey_8, c.grey_8]),
-                                        padding: EdgeInsets.fromLTRB(5, 8, 0, 8),
-                                        child: Row(
-                                          // Wrap with Row to add the plus icon
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.add, // Use the icon you prefer (e.g., Icons.add, Icons.add_circle, etc.)
-                                              color: c.white,
-                                              size: 15,
-                                            ),
-                                            SizedBox(width: 3),
-                                            Flexible(
-                                                child: UIHelper.titleTextStyle(
-                                                  selectedTaxTypeData.isNotEmpty ?("new".tr().toString() + (preferencesService.selectedLanguage == "en" ? selectedTaxTypeData["taxtypedesc_en"] : selectedTaxTypeData["taxtypedesc_ta"]) + "new2".tr().toString()):"new_tax".tr().toString(),
-                                                  c.white,
-                                                  10,
-                                                  true,
-                                                  true,
-                                                )) // Add a small space between the icon and the text
-                                            ,
-                                          ],
-                                        ),
-                                      )),
-                                ),*/
                                 taxWidgetGridView(),
                                 radioButtonListWidget(),
                                 formControls(context, model),
@@ -146,7 +111,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
 
   Widget addInputFormControl(String nameField, String hintText, String fieldType) {
     return FormBuilderTextField(
-      style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_9),
+      style: TextStyle(fontSize: fs.h4, fontWeight: FontWeight.w400, color: c.grey_9),
       name: nameField,
       controller: etTextController,
       autocorrect: false,
@@ -154,14 +119,14 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
       onChanged: (value) {},
       decoration: InputDecoration(
         labelText: hintText,
-        labelStyle: TextStyle(fontSize: 11.0, fontWeight: FontWeight.w600, color: c.grey_7),
+        labelStyle: TextStyle(fontSize: fs.h4, fontWeight: FontWeight.w600, color: c.grey_7),
         filled: true,
         fillColor: Colors.white,
         enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
         focusedBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
         focusedErrorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
         errorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
-        errorStyle: TextStyle(fontSize: 10),
+        errorStyle: TextStyle(fontSize: fs.h5),
         contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12), // Optional: Adjust padding
       ),
       validator: fieldType == key_mobile_number
@@ -232,17 +197,17 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
       debugPrint("End.....");
     }
     return FormBuilderDropdown(
-      style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w600, color: c.grey_10),
+      style: TextStyle(fontSize: fs.h4, fontWeight: FontWeight.w600, color: c.grey_10),
       decoration: InputDecoration(
         labelText: inputHint,
-        labelStyle: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_7),
+        labelStyle: TextStyle(fontSize: fs.h4, fontWeight: FontWeight.w400, color: c.grey_7),
         filled: true,
         fillColor: Colors.white,
         enabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
         focusedBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),
         focusedErrorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
         errorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
-        errorStyle: TextStyle(fontSize: 10),
+        errorStyle: TextStyle(fontSize: fs.h5),
         contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12), // Optional: Adjust padding
       ),
       name: fieldName,
@@ -257,7 +222,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                 value: item[keyCode],
                 child: Text(
                   preferencesService.selectedLanguage == "en" ? item[titleText].toString() : item[titleTextTamil].toString(),
-                  style: TextStyle(fontSize: 11.0, fontWeight: FontWeight.w400, color: c.grey_9),
+                  style: TextStyle(fontSize: fs.h4, fontWeight: FontWeight.w400, color: c.grey_9),
                 ),
               ))
           .toList(),
@@ -330,7 +295,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                           size: 17,
                         ),
                         UIHelper.horizontalSpaceSmall,
-                        Expanded(child: UIHelper.titleTextStyle(title, c.grey_9, 12, false, false)),
+                        Expanded(child: UIHelper.titleTextStyle(title, c.grey_9, fs.h4, false, false)),
                       ],
                     )))));
   }
@@ -342,7 +307,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          UIHelper.titleTextStyle('select_anyOne'.tr().toString(), c.grey_9, 12, true, true),
+          UIHelper.titleTextStyle('select_anyOne'.tr().toString(), c.grey_9, fs.h4, true, true),
           /* UIHelper.verticalSpaceMedium,
           radioButtonWidget(1, 'via_mobileNumber'.tr().toString()), */
           UIHelper.verticalSpaceSmall,
@@ -362,7 +327,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           UIHelper.verticalSpaceMedium,
-          UIHelper.titleTextStyle('enter_the_details'.tr().toString(), c.grey_9, 12, true, true),
+          UIHelper.titleTextStyle('enter_the_details'.tr().toString(), c.grey_9, fs.h4, true, true),
           UIHelper.verticalSpaceMedium,
           FormBuilder(
             key: _formKey,
@@ -443,7 +408,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      UIHelper.titleTextStyle('submit'.tr().toString(), c.white, 13, true, false),
+                                      UIHelper.titleTextStyle('submit'.tr().toString(), c.white, fs.h2, true, false),
                                     ],
                                   ),
                                 ),
@@ -495,7 +460,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                     width: 15,
                   )),
               UIHelper.horizontalSpaceSmall,
-              Flexible(child: UIHelper.titleTextStyle(preferencesService.selectedLanguage == "en" ? data[key_taxtypedesc_en] : data[key_taxtypedesc_ta], c.grey_9, 10, true, true)),
+              Flexible(child: UIHelper.titleTextStyle(preferencesService.selectedLanguage == "en" ? data[key_taxtypedesc_en] : data[key_taxtypedesc_ta], c.grey_9, fs.h5, true, true)),
             ],
           ),
         ));
@@ -504,7 +469,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
   Widget taxWidgetGridView() {
     return taxlist.isNotEmpty
         ? Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-            UIHelper.titleTextStyle('select_taxtype'.tr().toString(), c.grey_9, 12, true, true),
+            UIHelper.titleTextStyle('select_taxtype'.tr().toString(), c.grey_9, fs.h4, true, true),
             UIHelper.verticalSpaceMedium,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

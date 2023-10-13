@@ -27,6 +27,7 @@ class FavouriteTaxDetails extends StatefulWidget {
 
 class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerProviderStateMixin {
   PreferenceService preferencesService = locator<PreferenceService>();
+  FS fs = locator<FS>();
   dynamic requestJson = {key_service_id: service_key_getAllTaxAssessmentList};
   List mainList = [];
   List taxTypeList = [];
@@ -85,7 +86,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                                   itemComparator: (item1, item2) => item1[key_assessment_no].compareTo(item2[key_assessment_no]), // optional
                                 ))
                               : Expanded(
-                                  child: Center(child: Container(margin: EdgeInsets.only(top: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true))),
+                                  child: Center(child: Container(margin: EdgeInsets.only(top: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, fs.h4, true, true))),
                                 );
                         }),
                   ],
@@ -101,7 +102,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
             height: 50,
             decoration: UIHelper.circleWithColorWithShadow(30, c.white, c.white, borderColor: c.grey_7, borderWidth: 5),
             padding: EdgeInsets.all(3),
-            child: Container(decoration: UIHelper.circleWithColorWithShadow(30, c.colorPrimary, c.colorPrimaryDark), child: Center(child: UIHelper.titleTextStyle("+", c.white, 28, true, true))),
+            child: Container(decoration: UIHelper.circleWithColorWithShadow(30, c.colorPrimary, c.colorPrimaryDark), child: Center(child: UIHelper.titleTextStyle("+", c.white, fs.h1, true, true))),
           )),
     );
   }
@@ -145,7 +146,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                               width: 35,
                             )),
                         UIHelper.horizontalSpaceSmall,
-                        Flexible(child: UIHelper.titleTextStyle(getData[key_name] ?? '', c.grey_9, 12, true, false))
+                        Flexible(child: UIHelper.titleTextStyle(getData[key_name] ?? '', c.grey_9, fs.h4, true, false))
                       ],
                     ),
                     UIHelper.verticalSpaceTiny,
@@ -192,13 +193,13 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
     return await showDialog(
           context: mccontext,
           builder: (context) => AlertDialog(
-            content: UIHelper.titleTextStyle('assessment_remove'.tr().toString(), c.black, 13, false, false),
+            content: UIHelper.titleTextStyle('assessment_remove'.tr().toString(), c.black, fs.h4, false, false),
             actions: [
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(false),
                 child: Text(
                   'no'.tr().toString(),
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: fs.h4),
                 ),
               ),
               ElevatedButton(
@@ -212,7 +213,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                 },
                 child: Text(
                   'yes'.tr().toString(),
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: fs.h4),
                 ),
               ),
             ],
@@ -226,9 +227,9 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString()}"), clr, 12, false, true),
+        UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString()}"), clr, fs.h4, false, true),
         UIHelper.verticalSpaceTiny,
-        UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, 12, false, true),
+        UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h4, false, true),
         UIHelper.verticalSpaceTiny,
       ],
     );
@@ -329,7 +330,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                           Text(
                             "location".tr().toString(),
                             style: TextStyle(
-                              fontSize: 15,
+                              fontSize: fs.h3,
                               height: 1.5,
                               color: c.colorPrimaryDark,
                               decoration: TextDecoration.none,
@@ -352,9 +353,9 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    UIHelper.titleTextStyle(Utils().getDoorAndStreetName(getData, preferencesService.selectedLanguage).trim(), c.grey_9, 14, false, false),
-                                    UIHelper.titleTextStyle(Utils().getvillageAndBlockName(getData).trim(), c.grey_9, 14, false, false),
-                                    UIHelper.titleTextStyle(getData[key_district_name].trim() ?? '', c.grey_9, 14, false, false)
+                                    UIHelper.titleTextStyle(Utils().getDoorAndStreetName(getData, preferencesService.selectedLanguage).trim(), c.grey_9, fs.h4, false, false),
+                                    UIHelper.titleTextStyle(Utils().getvillageAndBlockName(getData).trim(), c.grey_9, fs.h4, false, false),
+                                    UIHelper.titleTextStyle(getData[key_district_name].trim() ?? '', c.grey_9, fs.h4, false, false)
                                   ],
                                 ),
                               ),
@@ -366,11 +367,11 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                               ? Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString()}"), clr, 13, false, true),
+                                    UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString()}"), clr, fs.h4, false, true),
                                     UIHelper.verticalSpaceTiny,
-                                    UIHelper.titleTextStyle(("${'building_licence_number'.tr()} : ${getData[key_building_licence_no].toString()}"), clr, 13, false, true),
+                                    UIHelper.titleTextStyle(("${'building_licence_number'.tr()} : ${getData[key_building_licence_no].toString()}"), clr, fs.h4, false, true),
                                     UIHelper.verticalSpaceTiny,
-                                    UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, 13, false, true),
+                                    UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h4, false, true),
                                     UIHelper.verticalSpaceTiny,
                                   ],
                                 )
@@ -378,9 +379,9 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                                   ? Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString()}"), clr, 13, false, true),
+                                        UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString()}"), clr, fs.h4, false, true),
                                         UIHelper.verticalSpaceTiny,
-                                        UIHelper.titleTextStyle(("${'water_connection_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, 13, false, true),
+                                        UIHelper.titleTextStyle(("${'water_connection_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h4, false, true),
                                         UIHelper.verticalSpaceTiny,
                                       ],
                                     )
@@ -388,11 +389,11 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                                       ? Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString()}"), clr, 13, false, true),
+                                            UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString()}"), clr, fs.h4, false, true),
                                             UIHelper.verticalSpaceTiny,
-                                            UIHelper.titleTextStyle(("${'financialYear'.tr()} : ${getData['financialyear'].toString()}"), clr, 12, false, true),
+                                            UIHelper.titleTextStyle(("${'financialYear'.tr()} : ${getData['financialyear'].toString()}"), clr, fs.h4, false, true),
                                             UIHelper.verticalSpaceTiny,
-                                            UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, 12, false, true),
+                                            UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h4, false, true),
                                             UIHelper.verticalSpaceTiny,
                                           ],
                                         )
@@ -400,24 +401,24 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                                           ? Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString()}"), clr, 13, false, true),
+                                                UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString()}"), clr, fs.h4, false, true),
                                                 UIHelper.verticalSpaceTiny,
-                                                UIHelper.titleTextStyle(("${'lease_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, 13, false, true),
+                                                UIHelper.titleTextStyle(("${'lease_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h4, false, true),
                                                 UIHelper.verticalSpaceTiny,
-                                                UIHelper.titleTextStyle(("${'lease_state'.tr()} : ${getData['lease_statename'].toString()}"), clr, 13, false, true),
+                                                UIHelper.titleTextStyle(("${'lease_state'.tr()} : ${getData['lease_statename'].toString()}"), clr, fs.h4, false, true),
                                                 UIHelper.verticalSpaceTiny,
-                                                UIHelper.titleTextStyle(("${'lease_district'.tr()} : ${getData['lease_districtname'].toString()}"), clr, 13, false, true),
+                                                UIHelper.titleTextStyle(("${'lease_district'.tr()} : ${getData['lease_districtname'].toString()}"), clr, fs.h4, false, true),
                                                 UIHelper.verticalSpaceTiny,
-                                                UIHelper.titleTextStyle(("${'lease_duration'.tr()} : ${getData['from_date'].toString()} - ${getData['to_date'].toString()}"), clr, 13, false, true),
+                                                UIHelper.titleTextStyle(("${'lease_duration'.tr()} : ${getData['from_date'].toString()} - ${getData['to_date'].toString()}"), clr, fs.h4, false, true),
                                                 UIHelper.verticalSpaceTiny,
                                               ],
                                             )
                                           : Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString()}"), clr, 13, false, true),
+                                                UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString()}"), clr, fs.h4, false, true),
                                                 UIHelper.verticalSpaceTiny,
-                                                UIHelper.titleTextStyle(("${'traders_code'.tr()} : ${getData[key_assessment_no].toString()}"), clr, 13, false, true),
+                                                UIHelper.titleTextStyle(("${'traders_code'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h4, false, true),
                                                 UIHelper.verticalSpaceTiny,
                                               ],
                                             )
@@ -467,7 +468,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                               ),
                               child: Text(
                                 "OK",
-                                style: TextStyle(color: c.colorPrimary, fontSize: 12, fontWeight: FontWeight.w500),
+                                style: TextStyle(color: c.colorPrimary, fontSize: fs.h4, fontWeight: FontWeight.w500),
                               ),
                             ),
                           ),
@@ -491,7 +492,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                               ),
                               child: Text(
                                 'Cancel',
-                                style: TextStyle(color: contentInfo.color, fontSize: 11),
+                                style: TextStyle(color: contentInfo.color, fontSize: fs.h4),
                               ),
                             ),
                           ),

@@ -33,6 +33,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   Utils utils = Utils();
   ApiServices apiServices = ApiServices();
   PreferenceService preferencesService = locator<PreferenceService>();
+  FS fs = locator<FS>();
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
   final GlobalKey<FormBuilderState> _SecretKey = GlobalKey<FormBuilderState>();
   StartUpViewModel model = StartUpViewModel();
@@ -182,7 +183,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                         ),
                       )),
                   UIHelper.verticalSpaceSmall,
-                  UIHelper.titleTextStyle(signUpFlag ? 'signUP' : 'signIN', c.white, 25, true, true)
+                  UIHelper.titleTextStyle(signUpFlag ? 'signUP' : 'signIN', c.white, fs.h1, true, true)
                 ],
               ),
             ),
@@ -198,7 +199,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    if (verifyOTPFlag && registerStep == 1) UIHelper.titleTextStyle(titleText, c.text_color, 15, true, false),
+                    if (verifyOTPFlag && registerStep == 1) UIHelper.titleTextStyle(titleText, c.text_color, fs.h3, true, false),
                     if (registerStep == 1) formControls(context),
                     if (registerStep == 2) otpControls(model),
                     if (registerStep == 3) appKeyControls(),
@@ -211,17 +212,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                       },
                       width: Screen.width(context) - 100,
                       height: 50,
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'submit'.tr().toString(),
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                      child: Container(alignment: Alignment.center, child: UIHelper.titleTextStyle('submit'.tr().toString(), c.white, fs.h2, true, true)),
                     ),
                   ],
                 ),
@@ -383,10 +374,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
       items: genderList
           .map((item) => DropdownMenuItem(
                 value: item['value'],
-                child: Text(
-                  item['title'],
-                  style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_9),
-                ),
+                child: UIHelper.titleTextStyle(item['title'], c.grey_9, fs.h4, true, true),
               ))
           .toList(),
       onChanged: (value) async {
@@ -429,18 +417,10 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
               }
             },
             child: Container(
-              width: Screen.width(context) - 100,
-              margin: EdgeInsets.only(right: 5),
-              alignment: Alignment.centerRight,
-              child: Text(
-                "( ${'resendOTP'.tr().toString()} )",
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                  color: c.primary_text_color2,
-                ),
-              ),
-            )),
+                width: Screen.width(context) - 100,
+                margin: EdgeInsets.only(right: 5),
+                alignment: Alignment.centerRight,
+                child: UIHelper.titleTextStyle('resendOTP'.tr().toString(), c.primary_text_color2, fs.h5, true, true))),
         UIHelper.verticalSpaceMedium
       ],
     );
@@ -536,7 +516,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   Widget appKeyControls() {
     return Column(
       children: [
-        UIHelper.titleTextStyle('enter_your_SecretPin'.tr().toString(), c.text_color, 12, true, false),
+        UIHelper.titleTextStyle('enter_your_SecretPin'.tr().toString(), c.text_color, fs.h4, true, false),
         UIHelper.verticalSpaceSmall,
         FormBuilder(
             key: _SecretKey,

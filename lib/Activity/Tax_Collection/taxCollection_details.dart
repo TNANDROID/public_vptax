@@ -34,6 +34,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
   late AnimationController _controller;
   late Animation<double> _animation;
   PreferenceService preferencesService = locator<PreferenceService>();
+  FS fs = locator<FS>();
   List isSelectAll = [];
   List isShowFlag = [];
   List mainList = [];
@@ -93,7 +94,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
             builder: (context, model, child) {
               double marginSpace = Screen.width(context) / 4;
               return model.isBusy
-                  ? Center(child: Container(margin: EdgeInsets.only(top: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true)))
+                  ? Center(child: Container(margin: EdgeInsets.only(top: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, fs.h4, true, true)))
                   : Container(
                       color: c.need_improvement2,
                       child: Column(
@@ -176,7 +177,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                           Visibility(
                               visible: mainList.isEmpty,
                               child: Expanded(
-                                child: Center(child: Container(margin: EdgeInsets.only(top: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, 12, true, true))),
+                                child: Center(child: Container(margin: EdgeInsets.only(top: 30), child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, fs.h4, true, true))),
                               )),
                         ],
                       ));
@@ -216,7 +217,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                       width: Screen.width(context) / 2,
                       child: Flex(
                         direction: Axis.horizontal,
-                        children: [Flexible(child: UIHelper.titleTextStyle(getData[s.key_name] ?? '', c.grey_9, 12, true, false))],
+                        children: [Flexible(child: UIHelper.titleTextStyle(getData[s.key_name] ?? '', c.grey_9, fs.h4, true, false))],
                       ),
                     ),
                     UIHelper.horizontalSpaceSmall,
@@ -238,9 +239,9 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          UIHelper.titleTextStyle(Utils().getDoorAndStreetName(getData, preferencesService.selectedLanguage), c.grey_8, 11, false, false),
-                          UIHelper.titleTextStyle(Utils().getvillageAndBlockName(getData), c.grey_8, 11, false, false),
-                          UIHelper.titleTextStyle(getData[s.key_district_name] ?? '', c.grey_8, 11, false, false)
+                          UIHelper.titleTextStyle(Utils().getDoorAndStreetName(getData, preferencesService.selectedLanguage), c.grey_8, fs.h4, false, false),
+                          UIHelper.titleTextStyle(Utils().getvillageAndBlockName(getData), c.grey_8, fs.h4, false, false),
+                          UIHelper.titleTextStyle(getData[s.key_district_name] ?? '', c.grey_8, fs.h4, false, false)
                         ],
                       ),
                     ),
@@ -249,7 +250,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                 ),
                 UIHelper.verticalSpaceTiny,
                 Container(alignment: Alignment.centerLeft, child: taxWiseReturnDataWidget(getData, c.grey_8)),
-                UIHelper.titleTextStyle(("${'pending_payment'.tr()} : \u{20B9} " + getData['totaldemand']), c.grey_10, 14, true, true),
+                UIHelper.titleTextStyle(("${'pending_payment'.tr()} : \u{20B9} " + getData['totaldemand']), c.grey_10, fs.h3, true, true),
               ],
             ),
 
@@ -329,7 +330,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                       margin: EdgeInsets.only(top: 0, right: 10, bottom: 10),
                       decoration: UIHelper.GradientContainer(5, 5, 5, 5, [c.account_status_green_color, c.account_status_green_color]),
                       padding: EdgeInsets.fromLTRB(10, 5, 10, 7),
-                      child: UIHelper.titleTextStyle("pay".tr().toString(), c.white, 11, true, true)),
+                      child: UIHelper.titleTextStyle("pay".tr().toString(), c.white, fs.h4, true, true)),
                 ),
               ),
             )
@@ -339,7 +340,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
         getData[key_DEMAND_DETAILS] == "Empty"
             ? Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: UIHelper.titleTextStyle('no_demand'.tr().toString(), c.warningYellow, 12, true, false),
+                child: UIHelper.titleTextStyle('no_demand'.tr().toString(), c.warningYellow, fs.h4, true, false),
               )
             : getData[key_DEMAND_DETAILS] == "Pending"
                 ? Padding(
@@ -350,7 +351,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                             builder: (context) => CheckTransaction(),
                           ));
                         },
-                        child: UIHelper.titleTextStyle('transaction_warning_hint'.tr().toString(), c.red, 12, true, true)),
+                        child: UIHelper.titleTextStyle('transaction_warning_hint'.tr().toString(), c.red, fs.h4, true, true)),
                   )
                 : AnimatedSize(
                     duration: const Duration(milliseconds: 500),
@@ -372,11 +373,11 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
+                UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, fs.h4, false, true),
                 UIHelper.verticalSpaceTiny,
-                UIHelper.titleTextStyle(("${'building_licence_number'.tr()} : ${getData[s.key_building_licence_no].toString() ?? ""}"), clr, 12, false, true),
+                UIHelper.titleTextStyle(("${'building_licence_number'.tr()} : ${getData[s.key_building_licence_no].toString() ?? ""}"), clr, fs.h4, false, true),
                 UIHelper.verticalSpaceTiny,
-                UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
+                UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, fs.h4, false, true),
                 UIHelper.verticalSpaceTiny,
               ],
             ),
@@ -385,9 +386,9 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
             ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
+                  UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, fs.h4, false, true),
                   UIHelper.verticalSpaceTiny,
-                  UIHelper.titleTextStyle(("${'water_connection_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
+                  UIHelper.titleTextStyle(("${'water_connection_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, fs.h4, false, true),
                   UIHelper.verticalSpaceTiny,
                 ],
               )
@@ -395,11 +396,11 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
+                      UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, fs.h4, false, true),
                       UIHelper.verticalSpaceTiny,
-                      UIHelper.titleTextStyle(("${'financialYear'.tr()} : ${getData['financialyear'].toString() ?? ""}"), clr, 12, false, true),
+                      UIHelper.titleTextStyle(("${'financialYear'.tr()} : ${getData['financialyear'].toString() ?? ""}"), clr, fs.h4, false, true),
                       UIHelper.verticalSpaceTiny,
-                      UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
+                      UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, fs.h4, false, true),
                       UIHelper.verticalSpaceTiny,
                     ],
                   )
@@ -407,24 +408,24 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
+                          UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, fs.h4, false, true),
                           UIHelper.verticalSpaceTiny,
-                          UIHelper.titleTextStyle(("${'lease_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
+                          UIHelper.titleTextStyle(("${'lease_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, fs.h4, false, true),
                           UIHelper.verticalSpaceTiny,
-                          UIHelper.titleTextStyle(("${'lease_state'.tr()} : ${getData['lease_statename'].toString() ?? ""}"), clr, 12, false, true),
+                          UIHelper.titleTextStyle(("${'lease_state'.tr()} : ${getData['lease_statename'].toString() ?? ""}"), clr, fs.h4, false, true),
                           UIHelper.verticalSpaceTiny,
-                          UIHelper.titleTextStyle(("${'lease_district'.tr()} : ${getData['lease_districtname'].toString() ?? ""}"), clr, 12, false, true),
+                          UIHelper.titleTextStyle(("${'lease_district'.tr()} : ${getData['lease_districtname'].toString() ?? ""}"), clr, fs.h4, false, true),
                           UIHelper.verticalSpaceTiny,
-                          UIHelper.titleTextStyle(("${'lease_duration'.tr()} : ${getData['from_date'].toString() ?? ""} - ${getData['to_date'].toString() ?? ""}"), clr, 12, false, true),
+                          UIHelper.titleTextStyle(("${'lease_duration'.tr()} : ${getData['from_date'].toString() ?? ""} - ${getData['to_date'].toString() ?? ""}"), clr, fs.h4, false, true),
                           UIHelper.verticalSpaceTiny,
                         ],
                       )
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, 12, false, true),
+                          UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, fs.h4, false, true),
                           UIHelper.verticalSpaceTiny,
-                          UIHelper.titleTextStyle(("${'traders_code'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, 12, false, true),
+                          UIHelper.titleTextStyle(("${'traders_code'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, fs.h4, false, true),
                           UIHelper.verticalSpaceTiny,
                         ],
                       );
@@ -518,7 +519,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                             Expanded(
                                               child: Text(
                                                 "$finYearStr ( $durationStr )",
-                                                style: TextStyle(fontSize: 10, fontWeight: FontWeight.normal, color: isStatus ? c.white : c.grey_8),
+                                                style: TextStyle(fontSize: fs.h5, fontWeight: FontWeight.normal, color: isStatus ? c.white : c.grey_8),
                                                 overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
@@ -527,7 +528,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                                                   padding: EdgeInsets.all(0),
                                                   child: Center(
                                                       child: UIHelper.titleTextStyle("\u{20B9} ${Utils().getDemadAmount(taxData[index], mainList[mainIndex][key_taxtypeid].toString())}",
-                                                          isStatus ? c.white : c.grey_10, 12, false, false))),
+                                                          isStatus ? c.white : c.grey_10, fs.h4, false, false))),
                                             ),
                                           ],
                                         ))
@@ -574,7 +575,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            UIHelper.titleTextStyle(title.toString().tr(), c.text_color, 12, false, true),
+            UIHelper.titleTextStyle(title.toString().tr(), c.text_color, fs.h4, false, true),
             UIHelper.horizontalSpaceSmall,
             Image.asset(
               isSelectAll.contains(mainIndex) ? imagePath.tick : imagePath.unchecked,
@@ -597,11 +598,11 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
               padding: const EdgeInsets.only(left: 10.0),
               child: Column(
                 children: [
-                  UIHelper.titleTextStyle('selected'.tr(), c.black, 12, false, false),
+                  UIHelper.titleTextStyle('selected'.tr(), c.black, fs.h4, false, false),
                   UIHelper.verticalSpaceTiny,
                   Transform.scale(
                     scale: _animation.value,
-                    child: UIHelper.titleTextStyle("\u{20B9} ${payableData[s.key_tax_total]}", c.grey_10, 13, true, false),
+                    child: UIHelper.titleTextStyle("\u{20B9} ${payableData[s.key_tax_total]}", c.grey_10, fs.h3, true, false),
                   )
                 ],
               ),
@@ -620,7 +621,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                     margin: EdgeInsets.only(top: 0, right: 10, bottom: 10),
                     decoration: UIHelper.GradientContainer(5, 5, 5, 5, [c.account_status_green_color, c.account_status_green_color]),
                     padding: EdgeInsets.fromLTRB(10, 5, 10, 7),
-                    child: UIHelper.titleTextStyle("pay".tr().toString(), c.white, 11, true, true)),
+                    child: UIHelper.titleTextStyle("pay".tr().toString(), c.white, fs.h4, true, true)),
               ),
             ),
           ],

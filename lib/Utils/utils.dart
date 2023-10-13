@@ -637,13 +637,13 @@ class Utils {
       fs.h2 = preferencesService.selectedLanguage == "ta" ? 12 : 14;
       fs.h3 = preferencesService.selectedLanguage == "ta" ? 10 : 12;
       fs.h4 = preferencesService.selectedLanguage == "ta" ? 8 : 10;
-      fs.h5 = 25;
+      fs.h5 = preferencesService.selectedLanguage == "ta" ? 7 : 8;
     } else if (screenWidth < 600) {
       fs.h1 = preferencesService.selectedLanguage == "ta" ? 23 : 25;
       fs.h2 = preferencesService.selectedLanguage == "ta" ? 14 : 16;
       fs.h3 = preferencesService.selectedLanguage == "ta" ? 12 : 14;
       fs.h4 = preferencesService.selectedLanguage == "ta" ? 10 : 12;
-      fs.h5 = 25;
+      fs.h5 = preferencesService.selectedLanguage == "ta" ? 9 : 10;
     } else if (screenWidth < 1200) {
       return 20.0;
     } else {

@@ -26,6 +26,7 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
   late Animation<Offset> _rightToLeftAnimation, _topAnimation;
   Utils utils = Utils();
   PreferenceService preferencesService = locator<PreferenceService>();
+  FS fs = locator<FS>();
 
   @override
   void initState() {
@@ -75,20 +76,13 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
                 children: [
                   Image.asset(imagepath.tamilnadu_logo, height: 80, width: 80),
                   UIHelper.verticalSpaceSmall,
-                  Text(
-                    'gov_tamilnadu'.tr().toString(),
-                    style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: c.text_color, fontStyle: FontStyle.normal, decorationStyle: TextDecorationStyle.wavy),
-                  ),
+                  UIHelper.titleTextStyle('gov_tamilnadu'.tr().toString(), c.text_color, fs.h2, true, true),
                 ],
               ),
               //  UIHelper.verticalSpaceMedium,
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Image.asset(imagepath.logo, fit: BoxFit.cover, height: 55, width: 50),
-                Text(
-                  'appName'.tr().toString(),
-                  textAlign: TextAlign.start,
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: c.text_color, fontStyle: FontStyle.normal, decorationStyle: TextDecorationStyle.wavy),
-                ),
+                UIHelper.titleTextStyle('appName'.tr().toString(), c.text_color, fs.h1, true, true),
               ]),
               // UIHelper.verticalSpaceMedium,
 
@@ -110,19 +104,13 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          'signupText'.tr().toString(),
-                          style: TextStyle(color: c.text_color, fontSize: 16),
-                        ),
+                        UIHelper.titleTextStyle('signupText'.tr().toString(), c.text_color, fs.h2, true, true),
                         UIHelper.horizontalSpaceSmall,
                         InkWell(
                           onTap: () => {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpView(isSignup: true))),
                           },
-                          child: Text(
-                            'signUP'.tr().toString(),
-                            style: TextStyle(color: c.sky_blue, fontSize: 16),
-                          ),
+                          child: UIHelper.titleTextStyle('signUP'.tr().toString(), c.sky_blue, fs.h2, true, true),
                         ),
                       ],
                     ),
@@ -187,15 +175,7 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
           height: 30,
         ),
         label: Center(
-          child: Text(
-            btnText,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: c.white,
-              fontWeight: FontWeight.bold,
-              fontSize: btnText.length > 10 ? 10 : 12,
-            ),
-          ),
+          child: UIHelper.titleTextStyle(btnText, c.sky_blue, btnText.length > 10 ? fs.h5 : fs.h4, true, true),
         ),
       ),
     );

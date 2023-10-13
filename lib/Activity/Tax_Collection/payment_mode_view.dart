@@ -29,6 +29,7 @@ class PaymentGateWayView extends StatefulWidget {
 
 class _PaymentGateWayViewState extends State<PaymentGateWayView> {
   PreferenceService preferencesService = locator<PreferenceService>();
+  FS fs = locator<FS>();
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
   TextEditingController nameTextController = TextEditingController();
   TextEditingController mobileTextController = TextEditingController();
@@ -70,12 +71,12 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
               Container(
                   margin: const EdgeInsets.only(top: 20, bottom: 10),
                   child: Text(('payment_mode'.tr().toString() + (preferencesService.selectedLanguage == 'en' ? paymentType[0][key_paymenttype_en] : paymentType[0][key_paymenttype_ta])),
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold))),
+                      style: TextStyle(fontSize: fs.h3, fontWeight: FontWeight.bold))),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
                     margin: const EdgeInsets.only(top: 5, left: 20, bottom: 5),
-                    child: Text('select_payment_gateway'.tr().toString(), style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.black))),
+                    child: Text('select_payment_gateway'.tr().toString(), style: TextStyle(fontSize: fs.h3, fontWeight: FontWeight.normal, color: c.black))),
               ),
               AnimationLimiter(
                   child: ListView.builder(
@@ -123,7 +124,7 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
                                               )),
                                           Text(
                                             list[index][key_gateway_name],
-                                            style: TextStyle(fontWeight: FontWeight.normal, fontSize: 12, color: c.grey_9),
+                                            style: TextStyle(fontWeight: FontWeight.normal, fontSize: fs.h3, color: c.grey_9),
                                           ),
                                         ],
                                       ),
@@ -135,7 +136,7 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
                 alignment: Alignment.centerLeft,
                 child: Container(
                     margin: const EdgeInsets.only(top: 10, left: 20, bottom: 5),
-                    child: Text(isLogin == "yes" ? "Payment Details" : 'enter_the_details'.tr().toString(), style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: c.black))),
+                    child: Text(isLogin == "yes" ? "Payment Details" : 'enter_the_details'.tr().toString(), style: TextStyle(fontSize: fs.h2, fontWeight: FontWeight.normal, color: c.black))),
               ),
               Container(
                 margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
@@ -176,8 +177,8 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
                       child: Text(
                         "continue".tr().toString(),
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 14,
+                        style: TextStyle(
+                          fontSize: fs.h2,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -197,7 +198,7 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
   Widget addInputFormControl(String nameField, String hintText, String fieldType, String isLogin) {
     return FormBuilderTextField(
       enabled: isLogin == "yes" ? false : true,
-      style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.w400, color: c.grey_9),
+      style: TextStyle(fontSize: fs.h3, fontWeight: FontWeight.w400, color: c.grey_9),
       name: nameField,
       controller: fieldType == key_mobile_number
           ? mobileTextController
@@ -209,7 +210,7 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
       onChanged: (value) {},
       decoration: InputDecoration(
         labelText: hintText,
-        labelStyle: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w600, color: c.grey_7),
+        labelStyle: TextStyle(fontSize: fs.h3, fontWeight: FontWeight.w600, color: c.grey_7),
         filled: true,
         fillColor: Colors.white,
         // disabledBorder: UIHelper.getInputBorder(1, borderColor: c.grey_7),

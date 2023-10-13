@@ -27,6 +27,7 @@ class CheckTransaction extends StatefulWidget {
 
 class _CheckTransactionState extends State<CheckTransaction> {
   PreferenceService preferencesService = locator<PreferenceService>();
+  FS fs = locator<FS>();
   ApiServices apiServices = locator<ApiServices>();
   StartUpViewModel model = StartUpViewModel();
 
@@ -233,7 +234,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
                     headerText,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
-                    style: TextStyle(color: c.text_color, fontSize: preferencesService.selectedLanguage == 'ta' ? 10 : 13),
+                    style: TextStyle(color: c.text_color, fontSize: fs.h3),
                   ),
                 ),
               ],
@@ -298,38 +299,20 @@ class _CheckTransactionState extends State<CheckTransaction> {
                       children: [
                         Row(
                           children: [
-                            Text(
-                              "${"transaction_id".tr().toString()} :",
-                              style: TextStyle(fontSize: 12, color: c.black),
-                            ),
-                            Text(
-                              transID,
-                              style: TextStyle(fontSize: 12, color: c.text_color),
-                            ),
+                            Text("${"transaction_id".tr().toString()} :", style: TextStyle(fontSize: fs.h4, color: c.black)),
+                            Text(transID, style: TextStyle(fontSize: fs.h4, color: c.text_color)),
                           ],
                         ),
                         Row(
                           children: [
-                            Text(
-                              "${"transaction_date".tr().toString()} :",
-                              style: TextStyle(fontSize: 12, color: c.black),
-                            ),
-                            Text(
-                              transDate,
-                              style: TextStyle(fontSize: 12, color: c.text_color),
-                            ),
+                            Text("${"transaction_date".tr().toString()} :", style: TextStyle(fontSize: fs.h4, color: c.black)),
+                            Text(transDate, style: TextStyle(fontSize: fs.h4, color: c.text_color)),
                           ],
                         ),
                         Row(
                           children: [
-                            Text(
-                              "${"transaction_amount".tr().toString()} :",
-                              style: TextStyle(fontSize: 12, color: c.black),
-                            ),
-                            Text(
-                              "\u{20B9} ${transAmount}",
-                              style: TextStyle(fontSize: 12, color: c.text_color),
-                            ),
+                            Text("${"transaction_amount".tr().toString()} :", style: TextStyle(fontSize: fs.h4, color: c.black)),
+                            Text("\u{20B9} ${transAmount}", style: TextStyle(fontSize: fs.h4, color: c.text_color)),
                           ],
                         ),
                       ],
@@ -373,7 +356,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
                                         status == 'SUCCESS' ? 'download_receipt'.tr() : 'check_status'.tr(),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(fontSize: preferencesService.selectedLanguage == 'ta' ? 10 : 12, color: c.white, fontWeight: FontWeight.w600),
+                                        style: TextStyle(fontSize: fs.h4, color: c.white, fontWeight: FontWeight.w600),
                                       ),
                                     ],
                                   ),
@@ -408,7 +391,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
                             headerText,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: TextStyle(fontSize: 10, color: c.text_color, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: fs.h5, color: c.text_color, fontWeight: FontWeight.bold),
                           ),
                         ],
                       )
