@@ -633,21 +633,29 @@ class Utils {
 
   getResponsiveFontSize(BuildContext context, double screenWidth) {
     if (screenWidth < 400) {
+      //Responsive For Smart Mobile Device Size
       fs.h1 = preferencesService.selectedLanguage == "ta" ? 18 : 20;
       fs.h2 = preferencesService.selectedLanguage == "ta" ? 12 : 14;
       fs.h3 = preferencesService.selectedLanguage == "ta" ? 10 : 12;
       fs.h4 = preferencesService.selectedLanguage == "ta" ? 8 : 10;
       fs.h5 = preferencesService.selectedLanguage == "ta" ? 7 : 8;
     } else if (screenWidth < 600) {
+      //Responsive For Common Mobile Device Size
       fs.h1 = preferencesService.selectedLanguage == "ta" ? 23 : 25;
       fs.h2 = preferencesService.selectedLanguage == "ta" ? 14 : 16;
       fs.h3 = preferencesService.selectedLanguage == "ta" ? 12 : 14;
       fs.h4 = preferencesService.selectedLanguage == "ta" ? 10 : 12;
       fs.h5 = preferencesService.selectedLanguage == "ta" ? 9 : 10;
     } else if (screenWidth < 1200) {
-      return 20.0;
+      //Responsive For Tablet Device Size
+      fs.h1 = preferencesService.selectedLanguage == "ta" ? 27 : 29;
+      fs.h2 = preferencesService.selectedLanguage == "ta" ? 19 : 20;
+      fs.h3 = preferencesService.selectedLanguage == "ta" ? 16 : 18;
+      fs.h4 = preferencesService.selectedLanguage == "ta" ? 14 : 16;
+      fs.h5 = preferencesService.selectedLanguage == "ta" ? 13 : 14;
     } else {
-      return 24.0;
+      // IF you want Desktop Size write here...
+      return null;
     }
   }
 }
