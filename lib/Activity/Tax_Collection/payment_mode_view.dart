@@ -47,8 +47,8 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
   }
 
   Future<void> initialize() async {
-    list = preferencesService.GatewayList;
-    paymentType = preferencesService.PaymentTypeList;
+    list = preferencesService.gatewayList;
+    paymentType = preferencesService.paymentTypeList;
     isLogin = await preferencesService.getUserInfo(key_isLogin);
     if (isLogin == "yes") {
       nameTextController.text = await preferencesService.getUserInfo(key_name);

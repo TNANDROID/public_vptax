@@ -15,11 +15,8 @@ class PreferenceService {
   List<dynamic> villageList = [];
   List<dynamic> taxTypeList = [];
   List<dynamic> finYearList = [];
-  List<dynamic> PaymentTypeList = [];
-  List<dynamic> GatewayList = [];
-  List<dynamic> addedTaxPayList = [];
-  List<dynamic> taxCollectionDetailsList = [];
-  List<dynamic> TransactionList = [];
+  List<dynamic> paymentTypeList = [];
+  List<dynamic> gatewayList = [];
 
   final StreamedList<dynamic>? taxListStream = StreamedList<dynamic>(initialData: []);
   final StreamedMap<String, dynamic> totalAmountStream = StreamedMap<String, dynamic>(initialData: {});

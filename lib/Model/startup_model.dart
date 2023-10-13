@@ -107,9 +107,9 @@ class StartUpViewModel extends BaseViewModel {
     } else if (type == "FinYear") {
       preferencesService.finYearList = res_jsonArray.toList();
     } else if (type == "PaymentTypeList") {
-      preferencesService.PaymentTypeList = res_jsonArray.toList();
+      preferencesService.paymentTypeList = res_jsonArray.toList();
     } else if (type == "GatewayList") {
-      preferencesService.GatewayList = res_jsonArray.toList();
+      preferencesService.gatewayList = res_jsonArray.toList();
     } else {
       return null;
     }
