@@ -24,7 +24,7 @@ class Splash extends StatefulWidget {
 class _SplashState extends State<Splash> with TickerProviderStateMixin {
   PreferenceService preferencesService = locator<PreferenceService>();
   Utils utils = Utils();
-
+  FS fs = locator<FS>();
   @override
   void initState() {
     super.initState();
@@ -94,16 +94,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
               width: 80,
             ),
             UIHelper.verticalSpaceSmall,
-            Text(
-              'gov_tamilnadu'.tr().toString(),
-              style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-                color: c.text_color,
-                fontStyle: FontStyle.normal,
-                decorationStyle: TextDecorationStyle.wavy,
-              ),
-            ),
+            UIHelper.titleTextStyle('gov_tamilnadu'.tr().toString(), c.text_color, fs.h2, true, true),
             UIHelper.verticalSpaceSmall,
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Image.asset(
@@ -113,16 +104,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
                 width: 50,
               ),
               UIHelper.horizontalSpaceSmall,
-              Text(
-                'appName'.tr().toString(),
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: c.text_color,
-                  fontStyle: FontStyle.normal,
-                  decorationStyle: TextDecorationStyle.wavy,
-                ),
-              ),
+              UIHelper.titleTextStyle('appName'.tr().toString(), c.text_color, fs.h1, true, true),
             ])
           ]),
         ),

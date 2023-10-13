@@ -1,5 +1,7 @@
 // ignore_for_file: file_names
 
+import 'dart:ffi';
+
 import 'package:public_vptax/stream/streamed_list.dart';
 import 'package:public_vptax/stream/streamed_map.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,4 +47,12 @@ class PreferenceService {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
   }
+}
+
+class FS {
+  double h1 = 0;
+  double h2 = 0;
+  double h3 = 0;
+  double h4 = 0;
+  double h5 = 0;
 }

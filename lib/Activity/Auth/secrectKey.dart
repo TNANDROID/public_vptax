@@ -27,6 +27,7 @@ class SecretKeyView extends StatefulWidget {
 
 class _SecretKeyViewState extends State<SecretKeyView> with TickerProviderStateMixin {
   PreferenceService preferencesService = locator<PreferenceService>();
+  FS fs = locator<FS>();
   Utils utils = Utils();
   String getPreferKey = "";
   String secretPin = "";
@@ -70,23 +71,14 @@ class _SecretKeyViewState extends State<SecretKeyView> with TickerProviderStateM
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Image.asset(imagepath.logo, fit: BoxFit.cover, height: 55, width: 50),
                   UIHelper.horizontalSpaceSmall,
-                  Text(
-                    'appName'.tr().toString(),
-                    style: TextStyle(
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.bold,
-                      color: c.text_color,
-                      fontStyle: FontStyle.normal,
-                      decorationStyle: TextDecorationStyle.wavy,
-                    ),
-                  ),
+                  UIHelper.titleTextStyle('appName'.tr().toString(), c.text_color, fs.h1, true, true),
                 ]),
                 UIHelper.verticalSpaceSmall,
-                UIHelper.titleTextStyle('enter_your_SecretPin'.tr().toString(), c.text_color, 14, true, true),
+                UIHelper.titleTextStyle('enter_your_SecretPin'.tr().toString(), c.text_color, fs.h3, true, true),
                 UIHelper.verticalSpaceSmall,
                 VerificationView(fixedlength: 4, pinString: secretPin, secureText: true),
                 if (!pinIsValid) UIHelper.verticalSpaceSmall,
-                if (!pinIsValid) UIHelper.titleTextStyle('invalid_Pin'.tr().toString(), c.red_new, 12, true, true),
+                if (!pinIsValid) UIHelper.titleTextStyle('invalid_Pin'.tr().toString(), c.red_new, fs.h4, true, true),
                 UIHelper.verticalSpaceMedium,
                 GestureDetector(
                   onTap: () {
@@ -107,12 +99,7 @@ class _SecretKeyViewState extends State<SecretKeyView> with TickerProviderStateM
                         color: c.primary_text_color2,
                         width: 1.0, // Underline thickness
                       ))),
-                      child: Text(
-                        'forgot_secret_Pin'.tr().toString(),
-                        style: TextStyle(
-                          color: c.primary_text_color2,
-                        ),
-                      ),
+                      child: UIHelper.titleTextStyle('forgot_secret_Pin'.tr().toString(), c.primary_text_color2, fs.h4, false, true),
                     ),
                   ),
                 )

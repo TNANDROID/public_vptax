@@ -4,7 +4,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:public_vptax/Activity/Auth/Splash.dart';
+import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Services/locator.dart';
+import 'package:public_vptax/Utils/utils.dart';
 
 Future<void> main() async {
   setupLocator();
@@ -28,8 +30,12 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+  Utils utils = Utils();
+
   @override
   Widget build(BuildContext context) {
+    utils.getResponsiveFontSize(context, Screen.width(context));
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       localizationsDelegates: context.localizationDelegates,

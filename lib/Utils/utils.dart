@@ -17,6 +17,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:public_vptax/Activity/Auth/Splash.dart';
 import 'package:public_vptax/Activity/Tax_Collection/payment_mode_view.dart';
+import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
@@ -32,6 +33,7 @@ import 'ContentInfo.dart';
 
 class Utils {
   PreferenceService preferencesService = locator<PreferenceService>();
+  FS fs = locator<FS>();
 
   Future<bool> isOnline() async {
     bool online = false;
@@ -627,5 +629,25 @@ class Utils {
         break;
     }
     return street;
+  }
+
+  getResponsiveFontSize(BuildContext context, double screenWidth) {
+    if (screenWidth < 400) {
+      fs.h1 = preferencesService.selectedLanguage == "ta" ? 18 : 20;
+      fs.h2 = preferencesService.selectedLanguage == "ta" ? 12 : 14;
+      fs.h3 = preferencesService.selectedLanguage == "ta" ? 10 : 12;
+      fs.h4 = preferencesService.selectedLanguage == "ta" ? 8 : 10;
+      fs.h5 = 25;
+    } else if (screenWidth < 600) {
+      fs.h1 = preferencesService.selectedLanguage == "ta" ? 23 : 25;
+      fs.h2 = preferencesService.selectedLanguage == "ta" ? 14 : 16;
+      fs.h3 = preferencesService.selectedLanguage == "ta" ? 12 : 14;
+      fs.h4 = preferencesService.selectedLanguage == "ta" ? 10 : 12;
+      fs.h5 = 25;
+    } else if (screenWidth < 1200) {
+      return 20.0;
+    } else {
+      return 24.0;
+    }
   }
 }

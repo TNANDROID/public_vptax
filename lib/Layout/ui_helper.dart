@@ -24,7 +24,8 @@ class UIHelper {
 
 // AppBar Provider
   static AppBar getBar(String title) {
-    return AppBar(backgroundColor: c.colorPrimary, centerTitle: true, elevation: 2, title: UIHelper.titleTextStyle(title.tr().toString(), c.white, 15, true, false));
+    FS fs = locator<FS>();
+    return AppBar(backgroundColor: c.colorPrimary, centerTitle: true, elevation: 2, title: UIHelper.titleTextStyle(title.tr().toString(), c.white, fs.h2, true, false));
   }
 
 // Input Box Style Provider
@@ -36,10 +37,10 @@ class UIHelper {
   }
 
 // Text and Style Provider
-  static Widget titleTextStyle(String title, Color clr, double fntsize, bool isBold, bool isCenterAliignment, {bool isUnderline = false}) {
+  static Widget titleTextStyle(String title, Color clr, double fntsize, bool isBold, bool isCenterAliignment, {bool isUnderline = false, bool isellipsis = false}) {
     return Text(
       title.tr().toString(),
-      overflow: TextOverflow.ellipsis,
+      overflow: isellipsis ? TextOverflow.ellipsis : null,
       style: TextStyle(
         color: clr,
         fontSize: fntsize,
@@ -175,6 +176,7 @@ class UIHelper {
 // *************** Sticky Header Widget ***********
   static Widget stickyHeader(var taxTypeId, String selectedLang, List data, double marginSpace) {
     PreferenceService preferencesService = locator<PreferenceService>();
+    FS fs = locator<FS>();
     var TaxList = preferencesService.taxTypeList;
     String TaxHeader = '';
     for (var list in TaxList) {
@@ -192,14 +194,14 @@ class UIHelper {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Expanded(child: UIHelper.titleTextStyle(TaxHeader, c.white, 12, true, true)),
+          Expanded(child: UIHelper.titleTextStyle(TaxHeader, c.white, fs.h4, true, true)),
           Container(
             width: 25,
             height: 25,
             padding: EdgeInsets.all(4),
             decoration: BoxDecoration(color: c.white, border: Border.all(width: 1, color: c.white), borderRadius: BorderRadius.circular(20)),
             child: Center(
-              child: UIHelper.titleTextStyle("$totalCount", c.grey_10, 12, true, false),
+              child: UIHelper.titleTextStyle("$totalCount", c.grey_10, fs.h4, true, false),
             ),
           )
         ],

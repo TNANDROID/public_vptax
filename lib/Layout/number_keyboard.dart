@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
+import 'package:public_vptax/Services/Preferenceservices.dart';
+import 'package:public_vptax/Services/locator.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
 
 class CustomNumberBoard extends StatefulWidget {
@@ -20,7 +22,7 @@ class CustomNumberBoard extends StatefulWidget {
 class _CustomNumberBoardState extends State<CustomNumberBoard> with TickerProviderStateMixin {
   List<String> numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "E", "0", "back"];
   String pin = "";
-
+  FS fs = locator<FS>();
   @override
   void initState() {
     super.initState();
@@ -34,7 +36,7 @@ class _CustomNumberBoardState extends State<CustomNumberBoard> with TickerProvid
         decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.grey_2, c.grey_2),
         padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
         // margin: const EdgeInsets.only(top: 15),
-        height: 270,
+        height: 290,
         child: ResponsiveGridList(
           listViewBuilderOptions: ListViewBuilderOptions(physics: const NeverScrollableScrollPhysics()),
           // horizontalGridMargin: 5,
@@ -46,7 +48,7 @@ class _CustomNumberBoardState extends State<CustomNumberBoard> with TickerProvid
               children: [
                 getData == "E"
                     ? SizedBox(
-                        height: 40,
+                        height: 50,
                         width: Screen.width(context) / 3,
                       )
                     : ElevatedButton(
@@ -76,7 +78,7 @@ class _CustomNumberBoardState extends State<CustomNumberBoard> with TickerProvid
                           ),
                         ),
                         child: Container(
-                          height: 40,
+                          height: 50,
                           width: Screen.width(context) / 3,
                           padding: const EdgeInsets.all(5),
                           child: Center(
@@ -87,7 +89,7 @@ class _CustomNumberBoardState extends State<CustomNumberBoard> with TickerProvid
                                     height: 20,
                                     width: 40,
                                   )
-                                : UIHelper.titleTextStyle(getData, c.black, 16, true, true),
+                                : UIHelper.titleTextStyle(getData, c.black, fs.h2, true, true),
                           ),
                         ),
                       )

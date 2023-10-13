@@ -36,6 +36,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with TickerProviderStateMixin {
   PreferenceService preferencesService = locator<PreferenceService>();
+  FS fs = locator<FS>();
   StartUpViewModel model = StartUpViewModel();
   Utils utils = Utils();
   List taxTypeList = [];
@@ -135,8 +136,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     return await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: UIHelper.titleTextStyle(isLogout ? 'logout'.tr().toString() : 'exit_app'.tr().toString(), c.black, 14, false, false),
-            content: UIHelper.titleTextStyle(isLogout ? 'confirm_logout'.tr().toString() : 'do_you_want_to_exit_an_app'.tr().toString(), c.black, 13, false, false),
+            title: UIHelper.titleTextStyle(isLogout ? 'logout'.tr().toString() : 'exit_app'.tr().toString(), c.black, fs.h3, false, false),
+            content: UIHelper.titleTextStyle(isLogout ? 'confirm_logout'.tr().toString() : 'do_you_want_to_exit_an_app'.tr().toString(), c.black, fs.h3, false, false),
             actions: [
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(false),
@@ -192,17 +193,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         color: c.white,
                         child: Row(
                           children: [
-                            Container(
-                              padding: EdgeInsets.only(left: 15),
-                              child: Text(
-                                langText,
-                                style: TextStyle(
-                                  color: c.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
+                            Container(padding: EdgeInsets.only(left: 15), child: UIHelper.titleTextStyle(langText, c.white, fs.h3, true, false)),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Icon(
@@ -218,7 +209,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           return {'தமிழ்', 'English'}.map((String choice) {
                             return PopupMenuItem<String>(
                               value: choice,
-                              child: Text(choice),
+                              child: UIHelper.titleTextStyle(choice, c.black, fs.h3, false, false),
                             );
                           }).toList();
                         },
@@ -230,7 +221,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         child: Text(
                           'home'.tr().toString(),
                           style: TextStyle(
-                            fontSize: 15,
+                            fontSize: fs.h3,
                             color: c.white,
                           ),
                         ),
@@ -283,7 +274,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           child: Text(
                             textAlign: TextAlign.center,
                             "appName".tr().toString(),
-                            style: TextStyle(color: c.white, fontSize: 14, fontWeight: FontWeight.bold),
+                            style: TextStyle(color: c.white, fontSize: fs.h3, fontWeight: FontWeight.bold),
                           ),
                         ),
                         UIHelper.verticalSpaceSmall,
@@ -297,7 +288,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                               textAlign: TextAlign.end,
-                              style: TextStyle(color: c.text_color, fontSize: preferencesService.selectedLanguage == "ta" ? 13 : 14, fontWeight: FontWeight.bold),
+                              style: TextStyle(color: c.text_color, fontSize: fs.h3, fontWeight: FontWeight.bold),
                             )),
                       ],
                     ),
@@ -321,9 +312,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                     alignment: Alignment.centerLeft,
                                     child: Row(
                                       children: [
-                                        Expanded(
-                                            flex: 2, child: UIHelper.titleTextStyle('tax_due'.tr().toString() + " : ", c.grey_10, preferencesService.selectedLanguage == "ta" ? 12 : 13, true, false)),
-                                        Expanded(flex: 1, child: UIHelper.titleTextStyle("\u{20B9} " + gettotal(data, 5), c.red_new, 17, true, false))
+                                        Expanded(flex: 2, child: UIHelper.titleTextStyle('tax_due'.tr().toString() + " : ", c.grey_10, fs.h4, true, false)),
+                                        Expanded(flex: 1, child: UIHelper.titleTextStyle("\u{20B9} " + gettotal(data, 5), c.red_new, fs.h2, true, false))
                                       ],
                                     )),
                                 Row(
@@ -377,10 +367,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 Container(
                   padding: EdgeInsets.only(left: 20, right: 20, top: 10),
                   alignment: Alignment.centerLeft,
-                  child: Text(
-                    'services'.tr().toString(),
-                    style: TextStyle(color: c.grey_8, fontSize: 14, fontWeight: FontWeight.bold),
-                  ),
+                  child: UIHelper.titleTextStyle('services'.tr().toString(), c.grey_8, fs.h3, true, false),
                 ),
                 Container(
                   margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
@@ -445,12 +432,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                             ),
                                             Container(
                                               alignment: Alignment.center,
-                                              margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                                              child: Text(
-                                                servicesList[index][key_service_name].toString().tr().toString(),
-                                                style: TextStyle(fontSize: 11, height: 1.2, color: c.text_color),
-                                                textAlign: TextAlign.center,
-                                              ),
+                                              child: UIHelper.titleTextStyle(servicesList[index][key_service_name].toString().tr().toString(), c.text_color, fs.h4, false, true),
                                             ),
                                           ],
                                         ),
@@ -512,7 +494,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         child: Column(children: [
           Container(
             decoration: UIHelper.GradientContainer(20, 20, 20, 20, [c.grey_2, c.grey_1], borderColor: c.white, intwid: 4),
-            height: Screen.height(context) / 3.5,
             width: Screen.width(context) / 1.6,
             child: Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
               UIHelper.verticalSpaceSmall,
@@ -525,9 +506,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               ),
               UIHelper.verticalSpaceSmall,
               UIHelper.titleTextStyle(preferencesService.selectedLanguage == 'en' ? taxTypeList[currentSelectedTax][key_taxtypedesc_en] : taxTypeList[currentSelectedTax][key_taxtypedesc_ta],
-                  c.colorPrimaryDark, preferencesService.selectedLanguage == "ta" ? 16 : 18, true, true),
+                  c.colorPrimaryDark, fs.h2, true, true),
               UIHelper.verticalSpaceSmall,
-              UIHelper.titleTextStyle('pending_payment'.tr().toString(), c.text_color, preferencesService.selectedLanguage == "ta" ? 12 : 14, true, true),
+              UIHelper.titleTextStyle('pending_payment'.tr().toString(), c.text_color, fs.h3, true, true),
               UIHelper.verticalSpaceSmall,
               Container(
                 width: Screen.width(context),
@@ -546,7 +527,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10), bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
                           ),
                           alignment: Alignment.center,
-                          child: UIHelper.titleTextStyle("\u{20B9} ${taxamount}", c.white, 18, true, true)),
+                          child: UIHelper.titleTextStyle("\u{20B9} ${taxamount}", c.white, fs.h2, true, true)),
                     ),
                     Positioned(
                       right: 0,
