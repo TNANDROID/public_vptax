@@ -301,23 +301,10 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                     Positioned(
                       top: -size.height * 0.030,
                       left: size.width * 0.08,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Image.asset(
-                            imagePath.location,
-                            color: c.colorPrimary,
-                            height: size.height * 0.08,
-                            // colorFilter: getColorFilter(hslDark.toColor(), ui.BlendMode.srcIn),
-                          ),
-                          Positioned(
-                            top: size.height * 0.025,
-                            child: SvgPicture.asset(
-                              contentInfo.assetPath,
-                              height: size.height * 0.022,
-                            ),
-                          )
-                        ],
+                      child: Image.asset(
+                        imagePath.location,
+                        color: c.colorPrimary,
+                        height: size.height * 0.08,
                       ),
                     ),
 
