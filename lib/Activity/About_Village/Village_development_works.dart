@@ -528,7 +528,7 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
             UIHelper.horizontalSpaceSmall,
             Expanded(
               flex: 1,
-              child: ExpandableText(value, trimLines: 2, txtcolor: "2"),
+              child: ExpandableText(value, trimLines: 2),
             ),
           ],
         ),

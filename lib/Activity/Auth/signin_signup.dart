@@ -277,7 +277,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
       children: [
         UIHelper.verticalSpaceSmall,
         FormBuilderTextField(
-          style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: c.grey_9),
+          style: TextStyle(fontSize: fs.h4, fontWeight: FontWeight.w400, color: c.grey_9),
           obscureText: secureFields.contains(nameField) || !isShowSuffixIcon ? false : true,
           name: nameField,
           autocorrect: false,

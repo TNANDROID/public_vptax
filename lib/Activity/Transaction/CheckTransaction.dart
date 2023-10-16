@@ -109,7 +109,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
                                   : GestureDetector(onTap: () {}, child: Icon(Icons.search, color: c.helpBlue)),
                               fillColor: c.white,
                             ),
-                            style: TextStyle(fontSize: 13),
+                            style: TextStyle(fontSize: fs.h3),
                           ))),
                   // SizedBox(width: 20),
                   // PopupMenuButton<dynamic>(

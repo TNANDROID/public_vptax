@@ -1,24 +1,24 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
+import 'package:public_vptax/Services/Preferenceservices.dart';
+import 'package:public_vptax/Services/locator.dart';
 
 class ExpandableText extends StatefulWidget {
   const ExpandableText(
-      this.text,  {
-        this.trimLines = 2,
-        this.txtcolor,
-      })  : assert(text != null);
-
+    this.text, {
+    this.trimLines = 2,
+  }) : assert(text != null);
 
   final String text;
   final int trimLines;
-  final  txtcolor;
 
   @override
   ExpandableTextState createState() => ExpandableTextState();
 }
 
 class ExpandableTextState extends State<ExpandableText> {
+  FS fs = locator<FS>();
   bool _readMore = true;
   void _onTapLink() {
     setState(() => _readMore = !_readMore);
@@ -26,16 +26,14 @@ class ExpandableTextState extends State<ExpandableText> {
 
   @override
   Widget build(BuildContext context) {
-    final DefaultTextStyle defaultTextStyle = DefaultTextStyle.of(context);
-    final colorClickableText = Colors.blue;
-    final widgetColor = widget.txtcolor=="1"?c.white:c.grey_8;
+    Color colorClickableText = Colors.blue;
+    final widgetColor = c.grey_8;
     TextSpan link = TextSpan(
         text: _readMore ? "... read more" : " read less",
         style: TextStyle(
           color: colorClickableText,
         ),
-        recognizer: TapGestureRecognizer()..onTap = _onTapLink
-    );
+        recognizer: TapGestureRecognizer()..onTap = _onTapLink);
     Widget result = LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         assert(constraints.hasBoundedWidth);
@@ -47,7 +45,7 @@ class ExpandableTextState extends State<ExpandableText> {
         // Layout and measure link
         TextPainter textPainter = TextPainter(
           text: link,
-          textDirection: TextDirection.rtl,//better to pass this from master widget if ltr and rtl both supported
+          textDirection: TextDirection.rtl, //better to pass this from master widget if ltr and rtl both supported
           maxLines: widget.trimLines,
           ellipsis: '...',
         );
@@ -67,22 +65,14 @@ class ExpandableTextState extends State<ExpandableText> {
         var textSpan;
         if (textPainter.didExceedMaxLines) {
           textSpan = TextSpan(
-            text: _readMore
-                ? widget.text.substring(0, endIndex)
-                : widget.text,
-            style: TextStyle(
-                color: widgetColor,
-                fontSize: 13
-            ),
+            text: _readMore ? widget.text.substring(0, endIndex) : widget.text,
+            style: TextStyle(color: widgetColor, fontSize: fs.h3),
             children: <TextSpan>[link],
           );
         } else {
           textSpan = TextSpan(
             text: widget.text,
-            style: TextStyle(
-                color: widgetColor,
-                fontSize: 13
-            ),
+            style: TextStyle(color: widgetColor, fontSize: fs.h3),
           );
         }
         return RichText(

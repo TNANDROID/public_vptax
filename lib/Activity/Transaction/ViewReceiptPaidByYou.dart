@@ -217,7 +217,7 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
               height: 60,
               padding: EdgeInsets.all(10),
               decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.white, c.white, borderColor: c.full_transparent, borderWidth: 0),
-              child: Center(child: UIHelper.titleTextStyle(title, c.text_color, 12, false, true))),
+              child: Center(child: UIHelper.titleTextStyle(title, c.text_color, fs.h4, false, true))),
           Container(
             transform: Matrix4.translationValues(-12, 18, 0),
             decoration: UIHelper.circleWithColorWithShadow(300, c.white, c.white),
@@ -281,7 +281,7 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
           )
         : noDataFound
             ? Container(
-                transform: Matrix4.translationValues(-5.0, -100.0, 10.0), padding: EdgeInsets.only(left: 22, right: 22), child: UIHelper.titleTextStyle('no_record', c.text_color, 12, true, true))
+                transform: Matrix4.translationValues(-5.0, -100.0, 10.0), padding: EdgeInsets.only(left: 22, right: 22), child: UIHelper.titleTextStyle('no_record', c.text_color, fs.h4, true, true))
             : SizedBox();
   }
 

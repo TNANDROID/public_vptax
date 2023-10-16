@@ -754,7 +754,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
 
   Widget addInputDropdownField() {
     return FormBuilderDropdown(
-      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: c.grey_8),
+      style: TextStyle(fontSize: fs.h4, fontWeight: FontWeight.w400, color: c.grey_8),
       decoration: InputDecoration(
         contentPadding: EdgeInsets.only(left: 0),
         constraints: BoxConstraints(maxHeight: 35),

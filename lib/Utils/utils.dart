@@ -92,7 +92,7 @@ class Utils {
   void showToast(BuildContext context, String msg, String type) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       backgroundColor: type == "S" ? c.account_status_green_color : c.grey_10,
-      content: UIHelper.titleTextStyle(msg, type == "S" ? c.white : c.white, 13, true, false),
+      content: UIHelper.titleTextStyle(msg, type == "S" ? c.white : c.white, fs.h3, true, false),
       duration: const Duration(seconds: 1),
     ));
   }
@@ -114,7 +114,7 @@ class Utils {
                 children: [
                   Center(child: HeartbeatProgressIndicator(duration: Duration(milliseconds: 250), child: Image.asset(imagePath.logo, height: 40, width: 30))),
                   UIHelper.verticalSpaceSmall,
-                  JumpingText(i == 1 ? 'loading'.tr().toString() : 'downloading'.tr().toString(), style: TextStyle(color: c.text_color, fontSize: 12, decoration: TextDecoration.none)),
+                  JumpingText(i == 1 ? 'loading'.tr().toString() : 'downloading'.tr().toString(), style: TextStyle(color: c.text_color, fontSize: fs.h4, decoration: TextDecoration.none)),
                   UIHelper.verticalSpaceSmall,
                 ],
               ),
@@ -218,7 +218,7 @@ class Utils {
                       top: 25,
                       child: Text(
                         mode == "payment_success" ? '' : title ?? contentInfo.title,
-                        style: UIHelper.textDecoration(titleFontSize ?? 14, c.white, bold: true),
+                        style: UIHelper.textDecoration(titleFontSize ?? fs.h3, c.white, bold: true),
                       ),
                     ),
 
@@ -226,7 +226,7 @@ class Utils {
                       margin: EdgeInsets.only(bottom: size.width * 0.05, left: size.width * 0.05, right: size.width * 0.05, top: size.width * 0.07),
                       child: Text(
                         message,
-                        style: UIHelper.textDecoration(messageFontSize ?? 14, c.white),
+                        style: UIHelper.textDecoration(messageFontSize ?? fs.h3, c.white),
                         textAlign: TextAlign.center,
                         softWrap: true,
                       ),
@@ -636,6 +636,7 @@ class Utils {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        UIHelper.verticalSpaceTiny,
         UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString()}"), clr, fs.h4, false, true),
         UIHelper.verticalSpaceTiny,
         if (taxTypeId == "1") UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h4, false, true),
@@ -673,7 +674,12 @@ class Utils {
       fs.h4 = preferencesService.selectedLanguage == "ta" ? 14 : 16;
       fs.h5 = preferencesService.selectedLanguage == "ta" ? 13 : 14;
     } else {
-      // IF you want Desktop Size write here...
+      // Responsive For Desktop Size
+      fs.h1 = preferencesService.selectedLanguage == "ta" ? 30 : 32;
+      fs.h2 = preferencesService.selectedLanguage == "ta" ? 22 : 23;
+      fs.h3 = preferencesService.selectedLanguage == "ta" ? 19 : 21;
+      fs.h4 = preferencesService.selectedLanguage == "ta" ? 17 : 19;
+      fs.h5 = preferencesService.selectedLanguage == "ta" ? 16 : 17;
       return null;
     }
   }

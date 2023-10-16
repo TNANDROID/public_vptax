@@ -143,7 +143,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 //return false when click on "NO"
                 child: Text(
                   'no'.tr().toString(),
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: fs.h4),
                 ),
               ),
               ElevatedButton(
@@ -161,7 +161,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       },
                 child: Text(
                   'yes'.tr().toString(),
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: fs.h4),
                 ),
               ),
             ],

@@ -144,13 +144,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                     UIHelper.verticalSpaceTiny,
                     Container(
                       padding: EdgeInsets.only(left: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          taxWiseReturnDataWidget(getData, c.grey_8),
-                          //   UIHelper.titleTextStyle(("${'pending_payment'.tr()} : \u{20B9} " + getData['totaldemand']), c.grey_10, 14, true, true),
-                        ],
-                      ),
+                      child: Utils().taxWiseReturnDataWidget(getData, c.grey_8),
                     )
                   ],
                 ),
@@ -212,19 +206,6 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
           ),
         ) ??
         false; //if showDialouge had returned null, then return false
-  }
-
-// *************** Tax based  Data Get Widget***********
-  Widget taxWiseReturnDataWidget(dynamic getData, Color clr) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString()}"), clr, fs.h4, false, true),
-        UIHelper.verticalSpaceTiny,
-        UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h4, false, true),
-        UIHelper.verticalSpaceTiny,
-      ],
-    );
   }
 
 // *************** Tax based Image Render Widget***********
