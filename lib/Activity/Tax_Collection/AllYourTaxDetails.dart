@@ -282,10 +282,6 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
 
 // *************** Blue Color Main Card Widget ***********
   Widget headerCardUIWidget(int mainIndex, dynamic getData, StartUpViewModel model) {
-    List taxData = [];
-    if (getData[key_DEMAND_DETAILS] != "Empty" && getData[key_DEMAND_DETAILS] != "Pending" && getData[key_DEMAND_DETAILS] != "Something Went Wrong" && getData[key_DEMAND_DETAILS] != null) {
-      taxData = getData[key_DEMAND_DETAILS];
-    }
     return Column(
       children: [
         Stack(

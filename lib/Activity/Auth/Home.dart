@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, sort_child_properties_last, prefer_const_constructors, use_build_context_synchronously
+// ignore_for_file: non_constant_identifier_names, sort_child_properties_last, prefer_const_constructors, use_build_context_synchronously, file_names, library_prefixes
 
 import 'dart:io';
 
@@ -13,7 +13,6 @@ import 'package:public_vptax/Activity/Tax_Collection/AllYourTaxDetails.dart';
 import 'package:public_vptax/Activity/Tax_Collection/taxCollection_view_request_screen.dart';
 import 'package:public_vptax/Activity/Transaction/CheckTransaction.dart';
 import 'package:public_vptax/Activity/Transaction/ViewReceiptPaidByYou.dart';
-import 'package:public_vptax/Activity/Transaction/View_receipt.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Model/startup_model.dart';
@@ -281,22 +280,15 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         Container(
                             width: MediaQuery.of(context).size.width / 2,
                             margin: EdgeInsets.only(right: 20),
-                            child:
-                                // UIHelper.titleTextStyle("Hi " + "userName", c.text_color, 14, true, true)),
-                                Text(
-                              'hi'.tr().toString() + " " + userName + ",",
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                              textAlign: TextAlign.end,
-                              style: TextStyle(color: c.text_color, fontSize: fs.h3, fontWeight: FontWeight.bold),
-                            )),
+                            child: Text("${'hi'.tr()} $userName,",
+                                overflow: TextOverflow.ellipsis, maxLines: 2, textAlign: TextAlign.end, style: TextStyle(color: c.text_color, fontSize: fs.h3, fontWeight: FontWeight.bold))),
                       ],
                     ),
                   )
                 ]),
-                if (taxTypeList.length > 0)
+                if (taxTypeList.isNotEmpty)
                   StreamBuilder<Map<String, dynamic>?>(
-                    stream: preferencesService.totalAmountStream!.outStream!,
+                    stream: preferencesService.totalAmountStream.outStream!,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.active) {
                         final data = snapshot.data;
@@ -312,8 +304,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                     alignment: Alignment.centerLeft,
                                     child: Row(
                                       children: [
-                                        Expanded(flex: 2, child: UIHelper.titleTextStyle('tax_due'.tr().toString() + " : ", c.grey_10, fs.h4, true, false)),
-                                        Expanded(flex: 1, child: UIHelper.titleTextStyle("\u{20B9} " + gettotal(data, 5), c.red_new, fs.h2, true, false))
+                                        Expanded(flex: 2, child: UIHelper.titleTextStyle("${'tax_due'.tr()} : ", c.grey_10, fs.h4, true, false)),
+                                        Expanded(flex: 1, child: UIHelper.titleTextStyle("\u{20B9} ${gettotal(data, 5)}", c.red_new, fs.h2, true, false))
                                       ],
                                     )),
                                 Row(
@@ -510,7 +502,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               UIHelper.verticalSpaceSmall,
               UIHelper.titleTextStyle('pending_payment'.tr().toString(), c.text_color, fs.h3, true, true),
               UIHelper.verticalSpaceSmall,
-              Container(
+              SizedBox(
                 width: Screen.width(context),
                 child: Stack(
                   children: [
@@ -527,7 +519,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10), bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
                           ),
                           alignment: Alignment.center,
-                          child: UIHelper.titleTextStyle("\u{20B9} ${taxamount}", c.white, fs.h2, true, true)),
+                          child: UIHelper.titleTextStyle("\u{20B9} $taxamount", c.white, fs.h2, true, true)),
                     ),
                     Positioned(
                       right: 0,
