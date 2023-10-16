@@ -175,7 +175,7 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
           height: 30,
         ),
         label: Center(
-          child: UIHelper.titleTextStyle(btnText, c.sky_blue, btnText.length > 10 ? fs.h5 : fs.h4, true, true),
+          child: UIHelper.titleTextStyle(btnText, c.sky_blue, btnText.length > 10 ? fs.h4 : fs.h3, true, true),
         ),
       ),
     );

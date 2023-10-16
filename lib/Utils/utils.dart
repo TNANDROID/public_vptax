@@ -107,15 +107,18 @@ class Utils {
           child: Center(
             child: Container(
               decoration: UIHelper.roundedBorderWithColor(10, 10, 10, 10, c.white),
-              height: 100,
-              width: 100,
+              height: Screen.width(context) / 3.5,
+              width: Screen.width(context) / 3.5,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Center(child: HeartbeatProgressIndicator(duration: Duration(milliseconds: 250), child: Image.asset(imagePath.logo, height: 40, width: 30))),
-                  UIHelper.verticalSpaceSmall,
+                  UIHelper.horizontalSpaceSmall,
+                  Center(
+                      child:
+                          HeartbeatProgressIndicator(duration: Duration(milliseconds: 250), child: Image.asset(imagePath.logo, height: Screen.width(context) / 11, width: Screen.width(context) / 12))),
+                  UIHelper.verticalSpaceMedium,
                   JumpingText(i == 1 ? 'loading'.tr().toString() : 'downloading'.tr().toString(), style: TextStyle(color: c.text_color, fontSize: fs.h4, decoration: TextDecoration.none)),
-                  UIHelper.verticalSpaceSmall,
                 ],
               ),
             ),
