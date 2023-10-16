@@ -338,7 +338,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                     ),
                   ],
                 ),
-                Container(alignment: Alignment.centerLeft, child: taxWiseReturnDataWidget(getData, c.grey_10)),
+                Container(alignment: Alignment.centerLeft, child: Utils().taxWiseReturnDataWidget(getData, c.grey_10)),
                 Row(
                   children: [
                     Container(
@@ -443,64 +443,6 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                   ),
       ],
     );
-  }
-
-// *************** Tax based  Data Get Widget***********
-  Widget taxWiseReturnDataWidget(dynamic getData, Color clr) {
-    return getData[key_taxtypeid].toString() == "1"
-        ? Container(
-            // margin: EdgeInsets.only(left: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString() ?? ""}"), clr, fs.h4, false, true),
-                UIHelper.verticalSpaceTiny,
-                UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[key_assessment_no].toString() ?? ""}"), clr, fs.h4, false, true),
-                UIHelper.verticalSpaceTiny,
-              ],
-            ),
-          )
-        : getData[key_taxtypeid].toString() == "2"
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString() ?? ""}"), clr, fs.h4, false, true),
-                  UIHelper.verticalSpaceTiny,
-                  UIHelper.titleTextStyle(("${'water_connection_number'.tr()} : ${getData[key_assessment_no].toString() ?? ""}"), clr, fs.h4, false, true),
-                  UIHelper.verticalSpaceTiny,
-                ],
-              )
-            : getData[key_taxtypeid].toString() == "4"
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString() ?? ""}"), clr, fs.h4, false, true),
-                      UIHelper.verticalSpaceTiny,
-                      UIHelper.titleTextStyle(("${'financialYear'.tr()} : ${getData['financialyear'].toString() ?? ""}"), clr, fs.h4, false, true),
-                      UIHelper.verticalSpaceTiny,
-                      UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[key_assessment_no].toString() ?? ""}"), clr, fs.h4, false, true),
-                      UIHelper.verticalSpaceTiny,
-                    ],
-                  )
-                : getData[key_taxtypeid].toString() == "5"
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString() ?? ""}"), clr, fs.h4, false, true),
-                          UIHelper.verticalSpaceTiny,
-                          UIHelper.titleTextStyle(("${'lease_number'.tr()} : ${getData[key_assessment_no].toString() ?? ""}"), clr, fs.h4, false, true),
-                          UIHelper.verticalSpaceTiny,
-                        ],
-                      )
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString() ?? ""}"), clr, fs.h4, false, true),
-                          UIHelper.verticalSpaceTiny,
-                          UIHelper.titleTextStyle(("${'traders_code'.tr()} : ${getData[key_assessment_no].toString() ?? ""}"), clr, fs.h4, false, true),
-                          UIHelper.verticalSpaceTiny,
-                        ],
-                      );
   }
 
   Widget propertyTaxCollectionWidget(int mainIndex, dynamic demandData) {

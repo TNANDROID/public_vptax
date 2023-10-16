@@ -631,6 +631,25 @@ class Utils {
     return street;
   }
 
+  Widget taxWiseReturnDataWidget(dynamic getData, Color clr) {
+    String taxTypeId = getData[key_taxtypeid].toString();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString()}"), clr, fs.h4, false, true),
+        UIHelper.verticalSpaceTiny,
+        if (taxTypeId == "1") UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h4, false, true),
+        if (taxTypeId == "2") UIHelper.titleTextStyle(("${'water_connection_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h4, false, true),
+        if (taxTypeId == "4") UIHelper.titleTextStyle(("${'financialYear'.tr()} : ${getData['financialyear'].toString()}"), clr, fs.h4, false, true),
+        if (taxTypeId == "4") UIHelper.verticalSpaceTiny,
+        if (taxTypeId == "4") UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h4, false, true),
+        if (taxTypeId == "5") UIHelper.titleTextStyle(("${'lease_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h4, false, true),
+        if (taxTypeId == "6") UIHelper.titleTextStyle(("${'traders_code'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h4, false, true),
+        UIHelper.verticalSpaceTiny,
+      ],
+    );
+  }
+
   getResponsiveFontSize(BuildContext context, double screenWidth) {
     if (screenWidth < 400) {
       //Responsive For Smart Mobile Device Size

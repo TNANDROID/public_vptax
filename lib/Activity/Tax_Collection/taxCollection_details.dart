@@ -249,7 +249,7 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                   ],
                 ),
                 UIHelper.verticalSpaceTiny,
-                Container(alignment: Alignment.centerLeft, child: taxWiseReturnDataWidget(getData, c.grey_8)),
+                Container(alignment: Alignment.centerLeft, child: Utils().taxWiseReturnDataWidget(getData, c.grey_8)),
                 UIHelper.titleTextStyle(("${'pending_payment'.tr()} : \u{20B9} " + getData['totaldemand']), c.grey_10, fs.h3, true, true),
               ],
             ),
@@ -363,72 +363,6 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                   ),
       ],
     );
-  }
-
-// *************** Tax based  Data Get Widget***********
-  Widget taxWiseReturnDataWidget(dynamic getData, Color clr) {
-    return getData[key_taxtypeid].toString() == "1"
-        ? Container(
-            margin: EdgeInsets.only(left: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, fs.h4, false, true),
-                UIHelper.verticalSpaceTiny,
-                UIHelper.titleTextStyle(("${'building_licence_number'.tr()} : ${getData[s.key_building_licence_no].toString() ?? ""}"), clr, fs.h4, false, true),
-                UIHelper.verticalSpaceTiny,
-                UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, fs.h4, false, true),
-                UIHelper.verticalSpaceTiny,
-              ],
-            ),
-          )
-        : getData[key_taxtypeid].toString() == "2"
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, fs.h4, false, true),
-                  UIHelper.verticalSpaceTiny,
-                  UIHelper.titleTextStyle(("${'water_connection_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, fs.h4, false, true),
-                  UIHelper.verticalSpaceTiny,
-                ],
-              )
-            : getData[key_taxtypeid].toString() == "4"
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, fs.h4, false, true),
-                      UIHelper.verticalSpaceTiny,
-                      UIHelper.titleTextStyle(("${'financialYear'.tr()} : ${getData['financialyear'].toString() ?? ""}"), clr, fs.h4, false, true),
-                      UIHelper.verticalSpaceTiny,
-                      UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, fs.h4, false, true),
-                      UIHelper.verticalSpaceTiny,
-                    ],
-                  )
-                : getData[key_taxtypeid].toString() == "5"
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, fs.h4, false, true),
-                          UIHelper.verticalSpaceTiny,
-                          UIHelper.titleTextStyle(("${'lease_number'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, fs.h4, false, true),
-                          UIHelper.verticalSpaceTiny,
-                          UIHelper.titleTextStyle(("${'lease_state'.tr()} : ${getData['lease_statename'].toString() ?? ""}"), clr, fs.h4, false, true),
-                          UIHelper.verticalSpaceTiny,
-                          UIHelper.titleTextStyle(("${'lease_district'.tr()} : ${getData['lease_districtname'].toString() ?? ""}"), clr, fs.h4, false, true),
-                          UIHelper.verticalSpaceTiny,
-                          UIHelper.titleTextStyle(("${'lease_duration'.tr()} : ${getData['from_date'].toString() ?? ""} - ${getData['to_date'].toString() ?? ""}"), clr, fs.h4, false, true),
-                          UIHelper.verticalSpaceTiny,
-                        ],
-                      )
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[s.key_assessment_id].toString() ?? ""}"), clr, fs.h4, false, true),
-                          UIHelper.verticalSpaceTiny,
-                          UIHelper.titleTextStyle(("${'traders_code'.tr()} : ${getData[s.key_assessment_no].toString() ?? ""}"), clr, fs.h4, false, true),
-                          UIHelper.verticalSpaceTiny,
-                        ],
-                      );
   }
 
   Widget propertyTaxCollectionWidget(int mainIndex, dynamic demandData) {

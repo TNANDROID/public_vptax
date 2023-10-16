@@ -156,9 +156,7 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Expanded(
-                                  child: UIHelper.titleTextStyle(
-                                      dateText, c.grey_8, preferencesService.selectedLanguage == "ta" && dateText == "select_from_to_date".tr().toString() ? 10 : 12, true, false)),
+                              Expanded(child: UIHelper.titleTextStyle(dateText, c.grey_8, dateText == "select_from_to_date".tr().toString() ? fs.h4 : fs.h3, true, false)),
                               Image.asset(
                                 imagePath.datepicker_icon,
                                 height: 30,
@@ -270,33 +268,7 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
                           duration: const Duration(milliseconds: 800),
                           child: SlideAnimation(
                             horizontalOffset: 200.0,
-                            child: FlipAnimation(child: customCardDesign(receiptList[index], model)
-                                // Container(
-                                //   padding: EdgeInsets.all(5),
-                                //   decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.colorAccent, c.white, stop1: 0.25, stop2: 0.1),
-                                //   child: Container(
-                                //       margin: EdgeInsets.all(10.0),
-                                //       child: Column(
-                                //         children: [
-                                //           Align(
-                                //               alignment: Alignment.topRight,
-                                //               child: Column(mainAxisAlignment: MainAxisAlignment.end, crossAxisAlignment: CrossAxisAlignment.end, children: [
-                                //                 UIHelper.titleTextStyle(receiptList[index]['owner_name'].toString(), c.text_color, 13, false, false),
-                                //                 UIHelper.titleTextStyle(formatedDate(receiptList[index]['collectiondate'].toString()), c.text_color, 12, false, false)
-                                //               ])),
-                                //           UIHelper.titleTextStyle('receiptno'.tr().toString(), c.primary_text_color, 12, false, true),
-                                //           UIHelper.titleTextStyle(receiptList[index]['receipt_no'].toString(), c.text_color, 12, true, true),
-                                //           UIHelper.verticalSpaceSmall,
-                                //           UIHelper.titleTextStyle('assesmentNumber'.tr().toString(), c.primary_text_color, 12, false, true),
-                                //           UIHelper.titleTextStyle(receiptList[index]['assessment_no'].toString(), c.text_color, 12, true, true),
-                                //           UIHelper.verticalSpaceMedium,
-                                //           getReceiptDownloadWidget(context, 'download_tamil'.tr().toString() + "\n" + 'tamil_1'.tr().toString(), receiptList[index], "ta", model),
-                                //           UIHelper.verticalSpaceMedium,
-                                //           getReceiptDownloadWidget(context, 'download_english'.tr().toString() + "\n" + 'english_1'.tr().toString(), receiptList[index], "en", model),
-                                //         ],
-                                //       )),
-                                // ),
-                                ),
+                            child: FlipAnimation(child: customCardDesign(receiptList[index], model)),
                           ),
                         ),
                         UIHelper.verticalSpaceSmall
@@ -320,13 +292,10 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(flex: 2, child: UIHelper.titleTextStyle(key, c.grey_8, 11, false, false)),
-            Expanded(flex: 0, child: UIHelper.titleTextStyle(":", c.grey_8, 11, false, false)),
+            Expanded(flex: 2, child: UIHelper.titleTextStyle(key, c.grey_8, fs.h4, false, false)),
+            Expanded(flex: 0, child: UIHelper.titleTextStyle(":", c.grey_8, fs.h4, false, false)),
             UIHelper.horizontalSpaceSmall,
-            Expanded(
-              flex: 3,
-              child: ExpandableText(value, trimLines: 2, txtcolor: "2"),
-            ),
+            Expanded(flex: 3, child: UIHelper.titleTextStyle(value, c.grey_8, fs.h3, false, false)),
           ],
         ),
         UIHelper.verticalSpaceSmall
@@ -337,7 +306,7 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
   Widget customCardDesign(dynamic getData, StartUpViewModel model) {
     return Container(
         margin: EdgeInsets.only(top: 10),
-        height: 210,
+        //  height: 210,
         decoration: UIHelper.roundedBorderWithColorWithShadow(15, c.white, c.white, borderWidth: 0, borderColor: c.colorAccent),
         width: Screen.width(context),
         child: Column(children: [
@@ -351,46 +320,42 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
             width: Screen.width(context) / 1.5,
             decoration: UIHelper.roundedBorderWithColor(0, 0, 10, 10, c.colorPrimaryDark, borderWidth: 0),
           ),
-          Expanded(
-              child: Container(
-                  margin: EdgeInsets.only(right: 10, left: 20),
-                  child: Column(
+          Container(
+              margin: EdgeInsets.only(right: 10, left: 20),
+              child: Column(
+                children: [
+                  UIHelper.verticalSpaceSmall,
+                  Align(alignment: Alignment.topRight, child: UIHelper.titleTextStyle(formatedDate(getData['collectiondate'].toString()), c.text_color, fs.h4, false, false)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      UIHelper.verticalSpaceSmall,
-                      Align(alignment: Alignment.topRight, child: UIHelper.titleTextStyle(formatedDate(getData['collectiondate'].toString()), c.text_color, 12, false, false)),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            imagePath.user,
-                            color: c.colorPrimaryDark,
-                            height: 15,
-                            width: 15,
-                          ),
-                          UIHelper.horizontalSpaceTiny,
-                          Expanded(
-                            child: Text(
-                              getData['owner_name'].toString(),
-                              style: TextStyle(fontSize: fs.h2, fontWeight: FontWeight.bold, color: c.text_color),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          // UIHelper.titleTextStyle(/*getData['owner_name'].toString()*/"fd gd fg fd dfgrtrtertretret etretert ggggggg gggg", c.text_color, 15, true, false),
-                        ],
+                      Image.asset(
+                        imagePath.user,
+                        color: c.colorPrimaryDark,
+                        height: 15,
+                        width: 15,
                       ),
-                      UIHelper.verticalSpaceMedium,
-                      keyValueRowWidget('receiptno'.tr().toString(), getData['receipt_no'].toString()),
-                      keyValueRowWidget('assesmentNumber'.tr().toString(), getData['assessment_no'].toString()),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          getReceiptDownloadWidget1(context, "தமிழ்", getData, "ta", model),
-                          UIHelper.horizontalSpaceMedium,
-                          getReceiptDownloadWidget1(context, "English", getData, "en", model)
-                        ],
+                      UIHelper.horizontalSpaceTiny,
+                      Expanded(
+                        child: Text(
+                          getData['owner_name'].toString(),
+                          style: TextStyle(fontSize: fs.h2, fontWeight: FontWeight.bold, color: c.text_color),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
+                      // UIHelper.titleTextStyle(/*getData['owner_name'].toString()*/"fd gd fg fd dfgrtrtertretret etretert ggggggg gggg", c.text_color, 15, true, false),
                     ],
-                  ))),
+                  ),
+                  UIHelper.verticalSpaceMedium,
+                  keyValueRowWidget('receiptno'.tr().toString(), getData['receipt_no'].toString()),
+                  keyValueRowWidget('assesmentNumber'.tr().toString(), getData['assessment_no'].toString()),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [getReceiptDownloadWidget1(context, "தமிழ்", getData, "ta", model), UIHelper.horizontalSpaceMedium, getReceiptDownloadWidget1(context, "English", getData, "en", model)],
+                  ),
+                  UIHelper.verticalSpaceSmall,
+                ],
+              )),
           Container(
             height: 25,
             width: Screen.width(context),
@@ -416,11 +381,10 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
       child: Stack(
         children: [
           Container(
-              width: 100,
+              width: Screen.width(context) / 4,
               height: 40,
-              padding: EdgeInsets.all(10),
               decoration: UIHelper.roundedBorderWithColorWithShadow(10, c.white, c.white, borderColor: c.grey_4, borderWidth: 0),
-              child: Center(child: UIHelper.titleTextStyle(title, c.text_color, 12, true, true))),
+              child: Center(child: UIHelper.titleTextStyle(title, c.text_color, fs.h4, true, true))),
           Container(
             transform: Matrix4.translationValues(-12, 10, 0),
             decoration: UIHelper.circleWithColorWithShadow(300, c.white, c.white),

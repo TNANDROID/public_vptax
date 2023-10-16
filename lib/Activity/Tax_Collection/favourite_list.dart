@@ -28,7 +28,6 @@ class FavouriteTaxDetails extends StatefulWidget {
 class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerProviderStateMixin {
   PreferenceService preferencesService = locator<PreferenceService>();
   FS fs = locator<FS>();
-  dynamic requestJson = {key_service_id: service_key_getAllTaxAssessmentList};
   List mainList = [];
   List taxTypeList = [];
   var selectedTaxTypeData;
@@ -42,13 +41,6 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
     taxTypeList.add(val);
     taxTypeList.addAll(preferencesService.taxTypeList);
     selectedTaxTypeData = taxTypeList[0];
-    initialize();
-  }
-
-  Future<void> initialize() async {
-    requestJson[key_mobile_number] = await preferencesService.getUserInfo(key_mobile_number);
-    requestJson[key_language_name] = preferencesService.selectedLanguage;
-    setState(() {});
   }
 
   // ********* Main Widget for this Class **********
@@ -263,9 +255,6 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
       builder: (BuildContext context) {
         // Size
         final size = MediaQuery.of(context).size;
-
-        ContentInfo contentInfo = ContentInfo(title: "Location", assetPath: imagePath.location, color: c.white);
-
         return WillPopScope(
             onWillPop: () async {
               return btnCount != null ? false : true;
@@ -456,30 +445,6 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                               child: Text(
                                 "OK",
                                 style: TextStyle(color: c.colorPrimary, fontSize: fs.h4, fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Visibility(
-                          visible: btnCount == '2' ? true : false,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              style: ButtonStyle(
-                                elevation: MaterialStateProperty.all(5.0),
-                                backgroundColor: MaterialStateProperty.all(c.white),
-                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20.0), // Set the desired border radius here
-                                  ),
-                                ),
-                              ),
-                              child: Text(
-                                'Cancel',
-                                style: TextStyle(color: contentInfo.color, fontSize: fs.h4),
                               ),
                             ),
                           ),
