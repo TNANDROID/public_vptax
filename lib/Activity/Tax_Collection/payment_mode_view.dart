@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:public_vptax/Layout/customgradientbutton.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Model/startup_model.dart';
@@ -157,8 +156,8 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
                 alignment: Alignment.centerRight,
                 child: Container(
                   margin: const EdgeInsets.only(left: 5, right: 20, bottom: 20),
-                  child: CustomGradientButton(
-                    onPressed: () async {
+                  child: GestureDetector(
+                    onTap: () async {
                       if (selectedid > 0) {
                         if (_formKey.currentState!.saveAndValidate()) {
                           Map<String, dynamic> postParams = Map.from(_formKey.currentState!.value);
@@ -170,9 +169,10 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
                         Utils().showAlert(context, ContentType.fail, 'select_anyOne_gateway'.tr().toString());
                       }
                     },
-                    width: 120,
-                    height: 40,
                     child: Container(
+                      width: 120,
+                      height: 40,
+                      decoration: UIHelper.roundedBorderWithColorWithShadow(15, c.colorPrimary, c.colorPrimaryDark),
                       alignment: Alignment.center,
                       child: Text(
                         "continue".tr().toString(),

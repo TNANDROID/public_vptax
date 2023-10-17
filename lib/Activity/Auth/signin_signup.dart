@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:public_vptax/Activity/Auth/Splash.dart';
-import 'package:public_vptax/Layout/customgradientbutton.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Layout/verification.dart';
@@ -19,7 +18,6 @@ import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:public_vptax/Utils/utils.dart';
-
 import '../../Layout/number_keyboard.dart';
 
 class SignUpView extends StatefulWidget {
@@ -102,14 +100,10 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
           children: [
             // ****************************** Background Color alone Field ****************************** //
 
-            CustomGradientButton(
+            Container(
+              decoration: UIHelper.roundedBorderWithColorWithoutShadow(0, c.colorPrimary, c.colorPrimaryDark),
               width: Screen.width(context),
               height: Screen.height(context),
-              topleft: 0,
-              topright: 0,
-              btmleft: 0,
-              btmright: 0,
-              btnPadding: 0,
             ),
 
             Positioned(
@@ -206,14 +200,16 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                     UIHelper.verticalSpaceMedium,
 
                     // ****************************** Submit Action Field ****************************** //
-                    CustomGradientButton(
-                      onPressed: () async {
-                        finalValidation(model);
-                      },
-                      width: Screen.width(context) - 100,
-                      height: 50,
-                      child: Container(alignment: Alignment.center, child: UIHelper.titleTextStyle('submit'.tr().toString(), c.white, fs.h2, true, true)),
-                    ),
+                    GestureDetector(
+                        onTap: () async {
+                          finalValidation(model);
+                        },
+                        child: Container(
+                            width: Screen.width(context) / 2,
+                            height: 50,
+                            decoration: UIHelper.roundedBorderWithColorWithoutShadow(20, c.colorPrimary, c.colorPrimaryDark),
+                            alignment: Alignment.center,
+                            child: UIHelper.titleTextStyle('submit'.tr().toString(), c.white, fs.h2, true, true))),
                   ],
                 ),
               ),
