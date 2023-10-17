@@ -149,19 +149,21 @@ class _CheckTransactionState extends State<CheckTransaction> {
               ),
             ),
             Expanded(
-                child: SingleChildScrollView(
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: filterList.length,
-                  itemBuilder: (context, mainIndex) {
-                    var item = filterList[mainIndex];
-                    return Container(
-                      margin: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                      child: buildTransactionStatusCard(item),
-                    );
-                  }),
-            )),
+                child: filterList.isNotEmpty
+                    ? SingleChildScrollView(
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: filterList.length,
+                            itemBuilder: (context, mainIndex) {
+                              var item = filterList[mainIndex];
+                              return Container(
+                                margin: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                                child: buildTransactionStatusCard(item),
+                              );
+                            }),
+                      )
+                    : Center(child: UIHelper.titleTextStyle("no_record".tr().toString(), c.grey_9, fs.h3, true, true))),
           ],
         ),
       ),
