@@ -52,4 +52,5 @@ class FS {
   double h3 = 0;
   double h4 = 0;
   double h5 = 0;
+  double h6 = 0;
 }

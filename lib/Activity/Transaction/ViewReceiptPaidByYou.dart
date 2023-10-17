@@ -157,7 +157,7 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Expanded(child: UIHelper.titleTextStyle(dateText, c.grey_8, dateText == "select_from_to_date".tr().toString() ? fs.h4 : fs.h3, true, false)),
+                              Expanded(child: UIHelper.titleTextStyle(dateText, c.grey_8, dateText == "select_from_to_date".tr().toString() ? fs.h5 : fs.h4, true, false)),
                               Image.asset(
                                 imagePath.datepicker_icon,
                                 height: 30,
@@ -173,29 +173,29 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
           style: TextButton.styleFrom(fixedSize: const Size(150, 20), shape: StadiumBorder(), backgroundColor: c.colorPrimary),
           onPressed: () async {
             if (_formKey.currentState!.saveAndValidate()) {
-            if (from_Date.isNotEmpty && to_Date.isNotEmpty) {
-              Map<String, dynamic> postParams = Map.from(_formKey.currentState!.value);
-              postParams['service_id'] = "ReceiptBillDetails";
-              postParams['language_name'] = preferencesService.selectedLanguage;
-              postParams['from_date'] = from_Date;
-              postParams['to_date'] = to_Date;
-              postParams[key_mobile_number] = mobile_number;
-              postParams.removeWhere((key, value) {
-                return value == null || (value is String && value.isEmpty);
-              });
-              Utils().showProgress(context, 1);
-              var response = await model.overAllMainService(context, postParams);
-              if (response[key_response] == key_fail) {
-                receiptList = [];
-                noDataFound = true;
+              if (from_Date.isNotEmpty && to_Date.isNotEmpty) {
+                Map<String, dynamic> postParams = Map.from(_formKey.currentState!.value);
+                postParams['service_id'] = "ReceiptBillDetails";
+                postParams['language_name'] = preferencesService.selectedLanguage;
+                postParams['from_date'] = from_Date;
+                postParams['to_date'] = to_Date;
+                postParams[key_mobile_number] = mobile_number;
+                postParams.removeWhere((key, value) {
+                  return value == null || (value is String && value.isEmpty);
+                });
+                Utils().showProgress(context, 1);
+                var response = await model.overAllMainService(context, postParams);
+                if (response[key_response] == key_fail) {
+                  receiptList = [];
+                  noDataFound = true;
+                } else {
+                  noDataFound = false;
+                  receiptList = response[key_data];
+                }
+                Utils().hideProgress(context);
               } else {
-                noDataFound = false;
-                receiptList = response[key_data];
+                Utils().showAlert(context, ContentType.warning, 'select_from_to_date'.tr().toString());
               }
-              Utils().hideProgress(context);
-            }else{
-              Utils().showAlert(context, ContentType.warning, 'select_from_to_date'.tr().toString());
-            }
             }
             setState(() {});
             scrollController.animateTo(

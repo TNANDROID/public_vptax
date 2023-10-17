@@ -394,7 +394,6 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                                 )
                               : SizedBox(),
                           Container(
-                              width: Screen.width(context) / 2,
                               alignment: Alignment.center,
                               child: GestureDetector(
                                 onTap: () async {
@@ -408,7 +407,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      UIHelper.titleTextStyle('submit'.tr().toString(), c.white, fs.h2, true, false),
+                                      UIHelper.titleTextStyle('submit'.tr().toString(), c.white, fs.h3, true, false),
                                     ],
                                   ),
                                 ),

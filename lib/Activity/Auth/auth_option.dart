@@ -140,16 +140,8 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
 //  ****************** Qucik Action Buttons Common Wdget  ****************** //
 
   Widget actionButton(int flag, String btnText, String imgPath) {
-    return CustomGradientButton(
-      topleft: 20,
-      topright: 20,
-      btmleft: 20,
-      btmright: 20,
-      elevation: 3,
-      width: Screen.width(context) / 2.5,
-      height: 45,
-      child: TextButton.icon(
-        onPressed: () async {
+    return GestureDetector(
+        onTap: () async {
           if (flag == 1) {
             Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpView(isSignup: false)));
           } else if (flag == 2) {
@@ -167,18 +159,20 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
             }
           }
         },
-        style: ButtonStyle(
-          side: MaterialStateProperty.all(BorderSide.none),
-        ),
-        icon: Image.asset(
-          imgPath,
-          width: 30,
-          height: 30,
-        ),
-        label: Center(
-          child: UIHelper.titleTextStyle(btnText, c.white, btnText.length > 10 ? fs.h4 : fs.h3, true, true),
-        ),
-      ),
-    );
+        child: Container(
+            decoration: UIHelper.roundedBorderWithColorWithShadow(15, c.colorPrimary, c.colorPrimaryDark),
+            padding: EdgeInsets.all(5),
+            width: Screen.width(context) / 2.3,
+            child: Row(
+              children: [
+                Image.asset(
+                  imgPath,
+                  width: 30,
+                  height: 30,
+                ),
+                UIHelper.horizontalSpaceTiny,
+                Expanded(child: UIHelper.titleTextStyle(btnText, c.white, btnText.length > 10 ? fs.h6 : fs.h5, true, false))
+              ],
+            )));
   }
 }

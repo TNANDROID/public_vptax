@@ -299,20 +299,20 @@ class _CheckTransactionState extends State<CheckTransaction> {
                       children: [
                         Row(
                           children: [
-                            Text("${"transaction_id".tr().toString()} :", style: TextStyle(fontSize: fs.h5, color: c.black)),
-                            Text(transID, style: TextStyle(fontSize: fs.h4, color: c.text_color)),
+                            Text("${"transaction_id".tr().toString()} :", style: TextStyle(fontSize: fs.h6, color: c.black)),
+                            Text(transID, style: TextStyle(fontSize: fs.h6, color: c.text_color)),
                           ],
                         ),
                         Row(
                           children: [
-                            Text("${"transaction_date".tr().toString()} :", style: TextStyle(fontSize: fs.h5, color: c.black)),
-                            Text(transDate, style: TextStyle(fontSize: fs.h4, color: c.text_color)),
+                            Text("${"transaction_date".tr().toString()} :", style: TextStyle(fontSize: fs.h6, color: c.black)),
+                            Text(transDate, style: TextStyle(fontSize: fs.h6, color: c.text_color)),
                           ],
                         ),
                         Row(
                           children: [
-                            Text("${"transaction_amount".tr().toString()} :", style: TextStyle(fontSize: fs.h5, color: c.black)),
-                            Text("\u{20B9} ${transAmount}", style: TextStyle(fontSize: fs.h4, color: c.text_color)),
+                            Text("${"transaction_amount".tr().toString()} :", style: TextStyle(fontSize: fs.h6, color: c.black)),
+                            Text("\u{20B9} ${transAmount}", style: TextStyle(fontSize: fs.h6, color: c.text_color)),
                           ],
                         ),
                       ],
@@ -339,7 +339,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
                                     checkReceiptStatus(status, transID, preferencesService.selectedLanguage, taxTypeID, context);
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    fixedSize: Size(160, 30),
+                                    padding: EdgeInsets.all(5),
                                     backgroundColor: cardColorPrimary,
                                   ),
                                   child: Row(

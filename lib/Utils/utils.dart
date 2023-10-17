@@ -662,6 +662,7 @@ class Utils {
       fs.h3 = preferencesService.selectedLanguage == "ta" ? 14 : 16;
       fs.h4 = preferencesService.selectedLanguage == "ta" ? 12 : 14;
       fs.h5 = preferencesService.selectedLanguage == "ta" ? 11 : 13;
+      fs.h6 = preferencesService.selectedLanguage == "ta" ? 10 : 12;
     } else if (screenWidth < 600) {
       //Responsive For Common Mobile Device Size
       fs.h1 = preferencesService.selectedLanguage == "ta" ? 20 : 18;
@@ -669,6 +670,7 @@ class Utils {
       fs.h3 = preferencesService.selectedLanguage == "ta" ? 16 : 14;
       fs.h4 = preferencesService.selectedLanguage == "ta" ? 14 : 12;
       fs.h5 = preferencesService.selectedLanguage == "ta" ? 13 : 14;
+      fs.h6 = preferencesService.selectedLanguage == "ta" ? 12 : 13;
     } else if (screenWidth < 1200) {
       //Responsive For Tablet Device Size
       fs.h1 = preferencesService.selectedLanguage == "ta" ? 22 : 20;
@@ -676,6 +678,7 @@ class Utils {
       fs.h3 = preferencesService.selectedLanguage == "ta" ? 18 : 16;
       fs.h4 = preferencesService.selectedLanguage == "ta" ? 16 : 14;
       fs.h5 = preferencesService.selectedLanguage == "ta" ? 15 : 16;
+      fs.h6 = preferencesService.selectedLanguage == "ta" ? 13 : 14;
     } else {
       // Responsive For Desktop Size
       fs.h1 = preferencesService.selectedLanguage == "ta" ? 24 : 22;
