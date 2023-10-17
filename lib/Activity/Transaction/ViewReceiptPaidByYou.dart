@@ -19,6 +19,7 @@ import 'package:stacked/stacked.dart';
 import '../../Model/startup_model.dart';
 import '../../Resources/StringsKey.dart';
 import '../../Services/Apiservices.dart';
+import '../../Utils/ContentInfo.dart';
 
 class ViewReceiptPaidByYou extends StatefulWidget {
   @override
@@ -169,9 +170,10 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
         transform: Matrix4.translationValues(5.0, -150.0, 10.0),
         child: TextButton(
           child: Padding(padding: EdgeInsets.only(left: 5, right: 5), child: Text("submit".tr().toString(), style: TextStyle(color: c.white, fontSize: fs.h3))),
-          style: TextButton.styleFrom(fixedSize: const Size(130, 20), shape: StadiumBorder(), backgroundColor: c.colorPrimary),
+          style: TextButton.styleFrom(fixedSize: const Size(150, 20), shape: StadiumBorder(), backgroundColor: c.colorPrimary),
           onPressed: () async {
-            if (_formKey.currentState!.saveAndValidate() && from_Date.isNotEmpty && to_Date.isNotEmpty) {
+            if (_formKey.currentState!.saveAndValidate()) {
+            if (from_Date.isNotEmpty && to_Date.isNotEmpty) {
               Map<String, dynamic> postParams = Map.from(_formKey.currentState!.value);
               postParams['service_id'] = "ReceiptBillDetails";
               postParams['language_name'] = preferencesService.selectedLanguage;
@@ -191,6 +193,9 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
                 receiptList = response[key_data];
               }
               Utils().hideProgress(context);
+            }else{
+              Utils().showAlert(context, ContentType.warning, 'select_from_to_date'.tr().toString());
+            }
             }
             setState(() {});
             scrollController.animateTo(
@@ -295,7 +300,7 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
             Expanded(flex: 2, child: UIHelper.titleTextStyle(key, c.grey_8, fs.h4, false, false)),
             Expanded(flex: 0, child: UIHelper.titleTextStyle(":", c.grey_8, fs.h4, false, false)),
             UIHelper.horizontalSpaceSmall,
-            Expanded(flex: 3, child: UIHelper.titleTextStyle(value, c.grey_8, fs.h3, false, false)),
+            Expanded(flex: 3, child: UIHelper.titleTextStyle(value, c.grey_8, fs.h4, false, false)),
           ],
         ),
         UIHelper.verticalSpaceSmall
@@ -312,13 +317,13 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
         child: Column(children: [
           Container(
             height: 15,
-            decoration: UIHelper.roundedBorderWithColor(15, 15, 0, 0, c.colorPrimaryDark, borderWidth: 0),
+            decoration: UIHelper.roundedBorderWithColor(15, 15, 0, 0, c.colorAccent, borderWidth: 0),
           ),
           Container(
             height: 10,
             transform: Matrix4.translationValues(0.0, -1, 0),
             width: Screen.width(context) / 1.5,
-            decoration: UIHelper.roundedBorderWithColor(0, 0, 10, 10, c.colorPrimaryDark, borderWidth: 0),
+            decoration: UIHelper.roundedBorderWithColor(0, 0, 10, 10, c.colorAccent, borderWidth: 0),
           ),
           Container(
               margin: EdgeInsets.only(right: 10, left: 20),
@@ -359,7 +364,7 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
           Container(
             height: 25,
             width: Screen.width(context),
-            decoration: UIHelper.roundedBorderWithColor(0, 0, 15, 15, c.colorPrimaryDark, borderWidth: 0),
+            decoration: UIHelper.roundedBorderWithColor(0, 0, 15, 15, c.colorAccent, borderWidth: 0),
             child: Column(
               children: [
                 Container(

@@ -239,9 +239,9 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          UIHelper.titleTextStyle(Utils().getDoorAndStreetName(getData, preferencesService.selectedLanguage), c.grey_8, fs.h4, false, false),
-                          UIHelper.titleTextStyle(Utils().getvillageAndBlockName(getData), c.grey_8, fs.h4, false, false),
-                          UIHelper.titleTextStyle(getData[s.key_district_name] ?? '', c.grey_8, fs.h4, false, false)
+                          UIHelper.titleTextStyle(Utils().getDoorAndStreetName(getData, preferencesService.selectedLanguage), c.grey_8, fs.h5, false, false),
+                          UIHelper.titleTextStyle(Utils().getvillageAndBlockName(getData), c.grey_8, fs.h5, false, false),
+                          UIHelper.titleTextStyle(getData[s.key_district_name] ?? '', c.grey_8, fs.h5, false, false)
                         ],
                       ),
                     ),

@@ -93,7 +93,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
                             textAlign: TextAlign.left,
                             decoration: InputDecoration(
                               hintText: 'transaction_id'.tr(),
-                              hintStyle: TextStyle(fontSize: 11),
+                              hintStyle: TextStyle(fontSize: 12),
                               filled: true,
                               contentPadding: EdgeInsets.all(10),
                               focusedBorder: UIHelper.getInputBorder(0, borderColor: c.white, radius: 20),
@@ -234,7 +234,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
                     headerText,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
-                    style: TextStyle(color: c.text_color, fontSize: fs.h3),
+                    style: TextStyle(color: c.text_color, fontSize: fs.h5),
                   ),
                 ),
               ],
@@ -299,19 +299,19 @@ class _CheckTransactionState extends State<CheckTransaction> {
                       children: [
                         Row(
                           children: [
-                            Text("${"transaction_id".tr().toString()} :", style: TextStyle(fontSize: fs.h4, color: c.black)),
+                            Text("${"transaction_id".tr().toString()} :", style: TextStyle(fontSize: fs.h5, color: c.black)),
                             Text(transID, style: TextStyle(fontSize: fs.h4, color: c.text_color)),
                           ],
                         ),
                         Row(
                           children: [
-                            Text("${"transaction_date".tr().toString()} :", style: TextStyle(fontSize: fs.h4, color: c.black)),
+                            Text("${"transaction_date".tr().toString()} :", style: TextStyle(fontSize: fs.h5, color: c.black)),
                             Text(transDate, style: TextStyle(fontSize: fs.h4, color: c.text_color)),
                           ],
                         ),
                         Row(
                           children: [
-                            Text("${"transaction_amount".tr().toString()} :", style: TextStyle(fontSize: fs.h4, color: c.black)),
+                            Text("${"transaction_amount".tr().toString()} :", style: TextStyle(fontSize: fs.h5, color: c.black)),
                             Text("\u{20B9} ${transAmount}", style: TextStyle(fontSize: fs.h4, color: c.text_color)),
                           ],
                         ),
@@ -356,7 +356,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
                                         status == 'SUCCESS' ? 'download_receipt'.tr() : 'check_status'.tr(),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(fontSize: fs.h4, color: c.white, fontWeight: FontWeight.w600),
+                                        style: TextStyle(fontSize: fs.h5, color: c.white, fontWeight: FontWeight.w600),
                                       ),
                                     ],
                                   ),

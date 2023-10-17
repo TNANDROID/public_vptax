@@ -25,7 +25,7 @@ class UIHelper {
 // AppBar Provider
   static AppBar getBar(String title) {
     FS fs = locator<FS>();
-    return AppBar(backgroundColor: c.colorPrimary, centerTitle: true, elevation: 2, title: UIHelper.titleTextStyle(title.tr().toString(), c.white, fs.h2, true, false));
+    return AppBar(backgroundColor: c.colorPrimary, centerTitle: true, elevation: 2, title: UIHelper.titleTextStyle(title.tr().toString(), c.white, fs.h3, true, false));
   }
 
 // Input Box Style Provider

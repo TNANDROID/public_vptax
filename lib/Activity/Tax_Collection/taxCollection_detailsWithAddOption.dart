@@ -233,7 +233,7 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
                   ),
                 ),
                 UIHelper.verticalSpaceTiny,
-                Container(alignment: Alignment.centerLeft, child: Utils().taxWiseReturnDataWidget(mainIndex, c.grey_8)),
+                Container(alignment: Alignment.centerLeft, child: Utils().taxWiseReturnDataWidget(getData, c.grey_8)),
               ],
             ))
       ],

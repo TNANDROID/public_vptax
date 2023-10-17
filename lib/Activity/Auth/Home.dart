@@ -424,7 +424,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                             ),
                                             Container(
                                               alignment: Alignment.center,
-                                              child: UIHelper.titleTextStyle(servicesList[index][key_service_name].toString().tr().toString(), c.text_color, fs.h4, false, true),
+                                              child: UIHelper.titleTextStyle(servicesList[index][key_service_name].toString().tr().toString(), c.text_color, fs.h5, false, true),
                                             ),
                                           ],
                                         ),

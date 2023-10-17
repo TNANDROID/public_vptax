@@ -330,9 +330,9 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          UIHelper.titleTextStyle(Utils().getDoorAndStreetName(getData, preferencesService.selectedLanguage).trim(), c.grey_9, fs.h4, false, false),
-                          UIHelper.titleTextStyle(Utils().getvillageAndBlockName(getData).trim(), c.grey_9, fs.h4, false, false),
-                          UIHelper.titleTextStyle(getData[key_district_name].trim() ?? '', c.grey_9, fs.h4, false, false)
+                          UIHelper.titleTextStyle(Utils().getDoorAndStreetName(getData, preferencesService.selectedLanguage).trim(), c.grey_9, fs.h5, false, false),
+                          UIHelper.titleTextStyle(Utils().getvillageAndBlockName(getData).trim(), c.grey_9, fs.h5, false, false),
+                          UIHelper.titleTextStyle(getData[key_district_name].trim() ?? '', c.grey_9, fs.h5, false, false)
                         ],
                       ),
                     ),

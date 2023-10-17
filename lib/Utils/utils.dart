@@ -640,15 +640,15 @@ class Utils {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         UIHelper.verticalSpaceTiny,
-        UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString()}"), clr, fs.h4, false, true),
+        UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString()}"), clr, fs.h5, false, true),
         UIHelper.verticalSpaceTiny,
-        if (taxTypeId == "1") UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h4, false, true),
-        if (taxTypeId == "2") UIHelper.titleTextStyle(("${'water_connection_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h4, false, true),
-        if (taxTypeId == "4") UIHelper.titleTextStyle(("${'financialYear'.tr()} : ${getData['financialyear'].toString()}"), clr, fs.h4, false, true),
+        if (taxTypeId == "1") UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h5, false, true),
+        if (taxTypeId == "2") UIHelper.titleTextStyle(("${'water_connection_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h5, false, true),
+        if (taxTypeId == "4") UIHelper.titleTextStyle(("${'financialYear'.tr()} : ${getData['financialyear'].toString()}"), clr, fs.h5, false, true),
         if (taxTypeId == "4") UIHelper.verticalSpaceTiny,
-        if (taxTypeId == "4") UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h4, false, true),
-        if (taxTypeId == "5") UIHelper.titleTextStyle(("${'lease_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h4, false, true),
-        if (taxTypeId == "6") UIHelper.titleTextStyle(("${'traders_code'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h4, false, true),
+        if (taxTypeId == "4") UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h5, false, true),
+        if (taxTypeId == "5") UIHelper.titleTextStyle(("${'lease_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h5, false, true),
+        if (taxTypeId == "6") UIHelper.titleTextStyle(("${'traders_code'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h5, false, true),
         UIHelper.verticalSpaceTiny,
       ],
     );
@@ -658,31 +658,31 @@ class Utils {
     if (screenWidth < 400) {
       //Responsive For Smart Mobile Device Size
       fs.h1 = preferencesService.selectedLanguage == "ta" ? 18 : 20;
-      fs.h2 = preferencesService.selectedLanguage == "ta" ? 12 : 14;
-      fs.h3 = preferencesService.selectedLanguage == "ta" ? 10 : 12;
-      fs.h4 = preferencesService.selectedLanguage == "ta" ? 8 : 10;
-      fs.h5 = preferencesService.selectedLanguage == "ta" ? 7 : 8;
+      fs.h2 = preferencesService.selectedLanguage == "ta" ? 16 : 18;
+      fs.h3 = preferencesService.selectedLanguage == "ta" ? 14 : 16;
+      fs.h4 = preferencesService.selectedLanguage == "ta" ? 12 : 14;
+      fs.h5 = preferencesService.selectedLanguage == "ta" ? 11 : 13;
     } else if (screenWidth < 600) {
       //Responsive For Common Mobile Device Size
-      fs.h1 = preferencesService.selectedLanguage == "ta" ? 23 : 25;
-      fs.h2 = preferencesService.selectedLanguage == "ta" ? 14 : 16;
-      fs.h3 = preferencesService.selectedLanguage == "ta" ? 12 : 14;
-      fs.h4 = preferencesService.selectedLanguage == "ta" ? 10 : 12;
-      fs.h5 = preferencesService.selectedLanguage == "ta" ? 9 : 10;
+      fs.h1 = preferencesService.selectedLanguage == "ta" ? 20 : 18;
+      fs.h2 = preferencesService.selectedLanguage == "ta" ? 18 : 16;
+      fs.h3 = preferencesService.selectedLanguage == "ta" ? 16 : 14;
+      fs.h4 = preferencesService.selectedLanguage == "ta" ? 14 : 12;
+      fs.h5 = preferencesService.selectedLanguage == "ta" ? 13 : 14;
     } else if (screenWidth < 1200) {
       //Responsive For Tablet Device Size
-      fs.h1 = preferencesService.selectedLanguage == "ta" ? 27 : 29;
-      fs.h2 = preferencesService.selectedLanguage == "ta" ? 19 : 20;
-      fs.h3 = preferencesService.selectedLanguage == "ta" ? 16 : 18;
-      fs.h4 = preferencesService.selectedLanguage == "ta" ? 14 : 16;
-      fs.h5 = preferencesService.selectedLanguage == "ta" ? 13 : 14;
+      fs.h1 = preferencesService.selectedLanguage == "ta" ? 22 : 20;
+      fs.h2 = preferencesService.selectedLanguage == "ta" ? 20 : 18;
+      fs.h3 = preferencesService.selectedLanguage == "ta" ? 18 : 16;
+      fs.h4 = preferencesService.selectedLanguage == "ta" ? 16 : 14;
+      fs.h5 = preferencesService.selectedLanguage == "ta" ? 15 : 16;
     } else {
       // Responsive For Desktop Size
-      fs.h1 = preferencesService.selectedLanguage == "ta" ? 30 : 32;
-      fs.h2 = preferencesService.selectedLanguage == "ta" ? 22 : 23;
-      fs.h3 = preferencesService.selectedLanguage == "ta" ? 19 : 21;
-      fs.h4 = preferencesService.selectedLanguage == "ta" ? 17 : 19;
-      fs.h5 = preferencesService.selectedLanguage == "ta" ? 16 : 17;
+      fs.h1 = preferencesService.selectedLanguage == "ta" ? 24 : 22;
+      fs.h2 = preferencesService.selectedLanguage == "ta" ? 22 : 20;
+      fs.h3 = preferencesService.selectedLanguage == "ta" ? 20 : 18;
+      fs.h4 = preferencesService.selectedLanguage == "ta" ? 18 : 16;
+      fs.h5 = preferencesService.selectedLanguage == "ta" ? 17 : 18;
       return null;
     }
   }

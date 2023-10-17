@@ -82,6 +82,7 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
               //  UIHelper.verticalSpaceMedium,
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Image.asset(imagepath.logo, fit: BoxFit.cover, height: 55, width: 50),
+                UIHelper.horizontalSpaceTiny,
                 UIHelper.titleTextStyle('appName'.tr().toString(), c.text_color, fs.h1, true, true),
               ]),
               // UIHelper.verticalSpaceMedium,
@@ -175,7 +176,7 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
           height: 30,
         ),
         label: Center(
-          child: UIHelper.titleTextStyle(btnText, c.sky_blue, btnText.length > 10 ? fs.h4 : fs.h3, true, true),
+          child: UIHelper.titleTextStyle(btnText, c.white, btnText.length > 10 ? fs.h4 : fs.h3, true, true),
         ),
       ),
     );
