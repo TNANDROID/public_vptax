@@ -1,7 +1,7 @@
 //SSl Certificate path
 // ignore_for_file: non_constant_identifier_names, file_names
 
-String certificate = "assets/certificate/tnrdtngovin.pem";
+String certificate = "assets/certificate/tnrd_tn_gov_in.pem";
 
 //png icons
 String splash = "assets/images/tax.png";
