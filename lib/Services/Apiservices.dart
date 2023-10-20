@@ -6,14 +6,15 @@ import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/utils.dart';
 
+// local
+String endPointUrl = 'http://10.163.19.137:8090/vptax/project/webservices';
+
 class ApiServices {
   Utils utils = Utils();
   PreferenceService preferencesService = locator<PreferenceService>();
-
-  // local
-  String mainURL = "http://10.163.19.137:8090/vptax/project/webservices/vptax_services_online.php";
-  String openURL = "http://10.163.19.137:8090/vptax/project/webservices/open_services/open_services.php";
-  String pdfURL = "http://10.163.19.137:8090/vptax/project/webservices/getReceipt.php";
+  String mainURL = "$endPointUrl/vptax_services_online.php";
+  String openURL = "$endPointUrl/open_services/open_services.php";
+  String pdfURL = "$endPointUrl/getReceipt.php";
 
   ioclientCertificate() async {
     HttpClient _client = HttpClient(context: await utils.globalContext);

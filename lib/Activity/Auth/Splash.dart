@@ -2,6 +2,7 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_indicators/progress_indicators.dart';
 import 'package:public_vptax/Activity/Auth/auth_option.dart';
 import 'package:public_vptax/Activity/Auth/secrectKey.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
@@ -97,17 +98,19 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
             ),
             UIHelper.verticalSpaceSmall,
             UIHelper.titleTextStyle('gov_tamilnadu'.tr().toString(), c.text_color, fs.h2, true, true),
-            UIHelper.verticalSpaceSmall,
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Image.asset(
-                imagepath.logo,
-                fit: BoxFit.cover,
-                height: 55,
-                width: 50,
-              ),
-              UIHelper.horizontalSpaceSmall,
-              UIHelper.titleTextStyle('appName'.tr().toString(), c.text_color, fs.h1, true, true),
-            ])
+            UIHelper.verticalSpaceMedium,
+            HeartbeatProgressIndicator(
+                duration: Duration(milliseconds: 250),
+                child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Image.asset(
+                    imagepath.logo,
+                    fit: BoxFit.cover,
+                    height: 30,
+                    width: 26,
+                  ),
+                  UIHelper.horizontalSpaceSmall,
+                  UIHelper.titleTextStyle('appName'.tr().toString(), c.text_color, fs.h4, true, true),
+                ]))
           ]),
         ),
       ),
