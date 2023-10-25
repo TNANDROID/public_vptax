@@ -14,6 +14,7 @@ import '../../Layout/customclip.dart';
 import '../../Layout/ui_helper.dart';
 import '../../Resources/StringsKey.dart';
 import '../../Services/Apiservices.dart';
+import '../../Services/KeyStorage.dart';
 import '../../Services/Preferenceservices.dart';
 import '../../Services/locator.dart';
 import '../../Utils/ContentInfo.dart';
@@ -32,6 +33,8 @@ class _CheckTransactionState extends State<CheckTransaction> {
   StartUpViewModel model = StartUpViewModel();
 
   Utils utils = Utils();
+  final storageUtil = SecureStorageUtil();
+
   List defaultWorklist = [];
   List filterList = [];
   String selectedFilter = "All";
@@ -446,7 +449,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
   }
 
   getFilterData(String type) {
-    print("$type");
+    print(type);
     if (type == "Pending") {
       filterList = defaultWorklist.where((item) => item[key_transaction_status] != "SUCCESS" && item[key_transaction_status] != "FAILED").toList();
     } else if (type == "All") {
@@ -468,7 +471,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
     if (flag == "SUCCESS") {
       String urlParams = "taxtypeid=${base64Encode(utf8.encode(taxType))}&transaction_id=${base64Encode(utf8.encode(transID))}&language_name=${base64Encode(utf8.encode(lang))}";
 
-      String key = preferencesService.userPassKey;
+      String key = await storageUtil.read('userPassKey') ?? '';
 
       String Signature = utils.generateHmacSha256(urlParams, key, true);
 

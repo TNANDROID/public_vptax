@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceService {
   String userName = 'public';
-  String userPassKey = '45af1c702e5c46acb5f4192cbeaba27c';
+  // String userPassKey = '45af1c702e5c46acb5f4192cbeaba27c';
   String paymentType = "";
   String selectedLanguage = "ta";
 
@@ -30,7 +30,7 @@ class PreferenceService {
 // Get User Info
   Future<String> getUserInfo(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String getStr = await prefs.getString(key) ?? '';
+    String getStr = prefs.getString(key) ?? '';
     if (getStr != '') {
       return getStr;
     }
