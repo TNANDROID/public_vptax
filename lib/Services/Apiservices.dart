@@ -1,19 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/io_client.dart';
 import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/utils.dart';
 
-import 'KeyStorage.dart';
-
 // local
-String endPointUrl = 'http://10.163.19.137:8090/vptax/project/webservices';
+String endPointUrl = dotenv.get("API_URL_LOCAL", fallback: "");
 
 class ApiServices {
   Utils utils = Utils();
-  final storageUtil = SecureStorageUtil();
 
   PreferenceService preferencesService = locator<PreferenceService>();
   String mainURL = "$endPointUrl/vptax_services_online.php";
@@ -33,7 +31,7 @@ class ApiServices {
 
   Future mainServiceFunction(dynamic jsonRequest) async {
     IOClient ioClient = await ioclientCertificate();
-    String key = await storageUtil.read('userPassKey') ?? '';
+    String key = dotenv.get("API_KEY", fallback: "");
     String userName = preferencesService.userName;
     String jsonString = jsonEncode(jsonRequest);
     String headerSignature = utils.generateHmacSha256(jsonString, key, true);
