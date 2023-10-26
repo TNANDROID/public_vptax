@@ -57,7 +57,7 @@ dependencies:
   calendar_date_picker2: ^0.5.2
   rxdart: ^0.27.7
   progress_indicators: ^1.0.0
-  flutter_dotenv: ^5.1.0
+  flutter_secure_storage: ^8.0.4
 
 
 
@@ -87,7 +87,6 @@ flutter:
     - assets/images/
     - assets/certificate/
     - assets/translations/
-    - .env
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

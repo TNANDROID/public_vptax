@@ -3,11 +3,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:public_vptax/Activity/Auth/Splash.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/utils.dart';
+import 'Services/KeyStorage.dart';
 
 Future<void> main() async {
   setupLocator();
@@ -17,7 +17,9 @@ Future<void> main() async {
     DeviceOrientation.portraitDown,
   ]);
   await EasyLocalization.ensureInitialized();
-  await dotenv.load(fileName: ".env");
+  final storageUtil = SecureStorageUtil();
+  // Storing data
+  await storageUtil.write('userPassKey', '45af1c702e5c46acb5f4192cbeaba27c');
   runApp(
     EasyLocalization(
       supportedLocales: [Locale('en', 'US'), Locale('ta', 'IN')],
