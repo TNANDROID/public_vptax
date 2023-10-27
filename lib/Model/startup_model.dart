@@ -14,13 +14,10 @@ import 'package:public_vptax/Utils/utils.dart';
 import 'package:stacked/stacked.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../Services/KeyStorage.dart';
-
 class StartUpViewModel extends BaseViewModel {
   PreferenceService preferencesService = locator<PreferenceService>();
   ApiServices apiServices = locator<ApiServices>();
   Utils utils = Utils();
-  final storageUtil = SecureStorageUtil();
 
   List<dynamic> selectedBlockList = [];
   List<dynamic> selectedVillageList = [];
@@ -146,7 +143,7 @@ class StartUpViewModel extends BaseViewModel {
   Future getReceipt(BuildContext context, receiptList, String setFlag, String language) async {
     String urlParams =
         "taxtypeid=${base64Encode(utf8.encode(receiptList[key_taxtypeid].toString()))}&statecode=${base64Encode(utf8.encode(receiptList[key_state_code].toString()))}&dcode=${base64Encode(utf8.encode(receiptList[key_dcode].toString()))}&lbcode=${base64Encode(utf8.encode(receiptList[key_lbcode].toString()))}&bcode=${base64Encode(utf8.encode(receiptList[key_bcode].toString()))}&receipt_id=${base64Encode(utf8.encode(receiptList[key_receipt_id].toString()))}&receipt_no=${base64Encode(utf8.encode(receiptList[key_receipt_no].toString()))}&language_name=${base64Encode(utf8.encode(language))}";
-    String key = await storageUtil.read('userPassKey') ?? '';
+    String key = await preferencesService.getString('userPassKey');
     String Signature = utils.generateHmacSha256(urlParams, key, true);
     String encodedParams = "${ApiServices().pdfURL}?$urlParams&sign=$Signature";
     await launch(encodedParams.toString());

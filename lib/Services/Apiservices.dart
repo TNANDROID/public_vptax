@@ -6,14 +6,11 @@ import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/utils.dart';
 
-import 'KeyStorage.dart';
-
 // local
 String endPointUrl = 'http://10.163.19.137:8090/vptax/project/webservices';
 
 class ApiServices {
   Utils utils = Utils();
-  final storageUtil = SecureStorageUtil();
 
   PreferenceService preferencesService = locator<PreferenceService>();
   String mainURL = "$endPointUrl/vptax_services_online.php";
@@ -33,7 +30,7 @@ class ApiServices {
 
   Future mainServiceFunction(dynamic jsonRequest) async {
     IOClient ioClient = await ioclientCertificate();
-    String key = await storageUtil.read('userPassKey') ?? '';
+    String key = await preferencesService.getString('userPassKey');
     String userName = preferencesService.userName;
     String jsonString = jsonEncode(jsonRequest);
     String headerSignature = utils.generateHmacSha256(jsonString, key, true);
