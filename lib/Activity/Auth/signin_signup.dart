@@ -479,11 +479,11 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
 
         if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
           dynamic resData = response['DATA'];
-          await preferencesService.setUserInfo("userId", resData['id'].toString());
-          await preferencesService.setUserInfo(key_name, resData[key_name].toString());
-          await preferencesService.setUserInfo(key_mobile_number, resData[key_mobile].toString());
-          await preferencesService.setUserInfo(key_email, resData[key_email].toString());
-          await preferencesService.setUserInfo(key_gender, resData[key_gender].toString());
+          await preferencesService.setString("userId", resData['id'].toString());
+          await preferencesService.setString(key_name, resData[key_name].toString());
+          await preferencesService.setString(key_mobile_number, resData[key_mobile].toString());
+          await preferencesService.setString(key_email, resData[key_email].toString());
+          await preferencesService.setString(key_gender, resData[key_gender].toString());
           registerStep++;
           setState(() {});
         } else {
@@ -494,7 +494,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
       if (_SecretKey.currentState!.saveAndValidate()) {
         Map<String, dynamic> postkEYParams = Map.from(_SecretKey.currentState!.value);
         if (postkEYParams[key_secretKey].toString() == postkEYParams['confirm'].toString()) {
-          await preferencesService.setUserInfo(key_secretKey, postkEYParams[key_secretKey].toString());
+          await preferencesService.setString(key_secretKey, postkEYParams[key_secretKey].toString());
           if (signUpFlag) {
             await utils.showAlert(context, ContentType.success, 'user_registered_successfull'.tr().toString());
           }

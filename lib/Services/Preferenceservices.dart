@@ -1,11 +1,11 @@
 // ignore_for_file: file_names
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:public_vptax/stream/streamed_list.dart';
 import 'package:public_vptax/stream/streamed_map.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceService {
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
   String userName = 'public';
-  // String userPassKey = '45af1c702e5c46acb5f4192cbeaba27c';
   String paymentType = "";
   String selectedLanguage = "ta";
 
@@ -21,16 +21,13 @@ class PreferenceService {
   final StreamedMap<String, dynamic> totalAmountStream = StreamedMap<String, dynamic>(initialData: {});
 
   //Set User Info
-  Future<bool> setUserInfo(String key, String value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(key, value);
-    return true;
+  Future<void> setString(String key, String value) async {
+    await _storage.write(key: key, value: value);
   }
 
 // Get User Info
-  Future<String> getUserInfo(String key) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String getStr = prefs.getString(key) ?? '';
+  Future<String> getString(String key) async {
+    String getStr = await _storage.read(key: key) ?? '';
     if (getStr != '') {
       return getStr;
     }
@@ -41,8 +38,7 @@ class PreferenceService {
   Future cleanAllPreferences() async {
     totalAmountStream.clear();
     taxListStream!.clear();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.clear();
+    _storage.deleteAll();
   }
 }
 

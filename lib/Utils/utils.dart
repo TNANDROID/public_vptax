@@ -249,7 +249,7 @@ class Utils {
                               await StartUpViewModel().getDemandList(mcontext);
                               hideProgress(mcontext);
                             } else {
-                              if (await preferencesService.getUserInfo(key_isLogin) == "yes") {
+                              if (await preferencesService.getString(key_isLogin) == "yes") {
                                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);
                               } else {
                                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Splash()), (route) => false);
@@ -261,7 +261,7 @@ class Utils {
                               await StartUpViewModel().getDemandList(mcontext);
                               hideProgress(mcontext);
                             } else {
-                              if (await preferencesService.getUserInfo(key_isLogin) == "yes") {
+                              if (await preferencesService.getString(key_isLogin) == "yes") {
                                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);
                               } else {
                                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Splash()), (route) => false);
@@ -301,7 +301,7 @@ class Utils {
                                     await StartUpViewModel().getDemandList(mcontext);
                                     hideProgress(mcontext);
                                   } else {
-                                    if (await preferencesService.getUserInfo(key_isLogin) == "yes") {
+                                    if (await preferencesService.getString(key_isLogin) == "yes") {
                                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);
                                     } else {
                                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Splash()), (route) => false);
@@ -317,7 +317,7 @@ class Utils {
                                     await StartUpViewModel().getDemandList(mcontext);
                                     hideProgress(mcontext);
                                   } else {
-                                    if (await preferencesService.getUserInfo(key_isLogin) == "yes") {
+                                    if (await preferencesService.getString(key_isLogin) == "yes") {
                                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);
                                     } else {
                                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Splash()), (route) => false);

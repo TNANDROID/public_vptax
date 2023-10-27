@@ -53,7 +53,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
   }
 
   Future<void> initialize() async {
-    dynamic requestData = {key_service_id: service_key_TransactionHistory, key_mobile_no: await preferencesService.getUserInfo(key_mobile_number), key_email_id: ''};
+    dynamic requestData = {key_service_id: service_key_TransactionHistory, key_mobile_no: await preferencesService.getString(key_mobile_number), key_email_id: ''};
     Utils().showProgress(context, 1);
     var response = await model.overAllMainService(context, requestData);
     Utils().hideProgress(context);

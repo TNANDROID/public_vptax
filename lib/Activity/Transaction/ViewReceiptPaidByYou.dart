@@ -50,7 +50,7 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
   }
 
   initialize() async {
-    mobile_number = await preferencesService.getUserInfo(key_mobile_number);
+    mobile_number = await preferencesService.getString(key_mobile_number);
   }
 
   //Dropdown Input Field Widget

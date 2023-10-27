@@ -165,7 +165,7 @@ class StartUpViewModel extends BaseViewModel {
     try {
       dynamic requestJson = {
         key_service_id: service_key_getAllTaxAssessmentList,
-        key_mobile_number: await preferencesService.getUserInfo(key_mobile_number),
+        key_mobile_number: await preferencesService.getString(key_mobile_number),
         key_language_name: preferencesService.selectedLanguage
       };
       var responce = await overAllMainService(context, requestJson);

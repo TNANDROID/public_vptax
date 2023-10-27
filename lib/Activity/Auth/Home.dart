@@ -87,7 +87,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   Future<void> initialize() async {
-    userName = await preferencesService.getUserInfo(key_name);
+    userName = await preferencesService.getString(key_name);
     taxTypeList = preferencesService.taxTypeList;
 
     if (preferencesService.selectedLanguage == "en") {
@@ -113,7 +113,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           setState(() {
             langText = value;
             preferencesService.selectedLanguage = "ta";
-            preferencesService.setUserInfo("lang", "ta");
+            preferencesService.setString("lang", "ta");
             context.setLocale(Locale('ta', 'IN'));
           });
           break;
@@ -121,7 +121,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           setState(() {
             langText = value;
             preferencesService.selectedLanguage = "en";
-            preferencesService.setUserInfo("lang", "en");
+            preferencesService.setString("lang", "en");
             context.setLocale(Locale('en', 'US'));
           });
           break;

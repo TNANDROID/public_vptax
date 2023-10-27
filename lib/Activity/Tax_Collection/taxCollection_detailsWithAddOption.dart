@@ -91,8 +91,8 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
                         for (var item in selectedList) {
                           var sendData = {};
 
-                          sendData['user_id'] = await preferencesService.getUserInfo("userId");
-                          sendData['mobile'] = await preferencesService.getUserInfo(key_mobile_number);
+                          sendData['user_id'] = await preferencesService.getString("userId");
+                          sendData['mobile'] = await preferencesService.getString(key_mobile_number);
                           sendData[key_dcode] = mainList[item][key_dcode];
                           sendData[key_bcode] = mainList[item][key_bcode];
                           sendData[key_pvcode] = mainList[item][key_lbcode];

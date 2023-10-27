@@ -33,22 +33,22 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
   }
 
   Future<void> initialize() async {
-    String getPrefesecrectKey = await preferencesService.getUserInfo(key_secretKey);
+    String getPrefesecrectKey = await preferencesService.getString(key_secretKey);
 /* preferencesService.selectedLanguage = "en";
-    preferencesService.setUserInfo("lang", "en");
+    preferencesService.setString("lang", "en");
     context.setLocale(Locale('en', 'US'));*/
-    if (await preferencesService.getUserInfo("lang") != '') {
-      preferencesService.selectedLanguage = await preferencesService.getUserInfo("lang");
+    if (await preferencesService.getString("lang") != '') {
+      preferencesService.selectedLanguage = await preferencesService.getString("lang");
     }
 
     if (getPrefesecrectKey.isNotEmpty) {
-      await preferencesService.setUserInfo(key_isLogin, "yes");
+      await preferencesService.setString(key_isLogin, "yes");
     }
     ////********************  Need to Remove ********************************************////
-    ////*******/ await preferencesService.setUserInfo(key_mobile_number, "9875235654"); //**////
-    ////*******/ await preferencesService.setUserInfo(key_secretKey, "9999"); //**////
-    // /*******/ await preferencesService.setUserInfo(key_name, "Test"); //**////
-    // /*******/ await preferencesService.setUserInfo(key_email, "Test@gmail.com"); //**////
+    ////*******/ await preferencesService.setString(key_mobile_number, "9875235654"); //**////
+    ////*******/ await preferencesService.setString(key_secretKey, "9999"); //**////
+    // /*******/ await preferencesService.setString(key_name, "Test"); //**////
+    // /*******/ await preferencesService.setString(key_email, "Test@gmail.com"); //**////
     ////*********************************************************************************////
 
     if (await utils.isOnline()) {

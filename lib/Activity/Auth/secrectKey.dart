@@ -39,7 +39,7 @@ class _SecretKeyViewState extends State<SecretKeyView> with TickerProviderStateM
   }
 
   Future<void> initialize() async {
-    getPreferKey = await preferencesService.getUserInfo(key_secretKey);
+    getPreferKey = await preferencesService.getString(key_secretKey);
     setState(() {});
   }
 
