@@ -52,9 +52,15 @@ class _CheckTransactionState extends State<CheckTransaction> {
 
   Future<void> initialize() async {
     dynamic requestData = {key_service_id: service_key_TransactionHistory, key_mobile_no: await preferencesService.getString(key_mobile_number), key_email_id: ''};
-    Utils().showProgress(context, 1);
-    var response = await model.overAllMainService(context, requestData);
-    Utils().hideProgress(context);
+    var response;
+    try{
+      Utils().showProgress(context, 1);
+      response = await model.overAllMainService(context, requestData);
+    } catch (e) {
+      Utils().showToast(context, "Fail","W");
+    } finally {
+      Utils().hideProgress(context);
+    }
 
     if (response[key_status] == key_success && response[key_response] == key_success) {
       defaultWorklist = response[key_data];

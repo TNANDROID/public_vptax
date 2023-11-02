@@ -227,6 +227,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
               ))
           .toList(),
       onChanged: (value) async {
+        try{
         Utils().showProgress(context, 1);
         if (index == 1) {
           model.selectedBlockList.clear();
@@ -238,7 +239,6 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
           Future.delayed(Duration(milliseconds: 500), () {
             model.loadUIBlock(selectedDistrict);
             setState(() {});
-            Utils().hideProgress(context);
           });
         } else if (index == 2) {
           selectedBlock = value.toString();
@@ -247,25 +247,22 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
           model.selectedVillageList.clear();
           Future.delayed(Duration(milliseconds: 500), () {
             model.loadUIVillage(selectedDistrict, selectedBlock);
-
             setState(() {});
-            Utils().hideProgress(context);
           });
         } else if (index == 3) {
           selectedVillage = value.toString();
-          Future.delayed(Duration(milliseconds: 200), () {
-            Utils().hideProgress(context);
-          });
         } else if (index == 4) {
           selectedFinYear = value.toString();
-          Future.delayed(Duration(milliseconds: 200), () {
-            Utils().hideProgress(context);
-          });
         } else {
           debugPrint("End of the Statement......");
         }
 
         setState(() {});
+      } catch (e) {
+      Utils().showToast(context, "Fail","W");
+    } finally {
+    Utils().hideProgress(context);
+    }
       },
     );
   }
@@ -510,9 +507,15 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
               if (selectedTaxTypeData[key_taxtypeid] == 4) key_fin_year: selectedFinYear
             }
           };
-          Utils().showProgress(context, 1);
-          var response = await StartUpViewModel().overAllMainService(context, request);
-          Utils().hideProgress(context);
+          var response;
+          try{
+            Utils().showProgress(context, 1);
+            response = await StartUpViewModel().overAllMainService(context, request);
+          } catch (e) {
+            Utils().showToast(context, "Fail","W");
+          } finally {
+            Utils().hideProgress(context);
+          }
           if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
             List resData = [];
             if (response["DATA"] != null) {

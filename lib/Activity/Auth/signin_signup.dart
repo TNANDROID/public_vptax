@@ -403,9 +403,15 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
               }
 
               var sendData = {key_service_id: serviceid, key_mobile_number: postParams[key_mobile_number].toString()};
+              var response;
+              try{
               Utils().showProgress(context, 1);
-              var response = await model.overAllMainService(context, sendData);
-              Utils().hideProgress(context);
+               response = await model.overAllMainService(context, sendData);
+    } catch (e) {
+    Utils().showToast(context, "Fail","W");
+    } finally {
+    Utils().hideProgress(context);
+    }
               if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
                 utils.showToast(context, 'otp_resent_success'.tr().toString(), "S");
               } else {
@@ -438,9 +444,16 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
           serviceId = verifyOTPFlag ? "ResendOtp" : "SendOTPforGeneratePIN";
         }
         postParams[key_service_id] = serviceId;
-        Utils().showProgress(context, 1);
-        var response = await model.overAllMainService(context, postParams);
-        Utils().hideProgress(context);
+        var response;
+        try{
+          Utils().showProgress(context, 1);
+          response = await model.overAllMainService(context, postParams);
+        } catch (e) {
+          Utils().showToast(context, "Fail","W");
+        } finally {
+          Utils().hideProgress(context);
+        }
+
 
         if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
           utils.showToast(context, 'otp_resent_success'.tr().toString(), "S");
@@ -473,9 +486,15 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
         }
 
         var sendData = {key_service_id: serviceId, key_mobile_number: postParams[key_mobile_number].toString(), "mobile_otp": finalOTP};
+        var response;
+        try{
         Utils().showProgress(context, 1);
-        var response = await model.overAllMainService(context, sendData);
-        Utils().hideProgress(context);
+         response = await model.overAllMainService(context, sendData);
+      } catch (e) {
+    Utils().showToast(context, "Fail","W");
+    } finally {
+    Utils().hideProgress(context);
+    }
 
         if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
           dynamic resData = response['DATA'];

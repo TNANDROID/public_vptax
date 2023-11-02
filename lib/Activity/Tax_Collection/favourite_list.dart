@@ -191,11 +191,16 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
               ElevatedButton(
                 onPressed: () async {
                   Navigator.of(context).pop(false);
-                  Utils().showProgress(mccontext, 1);
-                  var requestJson = {key_service_id: service_key_RemovefavouriteList, key_user_id: getData['user_id'], key_favourite_assessment_id: getData['favourite_assessment_id']};
-                  await model.overAllMainService(context, requestJson);
-                  await model.getDemandList(mccontext);
-                  Utils().hideProgress(mccontext);
+                  try{
+                    Utils().showProgress(context, 1);
+                    var requestJson = {key_service_id: service_key_RemovefavouriteList, key_user_id: getData['user_id'], key_favourite_assessment_id: getData['favourite_assessment_id']};
+                    await model.overAllMainService(context, requestJson);
+                    await model.getDemandList(mccontext);
+                  } catch (e) {
+                    Utils().showToast(context, "Fail","W");
+                  } finally {
+                    Utils().hideProgress(context);
+                  }
                 },
                 child: Text(
                   'yes'.tr().toString(),

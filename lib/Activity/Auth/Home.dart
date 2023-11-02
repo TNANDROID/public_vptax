@@ -100,9 +100,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   apicalls() async {
+    try{
     Utils().showProgress(context, 1);
     await model.getDemandList(context);
-    Utils().hideProgress(context);
+  } catch (e) {
+  Utils().showToast(context, "Fail","W");
+  } finally {
+  Utils().hideProgress(context);
+  }
   }
 
 // ********** Language Selection Function ***********\\

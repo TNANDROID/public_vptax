@@ -104,30 +104,34 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
                           selectedDataList.add(sendData);
                         }
                         var requestJson = {key_service_id: service_key_AddfavouriteList, key_favourite_assessment_list: selectedDataList};
-                        Utils().showProgress(context, 1);
+                        var response;
+                        try{
+                          Utils().showProgress(context, 1);
+                          response = await StartUpViewModel().overAllMainService(context, requestJson);
+                          if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              backgroundColor: c.account_status_green_color,
+                              content: Text(
+                                response[key_message].toString(),
+                                style: TextStyle(color: c.white),
+                              ),
+                            ));
+                            await await StartUpViewModel().getDemandList(context);
+                            Navigator.pop(context);
 
-                        var response = await StartUpViewModel().overAllMainService(context, requestJson);
-
-                        if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            backgroundColor: c.account_status_green_color,
-                            content: Text(
-                              response[key_message].toString(),
-                              style: TextStyle(color: c.white),
-                            ),
-                          ));
-                          await await StartUpViewModel().getDemandList(context);
-                          Utils().hideProgress(context);
+                            //  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FavouriteTaxDetails()));
+                          } else {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(SnackBar(backgroundColor: c.subscription_type_red_color, content: Text(response[key_message].toString(), style: TextStyle(color: c.white))));
+                          }
                           Navigator.pop(context);
-
-                          //  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FavouriteTaxDetails()));
-                        } else {
+                          print("response----:)$response");
+                        } catch (e) {
+                          Utils().showToast(context, "Fail","W");
+                        } finally {
                           Utils().hideProgress(context);
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(SnackBar(backgroundColor: c.subscription_type_red_color, content: Text(response[key_message].toString(), style: TextStyle(color: c.white))));
                         }
-                        Navigator.pop(context);
-                        print("response----:)$response");
+
                       },
                       child: Container(
                           height: 50,

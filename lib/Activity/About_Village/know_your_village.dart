@@ -213,6 +213,7 @@ class _KYVDashboardState extends State<KYVDashboard> {
               ))
           .toList(),
       onChanged: (value) async {
+        try{
         Utils().showProgress(context, 1);
         if (index == 1) {
           model.selectedBlockList.clear();
@@ -224,7 +225,6 @@ class _KYVDashboardState extends State<KYVDashboard> {
           Future.delayed(Duration(milliseconds: 500), () {
             model.loadUIBlock(selectedDistrict[key_dcode].toString());
             setState(() {});
-            Utils().hideProgress(context);
           });
         } else if (index == 2) {
           model.selectedVillageList.clear();
@@ -233,22 +233,22 @@ class _KYVDashboardState extends State<KYVDashboard> {
           isSelectedAll = false;
           Future.delayed(Duration(milliseconds: 500), () {
             model.loadUIVillage(selectedDistrict[key_dcode].toString(), selectedBlock[key_bcode].toString());
-
             setState(() {});
-            Utils().hideProgress(context);
           });
         } else if (index == 3) {
           selectedVillage = value;
           isAddressShow = true;
           isSelectedAll = true;
-          Future.delayed(Duration(milliseconds: 200), () {
-            Utils().hideProgress(context);
-          });
         } else {
           debugPrint("End.....");
         }
 
         setState(() {});
+      } catch (e) {
+      Utils().showToast(context, "Fail","W");
+    } finally {
+    Utils().hideProgress(context);
+    }
       },
     );
   }

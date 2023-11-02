@@ -295,9 +295,15 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
         key_payment_gateway: selectedid,
         'assessment_demand_list': assessment_demand_list,
       };
-      Utils().showProgress(widget.mcContext, 1);
-      var response = await StartUpViewModel().overAllMainService(widget.mcContext, request);
-      Utils().hideProgress(widget.mcContext);
+      var response;
+      try{
+        Utils().showProgress(context, 1);
+        response = await StartUpViewModel().overAllMainService(widget.mcContext, request);
+      } catch (e) {
+        Utils().showToast(context, "Fail","W");
+      } finally {
+        Utils().hideProgress(context);
+      }
 
       var status = response[key_status];
       String response_value = response[key_response];
@@ -318,7 +324,6 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
         Utils().showAlert(widget.mcContext, ContentType.warning, response_value.toString());
       }
     } catch (error) {
-      Utils().hideProgress(widget.mcContext);
       debugPrint('error (${error.toString()}) has been caught');
     }
   }

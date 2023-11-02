@@ -245,9 +245,15 @@ class Utils {
                           Navigator.of(context).pop();
                           if (btnmsg == 'payment') {
                             if (preferencesService.paymentType == "Favourite Pay") {
-                              showProgress(mcontext, 1);
-                              await StartUpViewModel().getDemandList(mcontext);
-                              hideProgress(mcontext);
+                              try{
+                                Utils().showProgress(context, 1);
+                                await StartUpViewModel().getDemandList(mcontext);
+                              } catch (e) {
+                                Utils().showToast(context, "Fail","W");
+                              } finally {
+                                Utils().hideProgress(context);
+                              }
+
                             } else {
                               if (await preferencesService.getString(key_isLogin) == "yes") {
                                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);
@@ -257,9 +263,15 @@ class Utils {
                             }
                           } else if (btnmsg == 'canceled') {
                             if (preferencesService.paymentType == "Favourite Pay") {
-                              showProgress(mcontext, 1);
-                              await StartUpViewModel().getDemandList(mcontext);
-                              hideProgress(mcontext);
+                              try{
+                                Utils().showProgress(context, 1);
+                                await StartUpViewModel().getDemandList(mcontext);
+                              } catch (e) {
+                                Utils().showToast(context, "Fail","W");
+                              } finally {
+                                Utils().hideProgress(context);
+                              }
+
                             } else {
                               if (await preferencesService.getString(key_isLogin) == "yes") {
                                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);
@@ -297,9 +309,15 @@ class Utils {
                                 if (btnmsg == 'payment') {
                                   Navigator.of(context).pop();
                                   if (preferencesService.paymentType == "Favourite Pay") {
-                                    showProgress(mcontext, 1);
-                                    await StartUpViewModel().getDemandList(mcontext);
-                                    hideProgress(mcontext);
+                                    try{
+                                      Utils().showProgress(context, 1);
+                                      await StartUpViewModel().getDemandList(mcontext);
+                                    } catch (e) {
+                                      Utils().showToast(context, "Fail","W");
+                                    } finally {
+                                      Utils().hideProgress(context);
+                                    }
+
                                   } else {
                                     if (await preferencesService.getString(key_isLogin) == "yes") {
                                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);
@@ -313,9 +331,15 @@ class Utils {
                                 } else if (btnmsg == 'canceled') {
                                   Navigator.of(context).pop();
                                   if (preferencesService.paymentType == "Favourite Pay") {
-                                    showProgress(mcontext, 1);
-                                    await StartUpViewModel().getDemandList(mcontext);
-                                    hideProgress(mcontext);
+                                    try{
+                                      Utils().showProgress(context, 1);
+                                      await StartUpViewModel().getDemandList(mcontext);
+                                    } catch (e) {
+                                      Utils().showToast(context, "Fail","W");
+                                    } finally {
+                                      Utils().hideProgress(context);
+                                    }
+
                                   } else {
                                     if (await preferencesService.getString(key_isLogin) == "yes") {
                                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);

@@ -214,18 +214,25 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
   Future<String> getPaymentStatus(BuildContext context, encData, String merchId) async {
     var responceMessage = '';
     var requestData = {key_service_id: service_key_SaveCollectionList, key_merchId_server_side: merchId, key_encdata_server_side: encData};
-    Utils().showProgress(context, 1);
-    var response = await model.overAllMainService(context, requestData);
-    if (response[key_response] == key_fail) {
-      receiptList = [];
-    } else {
-      var receiptResponce = response[key_data];
-      if (receiptResponce[key_status] == key_success && receiptResponce[key_response] == key_success) {
-        receiptList = receiptResponce[key_data];
-        responceMessage = response[key_message];
+
+    try{
+      Utils().showProgress(context, 1);
+      var response = await model.overAllMainService(context, requestData);
+      if (response[key_response] == key_fail) {
+        receiptList = [];
+      } else {
+        var receiptResponce = response[key_data];
+        if (receiptResponce[key_status] == key_success && receiptResponce[key_response] == key_success) {
+          receiptList = receiptResponce[key_data];
+          responceMessage = response[key_message];
+        }
       }
+    } catch (e) {
+      Utils().showToast(context, "Fail","W");
+    } finally {
+      Utils().hideProgress(context);
     }
-    Utils().hideProgress(context);
+
     return responceMessage;
   }
 }

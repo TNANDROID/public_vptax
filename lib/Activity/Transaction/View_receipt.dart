@@ -129,6 +129,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
               )))
           .toList(),
       onChanged: (value) async {
+        try{
         receiptList.clear();
         Utils().showProgress(context, 1);
         receiptController.text = "";
@@ -142,9 +143,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
           model.selectedVillageList.clear();
           Future.delayed(const Duration(milliseconds: 500), () {
             selectedTaxType = value.toString();
-
             setState(() {});
-            Utils().hideProgress(context);
           });
         } else if (index == 1) {
           model.selectedBlockList.clear();
@@ -156,7 +155,6 @@ class _ViewReceiptState extends State<ViewReceipt> {
           Future.delayed(const Duration(milliseconds: 500), () {
             model.loadUIBlock(selectedDistrict);
             setState(() {});
-            Utils().hideProgress(context);
           });
         } else if (index == 2) {
           selectedBlock = value.toString();
@@ -167,18 +165,20 @@ class _ViewReceiptState extends State<ViewReceipt> {
             model.loadUIVillage(selectedDistrict, selectedBlock);
 
             setState(() {});
-            Utils().hideProgress(context);
           });
         } else if (index == 3) {
           selectedvillage = value.toString();
-          Future.delayed(const Duration(milliseconds: 200), () {
-            Utils().hideProgress(context);
-          });
+
         } else {
           debugPrint("End of the Statement......");
         }
 
         setState(() {});
+      } catch (e) {
+      Utils().showToast(context, "Fail","W");
+    } finally {
+    Utils().hideProgress(context);
+    }
       },
     );
   }
@@ -302,17 +302,23 @@ class _ViewReceiptState extends State<ViewReceipt> {
                 return value == null || (value is String && value.isEmpty);
               });
               print("Ra---)))))))$postParams");
-              Utils().showProgress(context, 1);
-              var response = await model.overAllMainService(context, postParams);
-              if (response[key_response] == key_fail) {
-                receiptList = [];
-                noDataFound = true;
-              } else {
-                noDataFound = false;
-                receiptList = response[key_data];
+
+              try{
+                Utils().showProgress(context, 1);
+                var response = await model.overAllMainService(context, postParams);
+                if (response[key_response] == key_fail) {
+                  receiptList = [];
+                  noDataFound = true;
+                } else {
+                  noDataFound = false;
+                  receiptList = response[key_data];
+                }
+              } catch (e) {
+                Utils().showToast(context, "Fail","W");
+              } finally {
+                Utils().hideProgress(context);
               }
 
-              Utils().hideProgress(context);
             }
             setState(() {});
             scrollController.animateTo(

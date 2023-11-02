@@ -183,16 +183,22 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
                 postParams.removeWhere((key, value) {
                   return value == null || (value is String && value.isEmpty);
                 });
-                Utils().showProgress(context, 1);
-                var response = await model.overAllMainService(context, postParams);
-                if (response[key_response] == key_fail) {
-                  receiptList = [];
-                  noDataFound = true;
-                } else {
-                  noDataFound = false;
-                  receiptList = response[key_data];
+                try{
+                  Utils().showProgress(context, 1);
+                  var response = await model.overAllMainService(context, postParams);
+                  if (response[key_response] == key_fail) {
+                    receiptList = [];
+                    noDataFound = true;
+                  } else {
+                    noDataFound = false;
+                    receiptList = response[key_data];
+                  }
+                } catch (e) {
+                  Utils().showToast(context, "Fail","W");
+                } finally {
+                  Utils().hideProgress(context);
                 }
-                Utils().hideProgress(context);
+
               } else {
                 Utils().showAlert(context, ContentType.warning, 'select_from_to_date'.tr().toString());
               }
