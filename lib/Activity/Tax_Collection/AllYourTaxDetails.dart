@@ -198,6 +198,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                               mainList = sourceList;
                             } else {
                               mainList = sourceList.where((element) => element[key_taxtypeid].toString() == selectedTaxTypeData['taxtypeid'].toString()).toList();
+                              print('mainList: $mainList');
                             }
                             double marginSpace = Screen.width(context) / 4;
                             return mainList.isNotEmpty
@@ -350,7 +351,7 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                         child: Container(
                             decoration: UIHelper.GradientContainer(10, 10, 10, 10, [c.need_improvement2, c.need_improvement2]),
                             padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
-                            child: UIHelper.titleTextStyle(("\u{20B9} $getData['totaldemand']"), c.text_color, fs.h3, true, true))),
+                            child: UIHelper.titleTextStyle(("\u{20B9} ${getData['totaldemand']}"), c.text_color, fs.h3, true, true))),
                   ],
                 ),
                 UIHelper.verticalSpaceSmall,
