@@ -30,9 +30,11 @@ class AtomPaynetsView extends StatefulWidget {
 }
 
 class AtomPaynetsViewState extends State<AtomPaynetsView> {
+  AtomPaynetsViewState(this.mode, this.payDetails, this.mcontext);
+
   ApiServices apiServices = locator<ApiServices>();
   StartUpViewModel model = StartUpViewModel();
-
+  late WebView webView;
   final mode;
   final payDetails;
   final mcontext;
@@ -49,101 +51,104 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
     super.initState();
     // Enable hybrid composition.
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    webView = WebView(
+      key: UniqueKey(),
+      initialUrl: 'about:blank',
+      onWebViewCreated: (WebViewController webViewController) {
+        _controllerCompleter.future.then((value) => _controller = value);
+        _controllerCompleter.complete(webViewController);
+        debugPrint("payDetails from webview $payDetails");
+        _loadHtmlFromAssets(mode);
+      },
+      navigationDelegate: (NavigationRequest request) async {
+        if (request.url.startsWith("upi://")) {
+          debugPrint("upi url started loading");
+          try {
+            // ignore: deprecated_member_use
+            await launch(request.url);
+          } catch (e) {
+            closeWebView(context, "Transaction Status = cannot open UPI applications", ContentType.fail);
+            throw 'custom error for UPI Intent';
+          }
+          return NavigationDecision.prevent;
+        }
+        return NavigationDecision.navigate;
+      },
+      javascriptMode: JavascriptMode.unrestricted,
+      onPageFinished: (String url) async {
+        if (url.contains("AIPAYLocalFile")) {
+          debugPrint(" AIPAYLocalFile Now url loaded: $url");
+          await _controller.runJavascriptReturningResult("${"openPay('" + payDetails}')");
+        }
+
+        if (url.contains('/mobilesdk/param')) {
+          final response = await _controller.runJavascriptReturningResult("document.getElementsByTagName('h5')[0].innerHTML");
+          debugPrint("HTML response : $response");
+          if (response.trim().contains("cancelTransaction")) {
+            transactionResult = "Transaction Cancelled!";
+          } else {
+            final split = response.trim().split('|');
+            final Map<int, String> values = {for (int i = 0; i < split.length; i++) i: split[i]};
+            final encData = values[1]!.replaceAll('encData=', "");
+            final merchId = values[2]!.replaceAll('merchId=', "");
+
+            var returnData = {"encData": "$encData", "merchId": "$merchId"};
+
+            // const platform = MethodChannel('flutter.dev/NDPSAESLibrary');
+            //
+            // try {
+            //   final String result = await platform.invokeMethod('NDPSAESInit', {'AES_Method': 'decrypt', 'text': splitTwo[1].toString(), 'encKey': _responseDecryptionKey});
+            //   var respJsonStr = result.toString();
+            //   Map<String, dynamic> jsonInput = jsonDecode(respJsonStr);
+            //   debugPrint("read full respone : $jsonInput");
+            //
+            //   //calling validateSignature function from atom_pay_helper file
+            //   var checkFinalTransaction = Utils().validateSignature(jsonInput, _responsehashKey);
+            //
+            //   if (checkFinalTransaction) {
+            //     if (jsonInput["payInstrument"]["responseDetails"]["statusCode"] == 'OTS0000' || jsonInput["payInstrument"]["responseDetails"]["statusCode"] == 'OTS0551') {
+            //       debugPrint("Transaction success");
+            //       transactionResult = "Transaction Success";
+            //     } else {
+            //       debugPrint("Transaction failed");
+            //       transactionResult = "Transaction Failed";
+            //     }
+            //   } else {
+            //     debugPrint("signature mismatched");
+            //     transactionResult = "failed";
+            //   }
+            //   debugPrint("Transaction Response : $jsonInput");
+            // } on PlatformException catch (e) {
+            //   debugPrint("Failed to decrypt: '${e.message}'.");
+            // }
+            transactionResult = await getPaymentStatus(context, encData, merchId);
+          }
+          closeWebView(context, transactionResult, transactionResult.contains("Success") ? ContentType.success : ContentType.fail);
+        }
+      },
+      gestureNavigationEnabled: true,
+    );
   }
 
-  AtomPaynetsViewState(this.mode, this.payDetails, this.mcontext);
+  @override
+  void dispose() {
+    // Dispose of the WebView when the widget is disposed
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () => _handleBackButtonAction(context),
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           automaticallyImplyLeading: false,
           elevation: 0,
           toolbarHeight: 2,
         ),
-        body: SafeArea(
-            child: WebView(
-          key: UniqueKey(),
-          // initialUrl: 'about:blank',
-          onWebViewCreated: (WebViewController webViewController) {
-            _controllerCompleter.future.then((value) => _controller = value);
-            _controllerCompleter.complete(webViewController);
-            debugPrint("payDetails from webview $payDetails");
-            _loadHtmlFromAssets(mode);
-          },
-          navigationDelegate: (NavigationRequest request) async {
-            if (request.url.startsWith("upi://")) {
-              debugPrint("upi url started loading");
-              try {
-                // ignore: deprecated_member_use
-                debugPrint(request.url);
-                await launch(request.url);
-              } catch (e) {
-                closeWebView(context, "Transaction Status = cannot open UPI applications", ContentType.fail);
-                throw 'custom error for UPI Intent';
-              }
-              return NavigationDecision.prevent;
-            }
-            return NavigationDecision.navigate;
-          },
-          javascriptMode: JavascriptMode.unrestricted,
-          onPageFinished: (String url) async {
-            debugPrint(" onPageFinished: $url");
-            if (url.contains("AIPAYLocalFile")) {
-              debugPrint(" AIPAYLocalFile Now url loaded: $url");
-              await _controller.runJavascriptReturningResult("${"openPay('" + payDetails}')");
-            }
-
-            if (url.contains('/mobilesdk/param')) {
-              final response = await _controller.runJavascriptReturningResult("document.getElementsByTagName('h5')[0].innerHTML");
-              debugPrint("HTML response : $response");
-              if (response.trim().contains("cancelTransaction")) {
-                transactionResult = "Transaction Cancelled!";
-              } else {
-                final split = response.trim().split('|');
-                final Map<int, String> values = {for (int i = 0; i < split.length; i++) i: split[i]};
-                final encData = values[1]!.replaceAll('encData=', "");
-                final merchId = values[2]!.replaceAll('merchId=', "");
-
-                var returnData = {"encData": "$encData", "merchId": "$merchId"};
-
-                // const platform = MethodChannel('flutter.dev/NDPSAESLibrary');
-                //
-                // try {
-                //   final String result = await platform.invokeMethod('NDPSAESInit', {'AES_Method': 'decrypt', 'text': splitTwo[1].toString(), 'encKey': _responseDecryptionKey});
-                //   var respJsonStr = result.toString();
-                //   Map<String, dynamic> jsonInput = jsonDecode(respJsonStr);
-                //   debugPrint("read full respone : $jsonInput");
-                //
-                //   //calling validateSignature function from atom_pay_helper file
-                //   var checkFinalTransaction = Utils().validateSignature(jsonInput, _responsehashKey);
-                //
-                //   if (checkFinalTransaction) {
-                //     if (jsonInput["payInstrument"]["responseDetails"]["statusCode"] == 'OTS0000' || jsonInput["payInstrument"]["responseDetails"]["statusCode"] == 'OTS0551') {
-                //       debugPrint("Transaction success");
-                //       transactionResult = "Transaction Success";
-                //     } else {
-                //       debugPrint("Transaction failed");
-                //       transactionResult = "Transaction Failed";
-                //     }
-                //   } else {
-                //     debugPrint("signature mismatched");
-                //     transactionResult = "failed";
-                //   }
-                //   debugPrint("Transaction Response : $jsonInput");
-                // } on PlatformException catch (e) {
-                //   debugPrint("Failed to decrypt: '${e.message}'.");
-                // }
-                transactionResult = await getPaymentStatus(context, encData, merchId);
-              }
-              closeWebView(context, transactionResult, transactionResult.contains("Success") ? ContentType.success : ContentType.fail);
-            }
-          },
-          gestureNavigationEnabled: true,
-        )),
+        body: SafeArea(child: webView),
       ),
     );
   }
@@ -217,7 +222,7 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
     var responceMessage = '';
     var requestData = {key_service_id: service_key_SaveCollectionList, key_merchId_server_side: merchId, key_encdata_server_side: encData};
 
-    try{
+    try {
       Utils().showProgress(context, 1);
       var response = await model.overAllMainService(context, requestData);
       if (response[key_response] == key_fail) {
@@ -230,7 +235,7 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
         }
       }
     } catch (e) {
-      Utils().showToast(context, "Fail","W");
+      Utils().showToast(context, "Fail", "W");
     } finally {
       Utils().hideProgress(context);
     }

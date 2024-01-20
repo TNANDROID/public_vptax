@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script>
         var cdnScript = document.createElement('script');
-        cdnScript.setAttribute('src', 'https://pgtest.atomtech.in/staticdata/ots/js/atomcheckout.js?v=' + Date.now());
+        cdnScript.setAttribute('src', 'https://pgtest.atomtech.in/staticdata/ots/js/atomcheckout.js');
         document.head.appendChild(cdnScript);
     </script>
 </head>
@@ -18,16 +18,28 @@
     <script>
     function openPay(payDetails) {
             let convertedJson = JSON.parse(payDetails);
-            const options = {
-                "atomTokenId": convertedJson.atomTokenId,
-                "merchId": convertedJson.merchId,
-                "custEmail": convertedJson.emailId,
-                "custMobile": convertedJson.mobileNumber,
-                "returnUrl": convertedJson.returnUrl,
-                "userAgent": "mobile_webView"
-            }
-            console.table("openPay options = ", options);
-            let atom = new AtomPaynetz(options, 'uat');
+         const options = {
+          "atomTokenId": convertedJson.atomTokenId,
+          "merchId": convertedJson.merchId,
+          "custEmail":convertedJson.emailId,
+          "custMobile": convertedJson.mobileNumber,
+          "returnUrl":convertedJson.returnUrl,
+          "bgColor":"00FFAF",
+          "userAgent": "mobile_webView",
+          "merchantLogo":"https://sdp.nic.in/vptax/images/tn_logo_top.png",
+        }
+        let atom = new AtomPaynetz(options,'uat');
+
+         // const options = {
+            //     "atomTokenId": convertedJson.atomTokenId,
+            //     "merchId": convertedJson.merchId,
+            //     "custEmail": convertedJson.emailId,
+            //     "custMobile": convertedJson.mobileNumber,
+            //     "returnUrl": convertedJson.returnUrl,
+            //     "userAgent": "mobile_webView"
+            // }
+            // console.table("openPay options = ", options);
+            // let atom = new AtomPaynetz(options, 'uat');
         }
     </script>
 </body>
