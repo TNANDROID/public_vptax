@@ -242,7 +242,6 @@ class Utils {
                       right: 0,
                       child: GestureDetector(
                         onTap: () async {
-                          Navigator.of(context).pop();
                           if (btnmsg == 'payment') {
                             if (preferencesService.paymentType == "Favourite Pay") {
                               try{
@@ -282,6 +281,8 @@ class Utils {
                           } else {
                             debugPrint("....");
                           }
+                          Navigator.of(context).pop();
+
                         },
                         child: Container(
                           margin: const EdgeInsets.all(10.0),
@@ -307,7 +308,7 @@ class Utils {
                             child: ElevatedButton(
                               onPressed: () async {
                                 if (btnmsg == 'payment') {
-                                  Navigator.of(context).pop();
+
                                   if (preferencesService.paymentType == "Favourite Pay") {
                                     try{
                                       Utils().showProgress(context, 1);
@@ -317,8 +318,9 @@ class Utils {
                                     } finally {
                                       Utils().hideProgress(context);
                                     }
-
+                                    Navigator.of(context).pop();
                                   } else {
+                                    Navigator.of(context).pop();
                                     if (await preferencesService.getString(key_isLogin) == "yes") {
                                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);
                                     } else {
@@ -329,7 +331,7 @@ class Utils {
                                 } else if (btnmsg == 'receipt') {
                                   Navigator.of(context).pop();
                                 } else if (btnmsg == 'canceled') {
-                                  Navigator.of(context).pop();
+
                                   if (preferencesService.paymentType == "Favourite Pay") {
                                     try{
                                       Utils().showProgress(context, 1);
@@ -339,8 +341,9 @@ class Utils {
                                     } finally {
                                       Utils().hideProgress(context);
                                     }
-
+                                    Navigator.of(context).pop();
                                   } else {
+                                    Navigator.of(context).pop();
                                     if (await preferencesService.getString(key_isLogin) == "yes") {
                                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);
                                     } else {
@@ -541,6 +544,7 @@ class Utils {
   Future<void> openNdpsPG(mcontext, String atomTokenId, String merchId, String emailId, String mobileNumber) async {
     // String returnUrl = "https://payment.atomtech.in/mobilesdk/param"; ////return url production
     String returnUrl = "https://pgtest.atomtech.in/mobilesdk/param";
+
     Map payDetails = {key_atomTokenId: atomTokenId, key_merchId: merchId, key_emailId: emailId, key_mobileNumber: mobileNumber, key_returnUrl: returnUrl};
     Navigator.push(mcontext, MaterialPageRoute(builder: (context) => AtomPaynetsView("uat" /*"PROD"*/, json.encode(payDetails), mcontext, emailId, mobileNumber)));
   }

@@ -67,7 +67,7 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
         body: SafeArea(
             child: WebView(
           key: UniqueKey(),
-          initialUrl: 'about:blank',
+          // initialUrl: 'about:blank',
           onWebViewCreated: (WebViewController webViewController) {
             _controllerCompleter.future.then((value) => _controller = value);
             _controllerCompleter.complete(webViewController);
@@ -79,6 +79,7 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
               debugPrint("upi url started loading");
               try {
                 // ignore: deprecated_member_use
+                debugPrint(request.url);
                 await launch(request.url);
               } catch (e) {
                 closeWebView(context, "Transaction Status = cannot open UPI applications", ContentType.fail);
@@ -90,6 +91,7 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
           },
           javascriptMode: JavascriptMode.unrestricted,
           onPageFinished: (String url) async {
+            debugPrint(" onPageFinished: $url");
             if (url.contains("AIPAYLocalFile")) {
               debugPrint(" AIPAYLocalFile Now url loaded: $url");
               await _controller.runJavascriptReturningResult("${"openPay('" + payDetails}')");

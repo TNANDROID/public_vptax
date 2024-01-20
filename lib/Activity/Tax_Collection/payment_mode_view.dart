@@ -297,12 +297,12 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
       };
       var response;
       try{
-        Utils().showProgress(context, 1);
+        Utils().showProgress(widget.mcContext, 1);
         response = await StartUpViewModel().overAllMainService(widget.mcContext, request);
       } catch (e) {
-        Utils().showToast(context, "Fail","W");
+        Utils().showToast(widget.mcContext, "Fail","W");
       } finally {
-        Utils().hideProgress(context);
+        Utils().hideProgress(widget.mcContext);
       }
 
       var status = response[key_status];
