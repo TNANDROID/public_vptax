@@ -139,6 +139,9 @@ String key_secretKey = "secretKey";
 String key_user_id = "user_id";
 String key_favourite_assessment_id = "favourite_assessment_id";
 String key_favourite_assessment_list = "favourite_assessment_list";
+String key_app_code = "appcode";
+String key_apk = "apk";
+
 
 // ************************** Service Key Strings ************************** //
 
@@ -164,3 +167,7 @@ String service_key_getAllTaxAssessmentList = "getAllTaxAssessmentList";
 String service_key_AddfavouriteList = "AddfavouriteList";
 String service_key_RemovefavouriteList = "RemovefavouriteList";
 String service_key_ReceiptBillDetails = "ReceiptBillDetails";
+String service_key_version_check = "version_check";
+String service_key_appcode = "OG";
+
+

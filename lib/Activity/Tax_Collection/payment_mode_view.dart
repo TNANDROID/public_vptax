@@ -49,6 +49,7 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
   Future<void> initialize() async {
     list = preferencesService.gatewayList;
     paymentType = preferencesService.paymentTypeList;
+    print("paymentType>>"+paymentType.toString());
     isLogin = await preferencesService.getString(key_isLogin);
     if (isLogin == "yes") {
       nameTextController.text = await preferencesService.getString(key_name);
@@ -69,7 +70,7 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
             children: [
               Container(
                   margin: const EdgeInsets.only(top: 20, bottom: 10),
-                  child: Text(('payment_mode'.tr().toString() + (preferencesService.selectedLanguage == 'en' ? paymentType[0][key_paymenttype_en] : paymentType[0][key_paymenttype_ta])),
+                  child: Text(('payment_mode'.tr().toString() + (preferencesService.selectedLanguage == 'en' ? paymentType[0][key_paymenttype_en]??"" : paymentType[0][key_paymenttype_ta]??"")),
                       style: TextStyle(fontSize: fs.h3, fontWeight: FontWeight.bold))),
               Align(
                 alignment: Alignment.centerLeft,
@@ -304,25 +305,29 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
       } finally {
         Utils().hideProgress(widget.mcContext);
       }
+      if (response != null && response.isNotEmpty){
+        var status = response[key_status];
+        String response_value = response[key_response];
+        if (status == key_success && response_value == key_success) {
+          dynamic pay_params = response['pay_params'];
+          // String transaction_unique_id = Utils().decodeBase64(pay_params['a'].toString());
+          //  String req_payment_amount = Utils().decodeBase64(pay_params['c'].toString());
+          // String txmStartTime = Utils().decodeBase64(pay_params['f'].toString());
+          String atomTokenId = Utils().decodeBase64(pay_params['b'].toString());
+          String public_transaction_email_id = Utils().decodeBase64(pay_params['d'].toString());
+          String public_transaction_mobile_no = Utils().decodeBase64(pay_params['e'].toString());
+          String merchId = Utils().decodeBase64(pay_params['g'].toString());
 
-      var status = response[key_status];
-      String response_value = response[key_response];
-      if (status == key_success && response_value == key_success) {
-        dynamic pay_params = response['pay_params'];
-        // String transaction_unique_id = Utils().decodeBase64(pay_params['a'].toString());
-        //  String req_payment_amount = Utils().decodeBase64(pay_params['c'].toString());
-        // String txmStartTime = Utils().decodeBase64(pay_params['f'].toString());
-        String atomTokenId = Utils().decodeBase64(pay_params['b'].toString());
-        String public_transaction_email_id = Utils().decodeBase64(pay_params['d'].toString());
-        String public_transaction_mobile_no = Utils().decodeBase64(pay_params['e'].toString());
-        String merchId = Utils().decodeBase64(pay_params['g'].toString());
-
-        await Utils().openNdpsPG(widget.mcContext, atomTokenId, merchId, public_transaction_email_id, public_transaction_mobile_no);
-      } else if (response_value == key_fail) {
-        Utils().showAlert(widget.mcContext, ContentType.warning, response[key_message].toString());
-      } else {
-        Utils().showAlert(widget.mcContext, ContentType.warning, response_value.toString());
+          await Utils().openNdpsPG(widget.mcContext, atomTokenId, merchId, public_transaction_email_id, public_transaction_mobile_no);
+        } else if (response_value == key_fail) {
+          Utils().showAlert(widget.mcContext, ContentType.warning, response[key_message].toString());
+        } else {
+          Utils().showAlert(widget.mcContext, ContentType.warning, response_value.toString());
+        }
+      }else {
+        Utils().showAlert(context, ContentType.fail, ("failed".tr().toString()));
       }
+
     } catch (error) {
       debugPrint('error (${error.toString()}) has been caught');
     }

@@ -20,7 +20,9 @@ import 'package:public_vptax/Activity/Tax_Collection/payment_mode_view.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
+import 'package:public_vptax/Resources/StringsKey.dart' as s;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
+import 'package:public_vptax/Services/Apiservices.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/atom_paynets_service.dart';
 import 'package:public_vptax/Services/locator.dart';
@@ -278,7 +280,9 @@ class Utils {
                                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Splash()), (route) => false);
                               }
                             }
-                          } else {
+                          } else if (btnmsg == 'apk') {
+                            launchURL(await preferencesService.getString(s.key_apk));
+                          }else {
                             debugPrint("....");
                           }
                           Navigator.of(context).pop();
@@ -350,6 +354,9 @@ class Utils {
                                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Splash()), (route) => false);
                                     }
                                   }
+                                }else if (btnmsg == 'apk') {
+                                  launchURL(await preferencesService.getString(s.key_apk));
+                                  Navigator.of(context).pop();
                                 } else {
                                   performAction(btnmsg ?? '', context);
                                 }
@@ -542,11 +549,18 @@ class Utils {
 
   //Atom Paynets Gateway HTML Page Renger
   Future<void> openNdpsPG(mcontext, String atomTokenId, String merchId, String emailId, String mobileNumber) async {
-    // String returnUrl = "https://payment.atomtech.in/mobilesdk/param"; ////return url production
-    String returnUrl = "https://pgtest.atomtech.in/mobilesdk/param";
+    String mode="";
+    String returnUrl="";
+    if(ApiServices().mainURL.contains("10.163.19") || ApiServices().mainURL.contains("vptax_test")){
+      mode="uat";
+      returnUrl = "https://pgtest.atomtech.in/mobilesdk/param";
+    }else{
+      mode="PROD";
+      returnUrl = "https://payment.atomtech.in/mobilesdk/param"; ////return url production
+    }
 
     Map payDetails = {key_atomTokenId: atomTokenId, key_merchId: merchId, key_emailId: emailId, key_mobileNumber: mobileNumber, key_returnUrl: returnUrl};
-    Navigator.push(mcontext, MaterialPageRoute(builder: (context) => AtomPaynetsView("uat" /*"PROD"*/, json.encode(payDetails), mcontext, emailId, mobileNumber)));
+    Navigator.push(mcontext, MaterialPageRoute(builder: (context) => AtomPaynetsView(mode, json.encode(payDetails), mcontext, emailId, mobileNumber)));
   }
 
   String getDemadAmount(taxData, String taxTypeId) {

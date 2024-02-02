@@ -516,20 +516,25 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
           } finally {
             Utils().hideProgress(context);
           }
-          if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
-            List resData = [];
-            if (response["DATA"] != null) {
-              resData = response["DATA"];
-              if (widget.flag == "3") {
-                Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (_) => TaxCollectionDetailsWithAdd(selectedTaxTypeData: selectedTaxTypeData, responseData: resData)));
-              } else {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => TaxCollectionDetailsView(responseData: resData)));
+          if (response != null && response.isNotEmpty){
+            if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
+              List resData = [];
+              if (response["DATA"] != null) {
+                resData = response["DATA"];
+                if (widget.flag == "3") {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => TaxCollectionDetailsWithAdd(selectedTaxTypeData: selectedTaxTypeData, responseData: resData)));
+                } else {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => TaxCollectionDetailsView(responseData: resData)));
+                }
               }
+            } else {
+              Utils().showAlert(context, ContentType.fail, response[key_message].toString());
             }
-          } else {
-            Utils().showAlert(context, ContentType.fail, response[key_message].toString());
+          }else {
+            Utils().showAlert(context, ContentType.fail, ("failed".tr().toString()));
           }
+
         }
       } else {
         Utils().showAlert(context, ContentType.warning, 'select_all_field'.tr().toString(), btnCount: "1", btnmsg: "ok");

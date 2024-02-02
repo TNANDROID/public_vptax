@@ -20,6 +20,7 @@ import 'package:stacked/stacked.dart';
 import '../../Model/startup_model.dart';
 import '../../Resources/StringsKey.dart';
 import '../../Services/Apiservices.dart';
+import '../../Utils/ContentInfo.dart';
 
 class ViewReceipt extends StatefulWidget {
   const ViewReceipt({super.key});
@@ -306,13 +307,18 @@ class _ViewReceiptState extends State<ViewReceipt> {
               try{
                 Utils().showProgress(context, 1);
                 var response = await model.overAllMainService(context, postParams);
-                if (response[key_response] == key_fail) {
-                  receiptList = [];
-                  noDataFound = true;
-                } else {
-                  noDataFound = false;
-                  receiptList = response[key_data];
+                if (response != null && response.isNotEmpty){
+                  if (response[key_response] == key_fail) {
+                    receiptList = [];
+                    noDataFound = true;
+                  } else {
+                    noDataFound = false;
+                    receiptList = response[key_data];
+                  }
+                }else {
+                  Utils().showAlert(context, ContentType.fail, ("failed".tr().toString()));
                 }
+
               } catch (e) {
                 Utils().showToast(context, "Fail","W");
               } finally {

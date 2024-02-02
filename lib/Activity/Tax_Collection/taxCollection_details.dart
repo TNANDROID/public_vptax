@@ -586,20 +586,24 @@ class _TaxCollectionDetailsViewState extends State<TaxCollectionDetailsView> wit
         getDemandRequest[key_fin_year] = item[key_financialyear];
       }
       var getDemandResponce = await model.overAllMainService(context, getDemandRequest);
-
-      if (getDemandResponce[key_response] == key_fail) {
-        if (getDemandResponce[key_message] == "Demand Details Not Found") {
-          item[key_DEMAND_DETAILS] = "Empty";
-        } else if (getDemandResponce[key_message] == "Your previous transaction is pending. Please try after 60 minutes") {
-          item[key_DEMAND_DETAILS] = "Pending";
+      if (getDemandResponce != null && getDemandResponce.isNotEmpty){
+        if (getDemandResponce[key_response] == key_fail) {
+          if (getDemandResponce[key_message] == "Demand Details Not Found") {
+            item[key_DEMAND_DETAILS] = "Empty";
+          } else if (getDemandResponce[key_message] == "Your previous transaction is pending. Please try after 60 minutes") {
+            item[key_DEMAND_DETAILS] = "Pending";
+          } else {
+            item[key_DEMAND_DETAILS] = "Something Went Wrong...";
+          }
         } else {
-          item[key_DEMAND_DETAILS] = "Something Went Wrong...";
+          if (getDemandResponce[key_data] != null && getDemandResponce[key_data].length > 0) {
+            item[key_DEMAND_DETAILS] = getDemandResponce[key_data];
+          }
         }
-      } else {
-        if (getDemandResponce[key_data] != null && getDemandResponce[key_data].length > 0) {
-          item[key_DEMAND_DETAILS] = getDemandResponce[key_data];
-        }
+      }else {
+        Utils().showAlert(context, ContentType.fail, ("failed".tr().toString()));
       }
+
     }
 
     setState(() {});

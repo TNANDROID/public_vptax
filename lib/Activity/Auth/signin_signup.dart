@@ -407,16 +407,21 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
               try{
               Utils().showProgress(context, 1);
                response = await model.overAllMainService(context, sendData);
-    } catch (e) {
-    Utils().showToast(context, "Fail","W");
-    } finally {
-    Utils().hideProgress(context);
-    }
-              if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
-                utils.showToast(context, 'otp_resent_success'.tr().toString(), "S");
-              } else {
-                utils.showAlert(context, ContentType.fail, getErrorMessage(response[key_message].toString()));
+                } catch (e) {
+                Utils().showToast(context, "Fail","W");
+                } finally {
+                Utils().hideProgress(context);
+                }
+              if (response != null && response.isNotEmpty){
+                if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
+                  utils.showToast(context, 'otp_resent_success'.tr().toString(), "S");
+                } else {
+                  utils.showAlert(context, ContentType.fail, getErrorMessage(response[key_message].toString()));
+                }
+              }else {
+                utils.showAlert(context, ContentType.fail, getErrorMessage("failed".tr().toString()));
               }
+
             },
             child: Container(
                 width: Screen.width(context) - 100,
@@ -454,26 +459,30 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
           Utils().hideProgress(context);
         }
 
+        if (response != null && response.isNotEmpty){
+          if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
+            utils.showToast(context, 'otp_resent_success'.tr().toString(), "S");
+            registerStep++;
+            setState(() {});
+            changeImageAndAnimate();
+          } else if (response[key_status].toString() == key_success && response[key_response].toString() == key_fail) {
+            await utils.showAlert(context, ContentType.fail, getErrorMessage(response[key_message].toString()));
+            String flag = response['flag'] ?? '';
+            if (flag == 'N') {
+              verifyOTPFlag = true;
+              titleText = "verifyOTP".tr();
+            } else if (flag == 'Y') {
+              verifyOTPFlag = false;
+              signUpFlag = false;
+            }
 
-        if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
-          utils.showToast(context, 'otp_resent_success'.tr().toString(), "S");
-          registerStep++;
-          setState(() {});
-          changeImageAndAnimate();
-        } else if (response[key_status].toString() == key_success && response[key_response].toString() == key_fail) {
-          await utils.showAlert(context, ContentType.fail, getErrorMessage(response[key_message].toString()));
-          String flag = response['flag'] ?? '';
-          if (flag == 'N') {
-            verifyOTPFlag = true;
-            titleText = "verifyOTP".tr();
-          } else if (flag == 'Y') {
-            verifyOTPFlag = false;
-            signUpFlag = false;
+            setState(() {});
+          } else {
+            utils.showAlert(context, ContentType.fail, getErrorMessage(response[key_message].toString()));
           }
 
-          setState(() {});
-        } else {
-          utils.showAlert(context, ContentType.fail, getErrorMessage(response[key_message].toString()));
+        }else {
+          utils.showAlert(context, ContentType.fail, getErrorMessage("failed".tr().toString()));
         }
       }
     } else if (registerStep == 2) {
@@ -495,19 +504,23 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
     } finally {
     Utils().hideProgress(context);
     }
-
-        if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
-          dynamic resData = response['DATA'];
-          await preferencesService.setString("userId", resData['id'].toString());
-          await preferencesService.setString(key_name, resData[key_name].toString());
-          await preferencesService.setString(key_mobile_number, resData[key_mobile].toString());
-          await preferencesService.setString(key_email, resData[key_email].toString());
-          await preferencesService.setString(key_gender, resData[key_gender].toString());
-          registerStep++;
-          setState(() {});
-        } else {
-          utils.showAlert(context, ContentType.fail, 'wrong_otp_msg'.tr().toString());
+        if (response != null && response.isNotEmpty){
+          if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
+            dynamic resData = response['DATA'];
+            await preferencesService.setString("userId", resData['id'].toString());
+            await preferencesService.setString(key_name, resData[key_name].toString());
+            await preferencesService.setString(key_mobile_number, resData[key_mobile].toString());
+            await preferencesService.setString(key_email, resData[key_email].toString());
+            await preferencesService.setString(key_gender, resData[key_gender].toString());
+            registerStep++;
+            setState(() {});
+          } else {
+            utils.showAlert(context, ContentType.fail, 'wrong_otp_msg'.tr().toString());
+          }
+        }else {
+          utils.showAlert(context, ContentType.fail, getErrorMessage("failed".tr().toString()));
         }
+
       }
     } else if (registerStep == 3) {
       if (_SecretKey.currentState!.saveAndValidate()) {

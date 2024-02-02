@@ -186,13 +186,18 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
                 try{
                   Utils().showProgress(context, 1);
                   var response = await model.overAllMainService(context, postParams);
-                  if (response[key_response] == key_fail) {
-                    receiptList = [];
-                    noDataFound = true;
-                  } else {
-                    noDataFound = false;
-                    receiptList = response[key_data];
+                  if (response != null && response.isNotEmpty){
+                    if (response[key_response] == key_fail) {
+                      receiptList = [];
+                      noDataFound = true;
+                    } else {
+                      noDataFound = false;
+                      receiptList = response[key_data];
+                    }
+                  }else {
+                    Utils().showAlert(context, ContentType.fail, ("failed".tr().toString()));
                   }
+
                 } catch (e) {
                   Utils().showToast(context, "Fail","W");
                 } finally {

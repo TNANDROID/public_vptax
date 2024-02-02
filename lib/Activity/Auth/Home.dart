@@ -154,7 +154,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               ElevatedButton(
                 onPressed: isLogout
                     ? () {
-                        //preferencesService.cleanAllPreferences();
+                        preferencesService.cleanAllPreferences();
                         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Splash()), (route) => false);
                       }
                     : () {

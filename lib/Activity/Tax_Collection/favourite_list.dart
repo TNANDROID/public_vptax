@@ -192,14 +192,19 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                 onPressed: () async {
                   Navigator.of(context).pop(false);
                   try{
-                    Utils().showProgress(context, 1);
+                    Utils().showProgress(mccontext, 1);
                     var requestJson = {key_service_id: service_key_RemovefavouriteList, key_user_id: getData['user_id'], key_favourite_assessment_id: getData['favourite_assessment_id']};
-                    await model.overAllMainService(context, requestJson);
-                    await model.getDemandList(mccontext);
+                    if (requestJson != null && requestJson.isNotEmpty){
+                      await model.overAllMainService(context, requestJson);
+                      await model.getDemandList(mccontext);
+                    }else {
+                      Utils().showAlert(context, ContentType.fail, ("failed".tr().toString()));
+                    }
+
                   } catch (e) {
                     Utils().showToast(context, "Fail","W");
                   } finally {
-                    Utils().hideProgress(context);
+                    Utils().hideProgress(mccontext);
                   }
                 },
                 child: Text(

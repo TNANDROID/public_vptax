@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -61,6 +62,7 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
         _loadHtmlFromAssets(mode);
       },
       navigationDelegate: (NavigationRequest request) async {
+        log("request.url${request.url}");
         if (request.url.startsWith("upi://")) {
           debugPrint("upi url started loading");
           try {
@@ -76,6 +78,7 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
       },
       javascriptMode: JavascriptMode.unrestricted,
       onPageFinished: (String url) async {
+        log("onPageFinished : ${url}");
         if (url.contains("AIPAYLocalFile")) {
           debugPrint(" AIPAYLocalFile Now url loaded: $url");
           await _controller.runJavascriptReturningResult("${"openPay('" + payDetails}')");
@@ -180,6 +183,8 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
   }
 
   closeWebView(context, transactionResult, ContentType type) async {
+    bool keyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
+    keyboardVisible ? FocusScope.of(context).unfocus() : null;
     Navigator.pop(context);
     if (type == ContentType.success) {
       Utils().showAlert(mcontext, type, /*"$transactionResult"*/ 'payment_msg'.tr().toString(), btnCount: "1", btnmsg: 'payment', receiptList: receiptList, mode: 'payment_success');
@@ -225,15 +230,20 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
     try {
       Utils().showProgress(context, 1);
       var response = await model.overAllMainService(context, requestData);
-      if (response[key_response] == key_fail) {
-        receiptList = [];
-      } else {
-        var receiptResponce = response[key_data];
-        if (receiptResponce[key_status] == key_success && receiptResponce[key_response] == key_success) {
-          receiptList = receiptResponce[key_data];
-          responceMessage = response[key_message];
+      if (response != null && response.isNotEmpty){
+        if (response[key_response] == key_fail) {
+          receiptList = [];
+        } else {
+          var receiptResponce = response[key_data];
+          if (receiptResponce[key_status] == key_success && receiptResponce[key_response] == key_success) {
+            receiptList = receiptResponce[key_data];
+            responceMessage = response[key_message];
+          }
         }
+      }else {
+        Utils().showAlert(context, ContentType.fail, ("failed".tr().toString()));
       }
+
     } catch (e) {
       Utils().showToast(context, "Fail", "W");
     } finally {

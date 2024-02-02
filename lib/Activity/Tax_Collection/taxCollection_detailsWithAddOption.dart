@@ -13,6 +13,8 @@ import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/utils.dart';
 
+import '../../Utils/ContentInfo.dart';
+
 class TaxCollectionDetailsWithAdd extends StatefulWidget {
   final selectedTaxTypeData;
   List<dynamic> responseData;
@@ -108,24 +110,29 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
                         try{
                           Utils().showProgress(context, 1);
                           response = await StartUpViewModel().overAllMainService(context, requestJson);
-                          if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              backgroundColor: c.account_status_green_color,
-                              content: Text(
-                                response[key_message].toString(),
-                                style: TextStyle(color: c.white),
-                              ),
-                            ));
-                            await await StartUpViewModel().getDemandList(context);
-                            Navigator.pop(context);
+                          if (response != null && response.isNotEmpty){
+                            if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                backgroundColor: c.account_status_green_color,
+                                content: Text(
+                                  response[key_message].toString(),
+                                  style: TextStyle(color: c.white),
+                                ),
+                              ));
+                              await await StartUpViewModel().getDemandList(context);
+                              Navigator.pop(context);
 
-                            //  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FavouriteTaxDetails()));
-                          } else {
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(SnackBar(backgroundColor: c.subscription_type_red_color, content: Text(response[key_message].toString(), style: TextStyle(color: c.white))));
+                              //  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FavouriteTaxDetails()));
+                            } else {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(backgroundColor: c.subscription_type_red_color, content: Text(response[key_message].toString(), style: TextStyle(color: c.white))));
+                            }
+                            Navigator.pop(context);
+                            print("response----:)$response");
+                          }else {
+                            Utils().showAlert(context, ContentType.fail, ("failed".tr().toString()));
                           }
-                          Navigator.pop(context);
-                          print("response----:)$response");
+
                         } catch (e) {
                           Utils().showToast(context, "Fail","W");
                         } finally {

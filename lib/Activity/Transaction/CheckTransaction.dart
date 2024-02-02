@@ -61,13 +61,17 @@ class _CheckTransactionState extends State<CheckTransaction> {
     } finally {
       Utils().hideProgress(context);
     }
-
-    if (response[key_status] == key_success && response[key_response] == key_success) {
-      defaultWorklist = response[key_data];
-      filterList = defaultWorklist.toList();
-    } else {
-      Utils().showAlert(context, ContentType.warning, response[key_response].toString());
+    if (response != null && response.isNotEmpty){
+      if (response[key_status] == key_success && response[key_response] == key_success) {
+        defaultWorklist = response[key_data];
+        filterList = defaultWorklist.toList();
+      } else {
+        Utils().showAlert(context, ContentType.warning, response[key_message].toString());
+      }
+    }else {
+      Utils().showAlert(context, ContentType.fail, ("failed".tr().toString()));
     }
+
     setState(() {});
   }
 
@@ -486,14 +490,23 @@ class _CheckTransactionState extends State<CheckTransaction> {
       Utils().showProgress(context, 1);
       var requestData = {key_service_id: service_key_CheckTransaction, key_transaction_id: transID, key_language_name: lang};
       var response = await model.overAllMainService(context, requestData);
-      await model.getDemandList(context);
+      if (response != null && response.isNotEmpty){
+        await model.getDemandList(context);
+      }else {
+        Utils().showAlert(context, ContentType.fail, ("failed".tr().toString()));
+      }
 
       Utils().hideProgress(context);
-      if (response[key_status] == key_success && response[key_response] == key_success) {
-        Utils().showAlert(context, ContentType.help, '${response[key_message]}');
+      if (response != null && response.isNotEmpty){
+        if (response[key_status] == key_success && response[key_response] == key_success) {
+          Utils().showAlert(context, ContentType.help, '${response[key_message]}');
 
-        initialize();
+          initialize();
+        }
+      }else {
+        Utils().showAlert(context, ContentType.fail, ("failed".tr().toString()));
       }
+
     }
   }
 }

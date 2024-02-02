@@ -224,5 +224,7 @@
   "add_to_pay": "Add to Favourite List",
   "continue": "CONTINUE",
   "hi": "Hi",
-  "all":"All"
+  "all":"All",
+  "update":"Update",
+  "update_msg":"Download the latest version and install the new APK."
 }
