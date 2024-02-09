@@ -4,22 +4,23 @@ import 'dart:io';
 import 'package:http/io_client.dart';
 import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
+import 'package:public_vptax/Services/env.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/utils.dart';
 
-// local
-// String endPointUrl = 'http://10.163.19.137:8090/vptax/project/webservices';
-//LiveDemo
-String endPointUrl = 'https://vptax.tnrd.tn.gov.in/vptax_test/project/webservices';
+String endPointUrl = PreferenceService().buildMode=="Local"?Env.endPointUrlLocal:
+                     PreferenceService().buildMode=="LiveDemo"?Env.endPointUrlLiveDemo:Env.endPointUrlLive;
+
 
 class ApiServices {
   Utils utils = Utils();
 
   PreferenceService preferencesService = locator<PreferenceService>();
-  String loginURL = "$endPointUrl/login_service/login_services.php";
-  String mainURL = "$endPointUrl/vptax_services_online.php";
-  String openURL = "$endPointUrl/open_services/open_services.php";
-  String pdfURL = "$endPointUrl/getReceipt.php";
+
+  String? loginURL = endPointUrl+Env.loginURL;
+  String? mainURL = endPointUrl+Env.mainURL;
+  String? openURL = endPointUrl+Env.openURL;
+  String? pdfURL = endPointUrl+Env.pdfURL;
 
   ioclientCertificate() async {
     HttpClient client = HttpClient(context: await utils.globalContext);
@@ -35,7 +36,7 @@ class ApiServices {
     log("$type- url>>$loginURL");
     log("$type- request>>${json.encode(request)}");
     IOClient ioClient = IOClient();
-    var response = await ioClient.post(Uri.parse(loginURL), body: request);
+    var response = await ioClient.post(Uri.parse(loginURL!), body: request);
 
     if (response.statusCode == 200) {
       String data = response.body;
@@ -56,19 +57,21 @@ class ApiServices {
 
   Future mainServiceFunction(dynamic jsonRequest) async {
     IOClient ioClient = await ioclientCertificate();
-    String key = await preferencesService.getString('userPassKey');
+    String? key =  Env.userPassKey;
     String userName = preferencesService.userName;
     String jsonString = jsonEncode(jsonRequest);
-    String headerSignature = utils.generateHmacSha256(jsonString, key, true);
+    String headerSignature = utils.generateHmacSha256(jsonString, key!, true);
     String headerToken = utils.jwt_Encode(key, userName, headerSignature);
     var header = {"Content-Type": "application/json", "Authorization": "Bearer $headerToken"};
     print("MainService mainURL----:) $mainURL");
 
-    var response = await ioClient.post(Uri.parse(mainURL), body: jsonString, headers: header);
+    var response = await ioClient.post(Uri.parse(mainURL!), body: jsonString, headers: header);
     print("MainService statusCode----:) ${response.statusCode}");
     print("MainService body----:) ${response.body}");
     if (response.statusCode == 200) {
       var data = response.body;
+      print("MainService data----:) ${jsonDecode(data)}");
+
       String? authorizationHeader = response.headers['authorization'];
       String? token = authorizationHeader?.split(' ')[1];
       String responceSignature = utils.jwt_Decode(key, token!);
@@ -89,7 +92,7 @@ class ApiServices {
     IOClient ioClient = await ioclientCertificate();
     print("MainService openURL----:) $openURL");
 
-    var response = await ioClient.post(Uri.parse(openURL), body: json.encode(jsonRequest));
+    var response = await ioClient.post(Uri.parse(openURL!), body: json.encode(jsonRequest));
 
     if (response.statusCode == 200) {
       var data = response.body;

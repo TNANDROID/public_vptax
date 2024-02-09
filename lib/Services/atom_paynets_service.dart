@@ -15,6 +15,8 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:public_vptax/Utils/ContentInfo.dart';
 
+import '../Layout/screen_size.dart';
+import '../Layout/ui_helper.dart';
 import 'Apiservices.dart';
 import 'Preferenceservices.dart';
 import 'locator.dart';
@@ -151,7 +153,20 @@ class AtomPaynetsViewState extends State<AtomPaynetsView> {
           elevation: 0,
           toolbarHeight: 2,
         ),
-        body: SafeArea(child: webView),
+        body: SafeArea(
+            child: SizedBox(
+                height: Screen.height(context),
+                width: Screen.width(context),
+                child: Column(
+                  children: [
+                    Expanded(child: webView),
+                    Container(
+                        padding: const EdgeInsets.all(15),
+                        color: Colors.white,
+                        alignment: Alignment.center,
+                        child: UIHelper.titleTextStyle("* Do not press Back and Exit Button", Colors.red, 16, true, true))
+                  ],
+                ))),
       ),
     );
   }

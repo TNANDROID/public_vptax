@@ -8,6 +8,9 @@ class PreferenceService {
   String userName = 'public';
   String paymentType = "";
   String selectedLanguage = "ta";
+  String buildMode = "Local";
+  // String buildMode = "LiveDemo";
+  // String buildMode = "Live";
 
   List<dynamic> districtList = [];
   List<dynamic> blockList = [];

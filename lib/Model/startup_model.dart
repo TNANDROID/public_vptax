@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, non_constant_identifier_names, prefer_typing_uninitialized_variables
 
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Services/Apiservices.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
+import 'package:public_vptax/Services/env.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:public_vptax/Utils/utils.dart';
@@ -40,6 +42,10 @@ class StartUpViewModel extends BaseViewModel {
         selectedVillageList.add(item);
       }
     }
+   /* print("distcode"+distcode.toString());
+    print("blockcode"+blockcode.toString());
+    print("selectedVillageList"+selectedVillageList.toString());
+    print("selectedVillageList"+preferencesService.villageList.toString());*/
   }
 
 //------------Get Open Service API Function---------------//
@@ -128,7 +134,7 @@ class StartUpViewModel extends BaseViewModel {
       try {
         print("MainService Request----:) ${jsonEncode(requestData)}");
         var response = await apiServices.mainServiceFunction(requestData);
-        print("MainService Response----:) $response");
+        log("MainService Response----:) $response");
         setBusy(false);
         return response;
       } catch (error) {
@@ -148,8 +154,8 @@ class StartUpViewModel extends BaseViewModel {
   Future getReceipt(BuildContext context, receiptList, String setFlag, String language) async {
     String urlParams =
         "taxtypeid=${base64Encode(utf8.encode(receiptList[key_taxtypeid].toString()))}&statecode=${base64Encode(utf8.encode(receiptList[key_state_code].toString()))}&dcode=${base64Encode(utf8.encode(receiptList[key_dcode].toString()))}&lbcode=${base64Encode(utf8.encode(receiptList[key_lbcode].toString()))}&bcode=${base64Encode(utf8.encode(receiptList[key_bcode].toString()))}&receipt_id=${base64Encode(utf8.encode(receiptList[key_receipt_id].toString()))}&receipt_no=${base64Encode(utf8.encode(receiptList[key_receipt_no].toString()))}&language_name=${base64Encode(utf8.encode(language))}";
-    String key = await preferencesService.getString('userPassKey');
-    String Signature = utils.generateHmacSha256(urlParams, key, true);
+    String? key =  Env.userPassKey;
+    String Signature = utils.generateHmacSha256(urlParams, key!, true);
     String encodedParams = "${ApiServices().pdfURL}?$urlParams&sign=$Signature";
     await launch(encodedParams.toString());
   }

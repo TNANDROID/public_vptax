@@ -37,7 +37,6 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
   }
 
   Future<void> initialize() async {
-    await preferencesService.setString('userPassKey', '45af1c702e5c46acb5f4192cbeaba27c');
     getPrefesecrectKey = await preferencesService.getString(key_secretKey);
 /* preferencesService.selectedLanguage = "en";
     preferencesService.setString("lang", "en");
@@ -49,16 +48,11 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
     if (getPrefesecrectKey.isNotEmpty) {
       await preferencesService.setString(key_isLogin, "yes");
     }
-    ////********************  Need to Remove ********************************************////
-    ////*******/ await preferencesService.setString(key_mobile_number, "9875235654"); //**////
-    ////*******/ await preferencesService.setString(key_secretKey, "9999"); //**////
-    // /*******/ await preferencesService.setString(key_name, "Test"); //**////
-    // /*******/ await preferencesService.setString(key_email, "Test@gmail.com"); //**////
-    ////*********************************************************************************////
-    if (await utils.isOnline()) {
-      gotoLogin();
 
-      // checkVersion(context);
+    if (await utils.isOnline()) {
+      // gotoLogin();
+
+      checkVersion(context);
     } else {
   utils.showAlert(context, ContentType.fail, 'No Internet');
   }
@@ -82,6 +76,8 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
               width: 80,
             ),
             UIHelper.verticalSpaceSmall,
+            UIHelper.titleTextStyle('rural_development'.tr().toString(), c.text_color, fs.h2, true, true),
+            UIHelper.verticalSpaceTiny,
             UIHelper.titleTextStyle('gov_tamilnadu'.tr().toString(), c.text_color, fs.h2, true, true),
             UIHelper.verticalSpaceMedium,
             HeartbeatProgressIndicator(
@@ -153,7 +149,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
         print("v1Number>>" + v1Number.toString());
         print("v2Number>>" + v2Number.toString());
 
-        if (data[s.key_app_code] == "OG" && (v1Number > v2Number)) {
+        if (data[s.key_app_code] == s.service_key_appcode && (v1Number > v2Number)) {
           await preferencesService.setString(s.key_apk, data['apk_path'].toString());
           utils.showAlert(context, ContentType.fail, 'update_msg'.tr().toString(),btnText: 'update'.tr().toString(),btnmsg:"apk" ,btnCount: "1");
         } else {

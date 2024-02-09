@@ -25,12 +25,16 @@ import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
 import 'package:public_vptax/Services/Apiservices.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/atom_paynets_service.dart';
+import 'package:public_vptax/Services/env.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../Activity/Auth/Home.dart';
 import '../Model/startup_model.dart';
 import '../Resources/StringsKey.dart';
+import '../Services/env.dart';
+import '../Services/env.dart';
+import '../Services/env.dart';
 import 'ContentInfo.dart';
 
 class Utils {
@@ -551,12 +555,12 @@ class Utils {
   Future<void> openNdpsPG(mcontext, String atomTokenId, String merchId, String emailId, String mobileNumber) async {
     String mode="";
     String returnUrl="";
-    if(ApiServices().mainURL.contains("10.163.19") || ApiServices().mainURL.contains("vptax_test")){
-      mode="uat";
-      returnUrl = "https://pgtest.atomtech.in/mobilesdk/param";
+    if(preferencesService.buildMode=="Local"){
+      mode=Env.modeLocal;
+      returnUrl = Env.returnUrlLocal;
     }else{
-      mode="PROD";
-      returnUrl = "https://payment.atomtech.in/mobilesdk/param"; ////return url production
+      mode=Env.modeLive;
+      returnUrl = Env.returnUrlLive; ////return url production
     }
 
     Map payDetails = {key_atomTokenId: atomTokenId, key_merchId: merchId, key_emailId: emailId, key_mobileNumber: mobileNumber, key_returnUrl: returnUrl};

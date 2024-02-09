@@ -24,7 +24,6 @@ Future<void> main() async {
   ]);
   await EasyLocalization.ensureInitialized();
   EasyLocalization.logger.enableBuildModes = [];
-
   runApp(
     EasyLocalization(
       supportedLocales: [Locale('en', 'US'), Locale('ta', 'IN')],

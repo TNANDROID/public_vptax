@@ -318,14 +318,18 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
           String public_transaction_mobile_no = Utils().decodeBase64(pay_params['e'].toString());
           String merchId = Utils().decodeBase64(pay_params['g'].toString());
 
-          await Utils().openNdpsPG(widget.mcContext, atomTokenId, merchId, public_transaction_email_id, public_transaction_mobile_no);
+          Utils().openNdpsPG(widget.mcContext, atomTokenId, merchId, public_transaction_email_id, public_transaction_mobile_no);
         } else if (response_value == key_fail) {
           Utils().showAlert(widget.mcContext, ContentType.warning, response[key_message].toString());
+          Utils().showProgress(widget.mcContext, 1);
+          await StartUpViewModel().getDemandList(widget.mcContext);
+          Utils().hideProgress(widget.mcContext);
+
         } else {
           Utils().showAlert(widget.mcContext, ContentType.warning, response_value.toString());
         }
       }else {
-        Utils().showAlert(context, ContentType.fail, ("failed".tr().toString()));
+        Utils().showAlert(widget.mcContext, ContentType.fail, ("failed".tr().toString()));
       }
 
     } catch (error) {

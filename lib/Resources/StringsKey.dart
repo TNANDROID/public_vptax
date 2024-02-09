@@ -141,6 +141,7 @@ String key_favourite_assessment_id = "favourite_assessment_id";
 String key_favourite_assessment_list = "favourite_assessment_list";
 String key_app_code = "appcode";
 String key_apk = "apk";
+String key_public_transaction_user_name = "public_transaction_user_name";
 
 
 // ************************** Service Key Strings ************************** //
@@ -168,6 +169,7 @@ String service_key_AddfavouriteList = "AddfavouriteList";
 String service_key_RemovefavouriteList = "RemovefavouriteList";
 String service_key_ReceiptBillDetails = "ReceiptBillDetails";
 String service_key_version_check = "version_check";
-String service_key_appcode = "OG";
+// String service_key_appcode = "OG"; // in live demo
+String service_key_appcode = "VPTAX";
 
 

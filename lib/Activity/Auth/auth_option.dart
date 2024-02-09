@@ -75,8 +75,9 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
                 children: [
                   Image.asset(imagepath.tamilnadu_logo, height: 80, width: 80),
                   UIHelper.verticalSpaceSmall,
-                  UIHelper.titleTextStyle('gov_tamilnadu'.tr().toString(), c.text_color, fs.h2, true, true),
-                ],
+                  UIHelper.titleTextStyle('rural_development'.tr().toString(), c.text_color, fs.h2, true, true),
+                  UIHelper.verticalSpaceTiny,
+                  UIHelper.titleTextStyle('gov_tamilnadu'.tr().toString(), c.text_color, fs.h2, true, true),                ],
               ),
               //  UIHelper.verticalSpaceMedium,
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
