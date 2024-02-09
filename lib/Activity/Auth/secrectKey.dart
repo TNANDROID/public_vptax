@@ -99,7 +99,7 @@ class _SecretKeyViewState extends State<SecretKeyView> with TickerProviderStateM
                         color: c.primary_text_color2,
                         width: 1.0, // Underline thickness
                       ))),
-                      child: UIHelper.titleTextStyle('forgot_secret_Pin'.tr().toString(), c.primary_text_color2, fs.h4, false, true),
+                      child: UIHelper.titleTextStyle('forgot_secret_Pin'.tr().toString(), c.primary_text_color2, fs.h4, true, true),
                     ),
                   ),
                 )

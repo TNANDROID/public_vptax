@@ -285,14 +285,14 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                     color: selectedEntryType == index ? c.need_improvement : c.bg,
                     child: Row(
                       children: [
-                        UIHelper.horizontalSpaceSmall,
+                        UIHelper.horizontalSpaceMedium,
                         Icon(
                           selectedEntryType == index ? Icons.radio_button_checked_rounded : Icons.radio_button_off_rounded,
                           color: c.grey_9,
-                          size: 17,
+                          size: 15,
                         ),
                         UIHelper.horizontalSpaceSmall,
-                        Expanded(child: UIHelper.titleTextStyle(title, c.grey_9, fs.h4, false, false)),
+                        Expanded(child: UIHelper.titleTextStyle(title, c.black, fs.h4, false, false)),
                       ],
                     )))));
   }
@@ -308,9 +308,12 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
           /* UIHelper.verticalSpaceMedium,
           radioButtonWidget(1, 'via_mobileNumber'.tr().toString()), */
           UIHelper.verticalSpaceSmall,
+          radioButtonWidget(3, 'assesmentNumber'.tr().toString()),
+          UIHelper.verticalSpaceSmall,
+          Align(alignment:Alignment.center,child: UIHelper.titleTextStyle('(or)', c.grey_9, fs.h4, true, true)),
+          UIHelper.verticalSpaceSmall,
           radioButtonWidget(2, 'via_e_taxNumber'.tr().toString()),
           UIHelper.verticalSpaceSmall,
-          radioButtonWidget(3, 'via_assessNumber'.tr().toString()),
         ],
       ),
     );

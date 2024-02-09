@@ -308,10 +308,10 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(flex: 2, child: UIHelper.titleTextStyle(key, c.grey_8, fs.h4, false, false)),
-            Expanded(flex: 0, child: UIHelper.titleTextStyle(":", c.grey_8, fs.h4, false, false)),
+            Expanded(flex: 2, child: UIHelper.titleTextStyle(key, c.grey_10, fs.h4, false, false)),
+            Expanded(flex: 0, child: UIHelper.titleTextStyle(":", c.grey_10, fs.h4, false, false)),
             UIHelper.horizontalSpaceSmall,
-            Expanded(flex: 3, child: UIHelper.titleTextStyle(value, c.grey_8, fs.h4, false, false)),
+            Expanded(flex: 3, child: UIHelper.titleTextStyle(value, c.grey_10, fs.h4, false, false)),
           ],
         ),
         UIHelper.verticalSpaceSmall
@@ -341,7 +341,7 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
               child: Column(
                 children: [
                   UIHelper.verticalSpaceSmall,
-                  Align(alignment: Alignment.topRight, child: UIHelper.titleTextStyle(formatedDate(getData['collectiondate'].toString()), c.text_color, fs.h4, false, false)),
+                  Align(alignment: Alignment.topRight, child: UIHelper.titleTextStyle(formatedDate(getData['collectiondate'].toString()), c.text_color, fs.h4, true, false)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

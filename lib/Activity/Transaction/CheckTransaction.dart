@@ -21,7 +21,8 @@ import '../../Services/locator.dart';
 import '../../Utils/ContentInfo.dart';
 
 class CheckTransaction extends StatefulWidget {
-  const CheckTransaction({super.key});
+  final flag;
+   CheckTransaction({required this.flag});
 
   @override
   State<CheckTransaction> createState() => _CheckTransactionState();
@@ -74,6 +75,10 @@ class _CheckTransactionState extends State<CheckTransaction> {
       Utils().showAlert(context, ContentType.fail, ("failed".tr().toString()));
     }
 
+    if(widget.flag =="Pending"){
+      selectedFilter = widget.flag;
+      getFilterData(widget.flag);
+    }
     setState(() {});
   }
 

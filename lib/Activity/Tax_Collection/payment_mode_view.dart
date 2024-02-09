@@ -10,6 +10,7 @@ import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Model/startup_model.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
+import 'package:public_vptax/Resources/StringsKey.dart' as s;
 import 'package:public_vptax/Resources/imagepath.dart' as imagepath;
 import 'package:public_vptax/Resources/StringsKey.dart';
 import 'package:public_vptax/Services/Preferenceservices.dart';
@@ -55,6 +56,10 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
       nameTextController.text = await preferencesService.getString(key_name);
       mobileTextController.text = await preferencesService.getString(key_mobile_number);
       emailTextController.text = await preferencesService.getString(key_email);
+    }else{
+      nameTextController.text =widget.dataList[0][s.key_name]??"";
+      mobileTextController.text = widget.dataList[0][s.key_mobile_number]??'';
+      emailTextController.text = "";
     }
     setState(() {});
   }

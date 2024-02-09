@@ -639,6 +639,7 @@ class Utils {
 
   Future<void> settingModalBottomSheet(BuildContext context, List finalList, String payType) async {
     preferencesService.paymentType = payType;
+    print("finalList"+finalList.toString());
     return showModalBottomSheet(
         context: context,
         isScrollControlled: true,

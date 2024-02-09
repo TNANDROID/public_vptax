@@ -427,10 +427,13 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
                 ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
                     child: InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => CheckTransaction(),
-                          ));
+                        onTap: () async {
+                          if(await preferencesService.getString(key_isLogin) == "yes"){
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => CheckTransaction(flag: "Pending",),
+                            ));
+                          }
+
                         },
                         child: UIHelper.titleTextStyle('transaction_warning_hint'.tr().toString(), c.red, fs.h4, true, true)),
                   )

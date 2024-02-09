@@ -392,7 +392,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                     } else if (selected_index == 2) {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => TaxCollectionView(appbarTitle: 'quickPay', flag: "2")));
                                     } else if (selected_index == 3) {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => CheckTransaction()));
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => CheckTransaction(flag: "All")));
                                     } else if (selected_index == 4) {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => ViewReceiptPaidByYou()));
                                     } else if (selected_index == 5) {

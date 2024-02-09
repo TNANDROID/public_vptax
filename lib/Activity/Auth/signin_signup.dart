@@ -256,7 +256,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                 addInputFormControl(key_name, key_name.tr().toString(), "text"),
                 addInputFormControl(key_email, 'emailAddress'.tr().toString(), key_email_id),
                 UIHelper.verticalSpaceSmall,
-                addInputDropdownField(),
+                // addInputDropdownField(),
               } else ...{
                 UIHelper.verticalSpaceVeryLarge,
               }
@@ -445,6 +445,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
 
         if (signUpFlag) {
           serviceId = "register";
+          postParams[key_gender] = '';
         } else {
           serviceId = verifyOTPFlag ? "ResendOtp" : "SendOTPforGeneratePIN";
         }
@@ -511,7 +512,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
             await preferencesService.setString(key_name, resData[key_name].toString());
             await preferencesService.setString(key_mobile_number, resData[key_mobile].toString());
             await preferencesService.setString(key_email, resData[key_email].toString());
-            await preferencesService.setString(key_gender, resData[key_gender].toString());
+            // await preferencesService.setString(key_gender, resData[key_gender].toString());
             registerStep++;
             setState(() {});
           } else {
