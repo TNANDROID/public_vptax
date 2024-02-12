@@ -53,7 +53,10 @@ class _VerificationViewState extends State<VerificationView> with TickerProvider
                   : Container(
                       padding: EdgeInsets.all(10),
                       width: 35,
-                      decoration: UIHelper.roundedBorderWithColor(10, 10, 10, 10, c.white, borderColor: c.grey_6, borderWidth: 2),
+                      // decoration: UIHelper.roundedBorderWithColor(10, 10, 10, 10, c.white, borderColor: c.grey_6, borderWidth: 2),
+                      decoration: UIHelper.roundedBorderWithColor(10, 10, 10, 10, c.white,
+                          borderColor: widget.pinString.length == index ? c.colorPrimary : c.grey_6, borderWidth: widget.pinString.length == index ? 4 : 2),
+
                       child: UIHelper.titleTextStyle(otp == "E" ? "" : otp, c.colorPrimaryDark, 14, true, true),
                     )
             ],
