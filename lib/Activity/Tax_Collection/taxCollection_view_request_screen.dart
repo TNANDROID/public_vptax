@@ -276,17 +276,16 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
 
           setState(() {});
         },
-        child: ClipPath(
-            clipper: LeftTriangleClipper(),
+        // child: ClipPath(
+            // clipper: LeftTriangleClipper(),
             child: Card(
                 elevation: 2,
                 child: Container(
-                    width: Screen.width(context),
+                    width: Screen.width(context)/2.6,
                     padding: EdgeInsets.all(7),
                     color: selectedEntryType == index ? c.need_improvement : c.bg,
                     child: Row(
                       children: [
-                        UIHelper.horizontalSpaceMedium,
                         Icon(
                           selectedEntryType == index ? Icons.radio_button_checked_rounded : Icons.radio_button_off_rounded,
                           color: c.grey_9,
@@ -295,7 +294,9 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                         UIHelper.horizontalSpaceSmall,
                         Expanded(child: UIHelper.titleTextStyle(title, c.black, fs.h4, false, false)),
                       ],
-                    )))));
+                    )))
+        // )
+    );
   }
 
   Widget radioButtonListWidget() {
@@ -309,11 +310,22 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
           /* UIHelper.verticalSpaceMedium,
           radioButtonWidget(1, 'via_mobileNumber'.tr().toString()), */
           UIHelper.verticalSpaceSmall,
-          radioButtonWidget(3, 'assesmentNumber'.tr().toString()),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              radioButtonWidget(3, 'assesmentNumber'.tr().toString()),
+              UIHelper.horizontalSpaceTiny,
+              Align(alignment:Alignment.center,child: UIHelper.titleTextStyle('(or)', c.grey_9, fs.h4, true, true)),
+              UIHelper.horizontalSpaceTiny,
+              radioButtonWidget(2, 'vptax_id'.tr().toString()),
+            ],
+          ),
+         /* radioButtonWidget(3, 'assesmentNumber'.tr().toString()),
           UIHelper.verticalSpaceSmall,
           Align(alignment:Alignment.center,child: UIHelper.titleTextStyle('(or)', c.grey_9, fs.h4, true, true)),
           UIHelper.verticalSpaceSmall,
-          radioButtonWidget(2, 'via_vptax_id'.tr().toString()),
+          radioButtonWidget(2, 'via_vptax_id'.tr().toString()),*/
           UIHelper.verticalSpaceSmall,
         ],
       ),
