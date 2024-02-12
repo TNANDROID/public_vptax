@@ -19,6 +19,7 @@ import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:public_vptax/Utils/utils.dart';
 import '../../Layout/number_keyboard.dart';
+import 'package:sms_otp_auto_verify/sms_otp_auto_verify.dart';
 
 class SignUpView extends StatefulWidget {
   bool isSignup;
@@ -46,6 +47,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   String gender = "";
   List secureFields = [];
   Map<String, dynamic> postParams = {};
+  final intRegex = RegExp(r'\d+', multiLine: true);
 
   List<dynamic> genderList = [
     {"title": 'female'.tr().toString(), "value": "F"},
@@ -60,11 +62,19 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
     _rightToLeftAnimation =
         Tween<Offset>(begin: registerStep == 2 ? Offset.zero : Offset(1.0, 0.0), end: const Offset(0.0, 0.0)).animate(CurvedAnimation(parent: _rightToLeftAnimController, curve: Curves.easeInOut));
     signUpFlag = widget.isSignup;
+    _getSignatureCode();
+  }
+
+  /// get signature code
+  _getSignatureCode() async {
+    String? signature = await SmsVerification.getAppSignature();
+    print("signature $signature");
   }
 
   @override
   void dispose() {
     _rightToLeftAnimController.dispose();
+    SmsVerification.stopListening();
     super.dispose();
   }
 
@@ -404,24 +414,24 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
 
               var sendData = {key_service_id: serviceid, key_mobile_number: postParams[key_mobile_number].toString()};
               var response;
-              try{
-              Utils().showProgress(context, 1);
-               response = await model.overAllMainService(context, sendData);
-                } catch (e) {
-                Utils().showToast(context, "Fail","W");
-                } finally {
+              try {
+                Utils().showProgress(context, 1);
+                response = await model.overAllMainService(context, sendData);
+                _startListeningSms();
+              } catch (e) {
+                Utils().showToast(context, "Fail", "W");
+              } finally {
                 Utils().hideProgress(context);
-                }
-              if (response != null && response.isNotEmpty){
+              }
+              if (response != null && response.isNotEmpty) {
                 if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
                   utils.showToast(context, 'otp_resent_success'.tr().toString(), "S");
                 } else {
                   utils.showAlert(context, ContentType.fail, getErrorMessage(response[key_message].toString()));
                 }
-              }else {
+              } else {
                 utils.showAlert(context, ContentType.fail, getErrorMessage("failed".tr().toString()));
               }
-
             },
             child: Container(
                 width: Screen.width(context) - 100,
@@ -431,6 +441,15 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
         UIHelper.verticalSpaceMedium
       ],
     );
+  }
+
+  /// listen sms
+  _startListeningSms() {
+    SmsVerification.startListeningSms().then((message) {
+      setState(() {
+        finalOTP = SmsVerification.getCode(message, intRegex);
+      });
+    });
   }
 
 // ************* finalValidation  *********************** \\
@@ -451,16 +470,17 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
         }
         postParams[key_service_id] = serviceId;
         var response;
-        try{
+        try {
           Utils().showProgress(context, 1);
           response = await model.overAllMainService(context, postParams);
+          _startListeningSms();
         } catch (e) {
-          Utils().showToast(context, "Fail","W");
+          Utils().showToast(context, "Fail", "W");
         } finally {
           Utils().hideProgress(context);
         }
 
-        if (response != null && response.isNotEmpty){
+        if (response != null && response.isNotEmpty) {
           if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
             utils.showToast(context, 'otp_resent_success'.tr().toString(), "S");
             registerStep++;
@@ -481,8 +501,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
           } else {
             utils.showAlert(context, ContentType.fail, getErrorMessage(response[key_message].toString()));
           }
-
-        }else {
+        } else {
           utils.showAlert(context, ContentType.fail, getErrorMessage("failed".tr().toString()));
         }
       }
@@ -497,15 +516,15 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
 
         var sendData = {key_service_id: serviceId, key_mobile_number: postParams[key_mobile_number].toString(), "mobile_otp": finalOTP};
         var response;
-        try{
-        Utils().showProgress(context, 1);
-         response = await model.overAllMainService(context, sendData);
-      } catch (e) {
-    Utils().showToast(context, "Fail","W");
-    } finally {
-    Utils().hideProgress(context);
-    }
-        if (response != null && response.isNotEmpty){
+        try {
+          Utils().showProgress(context, 1);
+          response = await model.overAllMainService(context, sendData);
+        } catch (e) {
+          Utils().showToast(context, "Fail", "W");
+        } finally {
+          Utils().hideProgress(context);
+        }
+        if (response != null && response.isNotEmpty) {
           if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
             dynamic resData = response['DATA'];
             await preferencesService.setString("userId", resData['id'].toString());
@@ -518,10 +537,9 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
           } else {
             utils.showAlert(context, ContentType.fail, 'wrong_otp_msg'.tr().toString());
           }
-        }else {
+        } else {
           utils.showAlert(context, ContentType.fail, getErrorMessage("failed".tr().toString()));
         }
-
       }
     } else if (registerStep == 3) {
       if (_SecretKey.currentState!.saveAndValidate()) {
