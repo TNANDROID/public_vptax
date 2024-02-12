@@ -50,6 +50,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
   void initState() {
     super.initState();
     initialize();
+    print("##############################################");
   }
 
   Future<void> initialize() async {
@@ -208,7 +209,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
         focusedErrorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
         errorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
         errorStyle: TextStyle(fontSize: fs.h5),
-        contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12), // Optional: Adjust padding
+        contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 5), // Optional: Adjust padding
       ),
       name: fieldName,
       initialValue: initValue,
@@ -312,7 +313,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
           UIHelper.verticalSpaceSmall,
           Align(alignment:Alignment.center,child: UIHelper.titleTextStyle('(or)', c.grey_9, fs.h4, true, true)),
           UIHelper.verticalSpaceSmall,
-          radioButtonWidget(2, 'via_e_taxNumber'.tr().toString()),
+          radioButtonWidget(2, 'via_vptax_id'.tr().toString()),
           UIHelper.verticalSpaceSmall,
         ],
       ),
@@ -352,7 +353,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
                           selectedEntryType == 2
                               ? Column(
                                   children: [
-                                    addInputFormControl('computerRegNo', 'computerRegisterNumber'.tr().toString(), key_number),
+                                    addInputFormControl('computerRegNo', 'vptax_id'.tr().toString(), key_number),
                                     UIHelper.verticalSpaceSmall,
                                   ],
                                 )

@@ -334,7 +334,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                               ? Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString()}"), clr, fs.h4, false, true),
+                                    UIHelper.titleTextStyle(("${'vptax_id'.tr()} : ${getData[key_assessment_id].toString()}"), clr, fs.h4, false, true),
                                     UIHelper.verticalSpaceTiny,
                                     UIHelper.titleTextStyle(("${'building_licence_number'.tr()} : ${getData[key_building_licence_no].toString()}"), clr, fs.h4, false, true),
                                     UIHelper.verticalSpaceTiny,
@@ -346,7 +346,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                                   ? Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString()}"), clr, fs.h4, false, true),
+                                        UIHelper.titleTextStyle(("${'vptax_id'.tr()} : ${getData[key_assessment_id].toString()}"), clr, fs.h4, false, true),
                                         UIHelper.verticalSpaceTiny,
                                         UIHelper.titleTextStyle(("${'water_connection_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h4, false, true),
                                         UIHelper.verticalSpaceTiny,
@@ -356,7 +356,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                                       ? Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString()}"), clr, fs.h4, false, true),
+                                            UIHelper.titleTextStyle(("${'vptax_id'.tr()} : ${getData[key_assessment_id].toString()}"), clr, fs.h4, false, true),
                                             UIHelper.verticalSpaceTiny,
                                             UIHelper.titleTextStyle(("${'financialYear'.tr()} : ${getData['financialyear'].toString()}"), clr, fs.h4, false, true),
                                             UIHelper.verticalSpaceTiny,
@@ -368,7 +368,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                                           ? Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString()}"), clr, fs.h4, false, true),
+                                                UIHelper.titleTextStyle(("${'vptax_id'.tr()} : ${getData[key_assessment_id].toString()}"), clr, fs.h4, false, true),
                                                 UIHelper.verticalSpaceTiny,
                                                 UIHelper.titleTextStyle(("${'lease_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h4, false, true),
                                                 UIHelper.verticalSpaceTiny,
@@ -383,7 +383,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                                           : Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString()}"), clr, fs.h4, false, true),
+                                                UIHelper.titleTextStyle(("${'vptax_id'.tr()} : ${getData[key_assessment_id].toString()}"), clr, fs.h4, false, true),
                                                 UIHelper.verticalSpaceTiny,
                                                 UIHelper.titleTextStyle(("${'traders_code'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h4, false, true),
                                                 UIHelper.verticalSpaceTiny,

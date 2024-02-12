@@ -687,7 +687,7 @@ class Utils {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         UIHelper.verticalSpaceTiny,
-        UIHelper.titleTextStyle(("${'computerRegisterNumber'.tr()} : ${getData[key_assessment_id].toString()}"), clr, fs.h5, false, true),
+        UIHelper.titleTextStyle(("${'vptax_id'.tr()} : ${getData[key_assessment_id].toString()}"), clr, fs.h5, false, true),
         UIHelper.verticalSpaceTiny,
         if (taxTypeId == "1") UIHelper.titleTextStyle(("${'assesment_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h5, false, true),
         if (taxTypeId == "2") UIHelper.titleTextStyle(("${'water_connection_number'.tr()} : ${getData[key_assessment_no].toString()}"), clr, fs.h5, false, true),

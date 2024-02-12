@@ -464,7 +464,6 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
 
         if (signUpFlag) {
           serviceId = "register";
-          postParams[key_gender] = '';
         } else {
           serviceId = verifyOTPFlag ? "ResendOtp" : "SendOTPforGeneratePIN";
         }
@@ -563,7 +562,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   Widget appKeyControls() {
     return Column(
       children: [
-        UIHelper.titleTextStyle('enter_your_SecretPin'.tr().toString(), c.text_color, fs.h4, true, false),
+        UIHelper.titleTextStyle('set_your_SecretPin'.tr().toString(), c.text_color, fs.h4, true, false),
         UIHelper.verticalSpaceSmall,
         FormBuilder(
             key: _SecretKey,
@@ -571,7 +570,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                 padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                 child: Column(
                   children: [
-                    addInputFormControl(key_secretKey, 'enter_your_digitPin'.tr().toString(), key_number, isShowSuffixIcon: true),
+                    addInputFormControl(key_secretKey, 'enter_your_SecretPin'.tr().toString(), key_number, isShowSuffixIcon: true),
                     UIHelper.verticalSpaceSmall,
                     addInputFormControl("confirm", 'confirm_pin'.tr().toString(), key_number, isShowSuffixIcon: true),
                   ],
