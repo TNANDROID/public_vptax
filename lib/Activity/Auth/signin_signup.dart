@@ -40,6 +40,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   late AnimationController _rightToLeftAnimController;
   int registerStep = 1;
   String finalOTP = '';
+  String autofillOtp = '';
   String titleText = '';
   bool isShowKeyboard = false;
   bool verifyOTPFlag = false;
@@ -403,41 +404,59 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
               padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
               child: VerificationView(fixedlength: 6, pinString: finalOTP, secureText: false),
             )),
-        GestureDetector(
-            onTap: () async {
-              String serviceid = "";
-              if (signUpFlag || verifyOTPFlag) {
-                serviceid = "ResendOtp";
-              } else {
-                serviceid = "ResendOTPforGeneratePIN";
-              }
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            autofillOtp.isNotEmpty
+                ? GestureDetector(
+                    onTap: () {
+                      finalOTP = autofillOtp;
+                      setState(() {});
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.source_outlined,
+                          color: c.primary_text_color2,
+                        ),
+                        UIHelper.titleTextStyle("Auto Fill", c.primary_text_color2, fs.h4, true, false)
+                      ],
+                    ))
+                : Container(),
+            GestureDetector(
+                onTap: () async {
+                  String serviceid = "";
+                  if (signUpFlag || verifyOTPFlag) {
+                    serviceid = "ResendOtp";
+                  } else {
+                    serviceid = "ResendOTPforGeneratePIN";
+                  }
 
-              var sendData = {key_service_id: serviceid, key_mobile_number: postParams[key_mobile_number].toString()};
-              var response;
-              try {
-                Utils().showProgress(context, 1);
-                response = await model.overAllMainService(context, sendData);
-                _startListeningSms();
-              } catch (e) {
-                Utils().showToast(context, "Fail", "W");
-              } finally {
-                Utils().hideProgress(context);
-              }
-              if (response != null && response.isNotEmpty) {
-                if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
-                  utils.showToast(context, 'otp_resent_success'.tr().toString(), "S");
-                } else {
-                  utils.showAlert(context, ContentType.fail, getErrorMessage(response[key_message].toString()));
-                }
-              } else {
-                utils.showAlert(context, ContentType.fail, getErrorMessage("failed".tr().toString()));
-              }
-            },
-            child: Container(
-                width: Screen.width(context) - 100,
-                margin: EdgeInsets.only(right: 5),
-                alignment: Alignment.centerRight,
-                child: UIHelper.titleTextStyle('resendOTP'.tr().toString(), c.primary_text_color2, fs.h5, true, true))),
+                  var sendData = {key_service_id: serviceid, key_mobile_number: postParams[key_mobile_number].toString()};
+                  var response;
+                  try {
+                    Utils().showProgress(context, 1);
+                    response = await model.overAllMainService(context, sendData);
+                    _startListeningSms();
+                  } catch (e) {
+                    Utils().showToast(context, "Fail", "W");
+                  } finally {
+                    Utils().hideProgress(context);
+                  }
+                  if (response != null && response.isNotEmpty) {
+                    if (response[key_status].toString() == key_success && response[key_response].toString() == key_success) {
+                      utils.showToast(context, 'otp_resent_success'.tr().toString(), "S");
+                    } else {
+                      utils.showAlert(context, ContentType.fail, getErrorMessage(response[key_message].toString()));
+                    }
+                  } else {
+                    utils.showAlert(context, ContentType.fail, getErrorMessage("failed".tr().toString()));
+                  }
+                },
+                child: Container(child: UIHelper.titleTextStyle('resendOTP'.tr().toString(), c.primary_text_color2, fs.h5, true, true)))
+          ],
+        ),
         UIHelper.verticalSpaceMedium
       ],
     );
@@ -447,7 +466,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   _startListeningSms() {
     SmsVerification.startListeningSms().then((message) {
       setState(() {
-        finalOTP = SmsVerification.getCode(message, intRegex);
+        autofillOtp = SmsVerification.getCode(message, intRegex);
       });
     });
   }
