@@ -169,7 +169,7 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
       Container(
         transform: Matrix4.translationValues(5.0, -150.0, 10.0),
         child: TextButton(
-          child: Padding(padding: EdgeInsets.only(left: 5, right: 5), child: Text("submit".tr().toString(), style: TextStyle(color: c.white, fontSize: fs.h3))),
+          child: Padding(padding: EdgeInsets.only(left: 5, right: 5), child: Text("submit".tr().toString(), style: TextStyle(color: c.white, fontSize: fs.h4,fontWeight: FontWeight.bold))),
           style: TextButton.styleFrom(fixedSize: const Size(150, 20), shape: StadiumBorder(), backgroundColor: c.colorPrimary),
           onPressed: () async {
             if (_formKey.currentState!.saveAndValidate()) {
