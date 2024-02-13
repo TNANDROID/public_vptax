@@ -9,7 +9,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:form_builder_validators/localization/l10n.dart';
 const double kMinInteractiveDimension = 30.0;
 
 /// Field for Dropdown button
@@ -3342,7 +3341,7 @@ class FormBuilderValidators {
           (valueCandidate is String && valueCandidate.trim().isEmpty) ||
           (valueCandidate is Iterable && valueCandidate.isEmpty) ||
           (valueCandidate is Map && valueCandidate.isEmpty)) {
-        return errorText ?? FormBuilderLocalizations.current.requiredErrorText;
+        return errorText ??'Invalid input';
       }
       return null;
     };
@@ -3355,7 +3354,7 @@ class FormBuilderValidators {
         String? errorText,
       }) =>
           (valueCandidate) => valueCandidate != value
-          ? errorText ?? FormBuilderLocalizations.current.equalErrorText(value)
+          ? errorText ?? 'Invalid input'
           : null;
 
   /// [FormFieldValidator] that requires the field's value be not equal to
@@ -3366,7 +3365,7 @@ class FormBuilderValidators {
       }) =>
           (valueCandidate) => valueCandidate == value
           ? errorText ??
-          FormBuilderLocalizations.current.notEqualErrorText(value)
+              'Invalid input'
           : null;
 
   /// [FormFieldValidator] that requires the field's value to be greater than
@@ -3385,7 +3384,7 @@ class FormBuilderValidators {
 
         if (number != null && (inclusive ? number < min : number <= min)) {
           return errorText ??
-              FormBuilderLocalizations.current.minErrorText(min);
+              'Invalid input';
         }
       }
       return null;
@@ -3408,7 +3407,7 @@ class FormBuilderValidators {
 
         if (number != null && (inclusive ? number > max : number >= max)) {
           return errorText ??
-              FormBuilderLocalizations.current.maxErrorText(max);
+              'Invalid input';
         }
       }
       return null;
@@ -3432,7 +3431,7 @@ class FormBuilderValidators {
       if (valueCandidate is Iterable) valueLength = valueCandidate.length;
       return valueLength < minLength && (!allowEmpty || valueLength > 0)
           ? errorText ??
-          FormBuilderLocalizations.current.minLengthErrorText(minLength)
+          'Invalid input'
           : null;
     };
   }
@@ -3453,7 +3452,7 @@ class FormBuilderValidators {
       if (valueCandidate is Iterable) valueLength = valueCandidate.length;
       return null != valueCandidate && valueLength > maxLength
           ? errorText ??
-          FormBuilderLocalizations.current.maxLengthErrorText(maxLength)
+          'Invalid input'
           : null;
     };
   }
@@ -3479,7 +3478,7 @@ class FormBuilderValidators {
 
       return valueLength != length && (!allowEmpty || valueLength > 0)
           ? errorText ??
-          FormBuilderLocalizations.current.equalLengthErrorText(length)
+          'Invalid input'
           : null;
     };
   }
@@ -3501,7 +3500,7 @@ class FormBuilderValidators {
 
       return valueWordsCount < minCount && (!allowEmpty || valueWordsCount > 0)
           ? errorText ??
-          FormBuilderLocalizations.current.minWordsCountErrorText(minCount)
+          'Invalid input'
           : null;
     };
   }
@@ -3517,7 +3516,7 @@ class FormBuilderValidators {
       int valueWordsCount = valueCandidate?.trim().split(' ').length ?? 0;
       return null != valueCandidate && valueWordsCount > maxCount
           ? errorText ??
-          FormBuilderLocalizations.current.maxWordsCountErrorText(maxCount)
+          'Invalid input'
           : null;
     };
   }
@@ -3528,7 +3527,7 @@ class FormBuilderValidators {
   }) =>
           (valueCandidate) =>
       (valueCandidate?.isNotEmpty ?? false) && !isEmail(valueCandidate!)
-          ? errorText ?? FormBuilderLocalizations.current.emailErrorText
+          ? errorText ?? 'Invalid input'
           : null;
 
   /// [FormFieldValidator] that requires the field's value to be a valid url.
@@ -3557,7 +3556,7 @@ class FormBuilderValidators {
               allowUnderscore: allowUnderscore,
               hostWhitelist: hostWhitelist,
               hostBlacklist: hostBlacklist)
-          ? errorText ?? FormBuilderLocalizations.current.urlErrorText
+          ? errorText ?? 'Invalid input'
           : null;
 
   /// [FormFieldValidator] that requires the field's value to match the provided regex pattern.
@@ -3567,7 +3566,7 @@ class FormBuilderValidators {
       }) =>
           (valueCandidate) => true == valueCandidate?.isNotEmpty &&
           !RegExp(pattern).hasMatch(valueCandidate!)
-          ? errorText ?? FormBuilderLocalizations.current.matchErrorText
+          ? errorText ?? 'Invalid input'
           : null;
 
   /// [FormFieldValidator] that requires the field's value to be a valid number.
@@ -3576,7 +3575,7 @@ class FormBuilderValidators {
   }) =>
           (valueCandidate) => true == valueCandidate?.isNotEmpty &&
           null == num.tryParse(valueCandidate!)
-          ? errorText ?? FormBuilderLocalizations.current.numericErrorText
+          ? errorText ?? 'Invalid input'
           : null;
 
   /// [FormFieldValidator] that requires the field's value to be a valid integer.
@@ -3586,7 +3585,7 @@ class FormBuilderValidators {
   }) =>
           (valueCandidate) => true == valueCandidate?.isNotEmpty &&
           null == int.tryParse(valueCandidate!, radix: radix)
-          ? errorText ?? FormBuilderLocalizations.current.integerErrorText
+          ? errorText ?? 'Invalid input'
           : null;
 
   /// [FormFieldValidator] that requires the field's value to be a valid credit card number.
@@ -3595,7 +3594,7 @@ class FormBuilderValidators {
   }) =>
           (valueCandidate) => true == valueCandidate?.isNotEmpty &&
           !isCreditCard(valueCandidate!)
-          ? errorText ?? FormBuilderLocalizations.current.creditCardErrorText
+          ? errorText ?? 'Invalid input'
           : null;
 
   /// [FormFieldValidator] that requires the field's value to be a valid IP address.
@@ -3606,7 +3605,7 @@ class FormBuilderValidators {
   }) =>
           (valueCandidate) =>
       true == valueCandidate?.isNotEmpty && !isIP(valueCandidate!, version)
-          ? errorText ?? FormBuilderLocalizations.current.ipErrorText
+          ? errorText ?? 'Invalid input'
           : null;
 
   /// [FormFieldValidator] that requires the field's value to be a valid date string.
@@ -3615,7 +3614,7 @@ class FormBuilderValidators {
   }) =>
           (valueCandidate) => true == valueCandidate?.isNotEmpty &&
           !isDate(valueCandidate!)
-          ? errorText ?? FormBuilderLocalizations.current.dateStringErrorText
+          ? errorText ?? 'Invalid input'
           : null;
 }
 RegExp _email = RegExp(
