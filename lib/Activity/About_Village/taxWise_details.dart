@@ -2,7 +2,7 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:public_vptax/Layout/custom_dropdown.dart' as custom;
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
@@ -36,7 +36,9 @@ class _DCBViewState extends State<DCBView> {
   Widget addInputDropdownField() {
     List dropList = [];
     dropList = preferencesService.finYearList;
-    return FormBuilderDropdown(
+    return custom.FormBuilderDropdown(
+      itemHeight: 30,
+      menuMaxHeight: Screen.height(context)/1.5,
       decoration: InputDecoration(
         floatingLabelBehavior: FloatingLabelBehavior.never,
         constraints: BoxConstraints(maxHeight: 35),
@@ -49,13 +51,13 @@ class _DCBViewState extends State<DCBView> {
         focusedErrorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red, radius: 3),
         errorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red, radius: 3),
         errorStyle: TextStyle(fontSize: 10),
-        contentPadding: EdgeInsets.symmetric(vertical: 2, horizontal: 12), // Optional: Adjust padding
+        contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 12), // Optional: Adjust padding
       ),
       name: 'financial_year',
       initialValue: selectedFinYear,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+      autovalidateMode: custom.AutovalidateMode.onUserInteraction,
       items: dropList
-          .map((item) => DropdownMenuItem(
+          .map((item) => custom.DropdownMenuItem(
                 value: item[key_fin_year],
                 child: Text(
                   item[key_fin_year].toString(),

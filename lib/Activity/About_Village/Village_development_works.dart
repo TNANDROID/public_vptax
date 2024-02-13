@@ -4,15 +4,13 @@ import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:public_vptax/Layout/customclip.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Model/startup_model.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
 import 'package:public_vptax/Resources/ImagePath.dart' as imagePath;
+import 'package:public_vptax/Layout/custom_dropdown.dart' as custom;
 import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/utils.dart';
@@ -157,7 +155,9 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
     } else {
       debugPrint("End.....");
     }
-    return FormBuilderDropdown(
+    return custom.FormBuilderDropdown(
+      itemHeight: 30,
+      menuMaxHeight: Screen.height(context)/1.5,
       decoration: InputDecoration(
         labelText: inputHint,
         constraints: BoxConstraints(maxHeight: 35),
@@ -170,16 +170,16 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
         focusedErrorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
         errorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
         errorStyle: const TextStyle(fontSize: 10),
-        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6), // Optional: Adjust padding
+        contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 6), // Optional: Adjust padding
       ),
       name: fieldName,
       initialValue: initValue,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(errorText: "$inputHint ${'isEmpty'.tr()}"),
+      autovalidateMode: custom.AutovalidateMode.onUserInteraction,
+      validator: custom.FormBuilderValidators.compose([
+        custom.FormBuilderValidators.required(errorText: "$inputHint ${'isEmpty'.tr()}"),
       ]),
       items: dropList
-          .map((item) => DropdownMenuItem(
+          .map((item) => custom.DropdownMenuItem(
                 value: item,
                 child: Text(
                   preferencesService.selectedLanguage == "en" ? item[titleText].toString() : item[titleTextTamil].toString(),

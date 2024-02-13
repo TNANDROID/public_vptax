@@ -3,11 +3,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:public_vptax/Activity/Tax_Collection/taxCollection_details.dart';
 import 'package:public_vptax/Activity/Tax_Collection/taxCollection_detailsWithAddOption.dart';
-import 'package:public_vptax/Layout/customclip.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Model/startup_model.dart';
@@ -18,7 +15,7 @@ import 'package:public_vptax/Services/Preferenceservices.dart';
 import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/utils.dart';
 import 'package:stacked/stacked.dart';
-
+import 'package:public_vptax/Layout/custom_dropdown.dart' as custom;
 import '../../Utils/ContentInfo.dart';
 
 class TaxCollectionView extends StatefulWidget {
@@ -32,7 +29,7 @@ class TaxCollectionView extends StatefulWidget {
 }
 
 class _TaxCollectionViewState extends State<TaxCollectionView> {
-  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
+  final GlobalKey<custom.FormBuilderState> _formKey = GlobalKey<custom.FormBuilderState>();
   PreferenceService preferencesService = locator<PreferenceService>();
   FS fs = locator<FS>();
   TextEditingController etTextController = TextEditingController();
@@ -111,12 +108,12 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
   }
 
   Widget addInputFormControl(String nameField, String hintText, String fieldType) {
-    return FormBuilderTextField(
+    return custom.FormBuilderTextField(
       style: TextStyle(fontSize: fs.h4, fontWeight: FontWeight.w400, color: c.grey_9),
       name: nameField,
       controller: etTextController,
       autocorrect: false,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+      autovalidateMode: custom.AutovalidateMode.onUserInteraction,
       onChanged: (value) {},
       decoration: InputDecoration(
         labelText: hintText,
@@ -140,8 +137,8 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
               }
               return null;
             })
-          : FormBuilderValidators.compose([
-              FormBuilderValidators.required(errorText: "$hintText ${'isEmpty'.tr()}"),
+          : custom.FormBuilderValidators.compose([
+        custom.FormBuilderValidators.required(errorText: "$hintText ${'isEmpty'.tr()}"),
             ]),
       inputFormatters: fieldType == key_mobile_number
           ? [
@@ -197,7 +194,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
     } else {
       debugPrint("End.....");
     }
-    return FormBuilderDropdown(
+    return custom.FormBuilderDropdown(
       style: TextStyle(fontSize: fs.h4, fontWeight: FontWeight.w600, color: c.grey_10),
       decoration: InputDecoration(
         labelText: inputHint,
@@ -209,21 +206,24 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
         focusedErrorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
         errorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
         errorStyle: TextStyle(fontSize: fs.h5),
-        contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 5), // Optional: Adjust padding
+        contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 5), // Optional: Adjust padding
       ),
       name: fieldName,
       initialValue: initValue,
       iconSize: 30,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(errorText: "$inputHint ${'isEmpty'.tr()}"),
+      autovalidateMode: custom.AutovalidateMode.onUserInteraction,
+      validator: custom.FormBuilderValidators.compose([
+        custom. FormBuilderValidators.required(errorText: "$inputHint ${'isEmpty'.tr()}"),
       ]),
+      itemHeight: 30,
+      menuMaxHeight: Screen.height(context)/1.5,
       items: dropList
-          .map((item) => DropdownMenuItem(
+          .map((item) => custom.DropdownMenuItem(
                 value: item[keyCode],
                 child: Text(
-                  preferencesService.selectedLanguage == "en" ? item[titleText].toString() : item[titleTextTamil].toString(),
+                  preferencesService.selectedLanguage == "en" ? item[titleText].toString().trim() : item[titleTextTamil].toString().trim(),
                   style: TextStyle(fontSize: fs.h4, fontWeight: FontWeight.w400, color: c.grey_9),
+                    textAlign: TextAlign.center
                 ),
               ))
           .toList(),
@@ -342,7 +342,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
           UIHelper.verticalSpaceMedium,
           UIHelper.titleTextStyle('enter_the_details'.tr().toString(), c.grey_9, fs.h4, true, true),
           UIHelper.verticalSpaceMedium,
-          FormBuilder(
+          custom.FormBuilder(
             key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

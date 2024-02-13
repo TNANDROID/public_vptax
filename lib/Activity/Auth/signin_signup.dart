@@ -3,8 +3,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:public_vptax/Layout/custom_dropdown.dart' as custom;
 import 'package:public_vptax/Activity/Auth/Splash.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
@@ -33,8 +32,8 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   ApiServices apiServices = ApiServices();
   PreferenceService preferencesService = locator<PreferenceService>();
   FS fs = locator<FS>();
-  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
-  final GlobalKey<FormBuilderState> _SecretKey = GlobalKey<FormBuilderState>();
+  final GlobalKey<custom.FormBuilderState> _formKey = GlobalKey<custom.FormBuilderState>();
+  final GlobalKey<custom.FormBuilderState> _SecretKey = GlobalKey<custom.FormBuilderState>();
   StartUpViewModel model = StartUpViewModel();
   late Animation<Offset> _rightToLeftAnimation;
   late AnimationController _rightToLeftAnimController;
@@ -257,7 +256,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        FormBuilder(
+        custom.FormBuilder(
           key: _formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -283,12 +282,12 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
     return Column(
       children: [
         UIHelper.verticalSpaceSmall,
-        FormBuilderTextField(
+        custom.FormBuilderTextField(
           style: TextStyle(fontSize: fs.h4, fontWeight: FontWeight.w400, color: c.grey_9),
           obscureText: secureFields.contains(nameField) || !isShowSuffixIcon ? false : true,
           name: nameField,
           autocorrect: false,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
+          autovalidateMode: custom.AutovalidateMode.onUserInteraction,
           onChanged: (value) {},
           decoration: InputDecoration(
             suffixIcon: isShowSuffixIcon
@@ -344,8 +343,8 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                       }
                       return null;
                     })
-                  : FormBuilderValidators.compose([
-                      FormBuilderValidators.required(errorText: "$hintText ${'isEmpty'.tr()}"),
+                  : custom.FormBuilderValidators.compose([
+            custom.FormBuilderValidators.required(errorText: "$hintText ${'isEmpty'.tr()}"),
                     ]),
           inputFormatters: fieldType == key_mobile_number || fieldType == key_number
               ? [
@@ -361,7 +360,9 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
 
 // ************* Input DropDown Field Widget ********************* \\
   Widget addInputDropdownField() {
-    return FormBuilderDropdown(
+    return custom.FormBuilderDropdown(
+      itemHeight: 30,
+      menuMaxHeight: Screen.height(context)/1.5,
       name: key_gender,
       decoration: InputDecoration(
         labelText: key_gender.tr().toString(),
@@ -373,13 +374,13 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
         focusedErrorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
         errorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
         errorStyle: TextStyle(fontSize: 10),
-        contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12), // Optional: Adjust padding
+        contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 12), // Optional: Adjust padding
       ),
       initialValue: gender,
-      autovalidateMode: gender.isNotEmpty ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
-      validator: FormBuilderValidators.compose([FormBuilderValidators.required(errorText: key_gender.tr().toString() + " " + 'isEmpty'.tr())]),
+      autovalidateMode: gender.isNotEmpty ? custom.AutovalidateMode.onUserInteraction : custom.AutovalidateMode.disabled,
+      validator: custom.FormBuilderValidators.compose([custom.FormBuilderValidators.required(errorText: key_gender.tr().toString() + " " + 'isEmpty'.tr())]),
       items: genderList
-          .map((item) => DropdownMenuItem(
+          .map((item) => custom.DropdownMenuItem(
                 value: item['value'],
                 child: UIHelper.titleTextStyle(item['title'], c.grey_9, fs.h4, true, true),
               ))
@@ -426,6 +427,10 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                 : Container(),
             GestureDetector(
                 onTap: () async {
+                  setState(() {
+                    finalOTP="";
+                  });
+
                   String serviceid = "";
                   if (signUpFlag || verifyOTPFlag) {
                     serviceid = "ResendOtp";
@@ -583,7 +588,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
       children: [
         UIHelper.titleTextStyle('set_your_SecretPin'.tr().toString(), c.text_color, fs.h4, true, false),
         UIHelper.verticalSpaceSmall,
-        FormBuilder(
+        custom.FormBuilder(
             key: _SecretKey,
             child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),

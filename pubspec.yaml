@@ -37,7 +37,6 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^0.13.5
   get_it: ^7.6.0
-  flutter_form_builder: ^9.0.0
   form_builder_validators: ^9.0.0
   stacked: ^3.4.1
   easy_localization: ^3.0.2

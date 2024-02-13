@@ -4,8 +4,7 @@ import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:public_vptax/Layout/custom_dropdown.dart' as custom;
 import 'package:public_vptax/Activity/About_Village/assets_details.dart';
 import 'package:public_vptax/Activity/About_Village/habitation_details.dart';
 import 'package:public_vptax/Activity/About_Village/population_view.dart';
@@ -181,7 +180,9 @@ class _KYVDashboardState extends State<KYVDashboard> {
     } else {
       debugPrint("End.....");
     }
-    return FormBuilderDropdown(
+    return custom.FormBuilderDropdown(
+      itemHeight: 30,
+      menuMaxHeight: Screen.height(context)/1.5,
       decoration: InputDecoration(
         labelText: inputHint,
         constraints: BoxConstraints(maxHeight: 35),
@@ -194,16 +195,16 @@ class _KYVDashboardState extends State<KYVDashboard> {
         focusedErrorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
         errorBorder: UIHelper.getInputBorder(1, borderColor: Colors.red),
         errorStyle: const TextStyle(fontSize: 10),
-        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6), // Optional: Adjust padding
+        contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 6), // Optional: Adjust padding
       ),
       name: fieldName,
       initialValue: initValue,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(errorText: "$inputHint ${'isEmpty'.tr()}"),
+      autovalidateMode: custom.AutovalidateMode.onUserInteraction,
+      validator: custom.FormBuilderValidators.compose([
+        custom.FormBuilderValidators.required(errorText: "$inputHint ${'isEmpty'.tr()}"),
       ]),
       items: dropList
-          .map((item) => DropdownMenuItem(
+          .map((item) => custom.DropdownMenuItem(
                 value: item,
                 child: Text(
                   preferencesService.selectedLanguage == "en" ? item[titleText].toString() : item[titleTextTamil].toString(),

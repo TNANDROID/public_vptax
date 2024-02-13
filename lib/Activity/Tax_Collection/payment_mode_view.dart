@@ -3,9 +3,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:public_vptax/Layout/custom_dropdown.dart' as custom;
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Model/startup_model.dart';
@@ -30,7 +29,7 @@ class PaymentGateWayView extends StatefulWidget {
 class _PaymentGateWayViewState extends State<PaymentGateWayView> {
   PreferenceService preferencesService = locator<PreferenceService>();
   FS fs = locator<FS>();
-  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
+  final GlobalKey<custom.FormBuilderState> _formKey = GlobalKey<custom.FormBuilderState>();
   TextEditingController nameTextController = TextEditingController();
   TextEditingController mobileTextController = TextEditingController();
   TextEditingController emailTextController = TextEditingController();
@@ -145,7 +144,7 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
               ),
               Container(
                 margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                child: FormBuilder(
+                child: custom.FormBuilder(
                     key: _formKey,
                     child: Column(
                       children: [
@@ -202,7 +201,7 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
   }
 
   Widget addInputFormControl(String nameField, String hintText, String fieldType, String isLogin) {
-    return FormBuilderTextField(
+    return custom.FormBuilderTextField(
       enabled: isLogin == "yes" ? false : true,
       style: TextStyle(fontSize: fs.h3, fontWeight: FontWeight.w400, color: c.grey_9),
       name: nameField,
@@ -212,7 +211,7 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
               ? nameTextController
               : emailTextController,
       autocorrect: false,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+      autovalidateMode: custom.AutovalidateMode.onUserInteraction,
       onChanged: (value) {},
       decoration: InputDecoration(
         labelText: hintText,
@@ -247,8 +246,8 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
                   }
                   return null;
                 })
-              : FormBuilderValidators.compose([
-                  FormBuilderValidators.required(errorText: "$hintText ${'isEmpty'.tr()}"),
+              : custom.FormBuilderValidators.compose([
+        custom.FormBuilderValidators.required(errorText: "$hintText ${'isEmpty'.tr()}"),
                 ]),
       inputFormatters: fieldType == key_mobile_number
           ? [

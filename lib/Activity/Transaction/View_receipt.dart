@@ -5,9 +5,8 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:public_vptax/Layout/custom_dropdown.dart' as custom;
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
@@ -33,7 +32,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
   Utils utils = Utils();
   ApiServices apiServices = ApiServices();
   PreferenceService preferencesService = locator<PreferenceService>();
-  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
+  final GlobalKey<custom.FormBuilderState> _formKey = GlobalKey<custom.FormBuilderState>();
 
   String selectedDistrict = "";
   String selectedBlock = "";
@@ -94,7 +93,9 @@ class _ViewReceiptState extends State<ViewReceipt> {
       titleTextTamil = key_pvname_ta;
       initValue = selectedvillage;
     }
-    return FormBuilderDropdown(
+    return custom.FormBuilderDropdown(
+      itemHeight: 30,
+      menuMaxHeight: Screen.height(context)/1.5,
       decoration: InputDecoration(
         suffixIcon: Icon(
           Icons.arrow_drop_down,
@@ -110,15 +111,15 @@ class _ViewReceiptState extends State<ViewReceipt> {
         focusedErrorBorder: UIHelper.getInputBorder(0, borderColor: Colors.red, radius: 40),
         errorBorder: UIHelper.getInputBorder(0, borderColor: Colors.red, radius: 40),
         errorStyle: const TextStyle(fontSize: 10),
-        contentPadding: const EdgeInsets.symmetric(vertical: 1, horizontal: 10), // Optional: Adjust padding
+        contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10), // Optional: Adjust padding
       ),
       icon: SizedBox(width: 0, height: 0),
       name: fieldName,
       initialValue: initValue,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: FormBuilderValidators.compose([FormBuilderValidators.required(errorText: inputHint)]),
+      autovalidateMode: custom.AutovalidateMode.onUserInteraction,
+      validator: custom.FormBuilderValidators.compose([custom.FormBuilderValidators.required(errorText: inputHint)]),
       items: dropList
-          .map((item) => DropdownMenuItem(
+          .map((item) => custom.DropdownMenuItem(
               value: item[keyCode],
               child: Padding(
                 padding: const EdgeInsets.only(left: 10, top: 5),
@@ -256,7 +257,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
           margin: const EdgeInsets.only(left: 25, right: 15, top: 5),
           padding: const EdgeInsets.only(top: 10, left: 5, right: 5, bottom: 50),
           decoration: UIHelper.roundedBorderWithColorWithShadow(15, c.white, c.white, borderColor: Colors.transparent, borderWidth: 5),
-          child: FormBuilder(
+          child: custom.FormBuilder(
               key: _formKey,
               child: Column(children: [
                 headingWithDropdownWidget('taxType', addInputDropdownField(0, 'select_taxtype'.tr().toString(), "taxtypeid", model)),

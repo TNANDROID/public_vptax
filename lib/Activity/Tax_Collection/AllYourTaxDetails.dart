@@ -2,8 +2,7 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:public_vptax/Layout/custom_dropdown.dart' as custom;
 import 'package:grouped_list/grouped_list.dart';
 import 'package:public_vptax/Activity/Tax_Collection/taxCollection_view_request_screen.dart';
 import 'package:public_vptax/Activity/Transaction/CheckTransaction.dart';
@@ -757,7 +756,9 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
   }
 
   Widget addInputDropdownField() {
-    return FormBuilderDropdown(
+    return custom.FormBuilderDropdown(
+      itemHeight: 30,
+      menuMaxHeight: Screen.height(context)/1.5,
       style: TextStyle(fontSize: fs.h4, fontWeight: FontWeight.w400, color: c.grey_8),
       decoration: InputDecoration(
         contentPadding: EdgeInsets.only(left: 0),
@@ -780,10 +781,10 @@ class _AllYourTaxDetailsState extends State<AllYourTaxDetails> with TickerProvid
       ),
       initialValue: selectedTaxTypeData,
       iconSize: 28,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: FormBuilderValidators.compose([FormBuilderValidators.required(errorText: "")]),
+      autovalidateMode: custom.AutovalidateMode.onUserInteraction,
+      validator: custom.FormBuilderValidators.compose([custom.FormBuilderValidators.required(errorText: "")]),
       items: taxTypeList
-          .map((item) => DropdownMenuItem(
+          .map((item) => custom.DropdownMenuItem(
                 value: item,
                 child: Text(
                   preferencesService.selectedLanguage == "en" ? item[key_taxtypedesc_en].toString() : item[key_taxtypedesc_ta].toString(),
