@@ -370,6 +370,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
                   child: AnimationLimiter(
                     child: GridView.count(
+                      childAspectRatio: 0.9,
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       crossAxisCount: 3,
