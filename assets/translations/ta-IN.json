@@ -227,5 +227,6 @@
   "hi": "வணக்கம்",
   "all":"அனைத்தும்",
   "update":"புதுப்பிக்கவும்",
-  "update_msg":"Download the latest version and install the new APK."
+  "update_msg":"Download the latest version and install the new APK.",
+  "android_version_msg": "This application supports only android version 9 and above "
 }

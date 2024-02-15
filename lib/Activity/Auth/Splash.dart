@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, file_names, unused_field
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_indicators/progress_indicators.dart';
@@ -30,6 +31,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
   Utils utils = Utils();
   FS fs = locator<FS>();
   String getPrefesecrectKey="";
+  bool versionErrorFlag = false;
   @override
   void initState() {
     super.initState();
@@ -48,15 +50,21 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
     if (getPrefesecrectKey.isNotEmpty) {
       await preferencesService.setString(key_isLogin, "yes");
     }
-
-    if (await utils.isOnline()) {
-      // gotoLogin();
-
-      checkVersion(context);
-    } else {
-  utils.showAlert(context, ContentType.fail, 'No Internet');
-  }
-    // gotoLogin();
+    var androidInfo = await DeviceInfoPlugin().androidInfo;
+    var sdkInt = androidInfo.version.sdkInt;
+    if(sdkInt >=28){
+      if (await utils.isOnline()) {
+        gotoLogin();
+        // checkVersion(context);
+      }else {
+        utils.showAlert(context, ContentType.fail, 'No Internet');
+      }
+    }
+    else
+      {
+        versionErrorFlag = true;
+      }
+    setState(() {});
   }
 
   @override
@@ -80,6 +88,15 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
             UIHelper.verticalSpaceTiny,
             UIHelper.titleTextStyle('gov_tamilnadu'.tr().toString(), c.text_color, fs.h2, true, true),
             UIHelper.verticalSpaceMedium,
+            Visibility(
+                visible:versionErrorFlag,
+                child: Container(
+                    margin: EdgeInsets.only(top: 10, bottom: 20,left: 20),
+                    child: Text(
+                      "android_version_msg".tr(),
+                      style: TextStyle(fontWeight: FontWeight.bold, color: c.red_new, fontSize: fs.h3),
+                      textAlign: TextAlign.left,
+                    ))),
             HeartbeatProgressIndicator(
                 duration: Duration(milliseconds: 250),
                 child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
