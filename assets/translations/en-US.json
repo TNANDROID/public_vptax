@@ -139,7 +139,7 @@
   "transaction_amount": "Transaction Amount",
   "check_status": "Check Status",
   "pending": "Pending",
-  "failed": "Failed",
+  "failed": "No response !",
   "mobile": "Mobile",
   "email": "Email",
   "check_transaction_status": "Check Transaction Status",

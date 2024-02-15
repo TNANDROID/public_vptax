@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, file_names, unused_field, must_be_immutable, non_constant_identifier_names
 
+import 'dart:developer';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -50,6 +52,7 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
     list = preferencesService.gatewayList;
     paymentType = preferencesService.paymentTypeList;
     print("paymentType>>"+paymentType.toString());
+    log("paymentdata>>"+widget.dataList[0].toString());
     isLogin = await preferencesService.getString(key_isLogin);
     if (isLogin == "yes") {
       nameTextController.text = await preferencesService.getString(key_name);
@@ -58,7 +61,7 @@ class _PaymentGateWayViewState extends State<PaymentGateWayView> {
     }else{
       nameTextController.text =widget.dataList[0][s.key_name]??"";
       mobileTextController.text = widget.dataList[0][s.key_mobile_number]??'';
-      emailTextController.text = "";
+      emailTextController.text = widget.dataList[0][s.key_email]??"vptax-tn@panchayat.gov.in";
     }
     setState(() {});
   }
