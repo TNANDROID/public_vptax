@@ -26,10 +26,17 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
   Utils utils = Utils();
   PreferenceService preferencesService = locator<PreferenceService>();
   FS fs = locator<FS>();
+  String langText = 'தமிழ்';
+
 
   @override
   void initState() {
     super.initState();
+    if (preferencesService.selectedLanguage == "en") {
+      langText = 'English';
+    } else {
+      langText = 'தமிழ்';
+    }
     _rightToLeftAnimController = AnimationController(vsync: this, duration: const Duration(seconds: 2));
     _rightToLeftAnimation = Tween<Offset>(begin: const Offset(1.0, 0.0), end: const Offset(0.0, 0.0)).animate(CurvedAnimation(parent: _rightToLeftAnimController, curve: Curves.easeInOut));
     _rightToLeftAnimController.forward();
@@ -68,65 +75,91 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
           width: Screen.width(context),
           height: Screen.height(context),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              //  UIHelper.verticalSpaceMedium,
-              Column(
-                children: [
-                  Image.asset(imagepath.tamilnadu_logo, height: 80, width: 80),
-                  UIHelper.verticalSpaceSmall,
-                  UIHelper.titleTextStyle('rural_development'.tr().toString(), c.text_color, fs.h2, true, true),
-                  UIHelper.verticalSpaceTiny,
-                  UIHelper.titleTextStyle('gov_tamilnadu'.tr().toString(), c.text_color, fs.h2, true, true),                ],
+              PopupMenuButton<String>(
+                color: c.white,
+                child: Row(
+                  children: [
+                    Container(padding: EdgeInsets.only(left: 15), child: UIHelper.titleTextStyle(langText, c.text_color, fs.h3, true, false)),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(
+                        Icons.arrow_downward_rounded,
+                        size: 15,
+                        color: c.text_color,
+                      ),
+                    ),
+                  ],
+                ),
+                onSelected: handleClick,
+                itemBuilder: (BuildContext context) {
+                  return {'தமிழ்', 'English'}.map((String choice) {
+                    return PopupMenuItem<String>(
+                      value: choice,
+                      child: UIHelper.titleTextStyle(choice, c.black, fs.h3, false, false),
+                    );
+                  }).toList();
+                },
               ),
               //  UIHelper.verticalSpaceMedium,
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Image.asset(imagepath.logo, fit: BoxFit.cover, height: 55, width: 50),
-                UIHelper.horizontalSpaceTiny,
-                UIHelper.titleTextStyle('appName'.tr().toString(), c.text_color, fs.h1, true, true),
-              ]),
-              // UIHelper.verticalSpaceMedium,
-
-              //  ****************** Qucik Action Buttons  ****************** //
-
-              SlideTransition(
-                position: _rightToLeftAnimation,
+              Expanded(
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        actionButton(1, 'signIN'.tr().toString(), imagepath.login),
-                        UIHelper.horizontalSpaceMedium,
-                        actionButton(2, 'quickPay'.tr().toString(), imagepath.quick_pay1),
-                      ],
-                    ),
+                    Image.asset(imagepath.tamilnadu_logo, height: 80, width: 80),
+                    UIHelper.verticalSpaceSmall,
+                    UIHelper.titleTextStyle('rural_development'.tr().toString(), c.text_color, fs.h2, true, true),
+                    UIHelper.verticalSpaceTiny,
+                    UIHelper.titleTextStyle('gov_tamilnadu'.tr().toString(), c.text_color, fs.h2, true, true),
+                    UIHelper.verticalSpaceLarge,
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      Image.asset(imagepath.logo, fit: BoxFit.cover, height: 55, width: 50),
+                      UIHelper.horizontalSpaceTiny,
+                      UIHelper.titleTextStyle('appName'.tr().toString(), c.text_color, fs.h1, true, true),
+                    ]),
                     UIHelper.verticalSpaceMedium,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        UIHelper.titleTextStyle('signupText'.tr().toString(), c.text_color, fs.h2, true, true),
-                        UIHelper.horizontalSpaceSmall,
-                        InkWell(
-                          onTap: () => {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpView(isSignup: true))),
-                          },
-                          child: UIHelper.titleTextStyle('signUP'.tr().toString(), c.sky_blue, fs.h2, true, true),
-                        ),
-                      ],
+                    SlideTransition(
+                      position: _rightToLeftAnimation,
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              actionButton(1, 'signIN'.tr().toString(), imagepath.login),
+                              UIHelper.horizontalSpaceMedium,
+                              actionButton(2, 'quickPay'.tr().toString(), imagepath.quick_pay1),
+                            ],
+                          ),
+                          UIHelper.verticalSpaceMedium,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              UIHelper.titleTextStyle('signupText'.tr().toString(), c.text_color, fs.h2, true, true),
+                              UIHelper.horizontalSpaceSmall,
+                              InkWell(
+                                onTap: () => {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpView(isSignup: true))),
+                                },
+                                child: UIHelper.titleTextStyle('signUP'.tr().toString(), c.sky_blue, fs.h2, true, true),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
-              // Expanded(child: SizedBox()),
-              //  ****************** Image Container ****************** //
+
               Container(
                 height: MediaQuery.sizeOf(context).height / 2.8,
+                width: Screen.width(context),
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: Image.asset(
-                    imagepath.splash, // Replace with your image path
-                    fit: BoxFit.cover,
+                    width: Screen.width(context),
+                    imagepath.taxes, // Replace with your image path
+                    fit: BoxFit.fitWidth,
                   ),
                 ),
               )
@@ -175,4 +208,28 @@ class _AuthModeViewState extends State<AuthModeView> with TickerProviderStateMix
               ],
             )));
   }
+
+  void handleClick(String value) {
+    if (value != langText) {
+      switch (value) {
+        case 'தமிழ்':
+          setState(() {
+            langText = value;
+            preferencesService.selectedLanguage = "ta";
+            preferencesService.setString("lang", "ta");
+            context.setLocale(Locale('ta', 'IN'));
+          });
+          break;
+        case 'English':
+          setState(() {
+            langText = value;
+            preferencesService.selectedLanguage = "en";
+            preferencesService.setString("lang", "en");
+            context.setLocale(Locale('en', 'US'));
+          });
+          break;
+      }
+    }
+  }
+
 }

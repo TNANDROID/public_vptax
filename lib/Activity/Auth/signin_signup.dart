@@ -1,5 +1,6 @@
 // ignore_for_file: unused_local_variable, non_constant_identifier_names, file_names, camel_case_types, prefer_typing_uninitialized_variables, prefer_const_constructors_in_immutables, use_key_in_widget_constructors, avoid_print, library_prefixes, prefer_const_constructors, prefer_interpolation_to_compose_strings, use_build_context_synchronously, avoid_unnecessary_containers, no_leading_underscores_for_local_identifiers, equal_elements_in_set, must_be_immutable
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -468,12 +469,19 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   }
 
   /// listen sms
-  _startListeningSms() {
-    SmsVerification.startListeningSms().then((message) {
-      setState(() {
-        autofillOtp = SmsVerification.getCode(message, intRegex);
+  _startListeningSms() async {
+    var androidInfo = await DeviceInfoPlugin().androidInfo;
+    var sdkInt = androidInfo.version.sdkInt;
+    if(sdkInt <=33){
+      SmsVerification.startListeningSms().then((message) {
+        if(message != null  && message != ""){
+          setState(() {
+            autofillOtp = SmsVerification.getCode(message, intRegex);
+          });
+        }
       });
-    });
+    }
+
   }
 
 // ************* finalValidation  *********************** \\

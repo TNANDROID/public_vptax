@@ -514,7 +514,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
 
       String? key = Env.userPassKey;
 
-      String Signature = utils.generateHmacSha256(urlParams, key!, true);
+      String Signature = utils.generateHmacSha256(urlParams, key, true);
 
       String encodedParams = "${ApiServices().pdfURL}?$urlParams&sign=$Signature";
 

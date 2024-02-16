@@ -35,5 +35,14 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <receiver
+            android:name=".MyBroadcastReceiver"
+            android:exported="true"> <!-- or "false" depending on your requirements -->
+            <intent-filter>
+                <action android:name="com.example.MY_ACTION" />
+                <!-- other intent filters if needed -->
+            </intent-filter>
+        </receiver>
+
     </application>
 </manifest>

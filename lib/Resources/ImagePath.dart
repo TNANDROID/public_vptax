@@ -68,6 +68,10 @@ String vptax = "assets/images/vptax.png";
 String vptax1 = "assets/images/vptax1.png";
 String tap = "assets/images/tap.png";
 String lock_ic = "assets/images/lock_ic.png";
+String taxes = "assets/images/taxes.png";
+String taxs_image = "assets/images/taxs_image.png";
+String loader_1 = 'assets/images/loader_1.png';
+String loader_2 = 'assets/images/loader_2.png';
 
 String help = 'assets/images/help.svg';
 String failure = 'assets/images/failure.svg';
