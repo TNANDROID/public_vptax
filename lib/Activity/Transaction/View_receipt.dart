@@ -177,7 +177,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
 
         setState(() {});
       } catch (e) {
-      Utils().showToast(context, "Fail","W");
+      Utils().showToast(context, "failed".tr(), "W");
     } finally {
     Utils().hideProgress(context);
     }
@@ -321,7 +321,7 @@ class _ViewReceiptState extends State<ViewReceipt> {
                 }
 
               } catch (e) {
-                Utils().showToast(context, "Fail","W");
+                Utils().showToast(context, "failed".tr(), "W");
               } finally {
                 Utils().hideProgress(context);
               }

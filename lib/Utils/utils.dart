@@ -108,7 +108,7 @@ class Utils {
     return SizedBox(
       height: 70,
       width: 70,
-      child: CircleLoader(url: imagePath.loader),
+      child: CircleLoader(url: imagePath.loader_2),
     );
   }
 
@@ -131,7 +131,14 @@ class Utils {
                   UIHelper.horizontalSpaceSmall,
                   Center(child: loaderGif()),
                   //  UIHelper.verticalSpaceMedium,
-                  JumpingText(i == 1 ? 'loading'.tr().toString() : 'downloading'.tr().toString(), style: TextStyle(color: c.text_color, fontSize: fs.h4, decoration: TextDecoration.none)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(i == 1 ? 'loading'.tr().toString() : 'downloading'.tr().toString(), style: TextStyle(color: c.text_color, fontSize: fs.h4, decoration: TextDecoration.none)),
+                      JumpingText("...", style: TextStyle(color: c.text_color, fontSize: fs.h4, decoration: TextDecoration.none)),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -261,7 +268,7 @@ class Utils {
                                 Utils().showProgress(context, 1);
                                 await StartUpViewModel().getDemandList(mcontext);
                               } catch (e) {
-                                Utils().showToast(context, "Fail", "W");
+                                Utils().showToast(context, "failed".tr(), "W");
                               } finally {
                                 Utils().hideProgress(context);
                               }
@@ -278,7 +285,7 @@ class Utils {
                                 Utils().showProgress(context, 1);
                                 await StartUpViewModel().getDemandList(mcontext);
                               } catch (e) {
-                                Utils().showToast(context, "Fail", "W");
+                                Utils().showToast(context, "failed".tr(), "W");
                               } finally {
                                 Utils().hideProgress(context);
                               }
@@ -325,7 +332,7 @@ class Utils {
                                       Utils().showProgress(context, 1);
                                       await StartUpViewModel().getDemandList(mcontext);
                                     } catch (e) {
-                                      Utils().showToast(context, "Fail", "W");
+                                      Utils().showToast(context, "failed".tr(), "W");
                                     } finally {
                                       Utils().hideProgress(context);
                                     }
@@ -347,7 +354,7 @@ class Utils {
                                       Utils().showProgress(context, 1);
                                       await StartUpViewModel().getDemandList(mcontext);
                                     } catch (e) {
-                                      Utils().showToast(context, "Fail", "W");
+                                      Utils().showToast(context, "failed".tr(), "W");
                                     } finally {
                                       Utils().hideProgress(context);
                                     }

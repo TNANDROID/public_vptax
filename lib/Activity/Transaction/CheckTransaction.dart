@@ -60,7 +60,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
       Utils().showProgress(context, 1);
       response = await model.overAllMainService(context, requestData);
     } catch (e) {
-      Utils().showToast(context, "Fail","W");
+      Utils().showToast(context, "failed".tr(), "W");
     } finally {
       Utils().hideProgress(context);
     }
@@ -198,7 +198,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
       headerText = "pending".tr();
       bgColor = c.yellow_new_light;
     } else {
-      headerText = "failed".tr();
+      headerText = "fail".tr();
       bgColor = c.red_new_light;
     }
     return Expanded(
@@ -294,7 +294,7 @@ class _CheckTransactionState extends State<CheckTransaction> {
       cardColorPrimary = c.red_new;
       cardColorSecondary = c.red_new_light;
       cardColorPrimaryDark = c.red_new_dark;
-      headerText = "failed".tr();
+      headerText = "fail".tr();
     }
 
     return Stack(

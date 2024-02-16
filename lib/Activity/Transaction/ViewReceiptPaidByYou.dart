@@ -199,7 +199,7 @@ class _ViewReceiptPaidByYouState extends State<ViewReceiptPaidByYou> {
                   }
 
                 } catch (e) {
-                  Utils().showToast(context, "Fail","W");
+                  Utils().showToast(context, "failed".tr(), "W");
                 } finally {
                   Utils().hideProgress(context);
                 }

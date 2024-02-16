@@ -260,7 +260,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
 
         setState(() {});
       } catch (e) {
-      Utils().showToast(context, "Fail","W");
+      Utils().showToast(context, "failed".tr(), "W");
     } finally {
     Utils().hideProgress(context);
     }
@@ -528,7 +528,7 @@ class _TaxCollectionViewState extends State<TaxCollectionView> {
             Utils().showProgress(context, 1);
             response = await StartUpViewModel().overAllMainService(context, request);
           } catch (e) {
-            Utils().showToast(context, "Fail","W");
+            Utils().showToast(context, "failed".tr(), "W");
           } finally {
             Utils().hideProgress(context);
           }

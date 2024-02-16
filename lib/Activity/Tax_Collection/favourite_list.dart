@@ -202,7 +202,7 @@ class _FavouriteTaxDetailsState extends State<FavouriteTaxDetails> with TickerPr
                     }
 
                   } catch (e) {
-                    Utils().showToast(context, "Fail","W");
+                    Utils().showToast(context, "failed".tr(), "W");
                   } finally {
                     Utils().hideProgress(mccontext);
                   }

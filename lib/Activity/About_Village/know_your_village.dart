@@ -246,7 +246,7 @@ class _KYVDashboardState extends State<KYVDashboard> {
 
         setState(() {});
       } catch (e) {
-      Utils().showToast(context, "Fail","W");
+      Utils().showToast(context,"failed".tr(),"W");
     } finally {
     Utils().hideProgress(context);
     }

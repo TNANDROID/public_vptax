@@ -446,7 +446,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                     response = await model.overAllMainService(context, sendData);
                     _startListeningSms();
                   } catch (e) {
-                    Utils().showToast(context, "Fail", "W");
+                    Utils().showToast(context, "failed".tr(), "W");
                   } finally {
                     Utils().hideProgress(context);
                   }
@@ -506,7 +506,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
           response = await model.overAllMainService(context, postParams);
           _startListeningSms();
         } catch (e) {
-          Utils().showToast(context, "Fail", "W");
+          Utils().showToast(context, "failed".tr(), "W");
         } finally {
           Utils().hideProgress(context);
         }
@@ -551,7 +551,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
           Utils().showProgress(context, 1);
           response = await model.overAllMainService(context, sendData);
         } catch (e) {
-          Utils().showToast(context, "Fail", "W");
+          Utils().showToast(context, "failed".tr(), "W");
         } finally {
           Utils().hideProgress(context);
         }

@@ -220,7 +220,7 @@ class _VillagedevelopmentState extends State<Villagedevelopment> {
         }
         setState(() {});
       } catch (e) {
-          Utils().showToast(context, "Fail","W");
+          Utils().showToast(context, "failed".tr(),"W");
     } finally {
           Utils().hideProgress(context);
     }

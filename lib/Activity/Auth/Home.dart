@@ -104,7 +104,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     Utils().showProgress(context, 1);
     await model.getDemandList(context);
   } catch (e) {
-  Utils().showToast(context, "Fail","W");
+  Utils().showToast(context, "failed".tr(),"W");
   } finally {
   Utils().hideProgress(context);
   }

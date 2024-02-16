@@ -134,7 +134,7 @@ class _TaxCollectionDetailsWithAddState extends State<TaxCollectionDetailsWithAd
                           }
 
                         } catch (e) {
-                          Utils().showToast(context, "Fail","W");
+                          Utils().showToast(context, "failed".tr(), "W");
                         } finally {
                           Utils().hideProgress(context);
                         }
