@@ -30,7 +30,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
   PreferenceService preferencesService = locator<PreferenceService>();
   Utils utils = Utils();
   FS fs = locator<FS>();
-  String getPrefesecrectKey="";
+  String getPrefesecrectKey = "";
   bool versionErrorFlag = false;
   @override
   void initState() {
@@ -52,18 +52,16 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
     }
     var androidInfo = await DeviceInfoPlugin().androidInfo;
     var sdkInt = androidInfo.version.sdkInt;
-    if(sdkInt >=28){
+    if (sdkInt >= 28) {
       if (await utils.isOnline()) {
         gotoLogin();
         // checkVersion(context);
-      }else {
+      } else {
         utils.showAlert(context, ContentType.fail, 'No Internet');
       }
+    } else {
+      versionErrorFlag = true;
     }
-    else
-      {
-        versionErrorFlag = true;
-      }
     setState(() {});
   }
 
@@ -89,26 +87,24 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
             UIHelper.titleTextStyle('gov_tamilnadu'.tr().toString(), c.text_color, fs.h2, true, true),
             UIHelper.verticalSpaceMedium,
             Visibility(
-                visible:versionErrorFlag,
+                visible: versionErrorFlag,
                 child: Container(
-                    margin: EdgeInsets.only(top: 10, bottom: 20,left: 20),
+                    margin: EdgeInsets.only(top: 10, bottom: 20, left: 20),
                     child: Text(
                       "android_version_msg".tr(),
                       style: TextStyle(fontWeight: FontWeight.bold, color: c.red_new, fontSize: fs.h3),
                       textAlign: TextAlign.left,
                     ))),
-            HeartbeatProgressIndicator(
-                duration: Duration(milliseconds: 250),
-                child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Image.asset(
-                    imagepath.logo,
-                    fit: BoxFit.cover,
-                    height: 30,
-                    width: 26,
-                  ),
-                  UIHelper.horizontalSpaceSmall,
-                  UIHelper.titleTextStyle('appName'.tr().toString(), c.text_color, fs.h4, true, true),
-                ]))
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Image.asset(
+                imagepath.logo,
+                fit: BoxFit.cover,
+                height: 30,
+                width: 26,
+              ),
+              UIHelper.horizontalSpaceSmall,
+              UIHelper.titleTextStyle('appName'.tr().toString(), c.text_color, fs.h1, true, true),
+            ])
           ]),
         ),
       ),
@@ -117,33 +113,34 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
 
   Future<void> gotoLogin() async {
     if (await utils.isOnline()) {
-    if (getPrefesecrectKey.isNotEmpty) {
-    await Utils().apiCalls(context);
-    }
+      if (getPrefesecrectKey.isNotEmpty) {
+        await Utils().apiCalls(context);
+      }
 
-    Navigator.of(context).pushReplacement(
-    PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => getPrefesecrectKey.isNotEmpty ? const SecretKeyView() : const AuthModeView(),
-    transitionDuration: const Duration(seconds: 2),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-    const begin = Offset(1.0, 0.0); // Start position
-    const end = Offset.zero; // End position
-    const curve = Curves.easeInOut; // Transition curve
-    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-    var offsetAnimation = animation.drive(tween);
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => getPrefesecrectKey.isNotEmpty ? const SecretKeyView() : const AuthModeView(),
+          transitionDuration: const Duration(seconds: 2),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0); // Start position
+            const end = Offset.zero; // End position
+            const curve = Curves.easeInOut; // Transition curve
+            var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            var offsetAnimation = animation.drive(tween);
 
-    return SlideTransition(
-    position: offsetAnimation,
-    child: child,
-    );
-    },
-    ),
-    );
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+        ),
+      );
     } else {
-    utils.showAlert(context, ContentType.fail, 'No Internet');
+      utils.showAlert(context, ContentType.fail, 'No Internet');
     }
     setState(() {});
   }
+
   Future<dynamic> checkVersion(BuildContext context) async {
     try {
       var request = {
@@ -151,8 +148,8 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
         s.key_app_code: s.service_key_appcode,
       };
       var decodedData = await ApiServices().loginServiceFunction("checkVersion", request);
-      if (decodedData != null && decodedData != "" && decodedData[s.key_status]==s.key_success) {
-        var data=decodedData[s.key_data];
+      if (decodedData != null && decodedData != "" && decodedData[s.key_status] == s.key_success) {
+        var data = decodedData[s.key_data];
         String version = data['version'];
         version = containsNDots(version);
         // print("app__api_version>>" + api_version.toString());
@@ -168,7 +165,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
 
         if (data[s.key_app_code] == s.service_key_appcode && (v1Number > v2Number)) {
           await preferencesService.setString(s.key_apk, data['apk_path'].toString());
-          utils.showAlert(context, ContentType.fail, 'update_msg'.tr().toString(),btnText: 'update'.tr().toString(),btnmsg:"apk" ,btnCount: "1");
+          utils.showAlert(context, ContentType.fail, 'update_msg'.tr().toString(), btnText: 'update'.tr().toString(), btnmsg: "apk", btnCount: "1");
         } else {
           gotoLogin();
         }
@@ -178,11 +175,12 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
         throw Exception('Failed');
       }
     } catch (e) {
-      utils.showToast(context, 'Something Went Wrong',"W");
+      utils.showToast(context, 'Something Went Wrong', "W");
     } finally {
       setState(() {});
     }
   }
+
   int getExtendedVersionNumber(String version) {
     List versionCells = version.split('.');
     versionCells = versionCells.map((i) => int.parse(i)).toList();
@@ -198,8 +196,8 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
     charCount == 0
         ? input = "$input.0.0"
         : charCount == 1
-        ? input = "$input.0"
-        : null;
+            ? input = "$input.0"
+            : null;
     return input;
   }
 }

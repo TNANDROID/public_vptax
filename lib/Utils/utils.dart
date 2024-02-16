@@ -17,6 +17,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:public_vptax/Activity/Auth/Splash.dart';
 import 'package:public_vptax/Activity/Tax_Collection/payment_mode_view.dart';
+import 'package:public_vptax/Layout/circle_loader.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
 import 'package:public_vptax/Layout/ui_helper.dart';
 import 'package:public_vptax/Resources/ColorsValue.dart' as c;
@@ -103,6 +104,14 @@ class Utils {
     ));
   }
 
+  loaderGif() {
+    return SizedBox(
+      height: 70,
+      width: 70,
+      child: CircleLoader(url: imagePath.loader),
+    );
+  }
+
   Future<void> showProgress(BuildContext context, int i) async {
     return showDialog<void>(
       context: context,
@@ -120,10 +129,8 @@ class Utils {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   UIHelper.horizontalSpaceSmall,
-                  Center(
-                      child:
-                          HeartbeatProgressIndicator(duration: Duration(milliseconds: 250), child: Image.asset(imagePath.logo, height: Screen.width(context) / 11, width: Screen.width(context) / 12))),
-                  UIHelper.verticalSpaceMedium,
+                  Center(child: loaderGif()),
+                  //  UIHelper.verticalSpaceMedium,
                   JumpingText(i == 1 ? 'loading'.tr().toString() : 'downloading'.tr().toString(), style: TextStyle(color: c.text_color, fontSize: fs.h4, decoration: TextDecoration.none)),
                 ],
               ),
@@ -250,15 +257,14 @@ class Utils {
                         onTap: () async {
                           if (btnmsg == 'payment') {
                             if (preferencesService.paymentType == "Favourite Pay") {
-                              try{
+                              try {
                                 Utils().showProgress(context, 1);
                                 await StartUpViewModel().getDemandList(mcontext);
                               } catch (e) {
-                                Utils().showToast(context, "Fail","W");
+                                Utils().showToast(context, "Fail", "W");
                               } finally {
                                 Utils().hideProgress(context);
                               }
-
                             } else {
                               if (await preferencesService.getString(key_isLogin) == "yes") {
                                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);
@@ -268,15 +274,14 @@ class Utils {
                             }
                           } else if (btnmsg == 'canceled') {
                             if (preferencesService.paymentType == "Favourite Pay") {
-                              try{
+                              try {
                                 Utils().showProgress(context, 1);
                                 await StartUpViewModel().getDemandList(mcontext);
                               } catch (e) {
-                                Utils().showToast(context, "Fail","W");
+                                Utils().showToast(context, "Fail", "W");
                               } finally {
                                 Utils().hideProgress(context);
                               }
-
                             } else {
                               if (await preferencesService.getString(key_isLogin) == "yes") {
                                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (route) => false);
@@ -286,11 +291,10 @@ class Utils {
                             }
                           } else if (btnmsg == 'apk') {
                             launchURL(await preferencesService.getString(s.key_apk));
-                          }else {
+                          } else {
                             debugPrint("....");
                           }
                           Navigator.of(context).pop();
-
                         },
                         child: Container(
                           margin: const EdgeInsets.all(10.0),
@@ -316,13 +320,12 @@ class Utils {
                             child: ElevatedButton(
                               onPressed: () async {
                                 if (btnmsg == 'payment') {
-
                                   if (preferencesService.paymentType == "Favourite Pay") {
-                                    try{
+                                    try {
                                       Utils().showProgress(context, 1);
                                       await StartUpViewModel().getDemandList(mcontext);
                                     } catch (e) {
-                                      Utils().showToast(context, "Fail","W");
+                                      Utils().showToast(context, "Fail", "W");
                                     } finally {
                                       Utils().hideProgress(context);
                                     }
@@ -339,13 +342,12 @@ class Utils {
                                 } else if (btnmsg == 'receipt') {
                                   Navigator.of(context).pop();
                                 } else if (btnmsg == 'canceled') {
-
                                   if (preferencesService.paymentType == "Favourite Pay") {
-                                    try{
+                                    try {
                                       Utils().showProgress(context, 1);
                                       await StartUpViewModel().getDemandList(mcontext);
                                     } catch (e) {
-                                      Utils().showToast(context, "Fail","W");
+                                      Utils().showToast(context, "Fail", "W");
                                     } finally {
                                       Utils().hideProgress(context);
                                     }
@@ -358,7 +360,7 @@ class Utils {
                                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Splash()), (route) => false);
                                     }
                                   }
-                                }else if (btnmsg == 'apk') {
+                                } else if (btnmsg == 'apk') {
                                   launchURL(await preferencesService.getString(s.key_apk));
                                   Navigator.of(context).pop();
                                 } else {
@@ -553,13 +555,13 @@ class Utils {
 
   //Atom Paynets Gateway HTML Page Renger
   Future<void> openNdpsPG(mcontext, String atomTokenId, String merchId, String emailId, String mobileNumber) async {
-    String mode="";
-    String returnUrl="";
-    if(preferencesService.buildMode=="Local"){
-      mode=Env.modeLocal;
+    String mode = "";
+    String returnUrl = "";
+    if (preferencesService.buildMode == "Local") {
+      mode = Env.modeLocal;
       returnUrl = Env.returnUrlLocal;
-    }else{
-      mode=Env.modeLive;
+    } else {
+      mode = Env.modeLive;
       returnUrl = Env.returnUrlLive; ////return url production
     }
 
@@ -639,7 +641,7 @@ class Utils {
 
   Future<void> settingModalBottomSheet(BuildContext context, List finalList, String payType) async {
     preferencesService.paymentType = payType;
-    print("finalList"+finalList.toString());
+    print("finalList" + finalList.toString());
     return showModalBottomSheet(
         context: context,
         isScrollControlled: true,
