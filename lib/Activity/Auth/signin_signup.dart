@@ -462,7 +462,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   }
 
   /// listen sms
-  _startListeningSms() async {
+  void _startListeningSms() {
     telephony.listenIncomingSms(
       onNewMessage: (SmsMessage message) {
         print(message.address);
