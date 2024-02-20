@@ -19,7 +19,7 @@ import 'package:public_vptax/Services/locator.dart';
 import 'package:public_vptax/Utils/ContentInfo.dart';
 import 'package:public_vptax/Utils/utils.dart';
 import '../../Layout/number_keyboard.dart';
-import 'package:sms_otp_auto_verify/sms_otp_auto_verify.dart';
+import 'package:telephony/telephony.dart';
 
 class SignUpView extends StatefulWidget {
   bool isSignup;
@@ -31,6 +31,7 @@ class SignUpView extends StatefulWidget {
 class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   Utils utils = Utils();
   ApiServices apiServices = ApiServices();
+  Telephony telephony = Telephony.instance;
   PreferenceService preferencesService = locator<PreferenceService>();
   FS fs = locator<FS>();
   final GlobalKey<custom.FormBuilderState> _formKey = GlobalKey<custom.FormBuilderState>();
@@ -63,19 +64,11 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
     _rightToLeftAnimation =
         Tween<Offset>(begin: registerStep == 2 ? Offset.zero : Offset(1.0, 0.0), end: const Offset(0.0, 0.0)).animate(CurvedAnimation(parent: _rightToLeftAnimController, curve: Curves.easeInOut));
     signUpFlag = widget.isSignup;
-    _getSignatureCode();
-  }
-
-  /// get signature code
-  _getSignatureCode() async {
-    String? signature = await SmsVerification.getAppSignature();
-    print("signature $signature");
   }
 
   @override
   void dispose() {
     _rightToLeftAnimController.dispose();
-    SmsVerification.stopListening();
     super.dispose();
   }
 
@@ -470,16 +463,24 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
 
   /// listen sms
   _startListeningSms() async {
-    var androidInfo = await DeviceInfoPlugin().androidInfo;
-    var sdkInt = androidInfo.version.sdkInt;
-    if (sdkInt <= 33) {
-      var message = await SmsVerification.startListeningSms();
-      if (message != null || message != "") {
-        autofillOtp = SmsVerification.getCode(message, intRegex);
-      }
-      setState(() {});
-      print("message : $message");
-    }
+    telephony.listenIncomingSms(
+      onNewMessage: (SmsMessage message) {
+        print(message.address);
+        print(message.body);
+
+        String sms = message.body.toString();
+
+        if (message.body!.contains('VPTAX')) {
+          autofillOtp = sms.replaceAll(new RegExp(r'[^0-9]'), '');
+          //  otpbox.set(otpcode.split(""));
+
+          setState(() {});
+        } else {
+          print("error");
+        }
+      },
+      listenInBackground: false,
+    );
   }
 
 // ************* finalValidation  *********************** \\
