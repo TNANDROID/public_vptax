@@ -345,7 +345,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
                       return null;
                     })
                   : custom.FormBuilderValidators.compose([
-            custom.FormBuilderValidators.required(errorText: "$hintText ${'isEmpty'.tr()}"),
+                      custom.FormBuilderValidators.required(errorText: "$hintText ${'isEmpty'.tr()}"),
                     ]),
           inputFormatters: fieldType == key_mobile_number || fieldType == key_number
               ? [
@@ -363,7 +363,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   Widget addInputDropdownField() {
     return custom.FormBuilderDropdown(
       itemHeight: 30,
-      menuMaxHeight: Screen.height(context)/1.5,
+      menuMaxHeight: Screen.height(context) / 1.5,
       name: key_gender,
       decoration: InputDecoration(
         labelText: key_gender.tr().toString(),
@@ -429,7 +429,7 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
             GestureDetector(
                 onTap: () async {
                   setState(() {
-                    finalOTP="";
+                    finalOTP = "";
                   });
 
                   String serviceid = "";
@@ -472,16 +472,14 @@ class SignUpStateView extends State<SignUpView> with TickerProviderStateMixin {
   _startListeningSms() async {
     var androidInfo = await DeviceInfoPlugin().androidInfo;
     var sdkInt = androidInfo.version.sdkInt;
-    if(sdkInt <=33){
-      SmsVerification.startListeningSms().then((message) {
-        if(message != null  && message != ""){
-          setState(() {
-            autofillOtp = SmsVerification.getCode(message, intRegex);
-          });
-        }
-      });
+    if (sdkInt <= 33) {
+      var message = await SmsVerification.startListeningSms();
+      if (message != null || message != "") {
+        autofillOtp = SmsVerification.getCode(message, intRegex);
+      }
+      setState(() {});
+      print("message : $message");
     }
-
   }
 
 // ************* finalValidation  *********************** \\
