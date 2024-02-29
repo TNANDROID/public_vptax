@@ -3,7 +3,6 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:progress_indicators/progress_indicators.dart';
 import 'package:public_vptax/Activity/Auth/auth_option.dart';
 import 'package:public_vptax/Activity/Auth/secrectKey.dart';
 import 'package:public_vptax/Layout/screen_size.dart';
@@ -54,8 +53,8 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
     var sdkInt = androidInfo.version.sdkInt;
     if (sdkInt >= 28) {
       if (await utils.isOnline()) {
-        gotoLogin();
-        // checkVersion(context);
+        // gotoLogin();
+        checkVersion(context);
       } else {
         utils.showAlert(context, ContentType.fail, 'No Internet');
       }
